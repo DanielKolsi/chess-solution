@@ -1,6 +1,6 @@
 import React from 'react';
 
-class BishopC extends React.Component {
+class RookA extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,4 +15,4 @@ class BishopC extends React.Component {
       );
     }
 }
-export default BishopC;
+export default RookA;
