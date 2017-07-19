@@ -1,0 +1,56 @@
+
+.wrapper {
+  position: relative;
+}
+
+main {
+  display: flex;
+  padding: 0 1em;
+  margin-top: 100px;
+}
+
+.chess {
+  flex: 1 1 80%;
+  display: flex;
+  flex-flow: column nowrap;
+  position: relative;
+}
+
+.row {
+  width: 80%;
+  display: flex;
+  border-right: 3px solid #333;
+  border-left: 3px solid #333;
+}
+.row:first-child {
+    border-top: 3px solid #333;
+}
+.row:nth-child(8) {
+    border-bottom: 3px solid #333;
+}
+
+.row:nth-child(odd) .square:nth-child(even) {
+    background: #CCC8C8;
+}
+
+.row:nth-child(even) .square:nth-child(odd) {
+    background: #CCC8C8;
+}
+
+.square {
+  flex: 1 1 0;
+  display: flex;
+  flex-flow: column nowrap;
+  border: 1px solid $black;
+  min-height: 100px;
+  position: relative;
+}
+.piece {
+  display: flex;
+  flex: 1 1 auto;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  font-size: 3em;
+  cursor: pointer;
+}
