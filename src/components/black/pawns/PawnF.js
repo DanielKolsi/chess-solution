@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-class PawnA extends React.Component {
+class PawnF extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -28,4 +28,4 @@ class PawnA extends React.Component {
     }
 }
 
-export default PawnA;
+export default PawnF;
