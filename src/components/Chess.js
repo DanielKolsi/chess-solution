@@ -6,6 +6,7 @@ class Chess extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      pieces: {},
       squares: []
     }
   }
@@ -13,7 +14,7 @@ class Chess extends React.Component {
     this.initBoard();
   }
   componentDidMount() {
-    //this.initPieces();
+    this.initPieces();
   }
   initBoard() {
     const squares = [];
@@ -34,11 +35,32 @@ class Chess extends React.Component {
     this.setState({squares: squares});
   }
 
+  initPieces() {
+    const {squares, pieces} = this.state;
+
+    this.props.setup.forEach((item) => {
+      console.log('item='+item);
+      let piece = {
+        location: item[0],
+        type: item[1],
+        owner: item[2],
+        id: item[3]
+      }
+
+      squares[item[0]].piece = piece;
+      //pieces[piece.id] = piece;
+    });
+
+    this.setState({pieces: pieces});
+    //this.setState({squares: squares});
+  }
+
   render() {
     let squares = this.state.squares.map((square, index) => {
       return (
         <Square
           key={index}
+          piece={square.piece}
         />
       );
     });

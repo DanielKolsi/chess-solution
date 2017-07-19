@@ -4,7 +4,7 @@ import Chess from './components/Chess';
 const App = ({setup}) => {
   return (
     <div>
-      <Chess/>
+      <Chess setup={setup}/>
     </div>
   );
 }
