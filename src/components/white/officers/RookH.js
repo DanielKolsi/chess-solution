@@ -10,7 +10,7 @@ class BishopC extends React.Component {
     render() {
       return (
         <div className="piece">
-          {String.fromCharCode(9823)}
+          {String.fromCharCode(9814)}
         </div>
       );
     }

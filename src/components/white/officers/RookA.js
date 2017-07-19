@@ -10,7 +10,7 @@ class RookA extends React.Component {
     render() {
       return (
         <div className="piece">
-          {String.fromCharCode(9813)}
+          {String.fromCharCode(9814)}
         </div>
       );
     }

@@ -1,6 +1,6 @@
 import React from 'react';
 
-class BishopC extends React.Component {
+class King extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -10,9 +10,9 @@ class BishopC extends React.Component {
     render() {
       return (
         <div className="piece">
-          {String.fromCharCode(9823)}
+          {String.fromCharCode(9812)}
         </div>
       );
     }
 }
-export default BishopC;
+export default King;
