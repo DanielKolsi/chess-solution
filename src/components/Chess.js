@@ -20,22 +20,25 @@ class Chess extends React.Component {
     this.initBoard();
   }
 
-
-
   componentDidMount() {
     this.initPieces();
 
     //this.removePiece(0, 0);
-    //this.move(0, 3);
+
     console.log('starting next move');
-    this.moveMap(1, 2, 3, 3);
-    this.moveMap(3, 3, 5, 4);
+    this.moveMap(2, 5, 4, 5); // white
+    this.moveMap(7, 2, 5, 2); // black
+    this.moveMap(4, 5, 5, 5); // white
+    this.moveMap(7, 4, 5, 4); // black
+    this.moveMap(5, 5, 6, 4); // white
+
+    this.removePiece(0, 27); // en passe
 
   }
 
   removePiece(pieceId, index) {
     // pieces are referenced in two places so need to delete both
-    //delete this.state.pieces[pieceId];
+    //delete this.state.pieces[pieceId]; //TODO, check what is pieceId //let pieceId = command.substr(0, 3);
     delete this.state.squares[index].piece;
     //this.setState({pieces: this.state.pieces});
     this.setState({squares: this.state.squares});
