@@ -23,7 +23,12 @@ class Chess extends React.Component {
     this.initPieces();
 
     //this.removePiece(0, 0);
-    this.movePiece(0, 0);
+    //this.move(0, 3);
+    console.log('starting next move');
+    this.move(3, 0);
+    this.move(0, 3);
+    //this.move(7, 25);
+
   }
   removePiece(pieceId, index) {
     // pieces are referenced in two places so need to delete both
@@ -34,29 +39,42 @@ class Chess extends React.Component {
   }
 
 
+  move(src, dst) {
+    const {squares, pieces} = this.state;
+    const square = squares[src];
+    const mover = square.piece;
+
+    let source = squares[square.piece.location];
+    source.piece = null;
+
+    let destination = squares[dst];
+    if (destination.piece) {
+      delete pieces[destination.piece.id];
+      this.setState({pieces: pieces});
+    }
+    destination.piece = mover;
+    destination.piece.location = dst;//destination.index;
+
+    this.setState({squares: update(squares, {[src]: {$set: source}})});
+    this.setState({squares: update(squares, {[dst]: {$set: destination}})});
+    this.setState({move: null});
+    console.log('updated finished');
+  }
 
   movePiece(pieceId, index) {
-    const {squares, pieces, move} = this.state;
+    const {squares} = this.state;
     const target = squares[3];
     const movingPiece = target.piece;
 
-    let source = squares[movingPiece.location];
-
+    let source = squares[target.piece.location];
     source.piece = null;
 
-    let destination = squares[44];
-    destination.piece  =movingPiece;
+    let destination = squares[34];
+    destination.piece  = movingPiece;
     destination.piece.location = destination.index;
-
-    var n = 44;
-
-    //this.setState({squares: update(squares, {[3]: {$set: source}})});
-    //his.setState({squares: update(squares, {[n]: {$set: destination}})});
 
     this.setState({squares: update(squares, {[source.index]: {$set: source}})});
     this.setState({squares: update(squares, {[destination.index]: {$set: destination}})});
-
-
   }
 
   initBoard() {
