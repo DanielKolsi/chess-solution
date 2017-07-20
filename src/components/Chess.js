@@ -38,6 +38,9 @@ class Chess extends React.Component {
     this.setState({squares: this.state.squares});
   }
 
+    //rowcol to rowcol
+    moveMap(src, dst) {
+    }
 
   move(src, dst) {
     const {squares, pieces} = this.state;
