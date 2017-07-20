@@ -1,5 +1,6 @@
 import React from 'react';
 import Square from './Square';
+import update from 'immutability-helper';
 //import PropTypes from 'prop-types'; // ES6
 
 class Chess extends React.Component {
@@ -7,15 +8,59 @@ class Chess extends React.Component {
     super(props);
     this.state = {
       pieces: {},
-      squares: []
+      squares: [],
+      white: true,
+      move: null,
+      acceptedMoves: null
     }
+    this.removePiece = this.removePiece.bind(this);
   }
+
   componentWillMount() {
     this.initBoard();
   }
   componentDidMount() {
     this.initPieces();
+
+    //this.removePiece(0, 0);
+    this.movePiece(0, 0);
   }
+  removePiece(pieceId, index) {
+    // pieces are referenced in two places so need to delete both
+    //delete this.state.pieces[pieceId];
+    delete this.state.squares[index].piece;
+    //this.setState({pieces: this.state.pieces});
+    this.setState({squares: this.state.squares});
+  }
+
+
+
+  movePiece(pieceId, index) {
+    const {squares, pieces, currentPlayer} = this.state;
+    const queen = this.state.squares[3].piece;
+    //this.state.squares[5].piece = this.state.squares[1].piece;
+    //let source = squares[0];
+    let source = this.state.squares[2];
+    let destination = this.state.squares[3];
+    //this.state.squares[0].piece = queen;
+    if (destination.piece) {
+      delete pieces[destination.piece.id];
+      this.setState({pieces: pieces});
+    }
+
+    destination.piece.location = destination.index;
+
+     this.setState({squares: update(squares, {[0]: {$set: destination}})});
+    //this.setState({squares: update(squares, {[source.index]: {$set: source}})});
+    //this.setState({squares: update(squares, {[destination.index]: {$set: destination}})});
+
+    // pieces are referenced in two places so need to delete both
+    //delete this.state.pieces[pieceId];
+    //delete this.state.squares[index].piece;
+    //this.setState({pieces: this.state.pieces});
+    //this.setState({squares: this.state.squares});
+  }
+
   initBoard() {
     const squares = [];
     //const rows = [];
