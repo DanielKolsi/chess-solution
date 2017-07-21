@@ -14,7 +14,7 @@ class Chess extends React.Component {
       move: null,
       acceptedMoves: null
     }
-    //this.moveMap = this.moveMap.bind(this); //FIXME
+    this.moveMap = this.moveMap.bind(this); //FIXME
     this.removePiece = this.removePiece.bind(this);
     this.autoMove = this.autoMove.bind(this);
   }
@@ -27,16 +27,6 @@ class Chess extends React.Component {
     this.initPieces();
 
     //this.removePiece(0, 0);
-
-    console.log('starting next move');
-    this.moveMap(2, 5, 4, 5); // white
-    this.moveMap(7, 2, 5, 2); // black
-    this.moveMap(4, 5, 5, 5); // white
-    this.moveMap(7, 4, 5, 4); // black
-    this.moveMap(5, 5, 6, 4); // white
-
-    this.removePiece(0, 27); // en passe
-
   }
 
   removePiece(pieceId, index) {
@@ -133,14 +123,27 @@ class Chess extends React.Component {
 
   autoMove(move) {
     console.log('Chess: automove:');
+    const {pieces, squares} = this.state;
+    //let piece = pieces[pieceId];
+    //console.log('starting next move');
+    this.moveMap(2, 5, 4, 5); // white
+    this.moveMap(7, 2, 5, 2); // black
+    this.moveMap(4, 5, 5, 5); // white
+    this.moveMap(7, 4, 5, 4); // black
+    this.moveMap(5, 5, 6, 4); // white
+
+    this.removePiece(0, 27); // en passe
   }
 
   render() {
     let squares = this.state.squares.map((square, index) => {
       return (
         <Square
+          ref={index}
           key={index}
+          chessId={square.chessId}
           piece={square.piece}
+          moveMap = {this.moveMap}
         />
       );
     });
