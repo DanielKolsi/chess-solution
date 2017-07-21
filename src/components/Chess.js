@@ -63,7 +63,7 @@ class Chess extends React.Component {
     this.setState({squares: update(squares, {[src]: {$set: source}})});
     this.setState({squares: update(squares, {[dst]: {$set: destination}})});
     this.setState({move: null});
-    console.log('updated finished');
+
   }
 
   movePiece(pieceId, index) {
@@ -105,34 +105,46 @@ class Chess extends React.Component {
     const {squares, pieces} = this.state;
 
     this.props.setup.forEach((item) => {
-      console.log('item='+item);
+      //console.log('item='+item);
       let piece = {
-        location: item[0],
-        type: item[1],
-        owner: item[2],
-        id: item[3]
+        location: item[0], // number
+        type: item[1], // actual piece, e.g. RookBA
+        id: item[2] // piece id, e.g. bra
       }
 
       squares[item[0]].piece = piece;
-      //pieces[piece.id] = piece;
+      pieces[piece.id] = piece;
     });
 
     this.setState({pieces: pieces});
-    //this.setState({squares: squares});
+    this.setState({squares: squares});
   }
 
   autoMove(move) {
     console.log('Chess: automove:');
     const {pieces, squares} = this.state;
-    //let piece = pieces[pieceId];
+
+    let movingPiece = pieces['wq'];
+    let piece = pieces['wk'];
+    console.log('piece = ' + piece);
     //console.log('starting next move');
-    this.moveMap(2, 5, 4, 5); // white
+
+    let source = squares[piece.location];
+    source.piece = null;
+
+    let destination = squares[34];
+    destination.piece  = movingPiece;
+    destination.piece.location = destination.index;
+
+    this.setState({squares: update(squares, {[source.index]: {$set: source}})});
+    this.setState({squares: update(squares, {[destination.index]: {$set: destination}})});
+    /*this.moveMap(2, 5, 4, 5); // white
     this.moveMap(7, 2, 5, 2); // black
     this.moveMap(4, 5, 5, 5); // white
     this.moveMap(7, 4, 5, 4); // black
     this.moveMap(5, 5, 6, 4); // white
 
-    this.removePiece(0, 27); // en passe
+    this.removePiece(0, 27); // en passe*/
   }
 
   render() {
