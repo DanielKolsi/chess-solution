@@ -1,5 +1,6 @@
 import React from 'react';
 import Square from './Square';
+import AutoMove from './AutoMove';
 import update from 'immutability-helper';
 //import PropTypes from 'prop-types'; // ES6
 
@@ -13,7 +14,9 @@ class Chess extends React.Component {
       move: null,
       acceptedMoves: null
     }
+    //this.moveMap = this.moveMap.bind(this); //FIXME
     this.removePiece = this.removePiece.bind(this);
+    this.autoMove = this.autoMove.bind(this);
   }
 
   componentWillMount() {
@@ -128,6 +131,10 @@ class Chess extends React.Component {
     //this.setState({squares: squares});
   }
 
+  autoMove(move) {
+    console.log('Chess: automove:');
+  }
+
   render() {
     let squares = this.state.squares.map((square, index) => {
       return (
@@ -160,7 +167,10 @@ class Chess extends React.Component {
               return <div className="row" key={index}>{row}</div>
             })}
           </div>
+          <div className="automove">
+            <AutoMove autoMove={this.autoMove}/>
 
+          </div>
         </main>
       </div>
     );
