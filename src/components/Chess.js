@@ -25,31 +25,43 @@ class Chess extends React.Component {
 
   componentDidMount() {
     this.initPieces();
-
-    //this.removePiece(0, 0);
   }
 
   removePiece(pieceId, index) {
-    // pieces are referenced in two places so need to delete both
-    //delete this.state.pieces[pieceId]; //TODO, check what is pieceId //let pieceId = command.substr(0, 3);
+    delete this.state.pieces[pieceId];
     delete this.state.squares[index].piece;
-    //this.setState({pieces: this.state.pieces});
+    this.setState({pieces: this.state.pieces});
     this.setState({squares: this.state.squares});
   }
 
+  moveMap(sr, sc, dr, dc) {
+    const src = 56 - (((sr - 1) * 8)) + (sc - 1);
+    const dst = 56 - (((dr - 1) * 8)) + (dc - 1);
+    this.move(src, dst);
+  }
 
-    moveMap(sr, sc, dr, dc) {
-        const src = 56 - (((sr - 1) * 8)) + (sc - 1);
-        const dst = 56 - (((dr - 1) * 8)) + (dc - 1);
-        this.move(src, dst);
-    }
+  //FIXME: get pieceId from index and index from pieceId
+  possibleMoves(index) {
+    const {pieces, squares} = this.state;
+    const target = squares[index];
+    let piece = pieces['wq']; //FIXME
+    let source = squares[piece.location];
+    let idx = 59;//source.index;
+    console.log('idx = ' + idx);
+    this.refs[source.index];
+    //let acceptedMoves = this.refs[target.index].refs.piece.getAcceptedMoves(target, squares);
+    let acceptedMoves = this.refs[59].refs.piece.getAcceptedMoves(source, squares);
+
+    console.log('possibles moves piece index = ' + index);
+  }
 
   move(src, dst) {
-    const {squares, pieces} = this.state;
+    const {squares, pieces, move, acceptedMoves} = this.state; //FIXME
     const square = squares[src];
     const mover = square.piece;
-
+    const target = squares[dst];
     let source = squares[square.piece.location];
+
     source.piece = null;
 
     let destination = squares[dst];
@@ -58,15 +70,27 @@ class Chess extends React.Component {
       this.setState({pieces: pieces});
     }
     destination.piece = mover;
-    destination.piece.location = dst;//destination.index;
+    destination.piece.location = dst; //destination.index;
 
-    this.setState({squares: update(squares, {[src]: {$set: source}})});
-    this.setState({squares: update(squares, {[dst]: {$set: destination}})});
+    this.setState({
+      squares: update(squares, {
+        [src]: {
+          $set: source
+        }
+      })
+    });
+    this.setState({
+      squares: update(squares, {
+        [dst]: {
+          $set: destination
+        }
+      })
+    });
     this.setState({move: null});
 
   }
 
-  movePiece(pieceId, index) {
+  /*movePiece(pieceId, index) {
     const {squares} = this.state;
     const target = squares[3];
     const movingPiece = target.piece;
@@ -80,20 +104,18 @@ class Chess extends React.Component {
 
     this.setState({squares: update(squares, {[source.index]: {$set: source}})});
     this.setState({squares: update(squares, {[destination.index]: {$set: destination}})});
-  }
+  }*/
 
   initBoard() {
     const squares = [];
     //const rows = [];
     //const cols = [];
 
-
     // fill board with squares
     for (let counter = 0, i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
 
-        let square = {
-        }
+        let square = {}
         squares[counter] = square;
         counter++;
       }
@@ -122,22 +144,37 @@ class Chess extends React.Component {
 
   autoMove(move) {
     console.log('Chess: automove:');
+
     const {pieces, squares} = this.state;
+    let pieceId = 'wq';
+    this.possibleMoves(59); // white queen //FIXME
 
     let movingPiece = pieces['wq'];
-    let piece = pieces['wk'];
+    let piece = pieces['wq'];
     console.log('piece = ' + piece);
     //console.log('starting next move');
 
     let source = squares[piece.location];
     source.piece = null;
 
-    let destination = squares[34];
-    destination.piece  = movingPiece;
+    let destination = squares[63];
+    destination.piece = movingPiece;
     destination.piece.location = destination.index;
 
-    this.setState({squares: update(squares, {[source.index]: {$set: source}})});
-    this.setState({squares: update(squares, {[destination.index]: {$set: destination}})});
+    this.setState({
+      squares: update(squares, {
+        [source.index]: {
+          $set: source
+        }
+      })
+    });
+    this.setState({
+      squares: update(squares, {
+        [destination.index]: {
+          $set: destination
+        }
+      })
+    });
     /*this.moveMap(2, 5, 4, 5); // white
     this.moveMap(7, 2, 5, 2); // black
     this.moveMap(4, 5, 5, 5); // white
@@ -149,15 +186,7 @@ class Chess extends React.Component {
 
   render() {
     let squares = this.state.squares.map((square, index) => {
-      return (
-        <Square
-          ref={index}
-          key={index}
-          chessId={square.chessId}
-          piece={square.piece}
-          moveMap = {this.moveMap}
-        />
-      );
+      return (<Square ref={index} key={index} chessId={square.chessId} piece={square.piece} moveMap={this.moveMap}/>);
     });
 
     // Process squares into rows of length 8
@@ -172,13 +201,14 @@ class Chess extends React.Component {
 
       <div className="wrapper">
 
-        <h3> Just testing..</h3>
+        <h3>
+          Just testing..</h3>
 
         <main>
           <div className="chess">
 
             {rows.map((row, index) => {
-                //console.log('row='+row+'index='+index);
+              //console.log('row='+row+'index='+index);
               return <div className="row" key={index}>{row}</div>
             })}
           </div>

@@ -7,6 +7,10 @@ class Queen extends React.Component {
     }
   }
 
+    getAcceptedMoves(pieceId, squares) {
+    console.log('white queen valid moves');
+  }
+
     render() {
       return (
         <div className="piece">
