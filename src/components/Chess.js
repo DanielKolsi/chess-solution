@@ -43,15 +43,12 @@ class Chess extends React.Component {
   //FIXME: get pieceId from index and index from pieceId
   possibleMoves(index) {
     const {pieces, squares} = this.state;
-    const target = squares[index];
-    let piece = pieces['wq']; //FIXME
-    let source = squares[piece.location];
-    let idx = 59;//source.index;
-    console.log('idx = ' + idx);
-    this.refs[source.index];
-    //let acceptedMoves = this.refs[target.index].refs.piece.getAcceptedMoves(target, squares);
-    let acceptedMoves = this.refs[59].refs.piece.getAcceptedMoves(source, squares);
+    //const target = squares[index];
+    let piece = pieces['wq']; // piece.location = 59
 
+    //this.refs[source.index];
+    //let acceptedMoves = this.refs[target.index].refs.piece.getAcceptedMoves(target, squares);
+    let acceptedMoves = this.refs[piece.location].refs.piece.getAcceptedMoves(piece, squares);
     console.log('possibles moves piece index = ' + index);
   }
 
