@@ -12,11 +12,9 @@ class PawnA extends React.Component {
     }
   }
 
-    getValidMoves() {
-      // el passe
-      let validMoves = 1; // row + 2  OR row + 1, col + 1 (eat)
-      return validMoves;
-    }
+  getAcceptedMoves(pieceId, squares) {
+    console.log('white PawnA valid moves');
+  }
 
 
     render() {

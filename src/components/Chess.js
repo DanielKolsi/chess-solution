@@ -46,6 +46,7 @@ class Chess extends React.Component {
     //const target = squares[index];
     let piece = pieces['wq']; // piece.location = 59
 
+
     //this.refs[source.index];
     //let acceptedMoves = this.refs[target.index].refs.piece.getAcceptedMoves(target, squares);
     let acceptedMoves = this.refs[piece.location].refs.piece.getAcceptedMoves(piece, squares);
@@ -126,7 +127,7 @@ class Chess extends React.Component {
     this.props.setup.forEach((item) => {
       //console.log('item='+item);
       let piece = {
-        location: item[0], // number
+        location: item[0], // number 0..63
         type: item[1], // actual piece, e.g. RookBA
         id: item[2] // piece id, e.g. bra
       }
