@@ -1,6 +1,6 @@
 export default {
   setup: [
-    [0, 'RookBA', 'bra'],
+    [0, 'RookBA', 'bra'], //id, white...
     [1, 'KnightBB', 'bka'],
     [2, 'BishopBC', 'bbc'],
     [3, 'QueenB', 'bq'],
