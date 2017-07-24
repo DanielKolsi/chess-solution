@@ -12,7 +12,6 @@ class PawnA extends React.Component {
     //row: 2,
       //let col: 1
     }
-    this.getAcceptedMoves = this.getAcceptedMoves.bind(this);
   }
 
   getAcceptedMoves(pieceId, squares) {
@@ -20,17 +19,10 @@ class PawnA extends React.Component {
 
     let acceptedMoves = [];
     acceptedMoves.push(squares[55].index);
-    this.setState({test: true}, this.getState(squares));
-    this.setState({value: 55}, this.getState(squares));
-
+    this.setState({test: true}, function() { console.log('test = ' + this.state.test); });
+    this.setState({value: 55}, function() { console.log('value = ' + this.state.value); });
     return acceptedMoves;
   }
-
-  getState(squares) {
-    console.log('white PawnA valid moves, value = ' + squares[55].index + this.state.test);
-    console.log('white PawnA valid moves, value = ' + this.state.value);
-  }
-
 
     render() {
       return (

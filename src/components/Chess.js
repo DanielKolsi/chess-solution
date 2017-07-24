@@ -10,6 +10,7 @@ class Chess extends React.Component {
     this.state = {
       pieces: {},
       squares: [],
+      ids: [], // raw ref number of the piece, won't change
       white: true,
       move: null,
       acceptedMoves: null
@@ -41,17 +42,22 @@ class Chess extends React.Component {
   }
 
   //FIXME: get pieceId from index and index from pieceId
-  possibleMoves(index) {
-    const {pieces, squares} = this.state;
+  possibleMoves(id) {
+    const {pieces, squares, ids} = this.state;
+
     //const target = squares[index];
-  //  let queen = pieces['wq']; // piece.location = 59
-    let piece = pieces['wpa']; // piece.location = 59
+    //  let queen = pieces['wq']; // piece.location = 59
+    let piece = pieces[id]; // piece.location = 59
+    console.log('piece='+piece);
 
     //this.refs[source.index];
     //let acceptedMoves = this.refs[target.index].refs.piece.getAcceptedMoves(target, squares);
     let acceptedMoves = this.refs[piece.location].refs.piece.getAcceptedMoves(piece, squares);
-    this.refs[piece.location].refs.piece.getState(squares);
+    //console.log('acceptedMoves = ' + acceptedMoves[0]);
+    //this.refs[piece.location].refs.piece.getState(squares);
     //console.log('queen location = ' + queen.location);
+
+    this.white = !this.white; // switch turn
   }
 
   move(src, dst) {
@@ -115,7 +121,7 @@ class Chess extends React.Component {
     for (let counter = 0, i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
 
-        let square = {index: counter} // each quare has an index ranging from 0 to 63
+        let square = {index: counter} // each square has an index ranging from 0 to 63
         squares[counter] = square;
         counter++;
       }
@@ -124,33 +130,39 @@ class Chess extends React.Component {
   }
 
   initPieces() {
-    const {squares, pieces} = this.state;
+    const {squares, pieces, ids} = this.state;
 
     this.props.setup.forEach((item) => {
-      //console.log('item='+item);
+      console.log('item='+item);
       let piece = {
         location: item[0], // number 0..63
         type: item[1], // actual piece, e.g. RookBA
-        id: item[2] // piece id, e.g. bra
+        id: item[2], // piece id, e.g. bra
+        n: item[3] // number
       }
 
       squares[item[0]].piece = piece;
-      pieces[piece.id] = piece;
+      console.log('piece.n='+piece.n);
+      pieces[piece.n] = piece;
+      //ids[item[3]] = item[3];
+      //console.log('id='+ids[item[3]]);
     });
+
 
     this.setState({pieces: pieces});
     this.setState({squares: squares});
+    this.setState({ids: ids});
   }
 
   autoMove(move) {
     console.log('Chess: automove:');
 
     const {pieces, squares} = this.state;
-    let pieceId = 'wq';
+    let pieceId = 59;
     this.possibleMoves(59); // white queen //FIXME
 
-    let movingPiece = pieces['wq'];
-    let piece = pieces['wq'];
+    let movingPiece = pieces[59];
+    let piece = pieces[59];
 
     //console.log('starting next move');
 
@@ -163,7 +175,6 @@ class Chess extends React.Component {
       delete pieces[destination.piece.id];
       this.setState({pieces: pieces});
     }
-
 
     destination.piece = movingPiece;
 
@@ -185,7 +196,7 @@ class Chess extends React.Component {
       })
     });
 
-    let pieceq = pieces['wq'];
+    let pieceq = pieces[59];
     console.log('wq new location='+pieceq.location);
 
     /*this.moveMap(2, 5, 4, 5); // white
