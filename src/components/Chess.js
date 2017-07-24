@@ -44,13 +44,14 @@ class Chess extends React.Component {
   possibleMoves(index) {
     const {pieces, squares} = this.state;
     //const target = squares[index];
-    let queen = pieces['wq']; // piece.location = 59
+  //  let queen = pieces['wq']; // piece.location = 59
     let piece = pieces['wpa']; // piece.location = 59
-    //let accep = piece.getAcceptedMoves(piece, squares);
+
     //this.refs[source.index];
     //let acceptedMoves = this.refs[target.index].refs.piece.getAcceptedMoves(target, squares);
     let acceptedMoves = this.refs[piece.location].refs.piece.getAcceptedMoves(piece, squares);
-    console.log('queen location = ' + queen.location);
+    this.refs[piece.location].refs.piece.getState(squares);
+    //console.log('queen location = ' + queen.location);
   }
 
   move(src, dst) {
@@ -146,7 +147,7 @@ class Chess extends React.Component {
 
     const {pieces, squares} = this.state;
     let pieceId = 'wq';
-    //this.possibleMoves(59); // white queen //FIXME
+    this.possibleMoves(59); // white queen //FIXME
 
     let movingPiece = pieces['wq'];
     let piece = pieces['wq'];
