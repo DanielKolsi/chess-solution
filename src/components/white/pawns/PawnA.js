@@ -20,8 +20,8 @@ class PawnA extends React.Component {
 
     let acceptedMoves = [];
     acceptedMoves.push(squares[55].index);
-    this.setState({test: true});
-    this.setState({value: 55});
+    this.setState({test: true}, this.getState(squares));
+    this.setState({value: 55}, this.getState(squares));
 
     return acceptedMoves;
   }
