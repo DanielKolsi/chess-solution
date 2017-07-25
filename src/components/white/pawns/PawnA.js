@@ -5,6 +5,7 @@ class PawnA extends Moves {
   constructor(props) {
     super(props);
     this.state = {
+      formerPosition: 48,
       value: 1,
       row: 0,
       col: 0

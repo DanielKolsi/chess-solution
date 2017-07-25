@@ -1,6 +1,6 @@
 export default {
   setup: [
-    [0, 'RookBA', 'bra', 0], //id, white...
+    [0, 'RookBA', 'bra', 0], //location, name, id, n (number-id)
     [1, 'KnightBB', 'bka', 1],
     [2, 'BishopBC', 'bbc', 2],
     [3, 'QueenB', 'bq', 3],
@@ -9,7 +9,7 @@ export default {
     [6, 'KnightBG', 'bkg', 6],
     [7, 'RookBH', 'brh', 7],
     [8, 'PawnBA','bpa', 8],
-    [9, 'PawnBB','bpb', 9],
+    [41, 'PawnBB','bpb', 9],
     [10, 'PawnBC','bpc', 10],
     [11, 'PawnBD','bpd', 11],
     [12, 'PawnBE','bpe', 12],
