@@ -10,11 +10,13 @@ class PawnC extends React.Component {
     }
   }
 
-    getValidMoves() {
-      // el passe
-      let validMoves = 1; // row + 2  OR row + 1, col + 1 (eat)
-      return validMoves;
-    }
+  getAcceptedMoves() {
+
+    console.log('White Pawn A');
+    let acceptedMoves = [];
+
+    return acceptedMoves;
+  }
 
 
     render() {

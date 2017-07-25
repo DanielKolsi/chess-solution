@@ -6,7 +6,13 @@ class KnightB extends React.Component {
     this.state = {
     }
   }
+  getAcceptedMoves() {
 
+    console.log('White Pawn A');
+    let acceptedMoves = [];
+
+    return acceptedMoves;
+  }
     render() {
       return (
         <div className="piece">

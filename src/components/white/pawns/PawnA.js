@@ -14,7 +14,15 @@ class PawnA extends React.Component {
     }
   }
 
-  getAcceptedMoves(pieceId, squares) {
+  getAcceptedMoves() {
+
+    console.log('White Pawn A');
+    let acceptedMoves = [];
+
+    return acceptedMoves;
+  }
+
+  getAcceptedMoves2(pieceId, squares) {
     const {value, test} = this.state;
 
     let acceptedMoves = [];

@@ -7,6 +7,14 @@ class BishopC extends React.Component {
     }
   }
 
+  getAcceptedMoves() {
+
+    console.log('White Pawn A');
+    let acceptedMoves = [];
+
+    return acceptedMoves;
+  }
+
     render() {
       return (
         <div className="piece">

@@ -6,8 +6,12 @@ class Queen extends React.Component {
     this.state = {}
   }
 
-  getAcceptedMoves(pieceId, squares) {
-    console.log('white queen valid moves');
+  getAcceptedMoves() {
+
+    console.log('White Pawn A');
+    let acceptedMoves = [];
+
+    return acceptedMoves;
   }
 
   render() {

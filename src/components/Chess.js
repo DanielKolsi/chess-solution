@@ -48,7 +48,7 @@ class Chess extends React.Component {
     //const target = squares[index];
     //  let queen = pieces['wq']; // piece.location = 59
     let piece = pieces[id]; // piece.location = 59
-    console.log('piece='+piece);
+    //console.log('piece='+piece);
 
     //this.refs[source.index];
     //let acceptedMoves = this.refs[target.index].refs.piece.getAcceptedMoves(target, squares);
@@ -61,7 +61,7 @@ class Chess extends React.Component {
   }
 
   move(src, dst) {
-    const {squares, pieces, move, acceptedMoves} = this.state; //FIXME
+    const {squares, pieces, move, white, acceptedMoves} = this.state; //FIXME
     const square = squares[src];
     const mover = square.piece;
     const target = squares[dst];
@@ -154,10 +154,24 @@ class Chess extends React.Component {
     this.setState({ids: ids});
   }
 
-  autoMove(move) {
-    console.log('Chess: automove:');
+  autoMove() {
+
 
     const {pieces, squares} = this.state;
+
+    if (this.state.white) {
+      console.log('xxx  Chess: automove:'+ this.state.white);
+
+        for (let i = 48; i < 64; i++) {
+            this.possibleMoves(i);
+        }
+    } else { //black moves
+      for (let i = 0; i < 16; i++) {
+          console.log('black piece i  = ' + i + pieces[i]);
+      }
+    }
+
+
     let pieceId = 59;
     this.possibleMoves(59); // white queen //FIXME
 
