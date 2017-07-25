@@ -21,6 +21,8 @@ class PawnA extends Moves {
 
     console.log('White Pawn A');
     let acceptedMoves = [];
+    acceptedMoves = this.movePawn(0, 1, 2, true);
+    console.log('move = ' + acceptedMoves[0]);
 
     return acceptedMoves;
   }
