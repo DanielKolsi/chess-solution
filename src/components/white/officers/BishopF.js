@@ -8,7 +8,7 @@ class BishopF extends React.Component {
   }
   getAcceptedMoves() {
 
-    console.log('White Pawn A');
+    console.log('White Bishop F');
     let acceptedMoves = [];
 
     return acceptedMoves;

@@ -8,7 +8,7 @@ class RookA extends React.Component {
   }
     getAcceptedMoves() {
 
-      console.log('White Pawn A');
+      console.log('White Rook A');
       let acceptedMoves = [];
 
       return acceptedMoves;

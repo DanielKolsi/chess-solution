@@ -12,7 +12,7 @@ class PawnC extends React.Component {
 
   getAcceptedMoves() {
 
-    console.log('White Pawn A');
+    console.log('White Pawn C');
     let acceptedMoves = [];
 
     return acceptedMoves;

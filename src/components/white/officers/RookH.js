@@ -8,12 +8,12 @@ class RookH extends React.Component {
   }
   getAcceptedMoves() {
 
-    console.log('White Pawn A');
+    console.log('White Rook H');
     let acceptedMoves = [];
 
     return acceptedMoves;
   }
-  
+
     render() {
       return (
         <div className="piece">
