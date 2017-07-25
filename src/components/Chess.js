@@ -43,21 +43,12 @@ class Chess extends React.Component {
 
   //FIXME: get pieceId from index and index from pieceId
   possibleMoves(id) {
-    const {pieces, squares, ids} = this.state;
+    const {pieces} = this.state;
 
-    //const target = squares[index];
-    //  let queen = pieces['wq']; // piece.location = 59
-    let piece = pieces[id]; // piece.location = 59
-    //console.log('piece='+piece);
-
-    //this.refs[source.index];
-    //let acceptedMoves = this.refs[target.index].refs.piece.getAcceptedMoves(target, squares);
-    let acceptedMoves = this.refs[piece.location].refs.piece.getAcceptedMoves(piece, squares);
-    //console.log('acceptedMoves = ' + acceptedMoves[0]);
-    //this.refs[piece.location].refs.piece.getState(squares);
-    //console.log('queen location = ' + queen.location);
-
-    this.white = !this.white; // switch turn
+    let piece = pieces[id];
+    let acceptedMoves = this.refs[piece.location].refs.piece.getAcceptedMoves();
+    this.setState({white: !this.white});
+    //this.white = !this.white; // switch turn
   }
 
   move(src, dst) {
@@ -96,21 +87,6 @@ class Chess extends React.Component {
 
   }
 
-  /*movePiece(pieceId, index) {
-    const {squares} = this.state;
-    const target = squares[3];
-    const movingPiece = target.piece;
-
-    let source = squares[target.piece.location];
-    source.piece = null;
-
-    let destination = squares[34];
-    destination.piece  = movingPiece;
-    destination.piece.location = destination.index;
-
-    this.setState({squares: update(squares, {[source.index]: {$set: source}})});
-    this.setState({squares: update(squares, {[destination.index]: {$set: destination}})});
-  }*/
 
   initBoard() {
     const squares = [];
@@ -156,14 +132,12 @@ class Chess extends React.Component {
 
   autoMove() {
 
-
     const {pieces, squares} = this.state;
 
     if (this.state.white) {
       console.log('xxx  Chess: automove:'+ this.state.white);
-
         for (let i = 48; i < 64; i++) {
-            this.possibleMoves(i);
+            this.possibleMoves(i); // possiblemoves, removalmoves, acceptedmoves
         }
     } else { //black moves
       for (let i = 0; i < 16; i++) {

@@ -8,7 +8,7 @@ class KnightB extends React.Component {
   }
   getAcceptedMoves() {
 
-    console.log('White Pawn A');
+    console.log('White Knight B');
     let acceptedMoves = [];
 
     return acceptedMoves;

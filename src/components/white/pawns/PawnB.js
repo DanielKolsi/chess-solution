@@ -13,7 +13,7 @@ class PawnB extends React.Component {
     getAcceptedMoves() {
       // el passe
       let validMoves = 1; // row + 2  OR row + 1, col + 1 (eat)
-      console.log('White Pawn B, 49');
+      console.log('White Pawn B');
       return validMoves;
     }
 

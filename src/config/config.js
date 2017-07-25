@@ -23,7 +23,7 @@ export default {
     [52, 'PawnWE','wpe', 52],
     [53, 'PawnWF','wpf', 53],
     [54, 'PawnWG','wpg', 54],
-    [55, 'PawnWG','wpg', 55],
+    [55, 'PawnWH','wph', 55],
     [56, 'RookWA','wra', 56],
     [57, 'KnightWB','wkb', 57],
     [58, 'BishopWC','wbc', 58],
