@@ -1,6 +1,7 @@
 import React from 'react';
+import Moves from '../../Moves';
 
-class PawnD extends React.Component {
+class PawnD extends Moves {
   constructor(props) {
     super(props);
     this.state = {
@@ -10,12 +11,9 @@ class PawnD extends React.Component {
     }
   }
 
-  getAcceptedMoves() {
-
+  getAcceptedMoves(piece, squares) {
     console.log('White Pawn D');
-    let acceptedMoves = [];
-
-    return acceptedMoves;
+    return this.movePawn(piece, squares);
   }
 
 

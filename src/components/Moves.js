@@ -3,9 +3,20 @@ import React from 'react';
 
 class Moves extends React.Component {
 
-  movePawn(start, rows, cols, white) {
+  movePawn(piece, squares) {
+
     let acceptedMoves = [];
-    acceptedMoves.push(23); //FIXME
+
+    if (piece.n > 47) { // white
+        console.log('PIECE='+piece.location+piece.type+piece.id+piece.n);
+        if (piece.location > 47) { // hasn't moved yet
+            acceptedMoves.push(piece.location - 16);
+        }
+          acceptedMoves.push(piece.location - 8);
+          // FIXME, add eating & en passe
+    } else {
+
+    }
     return acceptedMoves;
   }
 }

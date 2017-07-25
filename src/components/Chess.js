@@ -10,7 +10,7 @@ class Chess extends React.Component {
     this.state = {
       pieces: {},
       squares: [],
-      ids: [], // raw ref number of the piece, won't change
+//      ids: [], // raw ref number of the piece, won't change
       white: true,
       move: null,
       acceptedMoves: null
@@ -42,13 +42,17 @@ class Chess extends React.Component {
   }
 
   //FIXME: get pieceId from index and index from pieceId
-  possibleMoves(id) {
+  possibleMoves(piece, squares) {
     const {pieces} = this.state;
 
-    let piece = pieces[id];
-    let acceptedMoves = this.refs[piece.location].refs.piece.getAcceptedMoves();
-    this.setState({white: !this.white});
-    //this.white = !this.white; // switch turn
+    //let piece = pieces[id];
+    let location = piece.location;
+    if (location !== undefined) {
+      let acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares);
+      console.log('acceptedmoves size ='+acceptedMoves.length);
+    }
+
+    this.setState({white: !this.white}); // switch turn
   }
 
   move(src, dst) {
@@ -106,28 +110,25 @@ class Chess extends React.Component {
   }
 
   initPieces() {
-    const {squares, pieces, ids} = this.state;
+    const {squares, pieces} = this.state;
 
     this.props.setup.forEach((item) => {
-      console.log('item='+item);
+
       let piece = {
-        location: item[0], // number 0..63
+        location: item[0], // number 0..63, changes
         type: item[1], // actual piece, e.g. RookBA
         id: item[2], // piece id, e.g. bra
-        n: item[3] // number
+        n: item[3] // ORIGINAL number 0..63, won't change (unique identifier)
       }
 
       squares[item[0]].piece = piece;
-      console.log('piece.n='+piece.n);
       pieces[piece.n] = piece;
-      //ids[item[3]] = item[3];
-      //console.log('id='+ids[item[3]]);
-    });
 
+    });
 
     this.setState({pieces: pieces});
     this.setState({squares: squares});
-    this.setState({ids: ids});
+    //this.setState({ids: ids});
   }
 
   autoMove() {
@@ -137,7 +138,8 @@ class Chess extends React.Component {
     if (this.state.white) {
       console.log('xxx  Chess: automove:'+ this.state.white);
         for (let i = 48; i < 64; i++) {
-            this.possibleMoves(i); // possiblemoves, removalmoves, acceptedmoves
+          // FIXME: continue with empty squares e.g. "eaten" pieces
+            this.possibleMoves(pieces[i], squares); // possiblemoves, removalmoves, acceptedmoves
         }
     } else { //black moves
       for (let i = 0; i < 16; i++) {
