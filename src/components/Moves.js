@@ -6,7 +6,7 @@ class Moves extends React.Component {
   constructor(props) {
     super(props);
         this.state = {
-        enPasse: 0 // candidate for en passe (prev move two up)
+        enPasse: 0 // candidate for en passe, check the opponent's previous pawn move if en passe is allowed!
     }
   }
 
@@ -28,6 +28,10 @@ class Moves extends React.Component {
     const MIN_BLACK_PAWN = 8;
     const LEFT = pos - 1;
     const RIGHT = pos + 1;
+    // en passe previous moves
+    const EN_PASSE_WHITE_LEFT = pos - 17;
+    const EN_PASSE_WHITE_RIGHT = pos - 15;
+
 
     let acceptedMoves = [];
 
@@ -40,7 +44,7 @@ class Moves extends React.Component {
         if (squares[UP].piece == null) {
             acceptedMoves.push(UP);
           if (pos >= MIN_WHITE && squares[UP2].piece == null) { // hasn't moved yet
-              this.state.enPasse = piece.location;
+              this.setState({enPasse: piece.location});
               acceptedMoves.push(UP2);
           }
         }
@@ -53,12 +57,17 @@ class Moves extends React.Component {
             acceptedMoves.push(RIGHT_DOWN); // eat black piece
         }
 
-        // FIXME: add condition for en passe (correct black pawn two up previous move)
-        if (squares[LEFT].piece !== undefined && (squares[LEFT].piece.n >= MIN_BLACK_PAWN && squares[LEFT].piece.n <= MAX_BLACK)) {
-            acceptedMoves.push(LEFT_UP); // en passe black pawn
+        if (this.state.enPasse === EN_PASSE_WHITE_LEFT) {
+          // FIXME: add condition for en passe (correct black pawn two up previous move)
+          if (squares[LEFT].piece !== undefined && (squares[LEFT].piece.n >= MIN_BLACK_PAWN && squares[LEFT].piece.n <= MAX_BLACK)) {
+              acceptedMoves.push(LEFT_UP); // en passe black pawn
+          }
         }
-        if (squares[RIGHT].piece !== undefined && (squares[RIGHT].piece.n >= MIN_BLACK_PAWN && squares[RIGHT].piece.n <= MAX_BLACK)) {
-            acceptedMoves.push(RIGHT_UP); // en passe black pawn
+
+        if (this.state.enPasse === EN_PASSE_WHITE_RIGHT) {
+          if (squares[RIGHT].piece !== undefined && (squares[RIGHT].piece.n >= MIN_BLACK_PAWN && squares[RIGHT].piece.n <= MAX_BLACK)) {
+              acceptedMoves.push(RIGHT_UP); // en passe black pawn
+          }
         }
 
     } else {
