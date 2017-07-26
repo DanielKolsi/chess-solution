@@ -19,34 +19,34 @@ class Moves extends React.Component {
     let LEFT = pos - 1;
     let RIGHT = pos + 1;
 
-
     // move UP
     for (let i = UP; i < squares.length; i += UP) {
-      if (squares[UP].piece == null) {
-        acceptedMoves.push(UP);
+      if (squares[i].piece == null) {
+        acceptedMoves.push(i);
       }
     }
     // move DOWN
     for (let i = DOWN; i > 0; i -= DOWN) {
-      if (squares[DOWN].piece == null) {
-        acceptedMoves.push(DOWN);
+      if (squares[i].piece == null) {
+        acceptedMoves.push(i);
       }
     }
 
     // move RIGHT
-    /*for (let i = RIGHT; i > 7; i++) {
-      if (squares[DOWN].piece == null) {
-        acceptedMoves.push(RIGHT);
+    let movesRight = this.getColsToRight(pos);
+    for (let i = RIGHT; i <= (movesRight + pos); i++) {
+      if (squares[i].piece == null) {
+        acceptedMoves.push(i);
       }
     }
 
     // move LEFT
-    for (let i = LEFT; i > 7; i++) {
-      if (squares[DOWN].piece == null) {
-        acceptedMoves.push(RIGHT);
+    let movesLeft = this.getColsToLeft(pos);
+    for (let i = LEFT; i >= movesLeft; i--) {
+      if (squares[i].piece == null) {
+        acceptedMoves.push(i);
       }
-    }*/
-
+    }
   }
 
   // en passe -> former position (former from move)
@@ -103,6 +103,107 @@ class Moves extends React.Component {
     } else {}
     return acceptedMoves;
   }
+
+ // columns left for left direction based on current position
+  getColsToLeft(pos) {
+
+    const COLS_IN_ROW = 8;
+    if (pos < COLS_IN_ROW) {
+      return pos;
+    }
+    return pos % COLS_IN_ROW;
+  }
+
+// columns left for right direction based on current position
+  getColsToRight(pos) {
+    const COLS_IN_ROW = 8;
+    const MAX_COL_NUMBER = COLS_IN_ROW - 1; // 0...7
+    if (pos < COLS_IN_ROW) {
+      return (MAX_COL_NUMBER - pos);
+    }
+    return (MAX_COL_NUMBER - (pos % COLS_IN_ROW));
+  }
+
+  getDiagonalMovesUpRight(pos) {
+
+    const RIGHT = this.getColsToRight(pos);
+    const UP = 8 - Math.floor(pos / 8);
+
+    let numberOfMoves;
+    let acceptedMoves = [];
+
+    if (RIGHT <= UP) {
+      numberOfMoves = RIGHT;
+    } else {
+      numberOfMoves = UP;
+    }
+
+    const upRightReduction = 7;
+    for (let i = 1; i <= numberOfMoves; i++) {
+      acceptedMoves.push(pos - (i * upRightReduction));
+    }
+  }
+
+  getDiagonalMovesUpLeft(pos) {
+
+    const LEFT = this.getColsToLeft(pos);
+    const UP = 8 - Math.floor(pos / 8);
+
+    let numberOfMoves;
+    let acceptedMoves = [];
+
+    if (LEFT <= UP) {
+      numberOfMoves = LEFT;
+    } else {
+      numberOfMoves = UP;
+    }
+
+    const upLeftReduction = 9; //FIXME, to constants
+    for (let i = 1; i <= numberOfMoves; i++) {
+      acceptedMoves.push(pos - (i * upLeftReduction));
+    }
+  }
+
+  getDiagonalMovesDownRight(pos) {
+
+    const RIGHT = this.getColsToRight(pos);
+    const DOWN = Math.floor(pos / 8);
+
+    let numberOfMoves;
+    let acceptedMoves = [];
+
+    if (RIGHT <= DOWN) {
+      numberOfMoves = RIGHT;
+    } else {
+      numberOfMoves = DOWN;
+    }
+
+    const downRightAddition = 9; //FIXME, to constants
+    for (let i = 1; i <= numberOfMoves; i++) {
+      acceptedMoves.push(pos + (i * downRightAddition));
+    }
+  }
+
+  getDiagonalMovesDownLeft(pos) {
+
+    const LEFT = this.getColsToLeft(pos);
+    const DOWN = Math.floor(pos / 8);
+
+    let numberOfMoves;
+    let acceptedMoves = [];
+
+    if (LEFT <= DOWN) {
+      numberOfMoves = LEFT;
+    } else {
+      numberOfMoves = DOWN;
+    }
+
+    const downLeftAddition = 7; //FIXME, to constants
+    for (let i = 1; i <= numberOfMoves; i++) {
+      acceptedMoves.push(pos + (i * downLeftAddition));
+    }
+  }
+
 }
 
 export default Moves;
