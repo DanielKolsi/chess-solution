@@ -123,7 +123,6 @@ class Chess extends React.Component {
 
       squares[item[0]].piece = piece;
       pieces[piece.n] = piece;
-
     });
 
     this.setState({pieces: pieces});
