@@ -35,11 +35,3 @@ export default {
 
   ]
 };
-/*
-export default {
-  initialSetup: [
-    // starting square, piece type, owner, id
-    [0, 'Rook', 'black', 'br1'],
-  ]
-};
-*/
