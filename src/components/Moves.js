@@ -54,7 +54,9 @@ class Moves extends React.Component {
     let pos = piece.location;
     let acceptedMoves = [];
 
+    //let condition =
     // 2 right, 1 up
+    //  piece.white == true
     let rightUp = pos + 10;
     if (squares[rightUp].piece == null || squares[rightUp].piece.n <= CONSTANTS.maxBlack) {
         acceptedMoves.push(rightUp);
