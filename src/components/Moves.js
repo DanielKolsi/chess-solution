@@ -10,7 +10,7 @@ class Moves extends React.Component {
     }
   }
 
-  moveRook(piece, squares) {
+  getRookMoves(piece, squares) {
     let id = piece.n; // uniq piece id number, non-changing
     let pos = piece.location;
     let UP = pos + 8;
@@ -64,9 +64,10 @@ class Moves extends React.Component {
         break; // no more move possibilities after eating
       }
     }
+    return acceptedMoves;
   }
 
-  moveKnight(piece, squares) {
+  getKnightMoves(piece, squares) {
 
     let pos = piece.location;
     let acceptedMoves = [];
@@ -77,54 +78,78 @@ class Moves extends React.Component {
       condition = false;
     }
     let rightUp = pos + 10;
-    if (squares[rightUp].piece == null || squares[rightUp].piece.white === condition) {
-      acceptedMoves.push(rightUp);
-    }
 
+    if (squares[rightUp] !== undefined) { // check that the move stays on the board
+
+      if (squares[rightUp].piece == null || squares[rightUp].piece.white === condition) {
+        acceptedMoves.push(rightUp);
+      }
+    }
     // 2 right, 1 down
     let rightDown = pos + 10;
-    if (squares[rightDown].piece == null || squares[rightDown].piece.n <= CONSTANTS.maxBlack) {
-      acceptedMoves.push(rightDown);
+    if (squares[rightDown] !== undefined) {
+      if (squares[rightDown].piece == null || squares[rightDown].piece.n <= CONSTANTS.maxBlack) {
+        acceptedMoves.push(rightDown);
+      }
     }
 
     // 2 up, 1 right
     let upRight = pos + 17;
-    if (squares[upRight].piece == null || squares[upRight].piece.n <= CONSTANTS.maxBlack) {
-      acceptedMoves.push(upRight);
-    }
+    if (squares[upRight] !== undefined) {
 
+
+      if (squares[upRight].piece == null || squares[upRight].piece.n <= CONSTANTS.maxBlack) {
+        acceptedMoves.push(upRight);
+      }
+    }
     // 2 up, 1 left
     let upLeft = pos + 15;
-    if (squares[upLeft].piece == null || squares[upLeft].piece.n <= CONSTANTS.maxBlack) {
-      acceptedMoves.push(upLeft);
+    if (squares[upLeft] !== undefined) {
+      if (squares[upLeft].piece == null || squares[upLeft].piece.n <= CONSTANTS.maxBlack) {
+        acceptedMoves.push(upLeft);
+      }
     }
-
     // 2 left, 1 up
     let leftUp = pos + 15;
-    if (squares[leftUp].piece == null || squares[leftUp].piece.n <= CONSTANTS.maxBlack) {
-      acceptedMoves.push(leftUp);
+    if (squares[leftUp] !== undefined) {
+      if (squares[leftUp].piece == null || squares[leftUp].piece.n <= CONSTANTS.maxBlack) {
+        acceptedMoves.push(leftUp);
+      }
     }
 
     // 2 left, 1 down
     let leftDown = pos + 6;
-    if (squares[leftDown].piece == null || squares[leftDown].piece.n <= CONSTANTS.maxBlack) {
-      acceptedMoves.push(leftDown);
+    if (squares[leftDown] !== undefined) {
+      if (squares[leftDown].piece == null || squares[leftDown].piece.n <= CONSTANTS.maxBlack) {
+        acceptedMoves.push(leftDown);
+      }
     }
-
     // 2 down, 1 right
-    let downRight = pos + 17;
-    if (squares[downRight].piece == null || squares[downRight].piece.n <= CONSTANTS.maxBlack) {
-      acceptedMoves.push(downRight);
+    let downRight = pos - 15;
+    if (squares[downRight] !== undefined) {
+
+      if (squares[downRight].piece == null || squares[downRight].piece.n <= CONSTANTS.maxBlack) {
+        acceptedMoves.push(downRight);
+      }
     }
     // 2 down, 1 left
-    let downLeft = pos + 15;
-    if (squares[downLeft].piece == null || squares[downLeft].piece.n <= CONSTANTS.maxBlack) {
-      acceptedMoves.push(downLeft);
+    let downLeft = pos - 17;
+    if (squares[downLeft] !== undefined) {
+      if (squares[downLeft].piece == null || squares[downLeft].piece.n <= CONSTANTS.maxBlack) {
+        acceptedMoves.push(downLeft);
+      }
     }
+    return acceptedMoves;
+  }
+
+  getBishopMoves(piece, squares) {
+    let pos = piece.location;
+    let acceptedMoves = [];
+    return acceptedMoves;
   }
 
   // en passe -> former position (former from move)
-  movePawn(piece, squares) { //FIXME: -> moveWhitePawn
+  getPawnMoves(piece, squares) { //FIXME: -> moveWhitePawn
 
     let id = piece.n; // uniq piece id number, non-changing
     let pos = piece.location;
@@ -147,7 +172,6 @@ class Moves extends React.Component {
     // en passe -> former position
 
     if (id >= CONSTANTS.minWhite) { // white
-      console.log('PIECE=' + piece.location + piece.type + piece.id + piece.n);
 
       if (squares[FRONT].piece == null) {
         acceptedMoves.push(FRONT);

@@ -1,17 +1,16 @@
 import React from 'react';
+import Moves from '../../Moves';
 
-class KnightB extends React.Component {
+class KnightB extends Moves {
   constructor(props) {
     super(props);
     this.state = {
     }
   }
-  getAcceptedMoves() {
 
+  getAcceptedMoves(piece, squares) {
     console.log('White Knight B');
-    let acceptedMoves = [];
-
-    return acceptedMoves;
+    return this.getKnightMoves(piece, squares);
   }
     render() {
       return (

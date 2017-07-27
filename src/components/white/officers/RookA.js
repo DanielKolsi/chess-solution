@@ -1,17 +1,16 @@
 import React from 'react';
+import Moves from '../../Moves';
 
-class RookA extends React.Component {
+class RookA extends Moves {
   constructor(props) {
     super(props);
     this.state = {
     }
   }
-    getAcceptedMoves() {
-
+    getAcceptedMoves(piece, squares) {
       console.log('White Rook A');
-      let acceptedMoves = [];
+      return this.getRookMoves(piece, squares);
 
-      return acceptedMoves;
     }
 
     render() {

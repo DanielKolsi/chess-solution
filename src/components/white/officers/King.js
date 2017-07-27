@@ -23,7 +23,6 @@ class King extends React.Component {
     let RIGHT_UP = pos + 7;
 
       // check condition, remove threads from previous black move (possibleBlackMoves, candidateMove, removelMoves)
-      console.log('sq up = ' + squares[UP]);
 
       if (squares[UP] !== undefined) { // needs to stay on the board limits
         if (squares[UP].piece == null || squares[UP].piece.white === false) {

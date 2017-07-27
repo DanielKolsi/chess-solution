@@ -49,7 +49,7 @@ class Chess extends React.Component {
     let location = piece.location;
     if (location !== undefined) {
       let acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares);
-      console.log('acceptedmoves size ='+acceptedMoves.length);
+      console.log('acceptedmoves size = '+ acceptedMoves.length + '\n\n');
     }
 
     this.setState({white: !this.white}); // switch turn

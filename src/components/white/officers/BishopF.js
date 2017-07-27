@@ -1,6 +1,7 @@
 import React from 'react';
+import Moves from '../../Moves';
 
-class BishopF extends React.Component {
+class BishopF extends Moves {
   constructor(props) {
     super(props);
     this.state = {

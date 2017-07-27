@@ -14,7 +14,7 @@ class PawnC extends Moves {
 
   getAcceptedMoves(piece, squares) {
     console.log('White Pawn C');
-    return this.movePawn(piece, squares);
+    return this.getPawnMoves(piece, squares);
   }
 
 
