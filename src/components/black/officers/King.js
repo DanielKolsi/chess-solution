@@ -23,7 +23,7 @@ class King extends React.Component {
     let RIGHT_UP = pos + 7;
 
       // check condition, remove threads from previous black move (possibleBlackMoves, candidateMove, removelMoves)
-      if (squares[UP].piece == null || squares[UP].piece.n >= CONSTANTS.minWhite) {
+      if (squares[UP].piece != undefined && (squares[UP].piece == null || squares[UP].piece.n >= CONSTANTS.minWhite)) {
           acceptedMoves.push(UP);
       }
       if (squares[DOWN].piece == null || squares[DOWN].piece.n >= CONSTANTS.minWhite) {

@@ -118,7 +118,8 @@ class Chess extends React.Component {
         location: item[0], // number 0..63, changes
         type: item[1], // actual piece, e.g. RookBA
         id: item[2], // piece id, e.g. bra
-        n: item[3] // ORIGINAL number 0..63, won't change (unique identifier)
+        n: item[3], // ORIGINAL number 0..63, won't change (unique identifier)
+        white: item[4] // true if white
       }
 
       squares[item[0]].piece = piece;
@@ -142,6 +143,7 @@ class Chess extends React.Component {
         }
     } else { //black moves
       for (let i = 0; i < 16; i++) {
+          //this.possibleMoves(pieces[i], squares);
           console.log('black piece i  = ' + i + pieces[i]);
       }
     }
