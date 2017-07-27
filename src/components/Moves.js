@@ -49,6 +49,59 @@ class Moves extends React.Component {
     }
   }
 
+  moveKnightWhite(piece, squares) {
+
+    let pos = piece.location;
+    let acceptedMoves = [];
+
+    // 2 right, 1 up
+    let rightUp = pos + 10;
+    if (squares[rightUp].piece == null || squares[rightUp].piece.n <= CONSTANTS.maxBlack) {
+        acceptedMoves.push(rightUp);
+    }
+
+    // 2 right, 1 down
+    let rightDown = pos + 10;
+    if (squares[rightDown].piece == null || squares[rightDown].piece.n <= CONSTANTS.maxBlack) {
+        acceptedMoves.push(rightDown);
+    }
+
+    // 2 up, 1 right
+    let upRight = pos + 17;
+    if (squares[upRight].piece == null || squares[upRight].piece.n <= CONSTANTS.maxBlack) {
+        acceptedMoves.push(upRight);
+    }
+
+    // 2 up, 1 left
+    let upLeft = pos + 15;
+    if (squares[upLeft].piece == null || squares[upLeft].piece.n <= CONSTANTS.maxBlack) {
+        acceptedMoves.push(upLeft);
+    }
+
+    // 2 left, 1 up
+    let leftUp = pos + 15;
+    if (squares[leftUp].piece == null || squares[leftUp].piece.n <= CONSTANTS.maxBlack) {
+        acceptedMoves.push(leftUp);
+    }
+
+    // 2 left, 1 down
+    let leftDown = pos + 6;
+    if (squares[leftDown].piece == null || squares[leftDown].piece.n <= CONSTANTS.maxBlack) {
+        acceptedMoves.push(leftDown);
+    }
+
+    // 2 down, 1 right
+    let downRight = pos + 17;
+    if (squares[downRight].piece == null || squares[downRight].piece.n <= CONSTANTS.maxBlack) {
+        acceptedMoves.push(downRight);
+    }
+    // 2 down, 1 left
+    let downLeft = pos + 15;
+    if (squares[downLeft].piece == null || squares[downLeft].piece.n <= CONSTANTS.maxBlack) {
+        acceptedMoves.push(downLeft);
+    }
+  }
+
   // en passe -> former position (former from move)
   movePawn(piece, squares) { //FIXME: -> moveWhitePawn
 
