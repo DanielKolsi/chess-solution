@@ -23,30 +23,57 @@ class King extends React.Component {
     let RIGHT_UP = pos + 7;
 
       // check condition, remove threads from previous black move (possibleBlackMoves, candidateMove, removelMoves)
-      if (squares[UP].piece == null || squares[UP].piece.n <= CONSTANTS.maxBlack) {
-          acceptedMoves.push(UP);
+      console.log('sq up = ' + squares[UP]);
+
+      if (squares[UP] !== undefined) { // needs to stay on the board limits
+        if (squares[UP].piece == null || squares[UP].piece.white === false) {
+            acceptedMoves.push(UP);
+        }
       }
-      if (squares[DOWN].piece == null || squares[DOWN].piece.n <= CONSTANTS.maxBlack) {
-          acceptedMoves.push(DOWN);
+
+      if (squares[DOWN] !== undefined) { // needs to stay on the board limits
+        if (squares[DOWN].piece == null || squares[DOWN].piece.white === false) {
+            acceptedMoves.push(DOWN);
+        }
       }
-      if (squares[LEFT].piece == null || squares[LEFT].piece.n <= CONSTANTS.maxBlack) {
-          acceptedMoves.push(LEFT);
+
+      if (squares[LEFT] !== undefined) {
+        if (squares[LEFT].piece == null || squares[LEFT].piece.white === false) {
+            acceptedMoves.push(LEFT);
+        }
       }
-      if (squares[RIGHT].piece == null || squares[RIGHT].piece.n <= CONSTANTS.maxBlack) {
-          acceptedMoves.push(RIGHT);
+
+      if (squares[RIGHT] !== undefined) {
+        if (squares[RIGHT].piece == null || squares[RIGHT].piece.white === false) {
+            acceptedMoves.push(RIGHT);
+        }
       }
-      if (squares[RIGHT_UP].piece == null || squares[RIGHT_UP].piece.n <= CONSTANTS.maxBlack) {
-        acceptedMoves.push(RIGHT_UP);
+
+      if (squares[RIGHT_UP] !== undefined) {
+        if (squares[RIGHT_UP].piece == null || squares[RIGHT_UP].piece.white === false) {
+          acceptedMoves.push(RIGHT_UP);
+        }
       }
-      if (squares[RIGHT_DOWN].piece == null || squares[RIGHT_DOWN].piece.n <= CONSTANTS.maxBlack) {
-          acceptedMoves.push(RIGHT_DOWN);
+
+      if (squares[RIGHT_DOWN] !== undefined) {
+        if (squares[RIGHT_DOWN].piece == null || squares[RIGHT_DOWN].piece.white === false) {
+            acceptedMoves.push(RIGHT_DOWN);
+        }
       }
-      if (squares[LEFT_UP].piece == null || squares[LEFT_UP].piece.n <= CONSTANTS.maxBlack) {
-          acceptedMoves.push(LEFT_UP);
+
+      if (squares[LEFT_UP] !== undefined) {
+        if (squares[LEFT_UP].piece == null || squares[LEFT_UP].piece.white === false) {
+            acceptedMoves.push(LEFT_UP);
+        }
       }
-      if (squares[LEFT_DOWN].piece == null || squares[LEFT_DOWN].piece.n <= CONSTANTS.maxBlack) {
-          acceptedMoves.push(LEFT_DOWN);
-      }
+
+      if (squares[LEFT_DOWN] !== undefined) {
+        if (squares[LEFT_DOWN].piece == null || squares[LEFT_DOWN].piece.white === false) {
+            acceptedMoves.push(LEFT_DOWN);
+        }
+     }
+
+     return acceptedMoves;
   }
 
     render() {
