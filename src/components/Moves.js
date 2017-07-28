@@ -26,7 +26,7 @@ class Moves extends React.Component {
 
     // move UP
     for (let i = UP; i < squares.length; i += UP) {
-      if (squares[i].piece == null) {
+      if (squares[i].piece === null) {
         acceptedMoves.push(i);
       } else if (squares[i].white === eatWhite) {
         acceptedMoves.push(i);
@@ -35,7 +35,7 @@ class Moves extends React.Component {
     }
     // move DOWN
     for (let i = DOWN; i > 0; i -= DOWN) {
-      if (squares[i].piece == null) {
+      if (squares[i].piece === null) {
         acceptedMoves.push(i);
       } else if (squares[i].white === eatWhite) {
         acceptedMoves.push(i);
@@ -46,14 +46,14 @@ class Moves extends React.Component {
     // move RIGHT
     let movesRight = this.getColsToRight(pos);
     for (let i = RIGHT; i <= (movesRight + pos); i++) {
-      if (squares[i].piece == null) {
+      if (squares[i].piece === null) {
         acceptedMoves.push(i);
       } else if (squares[i].white === eatWhite) {
         acceptedMoves.push(i);
         break; // no more move possibilities after eating
       }
     }
-
+/*
     // move LEFT
     let movesLeft = this.getColsToLeft(pos);
     for (let i = LEFT; i >= movesLeft; i--) {
@@ -63,7 +63,7 @@ class Moves extends React.Component {
         acceptedMoves.push(i);
         break; // no more move possibilities after eating
       }
-    }
+    }*/
     return acceptedMoves;
   }
 

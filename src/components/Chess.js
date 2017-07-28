@@ -148,7 +148,7 @@ class Chess extends React.Component {
       }
     }
 
-
+/*
     let pieceId = 59;
     this.possibleMoves(59); // white queen //FIXME
 
@@ -188,7 +188,7 @@ class Chess extends React.Component {
     });
 
     let pieceq = pieces[59];
-    console.log('wq new location='+pieceq.location);
+    console.log('wq new location='+pieceq.location);*/
 
     /*this.moveMap(2, 5, 4, 5); // white
     this.moveMap(7, 2, 5, 2); // black
