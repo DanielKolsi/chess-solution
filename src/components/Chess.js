@@ -94,14 +94,16 @@ class Chess extends React.Component {
 
   initBoard() {
     const squares = [];
-    //const rows = [];
-    //const cols = [];
 
     // fill board with squares
     for (let counter = 0, i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
 
-        let square = {index: counter} // each square has an index ranging from 0 to 63
+        let square = {
+          index: counter,
+          row: i, // rows: 0...7
+          col: j // col: 0...7
+        } // each square has an index ranging from 0 to 63
         squares[counter] = square;
         counter++;
       }

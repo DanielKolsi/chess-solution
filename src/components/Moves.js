@@ -92,39 +92,36 @@ class Moves extends React.Component {
     }
     let rightUp = pos + 10;
 
-    if (squares[rightUp] !== undefined) { // check that the move stays on the board
-
+    if (squares[pos].row <= 6 && squares[pos].col <= 5) { // check that the move stays on the board
       if (squares[rightUp].piece == null || squares[rightUp].piece.white === condition) {
         acceptedMoves.push(rightUp);
       }
     }
     // 2 right, 1 down
     let rightDown = pos + 10;
-    if (squares[rightDown] !== undefined) {
-      if (squares[rightDown].piece == null || squares[rightDown].piece.n <= CONSTANTS.maxBlack) {
+    if (squares[pos].row >= 1 && squares[pos].col <= 5) { // check that the move stays on the board
+      if (squares[rightDown].piece == null || squares[rightUp].piece.white === condition) {
         acceptedMoves.push(rightDown);
       }
     }
 
     // 2 up, 1 right
     let upRight = pos + 17;
-    if (squares[upRight] !== undefined) {
-
-
+    if (squares[pos].row <= 5 && squares[pos].col <= 6) {
       if (squares[upRight].piece == null || squares[upRight].piece.n <= CONSTANTS.maxBlack) {
         acceptedMoves.push(upRight);
       }
     }
     // 2 up, 1 left
     let upLeft = pos + 15;
-    if (squares[upLeft] !== undefined) {
+    if (squares[pos].row <= 5 && squares[pos].col >= 1) {
       if (squares[upLeft].piece == null || squares[upLeft].piece.n <= CONSTANTS.maxBlack) {
         acceptedMoves.push(upLeft);
       }
     }
     // 2 left, 1 up
     let leftUp = pos + 15;
-    if (squares[leftUp] !== undefined) {
+    if (squares[pos].row >= 1 && squares[pos].col >= 2) {
       if (squares[leftUp].piece == null || squares[leftUp].piece.n <= CONSTANTS.maxBlack) {
         acceptedMoves.push(leftUp);
       }
@@ -132,22 +129,21 @@ class Moves extends React.Component {
 
     // 2 left, 1 down
     let leftDown = pos + 6;
-    if (squares[leftDown] !== undefined) {
+    if (squares[pos].row >= 1 && squares[pos].col >= 2) {
       if (squares[leftDown].piece == null || squares[leftDown].piece.n <= CONSTANTS.maxBlack) {
         acceptedMoves.push(leftDown);
       }
     }
     // 2 down, 1 right
     let downRight = pos - 15;
-    if (squares[downRight] !== undefined) {
-
+    if (squares[pos].row <= 5 && squares[pos].col <= 6) {
       if (squares[downRight].piece == null || squares[downRight].piece.n <= CONSTANTS.maxBlack) {
         acceptedMoves.push(downRight);
       }
     }
     // 2 down, 1 left
     let downLeft = pos - 17;
-    if (squares[downLeft] !== undefined) {
+    if (squares[pos].row <= 5 && squares[pos].col <= 1) {
       if (squares[downLeft].piece == null || squares[downLeft].piece.n <= CONSTANTS.maxBlack) {
         acceptedMoves.push(downLeft);
       }
