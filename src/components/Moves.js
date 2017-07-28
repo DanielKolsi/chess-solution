@@ -53,17 +53,30 @@ class Moves extends React.Component {
         break; // no more move possibilities after eating
       }
     }
-/*
+
     // move LEFT
     let movesLeft = this.getColsToLeft(pos);
-    for (let i = LEFT; i >= movesLeft; i--) {
+
+    /*let i = LEFT;
+    while (squares[i] != undefined) { //stay at the board
       if (squares[i].piece == null) {
         acceptedMoves.push(i);
       } else if (squares[i].white === eatWhite) {
         acceptedMoves.push(i);
         break; // no more move possibilities after eating
       }
+        i--;
     }*/
+
+    for (let i = LEFT; i >= movesLeft + pos; i--) {
+      console.log('movesLeft, i= ' + i);
+      if (squares[i].piece == null) {
+        acceptedMoves.push(i);
+      } else if (squares[i].white === eatWhite) {
+        acceptedMoves.push(i);
+        break; // no more move possibilities after eating
+      }
+    }
     return acceptedMoves;
   }
 
