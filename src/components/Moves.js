@@ -10,162 +10,33 @@ class Moves extends React.Component {
     }
   }
 
-  getRookMoves(piece, squares) {
-    let id = piece.n; // uniq piece id number, non-changing
-    let pos = piece.location;
-    let UP = pos + 8;
-    let DOWN = pos - 8;
-    let acceptedMoves = [];
-    let LEFT = pos - 1;
-    let RIGHT = pos + 1;
+  // columns left for left direction based on current position
+  getColsToLeft(pos) {
 
-    let eatWhite = true;
-    if (piece.white === true) {
-      eatWhite = false;
+    const COLS_IN_ROW = 8;
+    if (pos < COLS_IN_ROW) {
+      return pos;
     }
-
-    // move UP
-    for (let i = UP; i < squares.length; i += UP) {
-      if (squares[i].piece === null) {
-        acceptedMoves.push(i);
-      } else if (squares[i].white === eatWhite) {
-        acceptedMoves.push(i);
-        break; // no more move possibilities after eating
-      }
-    }
-    // move DOWN
-    for (let i = DOWN; i > 0; i -= DOWN) {
-      if (squares[i].piece === null) {
-        acceptedMoves.push(i);
-      } else if (squares[i].white === eatWhite) {
-        acceptedMoves.push(i);
-        break; // no more move possibilities after eating
-      }
-    }
-
-    // move RIGHT
-    let movesRight = this.getColsToRight(pos);
-    for (let i = RIGHT; i <= (movesRight + pos); i++) {
-      if (squares[i].piece === null) {
-        acceptedMoves.push(i);
-      } else if (squares[i].white === eatWhite) {
-        acceptedMoves.push(i);
-        break; // no more move possibilities after eating
-      }
-    }
-
-    // move LEFT
-    let movesLeft = this.getColsToLeft(pos);
-
-    /*let i = LEFT;
-    while (squares[i] != null) { //stay at the board
-      if (squares[i].piece == null) {
-        acceptedMoves.push(i);
-      } else if (squares[i].white === eatWhite) {
-        acceptedMoves.push(i);
-        break; // no more move possibilities after eating
-      }
-        i--;
-    }*/
-
-    for (let i = LEFT; i >= movesLeft + pos; i--) {
-      console.log('movesLeft, i= ' + i);
-      if (squares[i].piece == null) {
-        acceptedMoves.push(i);
-      } else if (squares[i].white === eatWhite) {
-        acceptedMoves.push(i);
-        break; // no more move possibilities after eating
-      }
-    }
-    return acceptedMoves;
+    return pos % COLS_IN_ROW;
   }
 
-  getKnightMoves(piece, squares) {
-
-    let pos = piece.location;
-    let acceptedMoves = [];
-
-    // 2 right, 1 up
-    let condition = true;
-    if (piece.white === true) {
-      condition = false;
+  // columns left for right direction based on current position
+  getColsToRight(pos) {
+    const COLS_IN_ROW = 8;
+    const MAX_COL_NUMBER = COLS_IN_ROW - 1; // 0...7
+    if (pos < COLS_IN_ROW) {
+      return (MAX_COL_NUMBER - pos);
     }
-    let rightUp = pos + 10;
-
-    if (squares[pos].row <= 6 && squares[pos].col <= 5) { // check that the move stays on the board
-      if (squares[rightUp].piece == null || squares[rightUp].piece.white === condition) {
-        acceptedMoves.push(rightUp);
-      }
-    }
-    // 2 right, 1 down
-    let rightDown = pos - 6;
-    console.log('position = ' + pos);
-    if (squares[pos].row >= 1 && squares[pos].col <= 5) { // check that the move stays on the board
-      if (squares[rightDown].piece == null || squares[rightDown].piece.white === condition) {
-        acceptedMoves.push(rightDown);
-      }
-    }
-
-    // 2 up, 1 right
-    let upRight = pos + 17;
-    if (squares[pos].row <= 5 && squares[pos].col <= 6) {
-      if (squares[upRight].piece == null || squares[upRight].piece.n <= CONSTANTS.maxBlack) {
-        acceptedMoves.push(upRight);
-      }
-    }
-    // 2 up, 1 left
-    let upLeft = pos + 15;
-    if (squares[pos].row <= 5 && squares[pos].col >= 1) {
-      if (squares[upLeft].piece == null || squares[upLeft].piece.n <= CONSTANTS.maxBlack) {
-        acceptedMoves.push(upLeft);
-      }
-    }
-    // 2 left, 1 up
-    let leftUp = pos + 6;
-    console.log('row='+squares[pos].row + 'pos='+pos);
-    if (squares[pos].row <= 6 && squares[pos].col >= 2) {
-      if (squares[leftUp].piece == null || squares[leftUp].piece.n <= CONSTANTS.maxBlack) {
-        acceptedMoves.push(leftUp);
-      }
-    }
-
-    // 2 left, 1 down
-    let leftDown = pos - 10;
-    if (squares[pos].row >= 1 && squares[pos].col >= 2) {
-      if (squares[leftDown].piece == null || squares[leftDown].piece.n <= CONSTANTS.maxBlack) {
-        acceptedMoves.push(leftDown);
-      }
-    }
-    // 2 down, 1 right
-    let downRight = pos - 15;
-    console.log('piece null = ' + squares[downRight].piece);
-    if (squares[pos].row >= 2 && squares[pos].col <= 6) {
-      if (squares[downRight].piece == null || squares[downRight].piece.n <= CONSTANTS.maxBlack) {
-        acceptedMoves.push(downRight);
-      }
-    }
-    // 2 down, 1 left
-    let downLeft = pos - 17;
-    if (squares[pos].row >= 2 && squares[pos].col >= 1) {
-      if (squares[downLeft].piece == null || squares[downLeft].piece.n <= CONSTANTS.maxBlack) {
-        acceptedMoves.push(downLeft);
-      }
-    }
-    return acceptedMoves;
+    return (MAX_COL_NUMBER - (pos % COLS_IN_ROW));
   }
 
-  getBishopMoves(piece, squares) {
-    let pos = piece.location;
-    let acceptedMoves = [];
-    return acceptedMoves;
-  }
 
   // en passe -> former position (former from move)
   getPawnMoves(piece, squares) { //FIXME: -> moveWhitePawn
 
     let id = piece.n; // uniq piece id number, non-changing
     let pos = piece.location;
-
+    //FIXME: add constants + black / white handling
     let FRONT = pos - 8;
     let FRONT2 = pos - 16;
     let LEFT_DOWN = pos - 9; // white eat
@@ -215,31 +86,94 @@ class Moves extends React.Component {
     return acceptedMoves;
   }
 
-  // columns left for left direction based on current position
-  getColsToLeft(pos) {
 
-    const COLS_IN_ROW = 8;
-    if (pos < COLS_IN_ROW) {
-      return pos;
+
+  getKnightMoves(piece, squares) {
+
+    let pos = piece.location;
+    let acceptedMoves = [];
+
+    // 2 right, 1 up
+    let condition = true;
+    if (piece.white === true) {
+      condition = false;
     }
-    return pos % COLS_IN_ROW;
+    let rightUp = pos + 10;
+
+    if (squares[pos].row <= 6 && squares[pos].col <= 5) { // check that the move stays on the board
+      if (squares[rightUp].piece == null || squares[rightUp].piece.white === condition) {
+        acceptedMoves.push(rightUp);
+      }
+    }
+    // 2 right, 1 down
+    let rightDown = pos - 6;
+    
+    if (squares[pos].row >= 1 && squares[pos].col <= 5) { // check that the move stays on the board
+      if (squares[rightDown].piece == null || squares[rightDown].piece.white === condition) {
+        acceptedMoves.push(rightDown);
+      }
+    }
+
+    // 2 up, 1 right
+    let upRight = pos + 17;
+    if (squares[pos].row <= 5 && squares[pos].col <= 6) {
+      if (squares[upRight].piece == null || squares[upRight].piece.white === condition) {
+        acceptedMoves.push(upRight);
+      }
+    }
+    // 2 up, 1 left
+    let upLeft = pos + 15;
+    if (squares[pos].row <= 5 && squares[pos].col >= 1) {
+      if (squares[upLeft].piece == null || squares[upLeft].piece.white === condition) {
+        acceptedMoves.push(upLeft);
+      }
+    }
+    // 2 left, 1 up
+    let leftUp = pos + 6;
+
+    if (squares[pos].row <= 6 && squares[pos].col >= 2) {
+      if (squares[leftUp].piece == null || squares[leftUp].piece.white === condition) {
+        acceptedMoves.push(leftUp);
+      }
+    }
+
+    // 2 left, 1 down
+    let leftDown = pos - 10;
+    if (squares[pos].row >= 1 && squares[pos].col >= 2) {
+      if (squares[leftDown].piece == null || squares[leftDown].piece.white === condition) {
+        acceptedMoves.push(leftDown);
+      }
+    }
+    // 2 down, 1 right
+    let downRight = pos - 15;
+    if (squares[pos].row >= 2 && squares[pos].col <= 6) {
+      if (squares[downRight].piece == null || squares[downRight].piece.white === condition) {
+        acceptedMoves.push(downRight);
+      }
+    }
+    // 2 down, 1 left
+    let downLeft = pos - 17;
+    if (squares[pos].row >= 2 && squares[pos].col >= 1) {
+      if (squares[downLeft].piece == null || squares[downLeft].piece.white === condition) {
+        acceptedMoves.push(downLeft);
+      }
+    }
+    return acceptedMoves;
   }
 
-  // columns left for right direction based on current position
-  getColsToRight(pos) {
-    const COLS_IN_ROW = 8;
-    const MAX_COL_NUMBER = COLS_IN_ROW - 1; // 0...7
-    if (pos < COLS_IN_ROW) {
-      return (MAX_COL_NUMBER - pos);
-    }
-    return (MAX_COL_NUMBER - (pos % COLS_IN_ROW));
+  getBishopMoves(piece, squares) {
+    let pos = piece.location;
+    let acceptedMoves = [];
+    return acceptedMoves;
   }
 
-  getDiagonalMovesUpRight(pos, squares) {
 
-    const RIGHT = this.getColsToRight(pos);
-    const UP = 8 - Math.floor(pos / 8);
 
+  getDiagonalMovesUpRight(piece, squares) {
+
+    let RIGHT = 7 - piece.col;
+    let UP = 7 - piece.row;
+    let pos = piece.location;
     let numberOfMoves;
     let acceptedMoves = [];
 
@@ -256,11 +190,14 @@ class Moves extends React.Component {
         acceptedMoves.push(pos - (i * upRightReduction));
       }
     }
+    return acceptedMoves;
   }
 
-  getDiagonalMovesUpLeft(pos, squares) {
+  getDiagonalMovesUpLeft(piece, squares) {
 
-    const LEFT = this.getColsToLeft(pos);
+
+    let LEFT = piece.col;
+    let pos = piece.location;
     const UP = 8 - Math.floor(pos / 8);
 
     let numberOfMoves;
@@ -279,12 +216,14 @@ class Moves extends React.Component {
         acceptedMoves.push(dst);
       }
     }
+    return acceptedMoves;
   }
 
-  getDiagonalMovesDownRight(pos, squares) {
+  getDiagonalMovesDownRight(piece, squares) {
 
-    const RIGHT = this.getColsToRight(pos);
-    const DOWN = Math.floor(pos / 8);
+    let pos = piece.location;
+    let RIGHT = 7 - piece.col;
+    let DOWN = piece.row;
 
     let numberOfMoves;
     let acceptedMoves = [];
@@ -302,12 +241,16 @@ class Moves extends React.Component {
         acceptedMoves.push(dst);
       }
     }
+    return acceptedMoves;
   }
 
-  getDiagonalMovesDownLeft(pos, squares) {
 
-    const LEFT = this.getColsToLeft(pos);
-    const DOWN = Math.floor(pos / 8);
+  getDiagonalMovesDownLeft(piece, squares) {
+
+    let pos = piece.location;
+
+    let LEFT = piece.col;
+    let DOWN = 7 - piece.row;
 
     let numberOfMoves;
     let acceptedMoves = [];
@@ -326,6 +269,66 @@ class Moves extends React.Component {
       }
     }
   }
+
+  getRookMoves(piece, squares) {
+    let id = piece.n; // uniq piece id number, non-changing
+    let pos = piece.location;
+    let UP = pos + 8;
+    let DOWN = pos - 8;
+    let acceptedMoves = [];
+    let LEFT = pos - 1;
+    let RIGHT = pos + 1;
+
+    let eatWhite = true;
+    if (piece.white === true) {
+      eatWhite = false;
+    }
+
+    // move UP
+    for (let i = UP; i < squares.length; i += UP) {
+      if (squares[i].piece === null) {
+        acceptedMoves.push(i);
+      } else if (squares[i].white === eatWhite) {
+        acceptedMoves.push(i);
+        break; // no more move possibilities after eating
+      }
+    }
+    // move DOWN
+    for (let i = DOWN; i > 0; i -= DOWN) {
+      if (squares[i].piece === null) {
+        acceptedMoves.push(i);
+      } else if (squares[i].white === eatWhite) {
+        acceptedMoves.push(i);
+        break; // no more move possibilities after eating
+      }
+    }
+
+    // move RIGHT
+    let movesRight = this.getColsToRight(pos);
+    for (let i = RIGHT; i <= (movesRight + pos); i++) {
+      if (squares[i].piece === null) {
+        acceptedMoves.push(i);
+      } else if (squares[i].white === eatWhite) {
+        acceptedMoves.push(i);
+        break; // no more move possibilities after eating
+      }
+    }
+
+    // move LEFT
+    let movesLeft = this.getColsToLeft(pos);
+
+    for (let i = LEFT; i >= movesLeft + pos; i--) {
+
+      if (squares[i].piece == null) {
+        acceptedMoves.push(i);
+      } else if (squares[i].white === eatWhite) {
+        acceptedMoves.push(i);
+        break; // no more move possibilities after eating
+      }
+    }
+    return acceptedMoves;
+  }
+
 
 }
 
