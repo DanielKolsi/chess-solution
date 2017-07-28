@@ -58,7 +58,7 @@ class Moves extends React.Component {
     let movesLeft = this.getColsToLeft(pos);
 
     /*let i = LEFT;
-    while (squares[i] != undefined) { //stay at the board
+    while (squares[i] != null) { //stay at the board
       if (squares[i].piece == null) {
         acceptedMoves.push(i);
       } else if (squares[i].white === eatWhite) {
@@ -138,14 +138,15 @@ class Moves extends React.Component {
     }
     // 2 down, 1 right
     let downRight = pos - 15;
-    if (squares[pos].row <= 5 && squares[pos].col <= 6) {
+    console.log('piece null = ' + squares[downRight].piece);
+    if (squares[pos].row >= 2 && squares[pos].col <= 6) {
       if (squares[downRight].piece == null || squares[downRight].piece.n <= CONSTANTS.maxBlack) {
         acceptedMoves.push(downRight);
       }
     }
     // 2 down, 1 left
     let downLeft = pos - 17;
-    if (squares[pos].row <= 5 && squares[pos].col <= 1) {
+    if (squares[pos].row >= 2 && squares[pos].col >= 1) {
       if (squares[downLeft].piece == null || squares[downLeft].piece.n <= CONSTANTS.maxBlack) {
         acceptedMoves.push(downLeft);
       }
@@ -191,22 +192,22 @@ class Moves extends React.Component {
           acceptedMoves.push(FRONT2);
         }
       }
-      if (squares[LEFT_DOWN].piece !== undefined && squares[LEFT_DOWN].piece.n <= CONSTANTS.maxBlack) { // right up eat black
+      if (squares[LEFT_DOWN].piece !== null && squares[LEFT_DOWN].piece.n <= CONSTANTS.maxBlack) { // right up eat black
         acceptedMoves.push(LEFT_DOWN); // eat black piece
       }
-      if (squares[RIGHT_DOWN].piece !== undefined && squares[RIGHT_DOWN].piece.n <= CONSTANTS.maxBlack) { // right up eat black
+      if (squares[RIGHT_DOWN].piece !== null && squares[RIGHT_DOWN].piece.n <= CONSTANTS.maxBlack) { // right up eat black
         acceptedMoves.push(RIGHT_DOWN); // eat black piece
       }
       if (this.state.enPasse === EN_PASSE_WHITE_LEFT) {
         // FIXME: add condition for en passe (correct black pawn two up previous move)
-        if (squares[LEFT].piece !== undefined && (squares[LEFT].piece.n >= CONSTANTS.minBlackPawn && squares[LEFT].piece.n <= CONSTANTS.maxBlack)) {
+        if (squares[LEFT].piece !== null && (squares[LEFT].piece.n >= CONSTANTS.minBlackPawn && squares[LEFT].piece.n <= CONSTANTS.maxBlack)) {
           acceptedMoves.push(LEFT_UP); // en passe black pawn
         }
       }
 
       if (this.state.enPasse === EN_PASSE_WHITE_RIGHT) {
         //FIXME: replace with squares[RIGHT].piece.white == false
-        if (squares[RIGHT].piece !== undefined && (squares[RIGHT].piece.n >= CONSTANTS.minBlackPawn && squares[RIGHT].piece.n <= CONSTANTS.maxBlack)) {
+        if (squares[RIGHT].piece !== null && (squares[RIGHT].piece.n >= CONSTANTS.minBlackPawn && squares[RIGHT].piece.n <= CONSTANTS.maxBlack)) {
           acceptedMoves.push(RIGHT_UP); // en passe black pawn
         }
       }

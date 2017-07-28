@@ -96,16 +96,17 @@ class Chess extends React.Component {
     const squares = [];
 
     // fill board with squares
-    for (let counter = 0, i = 0; i < 8; i++) {
+    for (let idx = 0, i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
 
         let square = {
-          index: counter,
+          index: idx,
           row: i, // rows: 0...7
-          col: j // col: 0...7
+          col: j, // col: 0...7
+          piece: null
         } // each square has an index ranging from 0 to 63
-        squares[counter] = square;
-        counter++;
+        squares[idx] = square;
+        idx++;
       }
     }
     this.setState({squares: squares});
@@ -122,6 +123,7 @@ class Chess extends React.Component {
         id: item[2], // piece id, e.g. bra
         n: item[3], // ORIGINAL number 0..63, won't change (unique identifier)
         white: item[4] // true if white
+        //value: //exact piece value in relation to other pieces
       }
 
       squares[item[0]].piece = piece;
