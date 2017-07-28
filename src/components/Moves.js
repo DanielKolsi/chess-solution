@@ -98,9 +98,10 @@ class Moves extends React.Component {
       }
     }
     // 2 right, 1 down
-    let rightDown = pos + 10;
+    let rightDown = pos - 6;
+    console.log('position = ' + pos);
     if (squares[pos].row >= 1 && squares[pos].col <= 5) { // check that the move stays on the board
-      if (squares[rightDown].piece == null || squares[rightUp].piece.white === condition) {
+      if (squares[rightDown].piece == null || squares[rightDown].piece.white === condition) {
         acceptedMoves.push(rightDown);
       }
     }
@@ -120,15 +121,16 @@ class Moves extends React.Component {
       }
     }
     // 2 left, 1 up
-    let leftUp = pos + 15;
-    if (squares[pos].row >= 1 && squares[pos].col >= 2) {
+    let leftUp = pos + 6;
+    console.log('row='+squares[pos].row + 'pos='+pos);
+    if (squares[pos].row <= 6 && squares[pos].col >= 2) {
       if (squares[leftUp].piece == null || squares[leftUp].piece.n <= CONSTANTS.maxBlack) {
         acceptedMoves.push(leftUp);
       }
     }
 
     // 2 left, 1 down
-    let leftDown = pos + 6;
+    let leftDown = pos - 10;
     if (squares[pos].row >= 1 && squares[pos].col >= 2) {
       if (squares[leftDown].piece == null || squares[leftDown].piece.n <= CONSTANTS.maxBlack) {
         acceptedMoves.push(leftDown);
