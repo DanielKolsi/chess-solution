@@ -32,57 +32,52 @@ class Moves extends React.Component {
 
 
   // en passe -> former position (former from move)
-  getPawnMoves(piece, squares) { //FIXME: -> moveWhitePawn
+  getWhitePawnMoves(piece, squares) { //FIXME: -> moveWhitePawn
 
     let id = piece.n; // uniq piece id number, non-changing
     let pos = piece.location;
-    //FIXME: add constants + black / white handling
-    let FRONT = pos - 8;
-    let FRONT2 = pos - 16;
-    let LEFT_DOWN = pos - 9; // white eat
-    let RIGHT_DOWN = pos - 7;
-    let LEFT_UP = pos + 9; // black eat
-    let RIGHT_UP = pos + 7;
 
-    let LEFT = pos - 1;
-    let RIGHT = pos + 1;
     // en passe previous moves
     let EN_PASSE_WHITE_LEFT = pos - 17;
     let EN_PASSE_WHITE_RIGHT = pos - 15;
+
+    let down = pos + CONSTANTS.down;
+    let down2 = pos + CONSTANTS.down2;
+    let downLeft = pos + CONSTANTS.downLeft;
+    let downRight = pos + CONSTANTS.downRight;
+
 
     let acceptedMoves = [];
 
     // en passe -> former position
 
-    if (id >= CONSTANTS.minWhite) { // white
-
-      if (squares[FRONT].piece == null) {
-        acceptedMoves.push(FRONT);
-        if (pos >= CONSTANTS.minWhite && squares[FRONT2].piece == null) { // hasn't moved yet
+      if (squares[down].piece == null) {
+        acceptedMoves.push(down);
+        if (piece.row === CONSTANTS.whitePawnInitialRow && squares[down2].piece == null) { // hasn't moved yet
           this.setState({enPasse: piece.location});
-          acceptedMoves.push(FRONT2);
+          acceptedMoves.push(down2);
         }
       }
-      if (squares[LEFT_DOWN].piece !== null && squares[LEFT_DOWN].piece.n <= CONSTANTS.maxBlack) { // right up eat black
-        acceptedMoves.push(LEFT_DOWN); // eat black piece
+      if (squares[downLeft].piece !== null && squares[downLeft].piece.white === false) { // eat black
+        acceptedMoves.push(downLeft); // eat black piece
       }
-      if (squares[RIGHT_DOWN].piece !== null && squares[RIGHT_DOWN].piece.n <= CONSTANTS.maxBlack) { // right up eat black
-        acceptedMoves.push(RIGHT_DOWN); // eat black piece
+      if (squares[downRight].piece !== null && squares[downRight].piece.white === false) { // right up eat black
+        acceptedMoves.push(downRight); // eat black piece
       }
       if (this.state.enPasse === EN_PASSE_WHITE_LEFT) {
         // FIXME: add condition for en passe (correct black pawn two up previous move)
-        if (squares[LEFT].piece !== null && (squares[LEFT].piece.n >= CONSTANTS.minBlackPawn && squares[LEFT].piece.n <= CONSTANTS.maxBlack)) {
-          acceptedMoves.push(LEFT_UP); // en passe black pawn
+        if (squares[CONSTANTS.left].piece !== null && (squares[CONSTANTS.left].piece.n >= CONSTANTS.minBlackPawn && squares[CONSTANTS.left].piece.white === false)) {
+          acceptedMoves.push(downLeft); // en passe black pawn
         }
       }
 
       if (this.state.enPasse === EN_PASSE_WHITE_RIGHT) {
         //FIXME: replace with squares[RIGHT].piece.white == false
-        if (squares[RIGHT].piece !== null && (squares[RIGHT].piece.n >= CONSTANTS.minBlackPawn && squares[RIGHT].piece.n <= CONSTANTS.maxBlack)) {
-          acceptedMoves.push(RIGHT_UP); // en passe black pawn
+        if (squares[CONSTANTS.right].piece !== null && (squares[CONSTANTS.right].piece.n >= CONSTANTS.minBlackPawn && squares[CONSTANTS.right].piece.white === false)) {
+          acceptedMoves.push(downRight); // en passe black pawn
         }
       }
-    } else {}
+
     return acceptedMoves;
   }
 
@@ -93,11 +88,13 @@ class Moves extends React.Component {
     let pos = piece.location;
     let acceptedMoves = [];
 
-    // 2 right, 1 up
+
     let condition = true;
     if (piece.white === true) {
       condition = false;
     }
+
+    // 2 right, 1 up
     let rightUp = pos + 10;
 
     if (squares[pos].row <= 6 && squares[pos].col <= 5) { // check that the move stays on the board
@@ -332,7 +329,12 @@ class Moves extends React.Component {
     return acceptedMoves;
   }
 
-
+  getQueenMoves(piece, squares) {
+    let acceptedMovesBishop = this.getBishopMoves(piece, squares);
+    let acceptedMovesRook = this.getRookMoves(piece, squares);
+    let acceptedMovesQueen = acceptedMovesBishop.concat(acceptedMovesRook);
+    return acceptedMovesQueen;
+  }
 }
 
 export default Moves;

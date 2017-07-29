@@ -6,7 +6,7 @@ class Queen extends React.Component {
     this.state = {}
   }
 
-  getAcceptedMoves() {
+  getAcceptedMoves(piece, squares) {
 
     console.log('White Queen');
     let acceptedMoves = [];

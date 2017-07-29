@@ -14,7 +14,7 @@ class PawnD extends Moves {
 
   getAcceptedMoves(piece, squares) {
     console.log('White Pawn D');
-    return this.getPawnMoves(piece, squares);
+    return this.getWhitePawnMoves(piece, squares);
   }
 
 

@@ -13,62 +13,62 @@ class King extends React.Component {
     let acceptedMoves = [];
     let pos = piece.location;
 
-    let UP = pos + 8;
-    let DOWN = pos - 8;
-    let LEFT = pos - 1;
-    let RIGHT = pos + 1;
-    let LEFT_DOWN = pos - 9;
-    let RIGHT_DOWN = pos - 7;
-    let LEFT_UP = pos + 9;
-    let RIGHT_UP = pos + 7;
+    let up = pos + CONSTANTS.up;
+    let down = pos + CONSTANTS.down;
+    let left = pos + CONSTANTS.left;
+    let right = pos + CONSTANTS.right;
+    let downLeft = pos + CONSTANTS.downLeft;
+    let downRight = pos + CONSTANTS.downRight;
+    let upLeft = pos + CONSTANTS.upLeft;
+    let upRight = pos + CONSTANTS.upRight;
 
       // check condition, remove threads from previous black move (possibleBlackMoves, candidateMove, removelMoves)
 
-      if (squares[UP] !== undefined) { // needs to stay on the board limits
-        if (squares[UP].piece == null || squares[UP].piece.white === false) {
-            acceptedMoves.push(UP);
+      if (squares[up] !== undefined) { // needs to stay on the board limits
+        if (squares[up].piece == null || squares[up].piece.white === false) {
+            acceptedMoves.push(up);
         }
       }
 
-      if (squares[DOWN] !== undefined) { // needs to stay on the board limits
-        if (squares[DOWN].piece == null || squares[DOWN].piece.white === false) {
-            acceptedMoves.push(DOWN);
+      if (squares[down] !== undefined) { // needs to stay on the board limits
+        if (squares[down].piece == null || squares[down].piece.white === false) {
+            acceptedMoves.push(down);
         }
       }
 
-      if (squares[LEFT] !== undefined) {
-        if (squares[LEFT].piece == null || squares[LEFT].piece.white === false) {
-            acceptedMoves.push(LEFT);
+      if (squares[left] !== undefined) {
+        if (squares[left].piece == null || squares[left].piece.white === false) {
+            acceptedMoves.push(left);
         }
       }
 
-      if (squares[RIGHT] !== undefined) {
-        if (squares[RIGHT].piece == null || squares[RIGHT].piece.white === false) {
-            acceptedMoves.push(RIGHT);
+      if (squares[right] !== undefined) {
+        if (squares[right].piece == null || squares[right].piece.white === false) {
+            acceptedMoves.push(right);
         }
       }
 
-      if (squares[RIGHT_UP] !== undefined) {
-        if (squares[RIGHT_UP].piece == null || squares[RIGHT_UP].piece.white === false) {
-          acceptedMoves.push(RIGHT_UP);
+      if (squares[upRight] !== undefined) {
+        if (squares[upRight].piece == null || squares[upRight].piece.white === false) {
+          acceptedMoves.push(upRight);
         }
       }
 
-      if (squares[RIGHT_DOWN] !== undefined) {
-        if (squares[RIGHT_DOWN].piece == null || squares[RIGHT_DOWN].piece.white === false) {
-            acceptedMoves.push(RIGHT_DOWN);
+      if (squares[downRight] !== undefined) {
+        if (squares[downRight].piece == null || squares[downRight].piece.white === false) {
+            acceptedMoves.push(downRight);
         }
       }
 
-      if (squares[LEFT_UP] !== undefined) {
-        if (squares[LEFT_UP].piece == null || squares[LEFT_UP].piece.white === false) {
-            acceptedMoves.push(LEFT_UP);
+      if (squares[upLeft] !== undefined) {
+        if (squares[upLeft].piece == null || squares[upLeft].piece.white === false) {
+            acceptedMoves.push(upLeft);
         }
       }
 
-      if (squares[LEFT_DOWN] !== undefined) {
-        if (squares[LEFT_DOWN].piece == null || squares[LEFT_DOWN].piece.white === false) {
-            acceptedMoves.push(LEFT_DOWN);
+      if (squares[downLeft] !== undefined) {
+        if (squares[downLeft].piece == null || squares[downLeft].piece.white === false) {
+            acceptedMoves.push(downLeft);
         }
      }
 

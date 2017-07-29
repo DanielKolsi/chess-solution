@@ -17,10 +17,8 @@ class PawnA extends Moves {
 
   getAcceptedMoves(piece, squares) {
     console.log('White Pawn A');
-    return this.getPawnMoves(piece, squares);
+    return this.getWhitePawnMoves(piece, squares);
   }
-
-
     render() {
       return (
         <div className="piece">
