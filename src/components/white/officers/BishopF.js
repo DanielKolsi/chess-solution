@@ -7,13 +7,12 @@ class BishopF extends Moves {
     this.state = {
     }
   }
-  getAcceptedMoves() {
 
+  getAcceptedMoves(piece, squares) {
     console.log('White Bishop F');
-    let acceptedMoves = [];
-
-    return acceptedMoves;
+    return this.getBishopMoves(piece, squares);
   }
+  
     render() {
       return (
         <div className="piece">

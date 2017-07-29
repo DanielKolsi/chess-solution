@@ -7,15 +7,11 @@ class BishopC extends Moves {
     this.state = {
     }
   }
-
-  getAcceptedMoves() {
-
+  getAcceptedMoves(piece, squares) {
     console.log('White Bishop C');
-    let acceptedMoves = [];
-
-    return acceptedMoves;
+    return this.getBishopMoves(piece, squares);
   }
-
+  
     render() {
       return (
         <div className="piece">

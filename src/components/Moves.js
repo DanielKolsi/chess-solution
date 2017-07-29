@@ -162,20 +162,26 @@ class Moves extends React.Component {
   }
 
   getBishopMoves(piece, squares) {
+
     let pos = piece.location;
     let acceptedMoves = [];
+
+    acceptedMoves = this.getDiagonalMovesUpRight(piece, squares, acceptedMoves);
+    acceptedMoves = this.getDiagonalMovesUpLeft(piece, squares, acceptedMoves);
+    acceptedMoves = this.getDiagonalMovesDownLeft(piece, squares, acceptedMoves);
+    acceptedMoves = this.getDiagonalMovesDownRight(piece, squares, acceptedMoves);
+
     return acceptedMoves;
   }
 
 
-
-  getDiagonalMovesUpRight(piece, squares) {
+  getDiagonalMovesUpRight(piece, squares, acceptedMoves) {
 
     let RIGHT = 7 - piece.col;
     let UP = 7 - piece.row;
     let pos = piece.location;
     let numberOfMoves;
-    let acceptedMoves = [];
+
 
     if (RIGHT <= UP) {
       numberOfMoves = RIGHT;
@@ -193,15 +199,13 @@ class Moves extends React.Component {
     return acceptedMoves;
   }
 
-  getDiagonalMovesUpLeft(piece, squares) {
-
+  getDiagonalMovesUpLeft(piece, squares, acceptedMoves) {
 
     let LEFT = piece.col;
     let pos = piece.location;
     const UP = 8 - Math.floor(pos / 8);
 
     let numberOfMoves;
-    let acceptedMoves = [];
 
     if (LEFT <= UP) {
       numberOfMoves = LEFT;
@@ -219,14 +223,13 @@ class Moves extends React.Component {
     return acceptedMoves;
   }
 
-  getDiagonalMovesDownRight(piece, squares) {
+  getDiagonalMovesDownRight(piece, squares, acceptedMoves) {
 
     let pos = piece.location;
     let RIGHT = 7 - piece.col;
     let DOWN = piece.row;
 
     let numberOfMoves;
-    let acceptedMoves = [];
 
     if (RIGHT <= DOWN) {
       numberOfMoves = RIGHT;
@@ -245,15 +248,14 @@ class Moves extends React.Component {
   }
 
 
-  getDiagonalMovesDownLeft(piece, squares) {
+  getDiagonalMovesDownLeft(piece, squares, acceptedMoves) {
 
     let pos = piece.location;
-
     let LEFT = piece.col;
     let DOWN = 7 - piece.row;
 
     let numberOfMoves;
-    let acceptedMoves = [];
+
 
     if (LEFT <= DOWN) {
       numberOfMoves = LEFT;
@@ -268,6 +270,7 @@ class Moves extends React.Component {
         acceptedMoves.push(dst);
       }
     }
+    return acceptedMoves;
   }
 
   getRookMoves(piece, squares) {
