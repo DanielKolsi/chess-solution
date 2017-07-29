@@ -107,7 +107,7 @@ class Moves extends React.Component {
     }
     // 2 right, 1 down
     let rightDown = pos - 6;
-    
+
     if (squares[pos].row >= 1 && squares[pos].col <= 5) { // check that the move stays on the board
       if (squares[rightDown].piece == null || squares[rightDown].piece.white === condition) {
         acceptedMoves.push(rightDown);
