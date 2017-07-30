@@ -15,7 +15,10 @@ const CONSTANTS = {
   upRight: 9,
   upLeft: 7,
   enPasseDownLeft: -17,
-  enPasseDownRight: -15
+  enPasseDownRight: -15,
+  twoRightOneUp: 10,
+  whitePawnValue: 1,
+  blackPawnValue: -1
 }
 
 export default CONSTANTS;

@@ -122,7 +122,8 @@ class Chess extends React.Component {
         type: item[1], // actual piece, e.g. RookBA
         id: item[2], // piece id, e.g. bra
         n: item[3], // ORIGINAL number 0..63, won't change (unique identifier)
-        white: item[4] // true if white
+        white: item[4], // true if white
+        value: item[5]
         //value: //exact piece value in relation to other pieces
       }
 
