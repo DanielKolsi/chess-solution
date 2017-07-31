@@ -71,7 +71,7 @@ class King extends React.Component {
             acceptedMoves.push(downLeft);
         }
      }
-
+     console.log('King moves size = ' + acceptedMoves.length);
      return acceptedMoves;
   }
 

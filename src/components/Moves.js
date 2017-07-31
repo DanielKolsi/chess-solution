@@ -81,7 +81,6 @@ class Moves extends React.Component {
   }
 
 
-
   getKnightMoves(piece, squares) {
 
     let pos = piece.location;
@@ -199,7 +198,7 @@ class Moves extends React.Component {
 
     let LEFT = piece.col;
     let pos = piece.location;
-    const UP = 8 - Math.floor(pos / 8);
+    const UP = 7 - piece.row;
 
     let numberOfMoves;
 
@@ -209,9 +208,8 @@ class Moves extends React.Component {
       numberOfMoves = UP;
     }
 
-    const upLeftReduction = 9; //FIXME, to constants
     for (let i = 1; i <= numberOfMoves; i++) {
-      let dst = pos - (i * upLeftReduction);
+      let dst = pos - (i * CONSTANTS.upLeft);
       if (squares[dst].piece == null) {
         acceptedMoves.push(dst);
       }
@@ -233,9 +231,8 @@ class Moves extends React.Component {
       numberOfMoves = DOWN;
     }
 
-    const downRightAddition = 9; //FIXME, to constants
     for (let i = 1; i <= numberOfMoves; i++) {
-      let dst = pos + (i * downRightAddition);
+      let dst = pos + (i * CONSTANTS.downRight);
       if (squares[dst].piece == null) {
         acceptedMoves.push(dst);
       }
@@ -252,16 +249,14 @@ class Moves extends React.Component {
 
     let numberOfMoves;
 
-
     if (LEFT <= DOWN) {
       numberOfMoves = LEFT;
     } else {
       numberOfMoves = DOWN;
     }
 
-    const downLeftAddition = 7; //FIXME, to constants
     for (let i = 1; i <= numberOfMoves; i++) {
-      let dst = pos + (i * downLeftAddition);
+      let dst = pos + (i * CONSTANTS.downLeft);
       if (squares[dst].piece == null) {
         acceptedMoves.push(dst);
       }
