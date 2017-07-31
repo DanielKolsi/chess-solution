@@ -45,8 +45,9 @@ class Chess extends React.Component {
   possibleMoves(piece, squares) {
     const {pieces} = this.state;
 
-    //let piece = pieces[id];
+
     let location = piece.location;
+
     if (location !== undefined) {
       let acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares);
       console.log('acceptedmoves size = '+ acceptedMoves.length + '\n\n');
@@ -143,7 +144,8 @@ class Chess extends React.Component {
     if (this.state.white) {
       console.log('xxx  Chess: automove:'+ this.state.white);
         for (let i = 48; i < 64; i++) {
-          // FIXME: continue with empty squares e.g. "eaten" pieces
+            let piece = pieces[i];
+            if (piece == null) continue; // piece has been e.g. eaten
             this.possibleMoves(pieces[i], squares); // possiblemoves, removalmoves, acceptedmoves
         }
     } else { //black moves
