@@ -11,7 +11,7 @@ class Moves extends React.Component {
   }
 
   // columns left for left direction based on current position
-  getColsToLeft(pos) {
+/*  getColsToLeft(pos) {
 
     const COLS_IN_ROW = 8;
     if (pos < COLS_IN_ROW) {
@@ -28,11 +28,11 @@ class Moves extends React.Component {
       return (MAX_COL_NUMBER - pos);
     }
     return (MAX_COL_NUMBER - (pos % COLS_IN_ROW));
-  }
+  }*/
 
 
   // en passe -> former position (former from move)
-  getWhitePawnMoves(piece, squares) { //FIXME: -> moveWhitePawn
+  getWhitePawnMoves(piece, squares) { 
 
     let pos = piece.location;
 
@@ -265,8 +265,7 @@ class Moves extends React.Component {
   getRookMoves(piece, squares) {
 
     let pos = piece.location;
-    let UP = pos + CONSTANTS.up;
-    let DOWN = pos + CONSTANTS.down;
+
     let acceptedMoves = [];
     let LEFT = pos + CONSTANTS.left;
     let RIGHT = pos + CONSTANTS.right;
@@ -277,7 +276,8 @@ class Moves extends React.Component {
     }
 
     // move UP
-    for (let i = UP; i < squares.length; i += UP) {
+    console.log('squares='+squares.length);
+    for (let i = pos + CONSTANTS.up; i < squares.length; i += CONSTANTS.up) {
       if (squares[i].piece === null) {
         acceptedMoves.push(i);
       } else if (squares[i].white === eatWhite) {
@@ -286,7 +286,8 @@ class Moves extends React.Component {
       }
     }
     // move DOWN
-    for (let i = DOWN; i > 0; i -= DOWN) {
+    for (let i = pos + CONSTANTS.down; i >= 0; i += CONSTANTS.down) {
+      console.log('i='+i);
       if (squares[i].piece === null) {
         acceptedMoves.push(i);
       } else if (squares[i].white === eatWhite) {
@@ -296,7 +297,7 @@ class Moves extends React.Component {
     }
 
     // move RIGHT
-    let movesRight = this.getColsToRight(pos);
+    let movesRight = 7 - piece.col;
     for (let i = RIGHT; i <= (movesRight + pos); i++) {
       if (squares[i].piece === null) {
         acceptedMoves.push(i);
@@ -307,7 +308,7 @@ class Moves extends React.Component {
     }
 
     // move LEFT
-    let movesLeft = this.getColsToLeft(pos);
+    let movesLeft = piece.col;
 
     for (let i = LEFT; i >= movesLeft + pos; i--) {
 
