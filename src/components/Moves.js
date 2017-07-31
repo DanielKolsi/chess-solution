@@ -34,7 +34,6 @@ class Moves extends React.Component {
   // en passe -> former position (former from move)
   getWhitePawnMoves(piece, squares) { //FIXME: -> moveWhitePawn
 
-    let id = piece.n; // uniq piece id number, non-changing
     let pos = piece.location;
 
     // en passe previous moves
@@ -66,14 +65,14 @@ class Moves extends React.Component {
       }
       if (this.state.enPasse === EN_PASSE_WHITE_LEFT) {
         // FIXME: add condition for en passe (correct black pawn two up previous move)
-        if (squares[CONSTANTS.left].piece !== null && (squares[CONSTANTS.left].piece.value == CONSTANTS.blackPawnValue)) {
+        if (squares[CONSTANTS.left].piece !== null && (squares[CONSTANTS.left].piece.value === CONSTANTS.blackPawnValue)) {
           acceptedMoves.push(downLeft); // en passe black pawn
         }
       }
 
       if (this.state.enPasse === EN_PASSE_WHITE_RIGHT) {
         //FIXME: replace with squares[RIGHT].piece.white == false
-        if (squares[CONSTANTS.right].piece !== null && (squares[CONSTANTS.right].piece.value == CONSTANTS.blackPawnValue)) {
+        if (squares[CONSTANTS.right].piece !== null && (squares[CONSTANTS.right].piece.value === CONSTANTS.blackPawnValue)) {
           acceptedMoves.push(downRight); // en passe black pawn
         }
       }
@@ -93,7 +92,7 @@ class Moves extends React.Component {
     }
 
     // 2 right, 1 up
-    let rightUp = pos + 10;
+    let rightUp = pos + CONSTANTS.twoRightOneUp;
 
     if (squares[pos].row <= 6 && squares[pos].col <= 5) { // check that the move stays on the board
       if (squares[rightUp].piece == null || squares[rightUp].piece.white === condition) {
@@ -101,7 +100,7 @@ class Moves extends React.Component {
       }
     }
     // 2 right, 1 down
-    let rightDown = pos - 6;
+    let rightDown = pos + CONSTANTS.twoRightOneDown;
 
     if (squares[pos].row >= 1 && squares[pos].col <= 5) { // check that the move stays on the board
       if (squares[rightDown].piece == null || squares[rightDown].piece.white === condition) {
@@ -110,7 +109,7 @@ class Moves extends React.Component {
     }
 
     // 2 up, 1 right
-    let upRight = pos + 17;
+    let upRight = pos + CONSTANTS.twoUpOneRight;
     if (squares[pos].row <= 5 && squares[pos].col <= 6) {
       if (squares[upRight].piece == null || squares[upRight].piece.white === condition) {
         acceptedMoves.push(upRight);
@@ -124,7 +123,7 @@ class Moves extends React.Component {
       }
     }
     // 2 left, 1 up
-    let leftUp = pos + 6;
+    let leftUp = pos + CONSTANTS.twoLeftOneUp;
 
     if (squares[pos].row <= 6 && squares[pos].col >= 2) {
       if (squares[leftUp].piece == null || squares[leftUp].piece.white === condition) {
@@ -133,21 +132,21 @@ class Moves extends React.Component {
     }
 
     // 2 left, 1 down
-    let leftDown = pos - 10;
+    let leftDown = pos + CONSTANTS.twoLeftOneDown;
     if (squares[pos].row >= 1 && squares[pos].col >= 2) {
       if (squares[leftDown].piece == null || squares[leftDown].piece.white === condition) {
         acceptedMoves.push(leftDown);
       }
     }
     // 2 down, 1 right
-    let downRight = pos - 15;
+    let downRight = pos + CONSTANTS.twoDownOneRight;
     if (squares[pos].row >= 2 && squares[pos].col <= 6) {
       if (squares[downRight].piece == null || squares[downRight].piece.white === condition) {
         acceptedMoves.push(downRight);
       }
     }
     // 2 down, 1 left
-    let downLeft = pos - 17;
+    let downLeft = pos + CONSTANTS.twoDownOneLeft;
     if (squares[pos].row >= 2 && squares[pos].col >= 1) {
       if (squares[downLeft].piece == null || squares[downLeft].piece.white === condition) {
         acceptedMoves.push(downLeft);
@@ -158,7 +157,6 @@ class Moves extends React.Component {
 
   getBishopMoves(piece, squares) {
 
-    let pos = piece.location;
     let acceptedMoves = [];
 
     acceptedMoves = this.getDiagonalMovesUpRight(piece, squares, acceptedMoves);
@@ -265,13 +263,13 @@ class Moves extends React.Component {
   }
 
   getRookMoves(piece, squares) {
-    let id = piece.n; // uniq piece id number, non-changing
+
     let pos = piece.location;
-    let UP = pos + 8;
-    let DOWN = pos - 8;
+    let UP = pos + CONSTANTS.up;
+    let DOWN = pos + CONSTANTS.down;
     let acceptedMoves = [];
-    let LEFT = pos - 1;
-    let RIGHT = pos + 1;
+    let LEFT = pos + CONSTANTS.left;
+    let RIGHT = pos + CONSTANTS.right;
 
     let eatWhite = true;
     if (piece.white === true) {

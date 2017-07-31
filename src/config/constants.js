@@ -17,8 +17,18 @@ const CONSTANTS = {
   enPasseDownLeft: -17,
   enPasseDownRight: -15,
   twoRightOneUp: 10,
+  twoRightOneDown: -6,
+  twoUpOneRight: 17,
+  twoUpOneLeft: 15,
+  twoLeftOneUp: 6,
+  twoLeftOneDown: -10,
+  twoDownOneRight: -15,
+  twoDownOneLeft: -17,
   whitePawnValue: 1,
-  blackPawnValue: -1
+  blackPawnValue: -1,
+  maxKnightRowUp: 6,
+  minKnightRowDown: 1
+
 }
 
 export default CONSTANTS;

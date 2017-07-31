@@ -43,8 +43,6 @@ class Chess extends React.Component {
 
   //FIXME: get pieceId from index and index from pieceId
   possibleMoves(piece, squares) {
-    const {pieces} = this.state;
-
 
     let location = piece.location;
 
@@ -57,10 +55,10 @@ class Chess extends React.Component {
   }
 
   move(src, dst) {
-    const {squares, pieces, move, white, acceptedMoves} = this.state; //FIXME
+    const {squares, pieces} = this.state;
     const square = squares[src];
     const mover = square.piece;
-    const target = squares[dst];
+    //const target = squares[dst]; // FIXME, not required?
     let source = squares[square.piece.location];
 
     source.piece = null;
