@@ -188,8 +188,14 @@ class Moves extends React.Component {
       let dst = pos + (i * CONSTANTS.upRight);
       if (squares[dst].piece == null) {
         acceptedMoves.push(pos - (i * CONSTANTS.upRight));
+      } else if (squares[dst].white !== squares[pos].white) {
+        acceptedMoves.push(dst);// eat opponent's piece
+        break;
+      } else {
+        break; // own piece
       }
     }
+    console.log('up right moves ='+acceptedMoves.length);
     return acceptedMoves;
   }
 
@@ -212,8 +218,14 @@ class Moves extends React.Component {
       let dst = pos + (i * CONSTANTS.upLeft);
       if (squares[dst].piece == null) {
         acceptedMoves.push(dst);
+      } else if (squares[dst].white !== squares[pos].white) {
+        acceptedMoves.push(dst);// eat opponent's piece
+        break;
+      } else {
+        break; // own piece
       }
     }
+    console.log('up left moves ='+acceptedMoves.length);
     return acceptedMoves;
   }
 
@@ -231,13 +243,21 @@ class Moves extends React.Component {
       numberOfSquaresAvailable = squaresAvailableDown;
     }
 
+    console.log('sqr available ='+ numberOfSquaresAvailable);
 
     for (let i = 1; i <= numberOfSquaresAvailable; i++) {
       let dst = pos + (i * CONSTANTS.downRight);
       if (squares[dst].piece == null) {
+        
         acceptedMoves.push(dst);
+      } else if (squares[dst].white !== squares[pos].white) {
+        acceptedMoves.push(dst);// eat opponent's piece
+        break;
+      } else {
+        break; // own piece
       }
     }
+    console.log('down right moves ='+ acceptedMoves.length);
     return acceptedMoves;
   }
 
@@ -247,7 +267,7 @@ class Moves extends React.Component {
     //FIXME, BUG in move counting
     let pos = piece.location;
     let squaresAvailableLeft = squares[pos].col;
-    let squaresAvailableDown = 7 - squares[pos].row;
+    let squaresAvailableDown = squares[pos].row;
 
     let numberOfSquaresAvailable;
 
@@ -257,10 +277,16 @@ class Moves extends React.Component {
       numberOfSquaresAvailable = squaresAvailableDown;
     }
 
+    console.log('squares available ='+numberOfSquaresAvailable);
     for (let i = 1; i <= numberOfSquaresAvailable; i++) {
       let dst = pos + (i * CONSTANTS.downLeft);
       if (squares[dst].piece == null) {
         acceptedMoves.push(dst);
+      } else if (squares[dst].white !== squares[pos].white) {
+        acceptedMoves.push(dst);// eat opponent's piece
+        break;
+      } else {
+        break; // own piece
       }
     }
     console.log('down left moves ='+acceptedMoves.length);
