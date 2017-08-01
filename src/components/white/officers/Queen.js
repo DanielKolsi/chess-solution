@@ -1,17 +1,15 @@
 import React from 'react';
+import Moves from '../../Moves';
 
-class Queen extends React.Component {
+class Queen extends Moves {
   constructor(props) {
     super(props);
     this.state = {}
   }
 
   getAcceptedMoves(piece, squares) {
-
     console.log('White Queen');
-    let acceptedMoves = [];
-
-    return acceptedMoves;
+    return this.getQueenMoves(piece, squares);
   }
 
   render() {

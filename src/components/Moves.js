@@ -171,8 +171,8 @@ class Moves extends React.Component {
   getDiagonalMovesUpRight(piece, squares, acceptedMoves) {
 
     let pos = piece.location;
-    let squaresAvailableRight = 7 - squares[pos].col;
-    let squaresAvailableUp = 7 - squares[pos].row;
+    let squaresAvailableRight = CONSTANTS.maxCol - squares[pos].col;
+    let squaresAvailableUp = CONSTANTS.maxRow - squares[pos].row;
 
     let numberOfSquaresAvailable;
 
@@ -248,7 +248,7 @@ class Moves extends React.Component {
     for (let i = 1; i <= numberOfSquaresAvailable; i++) {
       let dst = pos + (i * CONSTANTS.downRight);
       if (squares[dst].piece == null) {
-        
+
         acceptedMoves.push(dst);
       } else if (squares[dst].white !== squares[pos].white) {
         acceptedMoves.push(dst);// eat opponent's piece
@@ -355,7 +355,9 @@ class Moves extends React.Component {
 
   getQueenMoves(piece, squares) {
     let acceptedMovesBishop = this.getBishopMoves(piece, squares);
+    console.log('queen: bishop moves =' + acceptedMovesBishop.length);
     let acceptedMovesRook = this.getRookMoves(piece, squares);
+    console.log('queen: rook moves =' + acceptedMovesRook.length);
     let acceptedMovesQueen = acceptedMovesBishop.concat(acceptedMovesRook);
     return acceptedMovesQueen;
   }
