@@ -32,7 +32,7 @@ class Moves extends React.Component {
 
 
   // en passe -> former position (former from move)
-  getWhitePawnMoves(piece, squares) { 
+  getWhitePawnMoves(piece, squares) {
 
     let pos = piece.location;
 
@@ -170,23 +170,24 @@ class Moves extends React.Component {
 
   getDiagonalMovesUpRight(piece, squares, acceptedMoves) {
 
-    let RIGHT = 7 - piece.col;
-    let UP = 7 - piece.row;
     let pos = piece.location;
-    let numberOfMoves;
+    let squaresAvailableRight = 7 - squares[pos].col;
+    let squaresAvailableUp = 7 - squares[pos].row;
+
+    let numberOfSquaresAvailable;
 
 
-    if (RIGHT <= UP) {
-      numberOfMoves = RIGHT;
+    if (squaresAvailableRight <= squaresAvailableUp) {
+      numberOfSquaresAvailable = squaresAvailableRight;
     } else {
-      numberOfMoves = UP;
+      numberOfSquaresAvailable = squaresAvailableUp;
     }
 
-    const upRightReduction = 7;
-    for (let i = 1; i <= numberOfMoves; i++) {
-      let dst = pos - (i * upRightReduction);
+
+    for (let i = 1; i <= numberOfSquaresAvailable; i++) {
+      let dst = pos + (i * CONSTANTS.upRight);
       if (squares[dst].piece == null) {
-        acceptedMoves.push(pos - (i * upRightReduction));
+        acceptedMoves.push(pos - (i * CONSTANTS.upRight));
       }
     }
     return acceptedMoves;
@@ -194,20 +195,21 @@ class Moves extends React.Component {
 
   getDiagonalMovesUpLeft(piece, squares, acceptedMoves) {
 
-    let LEFT = piece.col;
     let pos = piece.location;
-    const UP = 7 - piece.row;
+    let squaresAvailableLeft = squares[pos].col;
 
-    let numberOfMoves;
+    const squaresAvailableUp = CONSTANTS.maxRow - squares[pos].row;
 
-    if (LEFT <= UP) {
-      numberOfMoves = LEFT;
+    let numberOfSquaresAvailable;
+
+    if (squaresAvailableLeft <= squaresAvailableUp) {
+      numberOfSquaresAvailable = squaresAvailableLeft;
     } else {
-      numberOfMoves = UP;
+      numberOfSquaresAvailable = squaresAvailableUp;
     }
 
-    for (let i = 1; i <= numberOfMoves; i++) {
-      let dst = pos - (i * CONSTANTS.upLeft);
+    for (let i = 1; i <= numberOfSquaresAvailable; i++) {
+      let dst = pos + (i * CONSTANTS.upLeft);
       if (squares[dst].piece == null) {
         acceptedMoves.push(dst);
       }
@@ -218,18 +220,19 @@ class Moves extends React.Component {
   getDiagonalMovesDownRight(piece, squares, acceptedMoves) {
 
     let pos = piece.location;
-    let RIGHT = 7 - piece.col;
-    let DOWN = piece.row;
+    let squaresAvailableRight = CONSTANTS.maxCol - squares[pos].col;
+    let squaresAvailableDown = squares[pos].row;
 
-    let numberOfMoves;
+    let numberOfSquaresAvailable;
 
-    if (RIGHT <= DOWN) {
-      numberOfMoves = RIGHT;
+    if (squaresAvailableRight <= squaresAvailableDown) {
+      numberOfSquaresAvailable = squaresAvailableRight;
     } else {
-      numberOfMoves = DOWN;
+      numberOfSquaresAvailable = squaresAvailableDown;
     }
 
-    for (let i = 1; i <= numberOfMoves; i++) {
+
+    for (let i = 1; i <= numberOfSquaresAvailable; i++) {
       let dst = pos + (i * CONSTANTS.downRight);
       if (squares[dst].piece == null) {
         acceptedMoves.push(dst);
@@ -241,24 +244,26 @@ class Moves extends React.Component {
 
   getDiagonalMovesDownLeft(piece, squares, acceptedMoves) {
 
+    //FIXME, BUG in move counting
     let pos = piece.location;
-    let LEFT = piece.col;
-    let DOWN = 7 - piece.row;
+    let squaresAvailableLeft = squares[pos].col;
+    let squaresAvailableDown = 7 - squares[pos].row;
 
-    let numberOfMoves;
+    let numberOfSquaresAvailable;
 
-    if (LEFT <= DOWN) {
-      numberOfMoves = LEFT;
+    if (squaresAvailableLeft <= squaresAvailableDown) {
+      numberOfSquaresAvailable = squaresAvailableLeft;
     } else {
-      numberOfMoves = DOWN;
+      numberOfSquaresAvailable = squaresAvailableDown;
     }
 
-    for (let i = 1; i <= numberOfMoves; i++) {
+    for (let i = 1; i <= numberOfSquaresAvailable; i++) {
       let dst = pos + (i * CONSTANTS.downLeft);
       if (squares[dst].piece == null) {
         acceptedMoves.push(dst);
       }
     }
+    console.log('down left moves ='+acceptedMoves.length);
     return acceptedMoves;
   }
 
@@ -276,7 +281,6 @@ class Moves extends React.Component {
     }
 
     // move UP
-    console.log('squares='+squares.length);
     for (let i = pos + CONSTANTS.up; i < squares.length; i += CONSTANTS.up) {
       if (squares[i].piece === null) {
         acceptedMoves.push(i);
@@ -287,7 +291,7 @@ class Moves extends React.Component {
     }
     // move DOWN
     for (let i = pos + CONSTANTS.down; i >= 0; i += CONSTANTS.down) {
-      console.log('i='+i);
+
       if (squares[i].piece === null) {
         acceptedMoves.push(i);
       } else if (squares[i].white === eatWhite) {
@@ -297,7 +301,8 @@ class Moves extends React.Component {
     }
 
     // move RIGHT
-    let movesRight = 7 - piece.col;
+    let movesRight = 7 - squares[pos].col;
+
     for (let i = RIGHT; i <= (movesRight + pos); i++) {
       if (squares[i].piece === null) {
         acceptedMoves.push(i);
@@ -308,7 +313,7 @@ class Moves extends React.Component {
     }
 
     // move LEFT
-    let movesLeft = piece.col;
+    let movesLeft = squares[pos].col;
 
     for (let i = LEFT; i >= movesLeft + pos; i--) {
 

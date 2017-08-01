@@ -2,6 +2,10 @@ const CONSTANTS = {
   minWhite: 48, // white piece minimum value
   maxBlack: 15, // black piece max value
   minBlackPawn: 8,
+  minRow: 0,
+  maxRow: 7,
+  minCol: 0,
+  maxCol: 7,
   whitePawnInitialRow: 6,
   blackPawnInitialRow: 1,
   up: 8,
