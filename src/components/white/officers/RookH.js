@@ -7,12 +7,9 @@ class RookH extends Moves {
     this.state = {
     }
   }
-  getAcceptedMoves() {
-
+  getAcceptedMoves(piece, squares) {
     console.log('White Rook H');
-    let acceptedMoves = [];
-
-    return acceptedMoves;
+    return this.getRookMoves(piece, squares);
   }
 
     render() {
