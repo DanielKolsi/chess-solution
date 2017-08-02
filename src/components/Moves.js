@@ -14,11 +14,6 @@ class Moves extends React.Component {
   getWhitePawnMoves(piece, squares) {
 
     let pos = piece.location;
-
-    // en passe previous moves
-    let EN_PASSE_WHITE_LEFT = pos - 17;
-    let EN_PASSE_WHITE_RIGHT = pos - 15;
-
     let down = pos + CONSTANTS.down;
     let down2 = pos + CONSTANTS.down2;
     let downLeft = pos + CONSTANTS.downLeft;
@@ -28,10 +23,10 @@ class Moves extends React.Component {
 
     // en passe -> former position
 
-      if (squares[down].piece == null) {
+      if (squares[down].piece === null) {
         acceptedMoves.push(down);
 
-        if (squares[piece.location].row === CONSTANTS.blackPawnInitialRow && squares[down2].piece == null) { // hasn't moved yet, double pawn front
+        if (squares[piece.location].row === CONSTANTS.whitePawnInitialRow && squares[down2].piece == null) { // hasn't moved yet, double pawn front
           //this.setState({enPasse: piece.location});
           acceptedMoves.push(down2);
         }
@@ -42,14 +37,14 @@ class Moves extends React.Component {
       if (squares[downRight].piece !== null && squares[downRight].piece.white === false) { // right up eat black
         acceptedMoves.push(downRight); // eat black piece
       }
-      if (this.state.enPasse === EN_PASSE_WHITE_LEFT) {
+      if (this.state.enPasse === (pos + CONSTANTS.enPasseDownLeft)) {
         // FIXME: add condition for en passe (correct black pawn two up previous move)
         if (squares[CONSTANTS.left].piece !== null && (squares[CONSTANTS.left].piece.value === CONSTANTS.whitePawnValue)) {
           acceptedMoves.push(downLeft); // en passe black pawn
         }
       }
 
-      if (this.state.enPasse === EN_PASSE_WHITE_RIGHT) {
+      if (this.state.enPasse === (pos + CONSTANTS.enPasseDownRight)) {
         //FIXME: replace with squares[RIGHT].piece.white == false
         if (squares[CONSTANTS.right].piece !== null && (squares[CONSTANTS.right].piece.value === CONSTANTS.whitePawnValue)) {
           acceptedMoves.push(downRight); // en passe black pawn
@@ -62,10 +57,6 @@ class Moves extends React.Component {
 
     let pos = piece.location;
 
-    // en passe previous moves
-    let EN_PASSE_WHITE_LEFT = pos - 17;
-    let EN_PASSE_WHITE_RIGHT = pos - 15;
-
     let down = pos + CONSTANTS.down;
     let down2 = pos + CONSTANTS.down2;
     let downLeft = pos + CONSTANTS.downLeft;
@@ -83,20 +74,20 @@ class Moves extends React.Component {
           acceptedMoves.push(down2);
         }
       }
-      if (squares[downLeft].piece !== null && squares[downLeft].piece.white === false) { // eat black
+      if (squares[downLeft].piece !== null && squares[downLeft].piece.white === false) { // eat white
         acceptedMoves.push(downLeft); // eat black piece
       }
-      if (squares[downRight].piece !== null && squares[downRight].piece.white === false) { // right up eat black
-        acceptedMoves.push(downRight); // eat black piece
+      if (squares[downRight].piece !== null && squares[downRight].piece.white === false) { // right up eat white
+        acceptedMoves.push(downRight);
       }
-      if (this.state.enPasse === EN_PASSE_WHITE_LEFT) {
+      if (this.state.enPasse === (pos + CONSTANTS.enPasseDownLeft)) {
         // FIXME: add condition for en passe (correct black pawn two up previous move)
         if (squares[CONSTANTS.left].piece !== null && (squares[CONSTANTS.left].piece.value === CONSTANTS.whitePawnValue)) {
           acceptedMoves.push(downLeft); // en passe black pawn
         }
       }
 
-      if (this.state.enPasse === EN_PASSE_WHITE_RIGHT) {
+      if (this.state.enPasse === (pos + CONSTANTS.enPasseDownRight)) {
         //FIXME: replace with squares[RIGHT].piece.white == false
         if (squares[CONSTANTS.right].piece !== null && (squares[CONSTANTS.right].piece.value === CONSTANTS.whitePawnValue)) {
           acceptedMoves.push(downRight); // en passe black pawn
