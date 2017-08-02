@@ -4,7 +4,7 @@ class AutoMove extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: ''
+      value: 0
     }
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -12,8 +12,9 @@ class AutoMove extends React.Component {
   handleSubmit(e) {
     console.log('submitting move='+e);
     e.preventDefault();
+    this.setState({value: this.state.value++})
     this.props.autoMove(this.state.value);
-    //this.setState({value: ''});
+
   }
   render() {
     return (

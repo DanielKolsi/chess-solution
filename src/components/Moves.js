@@ -57,40 +57,40 @@ class Moves extends React.Component {
 
     let pos = piece.location;
 
-    let down = pos + CONSTANTS.down;
-    let down2 = pos + CONSTANTS.down2;
-    let downLeft = pos + CONSTANTS.downLeft;
-    let downRight = pos + CONSTANTS.downRight;
+    let up = pos + CONSTANTS.up;
+    let up2 = pos + CONSTANTS.up2;
+    let upLeft = pos + CONSTANTS.upLeft;
+    let upRight = pos + CONSTANTS.upRight;
 
     let acceptedMoves = [];
 
     // en passe -> former position
 
-      if (squares[down].piece == null) {
-        acceptedMoves.push(down);
+      if (squares[up].piece == null) {
+        acceptedMoves.push(up);
 
-        if (squares[piece.location].row === CONSTANTS.blackPawnInitialRow && squares[down2].piece == null) { // hasn't moved yet, double pawn front
+        if (squares[piece.location].row === CONSTANTS.blackPawnInitialRow && squares[up2].piece === null) { // hasn't moved yet, double pawn front
           //this.setState({enPasse: piece.location});
-          acceptedMoves.push(down2);
+          acceptedMoves.push(up2);
         }
       }
-      if (squares[downLeft].piece !== null && squares[downLeft].piece.white === false) { // eat white
-        acceptedMoves.push(downLeft); // eat black piece
+      if (squares[upLeft].piece !== null && squares[upLeft].piece.white === false) { // eat white
+        acceptedMoves.push(upLeft); // eat black piece
       }
-      if (squares[downRight].piece !== null && squares[downRight].piece.white === false) { // right up eat white
-        acceptedMoves.push(downRight);
+      if (squares[upRight].piece !== null && squares[upRight].piece.white === false) { // right up eat white
+        acceptedMoves.push(upRight);
       }
-      if (this.state.enPasse === (pos + CONSTANTS.enPasseDownLeft)) {
+      if (this.state.enPasse === (pos + CONSTANTS.enPasseUpLeft)) {
         // FIXME: add condition for en passe (correct black pawn two up previous move)
         if (squares[CONSTANTS.left].piece !== null && (squares[CONSTANTS.left].piece.value === CONSTANTS.whitePawnValue)) {
-          acceptedMoves.push(downLeft); // en passe black pawn
+          acceptedMoves.push(upLeft); // en passe black pawn
         }
       }
 
-      if (this.state.enPasse === (pos + CONSTANTS.enPasseDownRight)) {
+      if (this.state.enPasse === (pos + CONSTANTS.enPasseUpRight)) {
         //FIXME: replace with squares[RIGHT].piece.white == false
         if (squares[CONSTANTS.right].piece !== null && (squares[CONSTANTS.right].piece.value === CONSTANTS.whitePawnValue)) {
-          acceptedMoves.push(downRight); // en passe black pawn
+          acceptedMoves.push(upRight); // en passe black pawn
         }
       }
     return acceptedMoves;
@@ -113,7 +113,7 @@ class Moves extends React.Component {
     let rightDown = pos + CONSTANTS.twoRightOneDown;
 
     if (squares[pos].row >= 1 && squares[pos].col <= 5) { // check that the move stays on the board
-      if (squares[rightDown].piece == null || (squares[rightUp].piece.white !== squares[pos].piece.white)) {
+      if (squares[rightDown].piece == null || (squares[rightDown].piece.white !== squares[pos].piece.white)) {
         acceptedMoves.push(rightDown);
       }
     }
@@ -121,14 +121,14 @@ class Moves extends React.Component {
     // 2 up, 1 right
     let upRight = pos + CONSTANTS.twoUpOneRight;
     if (squares[pos].row <= 5 && squares[pos].col <= 6) {
-      if (squares[upRight].piece == null || (squares[rightUp].piece.white !== squares[pos].piece.white)) {
+      if (squares[upRight].piece == null || (squares[upRight].piece.white !== squares[pos].piece.white)) {
         acceptedMoves.push(upRight);
       }
     }
     // 2 up, 1 left
     let upLeft = pos + 15;
     if (squares[pos].row <= 5 && squares[pos].col >= 1) {
-      if (squares[upLeft].piece == null || (squares[rightUp].piece.white !== squares[pos].piece.white)) {
+      if (squares[upLeft].piece == null || (squares[upLeft].piece.white !== squares[pos].piece.white)) {
         acceptedMoves.push(upLeft);
       }
     }
@@ -136,7 +136,7 @@ class Moves extends React.Component {
     let leftUp = pos + CONSTANTS.twoLeftOneUp;
 
     if (squares[pos].row <= 6 && squares[pos].col >= 2) {
-      if (squares[leftUp].piece == null || (squares[rightUp].piece.white !== squares[pos].piece.white)) {
+      if (squares[leftUp].piece == null || (squares[leftUp].piece.white !== squares[pos].piece.white)) {
         acceptedMoves.push(leftUp);
       }
     }
@@ -144,21 +144,21 @@ class Moves extends React.Component {
     // 2 left, 1 down
     let leftDown = pos + CONSTANTS.twoLeftOneDown;
     if (squares[pos].row >= 1 && squares[pos].col >= 2) {
-      if (squares[leftDown].piece == null || (squares[rightUp].piece.white !== squares[pos].piece.white)) {
+      if (squares[leftDown].piece == null || (squares[leftDown].piece.white !== squares[pos].piece.white)) {
         acceptedMoves.push(leftDown);
       }
     }
     // 2 down, 1 right
     let downRight = pos + CONSTANTS.twoDownOneRight;
     if (squares[pos].row >= 2 && squares[pos].col <= 6) {
-      if (squares[downRight].piece == null || (squares[rightUp].piece.white !== squares[pos].piece.white)) {
+      if (squares[downRight].piece == null || (squares[downRight].piece.white !== squares[pos].piece.white)) {
         acceptedMoves.push(downRight);
       }
     }
     // 2 down, 1 left
     let downLeft = pos + CONSTANTS.twoDownOneLeft;
     if (squares[pos].row >= 2 && squares[pos].col >= 1) {
-      if (squares[downLeft].piece == null || (squares[rightUp].piece.white !== squares[pos].piece.white)) {
+      if (squares[downLeft].piece == null || (squares[downLeft].piece.white !== squares[pos].piece.white)) {
         acceptedMoves.push(downLeft);
       }
     }

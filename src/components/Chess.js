@@ -136,31 +136,32 @@ class Chess extends React.Component {
     //this.setState({ids: ids});
   }
 
-  autoMove() {
+  autoMove(value) {
 
     const {pieces, squares} = this.state;
 
-
-
-      console.log('xxx  Chess: automove:' + this.state.white);
+      console.log('xxx  Chess: automove:' + this.state.white + ' move number = ' + value);
 
 
         for (let i = 48; i < 64; i++) {
           let piece = pieces[i];
-          if (piece == null)
+          if (piece == null) {
             continue; // piece has been e.g. eaten
+          }
+          
+
           this.possibleMoves(pieces[i], squares); // possiblemoves, removalmoves, acceptedmoves
         }
 
-        /*for (let i = 0; i < 16; i++) {
+        for (let i = 0; i < 16; i++) {
           let piece = pieces[i];
-          if (piece == null)
+          if (piece == null) {
             continue; // piece has been e.g. eaten
+          }
+
           this.possibleMoves(pieces[i], squares);
-          console.log('black piece i  = ' + i + pieces[i]);
-        }*/
-
-
+          //console.log('black piece i  = ' + i + pieces[i]);
+        }
 
     /*
     let pieceId = 59;
