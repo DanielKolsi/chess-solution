@@ -10,7 +10,7 @@ class Chess extends React.Component {
     this.state = {
       pieces: {},
       squares: [],
-//      ids: [], // raw ref number of the piece, won't change
+      //      ids: [], // raw ref number of the piece, won't change
       white: true,
       move: null,
       acceptedMoves: null
@@ -48,10 +48,12 @@ class Chess extends React.Component {
 
     if (location !== undefined) {
       let acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares);
-      console.log('acceptedmoves size = '+ acceptedMoves.length + '\n\n');
+      console.log('acceptedmoves size = ' + acceptedMoves.length + '\n\n');
     }
 
-    this.setState({white: !this.white}); // switch turn
+    this.setState({
+      white: !this.white
+    }); // switch turn
   }
 
   move(src, dst) {
@@ -89,7 +91,6 @@ class Chess extends React.Component {
     this.setState({move: null});
 
   }
-
 
   initBoard() {
     const squares = [];
@@ -139,21 +140,29 @@ class Chess extends React.Component {
 
     const {pieces, squares} = this.state;
 
-    if (this.state.white) {
-      console.log('xxx  Chess: automove:'+ this.state.white);
+
+    for (let n = 0; n < 2; n++) {
+      console.log('xxx  Chess: automove:' + this.state.white);
+      if (this.state.white) {
+
         for (let i = 48; i < 64; i++) {
-            let piece = pieces[i];
-            if (piece == null) continue; // piece has been e.g. eaten
-            this.possibleMoves(pieces[i], squares); // possiblemoves, removalmoves, acceptedmoves
+          let piece = pieces[i];
+          if (piece == null)
+            continue; // piece has been e.g. eaten
+          this.possibleMoves(pieces[i], squares); // possiblemoves, removalmoves, acceptedmoves
         }
-    } else { //black moves
-      for (let i = 0; i < 16; i++) {
-          //this.possibleMoves(pieces[i], squares);
+      } else { //black moves
+        for (let i = 0; i < 16; i++) {
+          let piece = pieces[i];
+          if (piece == null)
+            continue; // piece has been e.g. eaten
+          this.possibleMoves(pieces[i], squares);
           console.log('black piece i  = ' + i + pieces[i]);
+        }
       }
     }
 
-/*
+    /*
     let pieceId = 59;
     this.possibleMoves(59); // white queen //FIXME
 
@@ -203,7 +212,7 @@ class Chess extends React.Component {
 
     this.removePiece(0, 27); // en passe*/
 
-  //  this.possibleMoves(59); // white queen //FIXME
+    //  this.possibleMoves(59); // white queen //FIXME
   }
 
   render() {

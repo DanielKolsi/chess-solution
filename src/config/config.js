@@ -12,7 +12,7 @@ export default {
     [25, 'PawnBB','bpb', 9, false, -1],
     [10, 'PawnBC','bpc', 10, false, -1],
     [11, 'PawnBD','bpd', 11, false, -1],
-    [12, 'PawnBE','bpe', 12, false, -1],
+    /*[12, 'PawnBE','bpe', 12, false, -1],
     [13, 'PawnBF','bpf', 13, false, -1],
     [14, 'PawnBG','bpg', 14, false, -1],
     [15, 'PawnBH','bph', 15, false, -1],
@@ -36,8 +36,9 @@ export default {
   ]*/
 
   setup: [
-  /*  [48, 'PawnWA', 'wpa', 48, true, 1],
-    [49, 'PawnWB','wpb', 49, true, 1],
+   [10, 'PawnWA', 'wpa', 48, true, 1],
+   [11, 'PawnBD','bpd', 11, false, -1],
+  /*  [49, 'PawnWB','wpb', 49, true, 1],
     [26, 'PawnWC','wpc', 50, true, 1],
     [51, 'PawnWD','wpd', 51, true, 1],
     [52, 'PawnWE','wpe', 52, true, 1],
