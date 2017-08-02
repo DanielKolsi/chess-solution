@@ -10,27 +10,6 @@ class Moves extends React.Component {
     }
   }
 
-  // columns left for left direction based on current position
-/*  getColsToLeft(pos) {
-
-    const COLS_IN_ROW = 8;
-    if (pos < COLS_IN_ROW) {
-      return pos;
-    }
-    return pos % COLS_IN_ROW;
-  }
-
-  // columns left for right direction based on current position
-  getColsToRight(pos) {
-    const COLS_IN_ROW = 8;
-    const MAX_COL_NUMBER = COLS_IN_ROW - 1; // 0...7
-    if (pos < COLS_IN_ROW) {
-      return (MAX_COL_NUMBER - pos);
-    }
-    return (MAX_COL_NUMBER - (pos % COLS_IN_ROW));
-  }*/
-
-
   // en passe -> former position (former from move)
   getWhitePawnMoves(piece, squares) {
 
@@ -79,6 +58,52 @@ class Moves extends React.Component {
     return acceptedMoves;
   }
 
+  getBlackPawnMoves(piece, squares) {
+
+    let pos = piece.location;
+
+    // en passe previous moves
+    let EN_PASSE_WHITE_LEFT = pos - 17;
+    let EN_PASSE_WHITE_RIGHT = pos - 15;
+
+    let down = pos + CONSTANTS.down;
+    let down2 = pos + CONSTANTS.down2;
+    let downLeft = pos + CONSTANTS.downLeft;
+    let downRight = pos + CONSTANTS.downRight;
+
+    let acceptedMoves = [];
+
+    // en passe -> former position
+
+      if (squares[down].piece == null) {
+        acceptedMoves.push(down);
+
+        if (squares[piece.location].row === CONSTANTS.whitePawnInitialRow && squares[down2].piece == null) { // hasn't moved yet, double pawn front
+          //this.setState({enPasse: piece.location});
+          acceptedMoves.push(down2);
+        }
+      }
+      if (squares[downLeft].piece !== null && squares[downLeft].piece.white === false) { // eat black
+        acceptedMoves.push(downLeft); // eat black piece
+      }
+      if (squares[downRight].piece !== null && squares[downRight].piece.white === false) { // right up eat black
+        acceptedMoves.push(downRight); // eat black piece
+      }
+      if (this.state.enPasse === EN_PASSE_WHITE_LEFT) {
+        // FIXME: add condition for en passe (correct black pawn two up previous move)
+        if (squares[CONSTANTS.left].piece !== null && (squares[CONSTANTS.left].piece.value === CONSTANTS.blackPawnValue)) {
+          acceptedMoves.push(downLeft); // en passe black pawn
+        }
+      }
+
+      if (this.state.enPasse === EN_PASSE_WHITE_RIGHT) {
+        //FIXME: replace with squares[RIGHT].piece.white == false
+        if (squares[CONSTANTS.right].piece !== null && (squares[CONSTANTS.right].piece.value === CONSTANTS.blackPawnValue)) {
+          acceptedMoves.push(downRight); // en passe black pawn
+        }
+      }
+    return acceptedMoves;
+  }
 
   getKnightMoves(piece, squares) {
 
@@ -336,7 +361,7 @@ class Moves extends React.Component {
     let movesLeft = squares[pos].col;
 
     for (let i = LEFT; i >= (pos - movesLeft); i--) {
-        
+
       if (squares[i].piece === null) {
         acceptedMoves.push(i);
       } else if (squares[pos].white !== squares[i].white) {

@@ -7,6 +7,12 @@ class RookA extends React.Component {
     }
   }
 
+
+  getAcceptedMoves(piece, squares) {
+    console.log('Black Rook A');
+    return this.getRookMoves(piece, squares);
+  }
+
     render() {
       return (
         <div className="piece">

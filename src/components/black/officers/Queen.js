@@ -7,6 +7,11 @@ class BishopC extends React.Component {
     }
   }
 
+  getAcceptedMoves(piece, squares) {
+    console.log('Black Queen');
+    return this.getQueenMoves(piece, squares);
+  }
+
     render() {
       return (
         <div className="piece">

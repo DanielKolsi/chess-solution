@@ -7,7 +7,6 @@ class KnightG extends React.Component {
     }
   }
   getAcceptedMoves(piece, squares) {
-
     console.log('Black Knight G');
     return this.getKnightMoves(piece, squares);
   }
