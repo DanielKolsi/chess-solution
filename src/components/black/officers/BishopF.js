@@ -6,6 +6,10 @@ class BishopF extends React.Component {
     this.state = {
     }
   }
+  getAcceptedMoves(piece, squares) {
+    console.log('Black Bishop F');
+    return this.getBishopMoves(piece, squares);
+  }
 
     render() {
       return (

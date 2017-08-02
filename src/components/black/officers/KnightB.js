@@ -7,6 +7,11 @@ class KnightB extends React.Component {
     }
   }
 
+  getAcceptedMoves(piece, squares) {
+    console.log('Black Knight B');
+    return this.getKnightMoves(piece, squares);
+  }
+
     render() {
       return (
         <div className="piece">
