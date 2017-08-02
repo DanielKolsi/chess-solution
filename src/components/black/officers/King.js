@@ -4,8 +4,7 @@ import CONSTANTS from '../../../config/constants';
 class King extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-    }
+    this.state = {}
   }
 
   getAcceptedMoves(piece, squares) {
@@ -13,48 +12,70 @@ class King extends React.Component {
     let acceptedMoves = [];
     let pos = piece.location;
 
-    let UP = pos + 8;
-    let DOWN = pos - 8;
-    let LEFT = pos - 1;
-    let RIGHT = pos + 1;
-    let LEFT_DOWN = pos - 9;
-    let RIGHT_DOWN = pos - 7;
-    let LEFT_UP = pos + 9;
-    let RIGHT_UP = pos + 7;
+    let up = pos + CONSTANTS.up;
+    let down = pos + CONSTANTS.down;
+    let left = pos + CONSTANTS.left;
+    let right = pos + CONSTANTS.right;
+    let downLeft = pos + CONSTANTS.downLeft;
+    let downRight = pos + CONSTANTS.downRight;
+    let upLeft = pos + CONSTANTS.upLeft;
+    let upRight = pos + CONSTANTS.upRight;
 
-    
-      if (squares[UP] !== undefined && (squares[UP].piece == null || squares[UP].piece.n >= CONSTANTS.minWhite)) {
-          acceptedMoves.push(UP);
+    if (squares[pos].row < CONSTANTS.maxRow) { // needs to stay on the board limits
+      if (squares[up] !== undefined && (squares[up].piece == null || (squares[up].piece.white === false))) {
+        acceptedMoves.push(up);
       }
-      if (squares[DOWN].piece == null || squares[DOWN].piece.n >= CONSTANTS.minWhite) {
-          acceptedMoves.push(DOWN);
+    }
+
+    if (squares[pos].row > CONSTANTS.minRow) { // needs to stay on the board limits
+      if (squares[down].piece == null || (squares[down].piece.white === false)) {
+        acceptedMoves.push(down);
       }
-      if (squares[LEFT].piece == null || squares[LEFT].piece.n >= CONSTANTS.minWhite) {
-          acceptedMoves.push(LEFT);
+    }
+
+    if (squares[pos].col > CONSTANTS.minCol) { // needs to stay on the board limits
+      if (squares[left].piece == null || (squares[left].piece.white === false)) {
+        acceptedMoves.push(left);
       }
-      if (squares[RIGHT].piece == null || squares[RIGHT].piece.n >= CONSTANTS.minWhite) {
-          acceptedMoves.push(RIGHT);
+    }
+
+    if (squares[pos].col < CONSTANTS.maxCol) { // needs to stay on the board limits
+      if (squares[right].piece == null || (squares[right].piece.white === false)) {
+        acceptedMoves.push(right);
       }
-      if (squares[RIGHT_UP].piece == null || squares[RIGHT_UP].piece.n >= CONSTANTS.minWhite) {
-        acceptedMoves.push(RIGHT_UP);
+    }
+
+    if (squares[pos].row < CONSTANTS.minRow && (squares[pos].col < CONSTANTS.minCol)) { // needs to stay on the board limits
+      if (squares[upRight].piece == null || (squares[upRight].piece.white === false)) {
+        acceptedMoves.push(upRight);
       }
-      if (squares[RIGHT_DOWN].piece == null || squares[RIGHT_DOWN].piece.n >= CONSTANTS.minWhite) {
-          acceptedMoves.push(RIGHT_DOWN);
+    }
+
+    if (squares[pos].row > CONSTANTS.minRow && squares[pos].col < CONSTANTS.maxCol) { // needs to stay on the board limits
+      if (squares[downRight].piece == null || (squares[downRight].piece.white === false)) {
+        acceptedMoves.push(downRight);
       }
-      if (squares[LEFT_UP].piece == null || squares[LEFT_UP].piece.n >= CONSTANTS.minWhite) {
-          acceptedMoves.push(LEFT_UP);
+    }
+
+    if (squares[pos].row < CONSTANTS.maxRow && squares[pos].col > CONSTANTS.minCol) { // needs to stay on the board limits
+      if (squares[upLeft].piece == null || (squares[upLeft].piece.white === false)) {
+        acceptedMoves.push(upLeft);
       }
-      if (squares[LEFT_DOWN].piece == null || squares[LEFT_DOWN].piece.n >= CONSTANTS.minWhite) {
-          acceptedMoves.push(LEFT_DOWN);
+    }
+
+    if (squares[pos].row > CONSTANTS.minRow && squares[pos].col > CONSTANTS.minCol) { // needs to stay on the board limits
+      if (squares[downLeft].piece == null || (squares[downLeft].piece.white === false)) {
+        acceptedMoves.push(downLeft);
       }
+    }
   }
 
-    render() {
-      return (
-        <div className="piece">
-          {String.fromCharCode(9818)}
-        </div>
-      );
-    }
+  render() {
+    return (
+      <div className="piece">
+        {String.fromCharCode(9818)}
+      </div>
+    );
+  }
 }
 export default King;
