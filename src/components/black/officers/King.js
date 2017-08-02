@@ -22,37 +22,37 @@ class King extends React.Component {
     let upRight = pos + CONSTANTS.upRight;
 
     if (squares[pos].row < CONSTANTS.maxRow) { // needs to stay on the board limits
-      if (squares[up].piece == null || squares[up].piece.white === true) {
+      if (squares[up].piece == null || (squares[up].piece.white === true)) {
         acceptedMoves.push(up);
       }
     }
 
     if (squares[pos].row > CONSTANTS.minRow) { // needs to stay on the board limits
-      if (squares[down].piece == null || squares[down].piece.white === true) {
+      if (squares[down].piece == null || (squares[down].piece.white === true)) {
         acceptedMoves.push(down);
       }
     }
 
     if (squares[pos].col > CONSTANTS.minCol) { // needs to stay on the board limits
-      if (squares[left].piece == null || squares[left].piece.white === true) {
+      if (squares[left].piece == null || (squares[left].piece.white === true)) {
         acceptedMoves.push(left);
       }
     }
 
     if (squares[pos].col < CONSTANTS.maxCol) { // needs to stay on the board limits
-      if (squares[right].piece == null || squares[right].piece.white === true) {
+      if (squares[right].piece == null || (squares[right].piece.white === true)) {
         acceptedMoves.push(right);
       }
     }
 
-    if (squares[pos].row < CONSTANTS.minRow && (squares[pos].col < CONSTANTS.minCol)) { // needs to stay on the board limits
-      if (squares[upRight].piece == null || squares[upRight].piece.white === true) {
+    if (squares[pos].row < CONSTANTS.maxRow && (squares[pos].col < CONSTANTS.maxCol)) { // needs to stay on the board limits
+      if (squares[upRight].piece == null || (squares[upRight].piece.white === true)) {
         acceptedMoves.push(upRight);
       }
     }
 
     if (squares[pos].row > CONSTANTS.minRow && squares[pos].col < CONSTANTS.maxCol) { // needs to stay on the board limits
-      if (squares[downRight].piece == null || squares[downRight].piece.white === true) {
+      if (squares[downRight].piece == null || (squares[downRight].piece.white === true)) {
         acceptedMoves.push(downRight);
       }
     }
