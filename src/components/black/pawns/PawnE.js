@@ -16,7 +16,6 @@ class PawnE extends Moves {
     return this.getBlackPawnMoves(piece, squares);
   }
 
-
     render() {
       return (
         <div className="piece">

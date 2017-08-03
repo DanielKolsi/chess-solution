@@ -2,6 +2,7 @@ import React from 'react';
 import Square from './Square';
 import AutoMove from './AutoMove';
 import update from 'immutability-helper';
+import CONSTANTS from '../config/constants';
 //import PropTypes from 'prop-types'; // ES6
 
 class Chess extends React.Component {
@@ -42,18 +43,21 @@ class Chess extends React.Component {
   }
 
   //FIXME: get pieceId from index and index from pieceId
-  possibleMoves(piece, squares) {
+  getPossibleMoves(piece, squares) {
 
     let location = piece.location;
+    let acceptedMoves = {};
 
     if (location !== undefined) {
-      let acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares);
+      acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares);
       console.log('acceptedmoves size = ' + acceptedMoves.length + '\n\n');
     }
 
     this.setState({
       white: !this.white
     }); // switch turn
+    console.log('accepted moves size = ' + acceptedMoves.length);
+    return acceptedMoves
   }
 
   move(src, dst) {
@@ -89,7 +93,6 @@ class Chess extends React.Component {
     });
     this.setState({pieces: pieces});
     this.setState({move: null});
-
   }
 
   initBoard() {
@@ -140,28 +143,38 @@ class Chess extends React.Component {
 
     const {pieces, squares} = this.state;
 
-      console.log('xxx  Chess: automove:' + this.state.white + ' move number = ' + value);
+    console.log('xxx  Chess: automove:' + this.state.white + ' move number = ' + value);
+    let possibleMovesWhite = {};
 
+    for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite; i++) {
+      let piece = pieces[i];
 
-        for (let i = 48; i < 64; i++) {
-          let piece = pieces[i];
-          if (piece == null) {
-            continue; // piece has been e.g. eaten
-          }
-          
+      if (piece == null) {
+        continue; // piece has been e.g. eaten
+      }
 
-          this.possibleMoves(pieces[i], squares); // possiblemoves, removalmoves, acceptedmoves
-        }
+      let pieceMoves = this.getPossibleMoves(pieces[i], squares);
 
-        for (let i = 0; i < 16; i++) {
-          let piece = pieces[i];
-          if (piece == null) {
-            continue; // piece has been e.g. eaten
-          }
+      if (pieceMoves.length > 0 && possibleMovesWhite.length == undefined) {
+        possibleMovesWhite = pieceMoves;
+      } else if (pieceMoves.length > 0) {
+        possibleMovesWhite = possibleMovesWhite.concat(pieceMoves); // possiblemoves, removalmoves, acceptedmoves
+      }
+    }
 
-          this.possibleMoves(pieces[i], squares);
-          //console.log('black piece i  = ' + i + pieces[i]);
-        }
+    console.log('Possible moves white, total = ' + possibleMovesWhite.length);
+
+    let possibleMovesBlack = {};
+
+    for (let i = CONSTANTS.minBlack; i <= CONSTANTS.maxBlack; i++) {
+      let piece = pieces[i];
+      if (piece == null) {
+        continue; // piece has been e.g. eaten
+      }
+
+      possibleMovesBlack = this.getPossibleMoves(pieces[i], squares);
+      //console.log('black piece i  = ' + i + pieces[i]);
+    }
 
     /*
     let pieceId = 59;
@@ -221,12 +234,11 @@ class Chess extends React.Component {
       return (<Square ref={index} key={index} index={index} chessId={square.chessId} piece={square.piece} moveMap={this.moveMap}/>);
     });
 
-    // Process squares into rows of length 8
-    // Doing it this way rather than rendering state.rows directly allows for squares to be indexed properly
     let rows = [];
-    let chunk = 8;
-    for (let i = 0; i < squares.length; i += chunk) {
-      rows.push(squares.slice(i, i + chunk));
+    let rowLength = CONSTANTS.squaresInRow;
+
+    for (let i = 0; i < squares.length; i += rowLength) {
+      rows.push(squares.slice(i, i + rowLength));
     }
 
     return (
