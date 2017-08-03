@@ -155,7 +155,7 @@ class Chess extends React.Component {
 
       let pieceMoves = this.getPossibleMoves(pieces[i], squares);
 
-      if (pieceMoves.length > 0 && possibleMovesWhite.length == undefined) {
+      if (pieceMoves.length > 0 && possibleMovesWhite.length === undefined) {
         possibleMovesWhite = pieceMoves;
       } else if (pieceMoves.length > 0) {
         possibleMovesWhite = possibleMovesWhite.concat(pieceMoves); // possiblemoves, removalmoves, acceptedmoves
@@ -171,10 +171,17 @@ class Chess extends React.Component {
       if (piece == null) {
         continue; // piece has been e.g. eaten
       }
+      let pieceMoves = this.getPossibleMoves(pieces[i], squares);
+      console.log('pieceMoves black = ' + pieceMoves.length);
 
-      possibleMovesBlack = this.getPossibleMoves(pieces[i], squares);
-      //console.log('black piece i  = ' + i + pieces[i]);
+      if (pieceMoves.length > 0 && possibleMovesBlack.length === undefined) {
+        possibleMovesBlack = pieceMoves;
+      } else if (pieceMoves.length > 0) {
+        possibleMovesBlack = possibleMovesBlack.concat(pieceMoves); // possiblemoves, removalmoves, acceptedmoves
+      }
     }
+
+    console.log('Possible moves black, total = ' + possibleMovesBlack.length);
 
     /*
     let pieceId = 59;
