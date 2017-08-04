@@ -63,9 +63,10 @@ class Chess extends React.Component {
   move(src, dst) {
     const {squares, pieces} = this.state;
     const square = squares[src];
+    const pos = square.piece.location;
     const mover = square.piece;
     //const target = squares[dst]; // FIXME, not required?
-    let source = squares[square.piece.location];
+    let source = squares[pos];
 
     source.piece = null;
 
@@ -161,7 +162,7 @@ class Chess extends React.Component {
         possibleMovesWhite = possibleMovesWhite.concat(pieceMoves); // possiblemoves, removalmoves, acceptedmoves
       }
     }
-
+    // select a move and execute it!  moveMap(sr, sc, dr, dc) { //FIXME
     console.log('Possible moves white, total = ' + possibleMovesWhite.length);
 
     let possibleMovesBlack = {};
@@ -181,8 +182,8 @@ class Chess extends React.Component {
       }
     }
 
-    console.log('Possible moves black, total = ' + possibleMovesBlack.length);
-
+    console.log('Possible moves black, total = ' + possibleMovesBlack.length + ' first = ' + possibleMovesBlack[0]);
+    this.move(0, 33);
     /*
     let pieceId = 59;
     this.possibleMoves(59); // white queen //FIXME
