@@ -10,10 +10,21 @@ class Moves extends React.Component {
     }
   }
 
+  // ensure that source position contains two digits
+  getFormattedPosition(pos) {
+
+    if (pos < CONSTANTS.minTwoDigitNumber) {
+      pos = '0' + pos; //use format 01, 02 ... 09 for source
+    }
+    return pos;
+  }
+
   // en passe -> former position (former from move)
   getWhitePawnMoves(piece, squares) {
 
     let pos = piece.location;
+    let src = this.getFormattedPosition(pos);
+
     let down = pos + CONSTANTS.down;
     let down2 = pos + CONSTANTS.down2;
     let downLeft = pos + CONSTANTS.downLeft;
@@ -24,7 +35,7 @@ class Moves extends React.Component {
     // en passe -> former position
 
       if (squares[down].piece === null && (squares[piece.location].row > CONSTANTS.minRow)) {
-        acceptedMoves.push(pos + '' + down);
+        acceptedMoves.push(src + '' + down);
 
         if (squares[piece.location].row === CONSTANTS.whitePawnInitialRow && squares[down2].piece == null) { // hasn't moved yet, double pawn front
           //this.setState({enPasse: piece.location});
@@ -32,7 +43,7 @@ class Moves extends React.Component {
         }
       }
       if (squares[pos].col > CONSTANTS.minCol && (squares[downLeft].piece !== null && squares[downLeft].piece.white === false)) { // eat black
-        acceptedMoves.push(pos + '' + downLeft); // eat black piece
+        acceptedMoves.push(src + '' + downLeft); // eat black piece
       }
       if (squares[pos].col < CONSTANTS.maxCol && (squares[downRight].piece !== null && squares[downRight].piece.white === false)) { // right up eat black
         acceptedMoves.push(downRight); // eat black piece
@@ -40,14 +51,14 @@ class Moves extends React.Component {
       if (this.state.enPasse === (pos + CONSTANTS.enPasseDownLeft)) {
         // FIXME: add condition for en passe (correct black pawn two up previous move)
         if (squares[CONSTANTS.left].piece !== null && (squares[CONSTANTS.left].piece.value === CONSTANTS.whitePawnValue)) {
-          acceptedMoves.push(pos + '' + downLeft); // en passe black pawn
+          acceptedMoves.push(src + '' + downLeft); // en passe black pawn
         }
       }
 
       if (this.state.enPasse === (pos + CONSTANTS.enPasseDownRight)) {
         //FIXME: replace with squares[RIGHT].piece.white == false
         if (squares[CONSTANTS.right].piece !== null && (squares[CONSTANTS.right].piece.value === CONSTANTS.whitePawnValue)) {
-          acceptedMoves.push(pos + '' + downRight); // en passe black pawn
+          acceptedMoves.push(src + '' + downRight); // en passe black pawn
         }
       }
     return acceptedMoves;
@@ -56,6 +67,7 @@ class Moves extends React.Component {
   getBlackPawnMoves(piece, squares) {
 
     let pos = piece.location;
+    let src = this.getFormattedPosition(pos);
 
     let up = pos + CONSTANTS.up;
     let up2 = pos + CONSTANTS.up2;
@@ -67,30 +79,30 @@ class Moves extends React.Component {
     // en passe -> former position
 
       if (squares[up].piece == null && (squares[piece.location].row < CONSTANTS.maxRow)) {
-        acceptedMoves.push(pos + '' + up);
+        acceptedMoves.push(src + '' + up);
 
         if (squares[piece.location].row === CONSTANTS.blackPawnInitialRow && squares[up2].piece === null) { // hasn't moved yet, double pawn front
           //this.setState({enPasse: piece.location});
-          acceptedMoves.push(pos + '' + up2);
+          acceptedMoves.push(src + '' + up2);
         }
       }
       if (squares[pos].col > CONSTANTS.minCol && (squares[upLeft].piece !== null && squares[upLeft].piece.white === false)) { // eat white
-          acceptedMoves.push(pos + '' + upLeft);
+          acceptedMoves.push(src + '' + upLeft);
       }
       if (squares[pos].col < CONSTANTS.maxCol && (squares[upRight].piece !== null && squares[upRight].piece.white === false)) { // right up eat white
-        acceptedMoves.push(pos + '' + upRight);
+        acceptedMoves.push(src + '' + upRight);
       }
       if (this.state.enPasse === (pos + CONSTANTS.enPasseUpLeft)) {
         // FIXME: add condition for en passe (correct black pawn two up previous move)
         if (squares[CONSTANTS.left].piece !== null && (squares[CONSTANTS.left].piece.value === CONSTANTS.whitePawnValue)) {
-          acceptedMoves.push(pos + '' + upLeft); // en passe black pawn
+          acceptedMoves.push(src + '' + upLeft); // en passe black pawn
         }
       }
 
       if (this.state.enPasse === (pos + CONSTANTS.enPasseUpRight)) {
         //FIXME: replace with squares[RIGHT].piece.white == false
         if (squares[CONSTANTS.right].piece !== null && (squares[CONSTANTS.right].piece.value === CONSTANTS.whitePawnValue)) {
-          acceptedMoves.push(pos + '' + upRight); // en passe black pawn
+          acceptedMoves.push(src + '' + upRight); // en passe black pawn
         }
       }
     return acceptedMoves;
@@ -99,6 +111,7 @@ class Moves extends React.Component {
   getKnightMoves(piece, squares) {
 
     let pos = piece.location;
+    let src = this.getFormattedPosition(piece.location);
     let acceptedMoves = [];
 
     // 2 right, 1 up
@@ -106,7 +119,7 @@ class Moves extends React.Component {
 
     if (squares[pos].row <= 6 && squares[pos].col <= 5) { // check that the move stays on the board
       if (squares[rightUp].piece == null || (squares[rightUp].piece.white !== piece.white)) {
-        acceptedMoves.push(pos + '' + rightUp);
+        acceptedMoves.push(src + '' + rightUp);
       }
     }
     // 2 right, 1 down
@@ -114,7 +127,7 @@ class Moves extends React.Component {
 
     if (squares[pos].row >= 1 && squares[pos].col <= 5) { // check that the move stays on the board
       if (squares[rightDown].piece == null || (squares[rightDown].piece.white !== piece.white)) {
-        acceptedMoves.push(pos + '' + rightDown);
+        acceptedMoves.push(src + '' + rightDown);
       }
     }
 
@@ -122,14 +135,14 @@ class Moves extends React.Component {
     let upRight = pos + CONSTANTS.twoUpOneRight;
     if (squares[pos].row <= 5 && squares[pos].col <= 6) {
       if (squares[upRight].piece == null || (squares[upRight].piece.white !== piece.white)) {
-        acceptedMoves.push(pos + '' + upRight);
+        acceptedMoves.push(src + '' + upRight);
       }
     }
     // 2 up, 1 left
     let upLeft = pos + 15;
     if (squares[pos].row <= 5 && squares[pos].col >= 1) {
       if (squares[upLeft].piece == null || (squares[upLeft].piece.white !== piece.white)) {
-        acceptedMoves.push(pos + '' + upLeft);
+        acceptedMoves.push(src + '' + upLeft);
       }
     }
     // 2 left, 1 up
@@ -137,7 +150,7 @@ class Moves extends React.Component {
 
     if (squares[pos].row <= 6 && squares[pos].col >= 2) {
       if (squares[leftUp].piece == null || (squares[leftUp].piece.white !== piece.white)) {
-        acceptedMoves.push(pos + '' + leftUp);
+        acceptedMoves.push(src + '' + leftUp);
       }
     }
 
@@ -145,21 +158,21 @@ class Moves extends React.Component {
     let leftDown = pos + CONSTANTS.twoLeftOneDown;
     if (squares[pos].row >= 1 && squares[pos].col >= 2) {
       if (squares[leftDown].piece == null || (squares[leftDown].piece.white !== piece.white)) {
-        acceptedMoves.push(pos + '' + leftDown);
+        acceptedMoves.push(src + '' + leftDown);
       }
     }
     // 2 down, 1 right
     let downRight = pos + CONSTANTS.twoDownOneRight;
     if (squares[pos].row >= 2 && squares[pos].col <= 6) {
       if (squares[downRight].piece == null || (squares[downRight].piece.white !== piece.white)) {
-        acceptedMoves.push(pos + '' + downRight);
+        acceptedMoves.push(src + '' + downRight);
       }
     }
     // 2 down, 1 left
     let downLeft = pos + CONSTANTS.twoDownOneLeft;
     if (squares[pos].row >= 2 && squares[pos].col >= 1) {
       if (squares[downLeft].piece == null || (squares[downLeft].piece.white !== piece.white)) {
-        acceptedMoves.push(pos + '' + downLeft);
+        acceptedMoves.push(src + '' + downLeft);
       }
     }
     return acceptedMoves;
@@ -181,6 +194,7 @@ class Moves extends React.Component {
   getDiagonalMovesUpRight(piece, squares, acceptedMoves) {
 
     let pos = piece.location;
+    let src = this.getFormattedPosition(pos);
     let squaresAvailableRight = CONSTANTS.maxCol - squares[pos].col;
     let squaresAvailableUp = CONSTANTS.maxRow - squares[pos].row;
 
@@ -197,9 +211,9 @@ class Moves extends React.Component {
     for (let i = 1; i <= numberOfSquaresAvailable; i++) {
       let dst = pos + (i * CONSTANTS.upRight);
       if (squares[dst].piece == null) {
-        acceptedMoves.push(pos + ' ' + pos - (i * CONSTANTS.upRight));
+        acceptedMoves.push(src + ' ' + pos - (i * CONSTANTS.upRight));
       } else if (squares[dst].piece.white !== piece.white) {
-        acceptedMoves.push(pos + '' + dst);// eat opponent's piece
+        acceptedMoves.push(src + '' + dst);// eat opponent's piece
         break;
       } else {
         break; // own piece
@@ -212,6 +226,7 @@ class Moves extends React.Component {
   getDiagonalMovesUpLeft(piece, squares, acceptedMoves) {
 
     let pos = piece.location;
+    let src = this.getFormattedPosition(pos);
     let squaresAvailableLeft = squares[pos].col;
 
     const squaresAvailableUp = CONSTANTS.maxRow - squares[pos].row;
@@ -228,9 +243,9 @@ class Moves extends React.Component {
       let dst = pos + (i * CONSTANTS.upLeft);
 
       if (squares[dst].piece == null) {
-        acceptedMoves.push(pos + '' + dst);
+        acceptedMoves.push(src + '' + dst);
       } else if (squares[dst].piece.white !== piece.white) {
-        acceptedMoves.push(pos + '' + dst); // eat opponent's piece
+        acceptedMoves.push(src + '' + dst); // eat opponent's piece
         break;
       } else {
         break; // own piece
@@ -243,6 +258,8 @@ class Moves extends React.Component {
   getDiagonalMovesDownRight(piece, squares, acceptedMoves) {
 
     let pos = piece.location;
+    let src = this.getFormattedPosition(pos);
+
     let squaresAvailableRight = CONSTANTS.maxCol - squares[pos].col;
     let squaresAvailableDown = squares[pos].row;
 
@@ -258,9 +275,9 @@ class Moves extends React.Component {
       let dst = pos + (i * CONSTANTS.downRight);
       if (squares[dst].piece == null) {
 
-        acceptedMoves.push(pos + '' + dst);
+        acceptedMoves.push(src + '' + dst);
       } else if (squares[dst].piece.white !== piece.white) {
-        acceptedMoves.push(pos + '' + dst);// eat opponent's piece
+        acceptedMoves.push(src + '' + dst);// eat opponent's piece
         break;
       } else {
         break; // own piece
@@ -275,6 +292,7 @@ class Moves extends React.Component {
 
     //FIXME, BUG in move counting
     let pos = piece.location;
+    let src = this.getFormattedPosition(pos);
     let squaresAvailableLeft = squares[pos].col;
     let squaresAvailableDown = squares[pos].row;
 
@@ -291,9 +309,9 @@ class Moves extends React.Component {
     for (let i = 1; i <= numberOfSquaresAvailable; i++) {
       let dst = pos + (i * CONSTANTS.downLeft);
       if (squares[dst].piece == null) {
-        acceptedMoves.push(pos + '' + dst);
+        acceptedMoves.push(src + '' + dst);
       } else if (squares[dst].piece.white !== piece.white) {
-        acceptedMoves.push(pos + '' + dst);// eat opponent's piece
+        acceptedMoves.push(src + '' + dst);// eat opponent's piece
         break;
       } else {
         break; // own piece
@@ -306,6 +324,7 @@ class Moves extends React.Component {
   getRookMoves(piece, squares) {
 
     let pos = piece.location;
+    let src = this.getFormattedPosition(piece.location);
 
     let acceptedMoves = [];
     let UP = pos + CONSTANTS.up;
@@ -317,9 +336,9 @@ class Moves extends React.Component {
     // move UP
     for (let i = UP; i < squares.length; i += CONSTANTS.up) {
       if (squares[i].piece === null) {
-        acceptedMoves.push(pos + '' + i);
+        acceptedMoves.push(src + '' + i);
       } else if (piece.white !== squares[i].piece.white) { // eat
-        acceptedMoves.push(pos + '' + i);
+        acceptedMoves.push(src + '' + i);
         break; // no more move possibilities after eating
       } else {
         break; // own piece blocks
@@ -329,9 +348,9 @@ class Moves extends React.Component {
     for (let i = DOWN; i >= 0; i += CONSTANTS.down) {
 
       if (squares[i].piece === null) {
-        acceptedMoves.push(pos + '' + i);
+        acceptedMoves.push(src + '' + i);
       } else if (piece.white !== squares[i].piece.white) { // eat
-        acceptedMoves.push(pos + '' + i);
+        acceptedMoves.push(src + '' + i);
         break; // no more move possibilities after eating
       } else break; // own piece
     }
@@ -341,9 +360,9 @@ class Moves extends React.Component {
 
     for (let i = RIGHT; i <= (movesRight + pos); i++) {
       if (squares[i].piece === null) {
-        acceptedMoves.push(pos + '' + i);
+        acceptedMoves.push(src + '' + i);
       } else if (piece.white !== squares[i].piece.white) { // eat
-        acceptedMoves.push(pos + '' + i);
+        acceptedMoves.push(src + '' + i);
         break; // no more move possibilities after eating
       } else break; // own piece
     }
@@ -354,9 +373,9 @@ class Moves extends React.Component {
     for (let i = LEFT; i >= (pos - movesLeft); i--) {
 
       if (squares[i].piece === null) {
-        acceptedMoves.push(pos + '' + i);
+        acceptedMoves.push(src + '' + i);
       } else if (piece.white !== squares[i].piece.white) { // eat
-        acceptedMoves.push(pos + '' + i);
+        acceptedMoves.push(src + '' + i);
         break; // no more move possibilities after eating
       } else break; // own piece
     }

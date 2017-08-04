@@ -183,7 +183,8 @@ class Chess extends React.Component {
     }
 
     console.log('Possible moves black, total = ' + possibleMovesBlack.length + ' first = ' + possibleMovesBlack[0]);
-    this.move(0, 33);
+    //this.move(0, 33);
+
     /*
     let pieceId = 59;
     this.possibleMoves(59); // white queen //FIXME
