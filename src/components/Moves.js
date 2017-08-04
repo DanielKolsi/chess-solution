@@ -31,13 +31,12 @@ class Moves extends React.Component {
 
     let acceptedMoves = [];
 
-    // en passe -> former position
 
-      if (squares[down].piece === null && (squares[piece.location].row > CONSTANTS.minRow)) {
+      if (squares[down].piece === null && (squares[pos].row > CONSTANTS.minRow)) {
         acceptedMoves.push(pos + '#' + down);
 
-        if (squares[piece.location].row === CONSTANTS.whitePawnInitialRow && squares[down2].piece == null) { // hasn't moved yet, double pawn front
-          //this.setState({enPasse: piece.location});
+        if (squares[pos].row === CONSTANTS.whitePawnInitialRow && squares[down2].piece == null) { // hasn't moved yet, double pawn front
+          //this.setState({enPasse: pos});
           acceptedMoves.push(down2);
         }
       }
@@ -66,7 +65,6 @@ class Moves extends React.Component {
   getBlackPawnMoves(piece, squares) {
 
     let pos = piece.location;
-    let src = this.getFormattedPosition(pos);
 
     let up = pos + CONSTANTS.up;
     let up2 = pos + CONSTANTS.up2;
@@ -77,11 +75,11 @@ class Moves extends React.Component {
 
     // en passe -> former position
 
-      if (squares[up].piece == null && (squares[piece.location].row < CONSTANTS.maxRow)) {
+      if (squares[up].piece == null && (squares[pos].row < CONSTANTS.maxRow)) {
         acceptedMoves.push(pos + '#' + up);
 
-        if (squares[piece.location].row === CONSTANTS.blackPawnInitialRow && squares[up2].piece === null) { // hasn't moved yet, double pawn front
-          //this.setState({enPasse: piece.location});
+        if (squares[pos].row === CONSTANTS.blackPawnInitialRow && squares[up2].piece === null) { // hasn't moved yet, double pawn front
+          //this.setState({enPasse: pos});
           acceptedMoves.push(pos + '#' + up2);
         }
       }
@@ -110,7 +108,7 @@ class Moves extends React.Component {
   getKnightMoves(piece, squares) {
 
     let pos = piece.location;
-    let src = this.getFormattedPosition(piece.location);
+
     let acceptedMoves = [];
 
     // 2 right, 1 up
@@ -225,7 +223,7 @@ class Moves extends React.Component {
   getDiagonalMovesUpLeft(piece, squares, acceptedMoves) {
 
     let pos = piece.location;
-    let src = this.getFormattedPosition(pos);
+
     let squaresAvailableLeft = squares[pos].col;
 
     const squaresAvailableUp = CONSTANTS.maxRow - squares[pos].row;
@@ -257,7 +255,6 @@ class Moves extends React.Component {
   getDiagonalMovesDownRight(piece, squares, acceptedMoves) {
 
     let pos = piece.location;
-    let src = this.getFormattedPosition(pos);
 
     let squaresAvailableRight = CONSTANTS.maxCol - squares[pos].col;
     let squaresAvailableDown = squares[pos].row;
@@ -291,7 +288,7 @@ class Moves extends React.Component {
 
     //FIXME, BUG in move counting
     let pos = piece.location;
-    let src = this.getFormattedPosition(pos);
+
     let squaresAvailableLeft = squares[pos].col;
     let squaresAvailableDown = squares[pos].row;
 
@@ -321,7 +318,6 @@ class Moves extends React.Component {
   getRookMoves(piece, squares) {
 
     let pos = piece.location;
-    let src = this.getFormattedPosition(piece.location);
 
     let acceptedMoves = [];
     let UP = pos + CONSTANTS.up;

@@ -164,6 +164,8 @@ class Chess extends React.Component {
     }
     // select a move and execute it!  moveMap(sr, sc, dr, dc) { //FIXME
     console.log('Possible moves white, total = ' + possibleMovesWhite.length);
+    const whiteMoves = possibleMovesWhite[0].split('#');
+    this.move(whiteMoves[0], whiteMoves[1]);
 
     let possibleMovesBlack = {};
 
