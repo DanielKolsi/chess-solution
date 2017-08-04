@@ -26,49 +26,49 @@ class King extends React.Component {
 
       if (squares[pos].row < CONSTANTS.maxRow) { // needs to stay on the board limits
         if (squares[up].piece == null || squares[up].piece.white === false) {
-            acceptedMoves.push(up);
+            acceptedMoves.push(pos + '' + up);
         }
       }
 
       if (squares[pos].row > CONSTANTS.minRow) { // needs to stay on the board limits
         if (squares[down].piece == null || squares[down].piece.white === false) {
-            acceptedMoves.push(down);
+            acceptedMoves.push(pos + '' + down);
         }
       }
 
       if (squares[pos].col > CONSTANTS.minCol) { // needs to stay on the board limits
         if (squares[left].piece == null || squares[left].piece.white === false) {
-            acceptedMoves.push(left);
+            acceptedMoves.push(pos + '' + left);
         }
       }
 
       if (squares[pos].col < CONSTANTS.maxCol) { // needs to stay on the board limits
         if (squares[right].piece == null || squares[right].piece.white === false) {
-            acceptedMoves.push(right);
+            acceptedMoves.push(pos + '' + pos + '' + right);
         }
       }
 
       if (squares[pos].row < CONSTANTS.minRow && (squares[pos].col < CONSTANTS.minCol)) { // needs to stay on the board limits
         if (squares[upRight].piece == null || squares[upRight].piece.white === false) {
-          acceptedMoves.push(upRight);
+          acceptedMoves.push(pos + '' + pos + '' + upRight);
         }
       }
 
       if (squares[pos].row > CONSTANTS.minRow && squares[pos].col < CONSTANTS.maxCol) { // needs to stay on the board limits
         if (squares[downRight].piece == null || squares[downRight].piece.white === false) {
-            acceptedMoves.push(downRight);
+            acceptedMoves.push(pos + '' + downRight);
         }
       }
 
       if (squares[pos].row < CONSTANTS.maxRow && squares[pos].col > CONSTANTS.minCol) { // needs to stay on the board limits
         if (squares[upLeft].piece == null || squares[upLeft].piece.white === false) {
-            acceptedMoves.push(upLeft);
+            acceptedMoves.push(pos + '' + upLeft);
         }
       }
 
       if (squares[pos].row > CONSTANTS.minRow && squares[pos].col > CONSTANTS.minCol) { // needs to stay on the board limits
         if (squares[downLeft].piece == null || squares[downLeft].piece.white === false) {
-            acceptedMoves.push(downLeft);
+            acceptedMoves.push(pos + '' + downLeft);
         }
      }
      console.log('White king moves size = ' + acceptedMoves.length);
