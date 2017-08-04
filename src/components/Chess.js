@@ -183,7 +183,11 @@ class Chess extends React.Component {
     }
 
     console.log('Possible moves black, total = ' + possibleMovesBlack.length + ' first = ' + possibleMovesBlack[0]);
-    //this.move(0, 33);
+    const str = possibleMovesBlack[0].split('#');
+    const src = str[0];
+    const dst = str[1];
+
+    this.move(src, dst);
 
     /*
     let pieceId = 59;
