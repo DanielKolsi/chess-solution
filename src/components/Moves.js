@@ -44,10 +44,10 @@ class Moves extends React.Component {
       }
       console.log('downLeft='+downLeft+'pos='+pos);
       if (squares[pos].col > CONSTANTS.minCol && (squares[downLeft].piece !== null && squares[downLeft].piece.white === false)) { // eat black
-        acceptedMoves.push(pos + '#' + downLeft); // eat black piece
+        acceptedMoves.push(pos + '#' + downLeft); // eats black piece
       }
       if (squares[pos].col < CONSTANTS.maxCol && (squares[downRight].piece !== null && squares[downRight].piece.white === false)) { // right up eat black
-        acceptedMoves.push(pos + '#' + downRight); // eat black piece
+        acceptedMoves.push(pos + '#' + downRight); // eats black piece
       }
       if (this.state.enPasse === (pos + CONSTANTS.enPasseDownLeft)) {
         // FIXME: add condition for en passe (correct black pawn two up previous move)

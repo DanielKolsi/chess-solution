@@ -48,8 +48,8 @@ class Chess extends React.Component {
     let location = piece.location;
     let acceptedMoves = {};
 
-    if (location !== undefined) {
-      console.log('piece=' + piece.type);
+    if (location !== undefined && this.refs[location].refs.piece !== undefined) {
+      console.log('piece = ' + piece.type + 'location='+piece.location);
       acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares);
       console.log('acceptedmoves size = ' + acceptedMoves.length + '\n\n');
     }
@@ -69,10 +69,14 @@ class Chess extends React.Component {
     source.piece = null;
 
     let destination = squares[dst];
+
     if (destination.piece) {
+      console.log('deleting: ' + destination.piece.type + ' id = ' + destination.piece.id + ' n='+destination.piece.n);
+      pieces[destination.piece.id] = null; //FIXME, is required?
       delete pieces[destination.piece.id];
       this.setState({pieces: pieces});
     }
+
     destination.piece = mover;
     destination.piece.location = dst; //destination.index;
 
@@ -149,11 +153,11 @@ class Chess extends React.Component {
       for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite; i++) {
         let piece = pieces[i];
 
-        if (piece == null) {
+        if (piece === null || piece === undefined) {
           continue; // piece has been e.g. eaten
         }
 
-        let pieceMoves = this.getPossibleMoves(pieces[i], squares);
+        let pieceMoves = this.getPossibleMoves(piece, squares);
 
         if (pieceMoves.length > 0 && possibleMovesWhite.length === undefined) {
           possibleMovesWhite = pieceMoves;
@@ -171,7 +175,8 @@ class Chess extends React.Component {
 
       for (let i = CONSTANTS.minBlack; i <= CONSTANTS.maxBlack; i++) {
         let piece = pieces[i];
-        if (piece == null) {
+        console.log('piece='+piece.type);
+        if (piece == null || piece === undefined) {
           continue; // piece has been e.g. eaten
         }
         let pieceMoves = this.getPossibleMoves(pieces[i], squares);
