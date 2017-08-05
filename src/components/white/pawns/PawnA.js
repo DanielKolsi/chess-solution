@@ -17,14 +17,28 @@ class PawnA extends Moves {
 
   getAcceptedMoves(piece, squares) {
     console.log('White Pawn A');
+
     return this.getWhitePawnMoves(piece, squares);
   }
+  getAcceptedMovesQueen(piece, squares) {
+    console.log('White Pawn A promoted to Queen');
+    return this.getQueenMoves(piece, squares);
+  }
     render() {
-      return (
-        <div className="piece">
-          {String.fromCharCode(9817)}
-        </div>
-      );
+      if (this.state.value === 1) {
+        return (
+          <div className="piece">
+            {String.fromCharCode(9817)}
+          </div>
+        );
+      } else {
+        return (
+          <div className="piece">
+            {String.fromCharCode(9813)}
+          </div>
+        );
+      }
+
     }
 }
 
