@@ -49,13 +49,11 @@ class Chess extends React.Component {
     let acceptedMoves = {};
 
     if (location !== undefined) {
+      console.log('piece=' + piece.type);
       acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares);
       console.log('acceptedmoves size = ' + acceptedMoves.length + '\n\n');
     }
 
-    this.setState({
-      white: !this.white
-    }); // switch turn
     console.log('accepted moves size = ' + acceptedMoves.length);
     return acceptedMoves
   }
@@ -142,54 +140,56 @@ class Chess extends React.Component {
 
   autoMove(value) {
 
-    const {pieces, squares} = this.state;
+    const {pieces, squares, white} = this.state;
 
     console.log('xxx  Chess: automove:' + this.state.white + ' move number = ' + value);
-    let possibleMovesWhite = {};
 
-    for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite; i++) {
-      let piece = pieces[i];
+    if (white === true) {
+      let possibleMovesWhite = {};
+      for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite; i++) {
+        let piece = pieces[i];
 
-      if (piece == null) {
-        continue; // piece has been e.g. eaten
+        if (piece == null) {
+          continue; // piece has been e.g. eaten
+        }
+
+        let pieceMoves = this.getPossibleMoves(pieces[i], squares);
+
+        if (pieceMoves.length > 0 && possibleMovesWhite.length === undefined) {
+          possibleMovesWhite = pieceMoves;
+        } else if (pieceMoves.length > 0) {
+          possibleMovesWhite = possibleMovesWhite.concat(pieceMoves); // possiblemoves, removalmoves, acceptedmoves
+        }
+      }
+      // select a move and execute it!  moveMap(sr, sc, dr, dc) { //FIXME
+      console.log('Possible moves white, total = ' + possibleMovesWhite.length + ' first= ' + possibleMovesWhite[0]);
+      const whiteMoves = possibleMovesWhite[0].split('#');
+      this.move(whiteMoves[0], whiteMoves[1]);
+      this.setState({white: false});
+    } else {
+      let possibleMovesBlack = {};
+
+      for (let i = CONSTANTS.minBlack; i <= CONSTANTS.maxBlack; i++) {
+        let piece = pieces[i];
+        if (piece == null) {
+          continue; // piece has been e.g. eaten
+        }
+        let pieceMoves = this.getPossibleMoves(pieces[i], squares);
+        console.log('pieceMoves black = ' + pieceMoves.length);
+
+        if (pieceMoves.length > 0 && possibleMovesBlack.length === undefined) {
+          possibleMovesBlack = pieceMoves;
+        } else if (pieceMoves.length > 0) {
+          possibleMovesBlack = possibleMovesBlack.concat(pieceMoves); // possiblemoves, removalmoves, acceptedmoves
+        }
       }
 
-      let pieceMoves = this.getPossibleMoves(pieces[i], squares);
+      console.log('Possible moves black, total = ' + possibleMovesBlack.length + ' first = ' + possibleMovesBlack[0]);
+      const blackMoves = possibleMovesBlack[0].split('#');
 
-      if (pieceMoves.length > 0 && possibleMovesWhite.length === undefined) {
-        possibleMovesWhite = pieceMoves;
-      } else if (pieceMoves.length > 0) {
-        possibleMovesWhite = possibleMovesWhite.concat(pieceMoves); // possiblemoves, removalmoves, acceptedmoves
-      }
+      this.move(blackMoves[0], blackMoves[1]);
+      this.setState({white: true});
     }
-    // select a move and execute it!  moveMap(sr, sc, dr, dc) { //FIXME
-    console.log('Possible moves white, total = ' + possibleMovesWhite.length);
-    const whiteMoves = possibleMovesWhite[0].split('#');
-    this.move(whiteMoves[0], whiteMoves[1]);
-
-    let possibleMovesBlack = {};
-
-    for (let i = CONSTANTS.minBlack; i <= CONSTANTS.maxBlack; i++) {
-      let piece = pieces[i];
-      if (piece == null) {
-        continue; // piece has been e.g. eaten
-      }
-      let pieceMoves = this.getPossibleMoves(pieces[i], squares);
-      console.log('pieceMoves black = ' + pieceMoves.length);
-
-      if (pieceMoves.length > 0 && possibleMovesBlack.length === undefined) {
-        possibleMovesBlack = pieceMoves;
-      } else if (pieceMoves.length > 0) {
-        possibleMovesBlack = possibleMovesBlack.concat(pieceMoves); // possiblemoves, removalmoves, acceptedmoves
-      }
-    }
-
-    console.log('Possible moves black, total = ' + possibleMovesBlack.length + ' first = ' + possibleMovesBlack[0]);
-    const str = possibleMovesBlack[0].split('#');
-    const src = str[0];
-    const dst = str[1];
-
-    this.move(src, dst);
 
     /*
     let pieceId = 59;

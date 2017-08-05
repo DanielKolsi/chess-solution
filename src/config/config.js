@@ -16,7 +16,7 @@ export default {
     [13, 'PawnBF','bpf', 13, false, -1],
     [14, 'PawnBG','bpg', 14, false, -1],
     [15, 'PawnBH','bph', 15, false, -1],
-    [48, 'PawnWA', 'wpa', 48, true, 1],
+    [16, 'PawnWA', 'wpa', 48, true, 1],
     [49, 'PawnWB','wpb', 49, true, 1],
     [50, 'PawnWC','wpc', 50, true, 1],
     [51, 'PawnWD','wpd', 51, true, 1],

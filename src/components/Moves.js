@@ -22,9 +22,10 @@ class Moves extends React.Component {
   // en passe -> former position (former from move)
   getWhitePawnMoves(piece, squares) {
 
-    let pos = piece.location;
+    let pos = 1*piece.location;
+    console.log('piece location = ' + pos);
 
-    let down = pos + CONSTANTS.down;
+    const down = pos + CONSTANTS.down;
     let down2 = pos + CONSTANTS.down2;
     let downLeft = pos + CONSTANTS.downLeft;
     let downRight = pos + CONSTANTS.downRight;
@@ -32,6 +33,7 @@ class Moves extends React.Component {
     let acceptedMoves = [];
 
 
+    console.log('piece = ' + squares[down] + ' down = ' + down);
       if (squares[down].piece === null && (squares[pos].row > CONSTANTS.minRow)) {
         acceptedMoves.push(pos + '#' + down);
 
@@ -40,11 +42,12 @@ class Moves extends React.Component {
           acceptedMoves.push(down2);
         }
       }
+      console.log('downLeft='+downLeft+'pos='+pos);
       if (squares[pos].col > CONSTANTS.minCol && (squares[downLeft].piece !== null && squares[downLeft].piece.white === false)) { // eat black
         acceptedMoves.push(pos + '#' + downLeft); // eat black piece
       }
       if (squares[pos].col < CONSTANTS.maxCol && (squares[downRight].piece !== null && squares[downRight].piece.white === false)) { // right up eat black
-        acceptedMoves.push(downRight); // eat black piece
+        acceptedMoves.push(pos + '#' + downRight); // eat black piece
       }
       if (this.state.enPasse === (pos + CONSTANTS.enPasseDownLeft)) {
         // FIXME: add condition for en passe (correct black pawn two up previous move)
@@ -64,7 +67,7 @@ class Moves extends React.Component {
 
   getBlackPawnMoves(piece, squares) {
 
-    let pos = piece.location;
+    const pos = 1*piece.location; // ensure this is a number
 
     let up = pos + CONSTANTS.up;
     let up2 = pos + CONSTANTS.up2;
@@ -107,12 +110,11 @@ class Moves extends React.Component {
 
   getKnightMoves(piece, squares) {
 
-    let pos = piece.location;
-
+    const pos = 1*piece.location;
     let acceptedMoves = [];
 
     // 2 right, 1 up
-    let rightUp = pos + CONSTANTS.twoRightOneUp;
+    const rightUp = pos+CONSTANTS.twoRightOneUp;
 
     if (squares[pos].row <= 6 && squares[pos].col <= 5) { // check that the move stays on the board
       if (squares[rightUp].piece == null || (squares[rightUp].piece.white !== piece.white)) {
@@ -190,7 +192,7 @@ class Moves extends React.Component {
 
   getDiagonalMovesUpRight(piece, squares, acceptedMoves) {
 
-    let pos = piece.location;
+    let pos = 1 * piece.location;
     let src = this.getFormattedPosition(pos);
     let squaresAvailableRight = CONSTANTS.maxCol - squares[pos].col;
     let squaresAvailableUp = CONSTANTS.maxRow - squares[pos].row;
@@ -222,7 +224,7 @@ class Moves extends React.Component {
 
   getDiagonalMovesUpLeft(piece, squares, acceptedMoves) {
 
-    let pos = piece.location;
+    let pos = 1 * piece.location;
 
     let squaresAvailableLeft = squares[pos].col;
 
@@ -254,7 +256,7 @@ class Moves extends React.Component {
 
   getDiagonalMovesDownRight(piece, squares, acceptedMoves) {
 
-    let pos = piece.location;
+    let pos = 1 * piece.location;
 
     let squaresAvailableRight = CONSTANTS.maxCol - squares[pos].col;
     let squaresAvailableDown = squares[pos].row;
@@ -287,7 +289,7 @@ class Moves extends React.Component {
   getDiagonalMovesDownLeft(piece, squares, acceptedMoves) {
 
     //FIXME, BUG in move counting
-    let pos = piece.location;
+    let pos = 1 * piece.location;
 
     let squaresAvailableLeft = squares[pos].col;
     let squaresAvailableDown = squares[pos].row;
@@ -317,7 +319,7 @@ class Moves extends React.Component {
 
   getRookMoves(piece, squares) {
 
-    let pos = piece.location;
+    let pos = 1 * piece.location;
 
     let acceptedMoves = [];
     let UP = pos + CONSTANTS.up;
