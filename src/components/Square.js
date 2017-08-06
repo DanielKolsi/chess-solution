@@ -20,6 +20,9 @@ import KnightWG from './white/officers/KnightG';
 import RookWA from './white/officers/RookA';
 import RookWH from './white/officers/RookH';
 
+// import white promotions
+import QueenWA from './white/officers/QueenA';
+
 // import black pawns
 import PawnBA from './black/pawns/PawnA';
 import PawnBB from './black/pawns/PawnB';
@@ -48,7 +51,8 @@ const pieces = {
   PawnWF, PawnWG, PawnWH,
   KingB, QueenB, BishopBC, BishopBF, KnightBB, KnightBG,
   RookBA, RookBH, PawnBA, PawnBB, PawnBC, PawnBD, PawnBE,
-  PawnBF, PawnBG, PawnBH
+  PawnBF, PawnBG, PawnBH,
+  QueenWA
 };
 
 class Square extends React.Component {

@@ -31,7 +31,9 @@ export default {
     [60, 'KingW','wk', 60, true, 4],
     [61, 'BishopWF','wbf', 61, true, 3.2],
     [62, 'KnightWG','wkg', 62, true, 3],
-    [63, 'RookWH','wrh', 63, true, 5]
+    [63, 'RookWH','wrh', 63, true, 5],
+    [64, 'QueenWA','wqa', 64, true, 9]
+
 
   ]
 

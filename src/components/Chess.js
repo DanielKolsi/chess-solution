@@ -61,24 +61,48 @@ class Chess extends React.Component {
   move(src, dst) {
     const {squares, pieces} = this.state;
     const square = squares[src];
-    const pos = square.piece.location;
-    const mover = square.piece;
-    //const target = squares[dst]; // FIXME, not required?
+    let piece = square.piece;
+    const pos = piece.location;
+
+    if (piece.value === 1 && dst < 8) {
+      //piece.value = 9;
+      //piece.forceUpdate();
+      //this.refs[pos].refs.piece.value = 9;
+      //this.refs[pos].refs.piece.promote(9);
+      //let {piece} = this.props;
+
+      //this.refs[pos].refs.piece.forceUpdate();
+
+    //  mover.value = 9;
+
+      // promotion to queen
+      //let {piece} = this.props;
+      // pieces 65
+      //mover = React.createElement(pieces[0], {ref: 'mover', owner: piece.owner, location: dst});
+
+      //console.log('piece='+mover);
+      //mover = React.createElement(pieces[59], {ref: 'piece', type: piece.type, owner: piece.owner, location: piece.location});
+      //console.log('PROMOTION to QUEEN, type = ' + piece.type);
+      //mover = piece;
+      piece = pieces[64];
+    }
+    let mover = piece;
+
     let source = squares[pos];
 
     source.piece = null;
-
     let destination = squares[dst];
 
     if (destination.piece) {
       console.log('deleting: ' + destination.piece.type + ' id = ' + destination.piece.id + ' n='+destination.piece.n);
-      pieces[destination.piece.id] = null; //FIXME, is required?
+      //pieces[destination.piece.id] = null; //FIXME, is required?
       delete pieces[destination.piece.id];
       this.setState({pieces: pieces});
     }
 
     destination.piece = mover;
     destination.piece.location = dst; //destination.index;
+
 
     this.setState({
       squares: update(squares, {
@@ -96,6 +120,7 @@ class Chess extends React.Component {
     });
     this.setState({pieces: pieces});
     this.setState({move: null});
+
   }
 
   initBoard() {
@@ -122,7 +147,7 @@ class Chess extends React.Component {
     const {squares, pieces} = this.state;
 
     this.props.setup.forEach((item) => {
-
+    console.log('item='+item);
       let piece = {
         location: item[0], // number 0..63, changes
         type: item[1], // actual piece, e.g. RookBA
@@ -133,7 +158,9 @@ class Chess extends React.Component {
         //value: //exact piece value in relation to other pieces
       }
 
-      squares[item[0]].piece = piece;
+      //if (item[3] != 20) {
+          squares[item[0]].piece = piece; // FIXME: max n < 64
+      //}
       pieces[piece.n] = piece;
     });
 
@@ -150,6 +177,7 @@ class Chess extends React.Component {
 
     if (white === true) {
       let possibleMovesWhite = {};
+
       for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite; i++) {
         let piece = pieces[i];
 
@@ -175,7 +203,7 @@ class Chess extends React.Component {
 
       for (let i = CONSTANTS.minBlack; i <= CONSTANTS.maxBlack; i++) {
         let piece = pieces[i];
-        console.log('piece='+piece.type);
+
         if (piece == null || piece === undefined) {
           continue; // piece has been e.g. eaten
         }
@@ -195,62 +223,11 @@ class Chess extends React.Component {
       this.move(blackMoves[0], blackMoves[1]);
       this.setState({white: true});
     }
-
-    /*
-    let pieceId = 59;
-    this.possibleMoves(59); // white queen //FIXME
-
-    let movingPiece = pieces[59];
-    let piece = pieces[59];
-
-    //console.log('starting next move');
-
-    let source = squares[piece.location];
-    source.piece = null;
-
-    let index = 63;
-    let destination = squares[index];
-    if (destination.piece) {
-      delete pieces[destination.piece.id];
-      this.setState({pieces: pieces});
-    }
-
-    destination.piece = movingPiece;
-
-    destination.piece.location = destination.index;
-    console.log('piece = ' + piece.location + ' dst idx = ' + destination.index);
-    this.setState({
-      squares: update(squares, {
-        [source.index]: {
-          $set: source
-        }
-      })
-    });
-    console.log('dst idx='+destination.index);
-    this.setState({
-      squares: update(squares, {
-        [destination.index]: {
-          $set: destination
-        }
-      })
-    });
-
-    let pieceq = pieces[59];
-    console.log('wq new location='+pieceq.location);*/
-
-    /*this.moveMap(2, 5, 4, 5); // white
-    this.moveMap(7, 2, 5, 2); // black
-    this.moveMap(4, 5, 5, 5); // white
-    this.moveMap(7, 4, 5, 4); // black
-    this.moveMap(5, 5, 6, 4); // white
-
-    this.removePiece(0, 27); // en passe*/
-
-    //  this.possibleMoves(59); // white queen //FIXME
   }
 
   render() {
     let squares = this.state.squares.map((square, index) => {
+
       return (<Square ref={index} key={index} index={index} chessId={square.chessId} piece={square.piece} moveMap={this.moveMap}/>);
     });
 

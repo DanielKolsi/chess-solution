@@ -24,20 +24,22 @@ class PawnA extends Moves {
     console.log('White Pawn A promoted to Queen');
     return this.getQueenMoves(piece, squares);
   }
-    render() {
-      if (this.state.value === 1) {
+
+  promote(value) {
+    console.log('White Pawn A promoted to Queen, value = ' + value);
+    this.setState({value: value}, function () {
+        console.log('VALUE  = ' + this.state.value);
+    });
+
+  }
+    render(value) {
+      console.log('rendering, value = ' + this.state.value);
+
         return (
           <div className="piece">
-            {String.fromCharCode(9817)}
+            {(this.state.value === 1) ? String.fromCharCode(9817) : String.fromCharCode(9813) }
           </div>
         );
-      } else {
-        return (
-          <div className="piece">
-            {String.fromCharCode(9813)}
-          </div>
-        );
-      }
 
     }
 }
