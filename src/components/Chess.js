@@ -127,7 +127,7 @@ class Chess extends React.Component {
     const squares = [];
 
     // fill board with squares
-    for (let idx = 0, i = 0; i < 8; i++) {
+    for (let idx = 0, i = 0; i < 9; i++) {
       for (let j = 0; j < 8; j++) {
 
         let square = {
