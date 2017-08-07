@@ -15,7 +15,6 @@ class Moves extends React.Component {
   getWhitePawnMoves(piece, squares) {
 
     let pos = 1*piece.location;
-    console.log('piece location = ' + pos);
 
     const down = pos + CONSTANTS.down;
     let down2 = pos + CONSTANTS.down2;
@@ -24,17 +23,15 @@ class Moves extends React.Component {
 
     let acceptedMoves = [];
 
-
-    console.log('piece = ' + squares[down] + ' down = ' + down);
       if (squares[down].piece === null && (squares[pos].row > CONSTANTS.minRow)) {
         acceptedMoves.push(pos + '#' + down);
 
         if (squares[pos].row === CONSTANTS.whitePawnInitialRow && squares[down2].piece == null) { // hasn't moved yet, double pawn front
           //this.setState({enPasse: pos});
-          acceptedMoves.push(down2);
+          acceptedMoves.push(pos + '#' + down2);
         }
       }
-      console.log('downLeft='+downLeft+'pos='+pos);
+
       if (squares[pos].col > CONSTANTS.minCol && (squares[downLeft].piece !== null && squares[downLeft].piece.white === false)) { // eat black
         acceptedMoves.push(pos + '#' + downLeft); // eats black piece
       }

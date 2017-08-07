@@ -9,8 +9,7 @@ class AutoMove extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit(e) {
-    console.log('submitting move='+e);
+  handleSubmit(e) {    
     e.preventDefault();
     this.setState({value: this.state.value++})
     this.props.autoMove(this.state.value);

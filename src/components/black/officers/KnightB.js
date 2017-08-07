@@ -9,7 +9,7 @@ class KnightB extends Moves {
   }
 
   getAcceptedMoves(piece, squares) {
-    console.log('Black Knight B');
+    console.log('\n **Black Knight B** \n');
     return this.getKnightMoves(piece, squares);
   }
 

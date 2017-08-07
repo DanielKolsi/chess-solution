@@ -16,8 +16,7 @@ class PawnA extends Moves {
   }
 
   getAcceptedMoves(piece, squares) {
-    console.log('White Pawn A');
-
+    console.log('\n** White Pawn A ** \n');
     return this.getWhitePawnMoves(piece, squares);
   }
   getAcceptedMovesQueen(piece, squares) {
@@ -26,14 +25,13 @@ class PawnA extends Moves {
   }
 
   promote(value) {
-    console.log('White Pawn A promoted to Queen, value = ' + value);
+    //console.log('White Pawn A promoted to Queen, value = ' + value);
     this.setState({value: value}, function () {
-        console.log('VALUE  = ' + this.state.value);
+        //console.log('VALUE  = ' + this.state.value);
     });
 
   }
     render(value) {
-      console.log('rendering, value = ' + this.state.value);
 
         return (
           <div className="piece">

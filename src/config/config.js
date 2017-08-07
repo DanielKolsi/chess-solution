@@ -14,11 +14,11 @@ export default {
     [11, 'PawnBD','bpd', 11, false, -1],
     [12, 'PawnBE','bpe', 12, false, -1],
     [13, 'PawnBF','bpf', 13, false, -1],
-    [14, 'PawnBG','bpg', 14, false, -1],
-    [15, 'PawnBH','bph', 15, false, -1],*/
+    [14, 'PawnBG','bpg', 14, false, -1],*/
+    //[15, 'PawnBH','bph', 15, false, -1],
     [16, 'PawnWA', 'wpa', 48, true, 1],
-    /*[49, 'PawnWB','wpb', 49, true, 1],
-    [50, 'PawnWC','wpc', 50, true, 1],
+    [49, 'PawnWB','wpb', 49, true, 1],
+    /*[50, 'PawnWC','wpc', 50, true, 1],
     [51, 'PawnWD','wpd', 51, true, 1],
     [52, 'PawnWE','wpe', 52, true, 1],
     [53, 'PawnWF','wpf', 53, true, 1],
@@ -33,7 +33,7 @@ export default {
     [62, 'KnightWG','wkg', 62, true, 3],
     [63, 'RookWH','wrh', 63, true, 5],*/
     [64, 'QueenWA','wqa', 64, true, 9]
-
+    //[65, 'QueenBA','bqa', 65, true, 9],
 
   ]
 

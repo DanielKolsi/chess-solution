@@ -37,7 +37,8 @@ const CONSTANTS = {
   blackPawnValue: -1,
   maxKnightRowUp: 6,
   minKnightRowDown: 1,
-  minTwoDigitNumber: 10
+  minTwoDigitNumber: 10,
+
 
 }
 
