@@ -1,8 +1,8 @@
 export default {
   setup: [
-    [0, 'RookBA', 'bra', 0, false, -5], //location, name, id, n (number-id), white (true/false), value
+    //[0, 'RookBA', 'bra', 0, false, -5], //location, name, id, n (number-id), white (true/false), value
     [1, 'KnightBB', 'bka', 1, false, -3],
-    [2, 'BishopBC', 'bbc', 2, false, -3.2],
+    /*[2, 'BishopBC', 'bbc', 2, false, -3.2],
     [3, 'QueenB', 'bq', 3, false, -9],
     [4, 'KingB', 'bk', 4, false, -4],
     [5, 'BishopBF', 'bbf', 5, false, -3.2],
@@ -15,9 +15,9 @@ export default {
     [12, 'PawnBE','bpe', 12, false, -1],
     [13, 'PawnBF','bpf', 13, false, -1],
     [14, 'PawnBG','bpg', 14, false, -1],
-    [15, 'PawnBH','bph', 15, false, -1],
+    [15, 'PawnBH','bph', 15, false, -1],*/
     [16, 'PawnWA', 'wpa', 48, true, 1],
-    [49, 'PawnWB','wpb', 49, true, 1],
+    /*[49, 'PawnWB','wpb', 49, true, 1],
     [50, 'PawnWC','wpc', 50, true, 1],
     [51, 'PawnWD','wpd', 51, true, 1],
     [52, 'PawnWE','wpe', 52, true, 1],
@@ -31,7 +31,7 @@ export default {
     [60, 'KingW','wk', 60, true, 4],
     [61, 'BishopWF','wbf', 61, true, 3.2],
     [62, 'KnightWG','wkg', 62, true, 3],
-    [63, 'RookWH','wrh', 63, true, 5],
+    [63, 'RookWH','wrh', 63, true, 5],*/
     [64, 'QueenWA','wqa', 64, true, 9]
 
 

@@ -49,7 +49,7 @@ class Chess extends React.Component {
     let acceptedMoves = {};
 
     if (location !== undefined && this.refs[location].refs.piece !== undefined) {
-      console.log('piece = ' + piece.type + 'location='+piece.location);
+      console.log('piece = ' + piece.type + ' location='+piece.location);
       acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares);
       console.log('acceptedmoves size = ' + acceptedMoves.length + '\n\n');
     }
@@ -84,7 +84,16 @@ class Chess extends React.Component {
       //mover = React.createElement(pieces[59], {ref: 'piece', type: piece.type, owner: piece.owner, location: piece.location});
       //console.log('PROMOTION to QUEEN, type = ' + piece.type);
       //mover = piece;
+
+      pieces[64].white = true;
+      pieces[64].location = dst;
+      pieces[piece.n] = pieces[64]; //FIXME
+      squares[piece.n] = pieces[64];
       piece = pieces[64];
+      //this.setState({pieces: pieces});
+      //this.setState({squares: squares});
+
+      //piece.location = dst;
     }
     let mover = piece;
 

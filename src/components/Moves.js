@@ -327,19 +327,23 @@ class Moves extends React.Component {
     let LEFT = pos + CONSTANTS.left;
     let RIGHT = pos + CONSTANTS.right;
 
-
     // move UP
     for (let i = UP; i < squares.length; i += CONSTANTS.up) {
-      if (i > CONSTANTS.maxRow) break;
+      if (i >= CONSTANTS.maxWhite) {
+        break;
+      }
       if (squares[i].piece === null) {
         acceptedMoves.push(pos + '#' + i);
-      } else if (piece.white !== squares[i].piece.white) { // eat
+      } else if (squares[i].piece === undefined) {
+        acceptedMoves.push(pos + '#' + i);
+      } else if (piece.white !== squares[i].piece.white) { // eat 
         acceptedMoves.push(pos + '#' + i);
         break; // no more move possibilities after eating
       } else {
         break; // own piece blocks
       }
     }
+    console.log('rook moves UP = ' + acceptedMoves.length);
     // move DOWN
     for (let i = DOWN; i >= 0; i += CONSTANTS.down) {
 
@@ -350,6 +354,7 @@ class Moves extends React.Component {
         break; // no more move possibilities after eating
       } else break; // own piece
     }
+    console.log('rook moves DOWN = ' + acceptedMoves.length);
 
     // move RIGHT
     let movesRight = CONSTANTS.maxCol - squares[pos].col;
@@ -362,7 +367,7 @@ class Moves extends React.Component {
         break; // no more move possibilities after eating
       } else break; // own piece
     }
-
+    console.log('rook moves RIGHT = ' + acceptedMoves.length);
     // move LEFT
     let movesLeft = squares[pos].col;
 
@@ -375,7 +380,9 @@ class Moves extends React.Component {
         break; // no more move possibilities after eating
       } else break; // own piece
     }
+    console.log('rook moves LEFT = ' + acceptedMoves.length);
     return acceptedMoves;
+
   }
 
   getQueenMoves(piece, squares) {
