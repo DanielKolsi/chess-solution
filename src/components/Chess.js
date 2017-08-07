@@ -192,6 +192,7 @@ class Chess extends React.Component {
           continue; // piece has been e.g. eaten
         }
 
+        console.log('piece = ' + piece.type + piece.location + piece.n);
         let pieceMoves = this.getPossibleMoves(piece, squares);
 
         if (pieceMoves.length > 0 && possibleMovesWhite.length === undefined) {

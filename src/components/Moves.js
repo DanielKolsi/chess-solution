@@ -10,14 +10,6 @@ class Moves extends React.Component {
     }
   }
 
-  // ensure that source position contains two digits
-  getFormattedPosition(pos) {
-//TODO, fix to have a delimiter
-    if (pos < CONSTANTS.minTwoDigitNumber) {
-      pos = '0' + pos; //use format 01, 02 ... 09 for source
-    }
-    return pos;
-  }
 
   // en passe -> former position (former from move)
   getWhitePawnMoves(piece, squares) {
@@ -189,16 +181,14 @@ class Moves extends React.Component {
     return acceptedMoves;
   }
 
-
   getDiagonalMovesUpRight(piece, squares, acceptedMoves) {
 
     let pos = 1 * piece.location;
-    let src = this.getFormattedPosition(pos);
+    //let src = this.getFormattedPosition(pos);
     let squaresAvailableRight = CONSTANTS.maxCol - squares[pos].col;
     let squaresAvailableUp = CONSTANTS.maxRow - squares[pos].row;
 
     let numberOfSquaresAvailable;
-
 
     if (squaresAvailableRight <= squaresAvailableUp) {
       numberOfSquaresAvailable = squaresAvailableRight;
@@ -210,7 +200,7 @@ class Moves extends React.Component {
     for (let i = 1; i <= numberOfSquaresAvailable; i++) {
       let dst = pos + (i * CONSTANTS.upRight);
       if (squares[dst].piece == null) {
-        acceptedMoves.push(src + ' ' + pos - (i * CONSTANTS.upRight));
+        acceptedMoves.push(pos + '#' + dst);
       } else if (squares[dst].piece.white !== piece.white) {
         acceptedMoves.push(pos + '#' + dst);// eat opponent's piece
         break;
@@ -336,7 +326,7 @@ class Moves extends React.Component {
         acceptedMoves.push(pos + '#' + i);
       } else if (squares[i].piece === undefined) {
         acceptedMoves.push(pos + '#' + i);
-      } else if (piece.white !== squares[i].piece.white) { // eat 
+      } else if (piece.white !== squares[i].piece.white) { // eat
         acceptedMoves.push(pos + '#' + i);
         break; // no more move possibilities after eating
       } else {
@@ -391,6 +381,7 @@ class Moves extends React.Component {
     let acceptedMovesRook = this.getRookMoves(piece, squares);
     console.log('queen: rook moves =' + acceptedMovesRook.length);
     let acceptedMovesQueen = acceptedMovesBishop.concat(acceptedMovesRook);
+    console.log('first accepted = ' + acceptedMovesQueen);
     return acceptedMovesQueen;
 
   }
