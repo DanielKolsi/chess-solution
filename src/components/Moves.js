@@ -330,6 +330,7 @@ class Moves extends React.Component {
 
     // move UP
     for (let i = UP; i < squares.length; i += CONSTANTS.up) {
+      if (i > CONSTANTS.maxRow) break;
       if (squares[i].piece === null) {
         acceptedMoves.push(pos + '#' + i);
       } else if (piece.white !== squares[i].piece.white) { // eat
