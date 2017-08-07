@@ -64,39 +64,12 @@ class Chess extends React.Component {
     let piece = square.piece;
     const pos = piece.location;
 
-    if (piece.value === 1 && dst < 8) {
-      //piece.value = 9;
-      //piece.forceUpdate();
-      //this.refs[pos].refs.piece.value = 9;
-      //this.refs[pos].refs.piece.promote(9);
-      //let {piece} = this.props;
-
-      //this.refs[pos].refs.piece.forceUpdate();
-
-    //  mover.value = 9;
-
-      // promotion to queen
-      //let {piece} = this.props;
-      // pieces 65
-      //mover = React.createElement(pieces[0], {ref: 'mover', owner: piece.owner, location: dst});
-
-      //console.log('piece='+mover);
-      //mover = React.createElement(pieces[59], {ref: 'piece', type: piece.type, owner: piece.owner, location: piece.location});
-      //console.log('PROMOTION to QUEEN, type = ' + piece.type);
-      //mover = piece;
-
-      pieces[64].white = true;
-      pieces[64].location = dst;
-      pieces[piece.n] = pieces[64]; //FIXME
-      squares[piece.n] = pieces[64];
-      piece = pieces[64];
-      //this.setState({pieces: pieces});
-      //this.setState({squares: squares});
-
-      //piece.location = dst;
+    if (piece.value === CONSTANTS.whitePawnValue && squares[dst].row === CONSTANTS.minRow) {
+      pieces[piece.n] = pieces[64]; // insert promoted piece to pieces
+      piece = pieces[64]; // actual promotion
     }
-    let mover = piece;
 
+    let mover = piece;
     let source = squares[pos];
 
     source.piece = null;

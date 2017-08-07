@@ -184,7 +184,7 @@ class Moves extends React.Component {
   getDiagonalMovesUpRight(piece, squares, acceptedMoves) {
 
     let pos = 1 * piece.location;
-    //let src = this.getFormattedPosition(pos);
+
     let squaresAvailableRight = CONSTANTS.maxCol - squares[pos].col;
     let squaresAvailableUp = CONSTANTS.maxRow - squares[pos].row;
 
