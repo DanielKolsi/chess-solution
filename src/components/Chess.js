@@ -147,7 +147,7 @@ class Chess extends React.Component {
     const {squares, pieces} = this.state;
 
     this.props.setup.forEach((item) => {
-    console.log('item='+item);
+    //console.log('item='+item);
       let piece = {
         location: item[0], // number 0..63, changes
         type: item[1], // actual piece, e.g. RookBA
@@ -158,9 +158,7 @@ class Chess extends React.Component {
         //value: //exact piece value in relation to other pieces
       }
 
-      //if (item[3] != 20) {
-          squares[item[0]].piece = piece; // FIXME: max n < 64
-      //}
+      squares[item[0]].piece = piece;
       pieces[piece.n] = piece;
     });
 
@@ -234,7 +232,7 @@ class Chess extends React.Component {
     let rows = [];
     let rowLength = CONSTANTS.squaresInRow;
 
-    for (let i = 0; i < squares.length; i += rowLength) {
+    for (let i = 0; i < CONSTANTS.maxWhite; i += rowLength) {
       rows.push(squares.slice(i, i + rowLength));
     }
 
