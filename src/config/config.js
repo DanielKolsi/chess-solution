@@ -33,8 +33,9 @@ export default {
     [62, 'KnightWG','wkg', 62, true, 3],
     [63, 'RookWH','wrh', 63, true, 5],*/
     [64, 'QueenW2','wq2', 64, true, 9],
-    //[65, 'QueenW3','wq3', 65, true, 9],
-    [66, 'QueenB2','bq2', 66, true, -9]
+    [65, 'QueenW3','wq3', 65, true, 9],
+    [66, 'QueenB2','bq3', 66, true, -9],
+    [67, 'QueenB3','bq3', 67, true, -9]
   ]
 
   /*setup: [

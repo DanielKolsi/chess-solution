@@ -14,6 +14,7 @@ class Chess extends React.Component {
       pieces: {},
       squares: [],
       promotedWhiteQueenNumber: 64,
+      promotedBlackQueenNumber: 66,
       //      ids: [], // raw ref number of the piece, won't change
       white: true,
       move: null,
@@ -70,16 +71,18 @@ class Chess extends React.Component {
 
     if (piece.value === CONSTANTS.whitePawnValue && squares[dst].row === CONSTANTS.minRow) {
 
-      pieces[piece.n] = pieces[64]; // insert promoted piece to pieces
-      piece = pieces[64]; // actual promotion
+      let value = this.state.promotedWhiteQueenNumber;
+      pieces[piece.n] = pieces[value]; // insert promoted piece to pieces
+      piece = pieces[value]; // actual promotion
       piece.location = dst;
-
+      this.setState({promotedWhiteQueenNumber: value++});
       this.setState({pieces: pieces});
-
     } else if (piece.value === CONSTANTS.blackPawnValue && squares[dst].row === CONSTANTS.maxRow) {
-      pieces[piece.n] = pieces[65]; // insert promoted piece to pieces
-      piece = pieces[65]; // actual promotion
+      let value = this.state.promotedBlackQueenNumber;
+      pieces[piece.n] = pieces[value]; // insert promoted piece to pieces
+      piece = pieces[value]; // actual promotion
       piece.location = dst;
+      this.setState({promotedBlackQueenNumber: value++});
       this.setState({pieces: pieces});
     }
 
@@ -115,7 +118,6 @@ class Chess extends React.Component {
     });
     this.setState({pieces: pieces});
     this.setState({move: null});
-
   }
 
   initBoard() {
@@ -177,7 +179,6 @@ class Chess extends React.Component {
         console.log('piece.type = ' + piece.type + ' i = ' + i);
       }
 
-
       for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite; i++) {
         let piece = pieces[i];
 
@@ -186,7 +187,6 @@ class Chess extends React.Component {
         }
 
         //console.log('\n WHITE: piece for moving =' + piece.type + ' white = ' + piece.white + ' value =' + piece.value + ' n=' + piece.n + ' location=' + piece.location);
-
         //console.log('piece = ' + piece.type + piece.location + piece.n);
         let pieceMoves = this.getPossibleMoves(piece, squares);
         if (pieceMoves === undefined)
@@ -198,7 +198,6 @@ class Chess extends React.Component {
           if (!possibleMovesWhite.includes(pieceMoves)) {
             possibleMovesWhite = possibleMovesWhite.concat(pieceMoves); // possiblemoves, removalmoves, acceptedmoves
           }
-
         }
       }
 
@@ -245,7 +244,6 @@ class Chess extends React.Component {
         console.log('BLACK MOVED * total moves were = ' + possibleMovesBlack.length + ' selected random = ' + possibleMovesBlack[n] + ' n was = ' + n);
         this.setState({white: true});
       }
-
     }
   }
 

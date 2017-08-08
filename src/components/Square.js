@@ -43,6 +43,8 @@ import RookBH from './black/officers/RookH';
 // import promotions
 import QueenW2 from './white/officers/Queen2';
 import QueenB2 from './black/officers/Queen2';
+import QueenW3 from './white/officers/Queen3';
+import QueenB3 from './black/officers/Queen3';
 
 
 //import PropTypes from 'prop-types'; // ES6
@@ -54,7 +56,7 @@ const pieces = {
   KingB, QueenB, BishopBC, BishopBF, KnightBB, KnightBG,
   RookBA, RookBH, PawnBA, PawnBB, PawnBC, PawnBD, PawnBE,
   PawnBF, PawnBG, PawnBH,
-  QueenW2, QueenB2
+  QueenW2, QueenB2, QueenW3, QueenB3
 };
 
 class Square extends React.Component {
