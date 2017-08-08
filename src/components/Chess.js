@@ -45,14 +45,18 @@ class Chess extends React.Component {
   //FIXME: get pieceId from index and index from pieceId
   getPossibleMoves(piece, squares) {
 
-    let location = piece.location;
+    let location = piece.location; //FIXME
     let acceptedMoves = {};
 
     if (location !== undefined && this.refs[location].refs.piece !== undefined) {
+      console.log('***piece = ' + piece.type + ' location='+piece.location + 'refs piece type = ' + this.refs[location].refs.piece[0]);
       acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares);
+
+    }
+    if (acceptedMoves !== undefined) {
+        console.log('accepted moves size = ' + acceptedMoves.length + ' piece = '+piece.type + ' location ='+piece.location);
     }
 
-    console.log('accepted moves size = ' + acceptedMoves.length + ' piece = '+piece.type + ' location ='+piece.location);
     return acceptedMoves
   }
 
@@ -65,6 +69,8 @@ class Chess extends React.Component {
     if (piece.value === CONSTANTS.whitePawnValue && squares[dst].row === CONSTANTS.minRow) {
       pieces[piece.n] = pieces[64]; // insert promoted piece to pieces
       piece = pieces[64]; // actual promotion
+      piece.location = dst;
+      this.setState({pieces: pieces});
     } else if (piece.value === CONSTANTS.blackPawnValue && squares[dst].row === CONSTANTS.maxRow) {
       pieces[piece.n] = pieces[65]; // insert promoted piece to pieces
       piece = pieces[65]; // actual promotion
@@ -164,24 +170,31 @@ class Chess extends React.Component {
         if (piece === null || piece === undefined) {
           continue; // piece has been e.g. eaten
         }
+        //FIXME: wrongly identifies the piece!
+        console.log('\n WHITE: piece for moving =' + piece.type + ' white = ' + piece.white + ' value =' + piece.value + ' n='+piece.n + ' location='+piece.location);
 
         //console.log('piece = ' + piece.type + piece.location + piece.n);
         let pieceMoves = this.getPossibleMoves(piece, squares);
-
+        if (pieceMoves === undefined) continue;
         if (pieceMoves.length > 0 && possibleMovesWhite.length === undefined) {
           possibleMovesWhite = pieceMoves;
         } else if (pieceMoves.length > 0) {
+          console.log('adding piecemoves, i = ' + i + ' n = ' + pieceMoves.length);
           possibleMovesWhite = possibleMovesWhite.concat(pieceMoves); // possiblemoves, removalmoves, acceptedmoves
         }
       }
-      // select a move and execute it!  moveMap(sr, sc, dr, dc) { //FIXME
-      if (possibleMovesWhite !== undefined) { // FIXME, no moves available?
+
+      if (possibleMovesWhite !== undefined && possibleMovesWhite.length > 0) { // FIXME, no moves available?
         const n = Math.floor(Math.random() * possibleMovesWhite.length);
-
-
         const whiteMoves = possibleMovesWhite[n].split('#');
+
         this.move(whiteMoves[0], whiteMoves[1]);
-        console.log('WHITE MOVED * total moves were = ' + possibleMovesWhite.length + ' selected random = ' + possibleMovesWhite[n] + ' n was = ' + n);
+
+
+        for (let i = 0; i < possibleMovesWhite.length; i++) {
+          console.log(' i = ' + i + ' candidate move = ' + possibleMovesWhite[i]);
+        }
+        console.log('WHITE MOVED * total moves were = ' + possibleMovesWhite.length + ' selected random = ' + possibleMovesWhite[n] + ' i was = ' + n);
         this.setState({white: false});
       } else {
         console.log('ERROR2');
@@ -206,9 +219,9 @@ class Chess extends React.Component {
         }
       }
 
-      if (possibleMovesBlack !== undefined) { // FIXME, no moves available?
+      if (possibleMovesBlack !== undefined && possibleMovesBlack.length > 0) { // FIXME, no moves available?
         const n = Math.floor(Math.random() * possibleMovesBlack.length);
-        
+
         const blackMoves = possibleMovesBlack[n].split('#');
         this.move(blackMoves[0], blackMoves[1]);
         console.log('BLACK MOVED * total moves were = ' + possibleMovesBlack.length + ' selected random = ' + possibleMovesBlack[n] + ' n was = ' + n);

@@ -205,7 +205,7 @@ class Moves extends React.Component {
         break; // own piece
       }
     }
-    console.log('up right moves =' + acceptedMoves.length);
+    //console.log('up right moves =' + acceptedMoves.length);
     return acceptedMoves;
   }
 
@@ -237,7 +237,7 @@ class Moves extends React.Component {
         break; // own piece
       }
     }
-    console.log('up left moves ='+acceptedMoves.length);
+    //console.log('up left moves ='+acceptedMoves.length);
     return acceptedMoves;
   }
 
@@ -268,7 +268,7 @@ class Moves extends React.Component {
         break; // own piece
       }
     }
-    console.log('down right moves ='+ acceptedMoves.length);
+    //console.log('down right moves ='+ acceptedMoves.length);
     return acceptedMoves;
   }
 
@@ -300,7 +300,7 @@ class Moves extends React.Component {
         break; // own piece
       }
     }
-    console.log('down left moves ='+acceptedMoves.length);
+    //console.log('down left moves ='+acceptedMoves.length);
     return acceptedMoves;
   }
 
@@ -330,7 +330,7 @@ class Moves extends React.Component {
         break; // own piece blocks
       }
     }
-    console.log('rook moves UP = ' + acceptedMoves.length);
+    //console.log('rook moves UP = ' + acceptedMoves.length);
     // move DOWN
     for (let i = DOWN; i >= 0; i += CONSTANTS.down) {
 
@@ -341,7 +341,7 @@ class Moves extends React.Component {
         break; // no more move possibilities after eating
       } else break; // own piece
     }
-    console.log('rook moves DOWN = ' + acceptedMoves.length);
+    //console.log('rook moves DOWN = ' + acceptedMoves.length);
 
     // move RIGHT
     let movesRight = CONSTANTS.maxCol - squares[pos].col;
@@ -354,7 +354,7 @@ class Moves extends React.Component {
         break; // no more move possibilities after eating
       } else break; // own piece
     }
-    console.log('rook moves RIGHT = ' + acceptedMoves.length);
+    //console.log('rook moves RIGHT = ' + acceptedMoves.length);
     // move LEFT
     let movesLeft = squares[pos].col;
 
@@ -367,18 +367,18 @@ class Moves extends React.Component {
         break; // no more move possibilities after eating
       } else break; // own piece
     }
-    console.log('rook moves LEFT = ' + acceptedMoves.length);
+    //console.log('rook moves LEFT = ' + acceptedMoves.length);
     return acceptedMoves;
 
   }
 
   getQueenMoves(piece, squares) {
     let acceptedMovesBishop = this.getBishopMoves(piece, squares);
-    console.log('queen: bishop moves =' + acceptedMovesBishop.length);
+//    console.log('queen: bishop moves =' + acceptedMovesBishop.length);
     let acceptedMovesRook = this.getRookMoves(piece, squares);
-    console.log('queen: rook moves =' + acceptedMovesRook.length);
+  //  console.log('queen: rook moves =' + acceptedMovesRook.length);
     let acceptedMovesQueen = acceptedMovesBishop.concat(acceptedMovesRook);
-    console.log('first accepted = ' + acceptedMovesQueen);
+    console.log('\n All accepted queen moves = ' + acceptedMovesQueen + ' for piece: ' + piece.type);
     return acceptedMovesQueen;
 
   }

@@ -64,7 +64,7 @@ class Square extends React.Component {
 
   render() {
     let {piece} = this.props;
-    piece = (piece) ? React.createElement(pieces[piece.type], {ref: 'piece', type: piece.type, owner: piece.owner, location: piece.location}) : '';
+    piece = (piece) ? React.createElement(pieces[piece.type], {ref: 'piece', type: piece.type, owner: piece.owner, location: piece.location, n: piece.n}) : '';
 
     return (
 
