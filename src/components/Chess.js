@@ -49,14 +49,13 @@ class Chess extends React.Component {
     let acceptedMoves = {};
 
     if (location !== undefined && this.refs[location].refs.piece !== undefined) {
-      console.log('***piece = ' + piece.type + ' location=' + piece.location + 'refs piece type = ' + this.refs[location].refs.piece[0]);
       acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares);
-
     }
     if (acceptedMoves !== undefined) {
-      console.log('accepted moves size = ' + acceptedMoves.length + ' piece = ' + piece.type + ' location =' + piece.location);
+      if (acceptedMoves.length > 0) {
+          console.log('accepted moves size = ' + acceptedMoves.length + ' piece = ' + piece.type + ' location =' + piece.location);
+      }
     }
-
     return acceptedMoves
   }
 
@@ -169,7 +168,7 @@ class Chess extends React.Component {
           continue; // piece has been e.g. eaten
         }
 
-        console.log('\n WHITE: piece for moving =' + piece.type + ' white = ' + piece.white + ' value =' + piece.value + ' n=' + piece.n + ' location=' + piece.location);
+        //console.log('\n WHITE: piece for moving =' + piece.type + ' white = ' + piece.white + ' value =' + piece.value + ' n=' + piece.n + ' location=' + piece.location);
 
         //console.log('piece = ' + piece.type + piece.location + piece.n);
         let pieceMoves = this.getPossibleMoves(piece, squares);

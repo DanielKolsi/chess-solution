@@ -17,11 +17,11 @@ class PawnB extends Moves {
       return this.getWhitePawnMoves(piece, squares);
     }
 
-
+//{String.fromCharCode(9817)}
     render() {
       return (
         <div className="piece">
-          {String.fromCharCode(9817)}
+          {'b'}
         </div>
       );
     }

@@ -21,7 +21,7 @@ class PawnF extends Moves {
     render() {
       return (
         <div className="piece">
-          {String.fromCharCode(9817)}
+          {'f'}
         </div>
       );
     }
