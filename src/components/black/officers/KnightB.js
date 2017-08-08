@@ -10,7 +10,6 @@ class KnightB extends Moves {
 
   getAcceptedMoves(piece, squares) {
 
-
     console.log('\n **Black Knight B** value = ' + piece.value + ' location = ' + piece.location + ' \n');
     if (piece.value !== -3) return undefined;
     return this.getKnightMoves(piece, squares);

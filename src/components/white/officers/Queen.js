@@ -9,6 +9,7 @@ class Queen extends Moves {
 
   getAcceptedMoves(piece, squares) {
     console.log('White Queen');
+    if (piece.value !== 9) return undefined;
     return this.getQueenMoves(piece, squares);
   }
 
