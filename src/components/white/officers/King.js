@@ -8,20 +8,10 @@ class King extends React.Component {
     }
   }
 
-  // ensure that source position contains two digits
-  getFormattedPosition(pos) {
-
-    if (pos < CONSTANTS.minTwoDigitNumber) {
-      pos = '0' + pos; //use format 01, 02 ... 09 for source
-    }
-    return pos;
-  }
-
-  getAcceptedMoves(piece, squares) {
+    getAcceptedMoves(piece, squares) {
 
     let acceptedMoves = [];
-    let pos = piece.location;
-    //let src = this.getFormattedPosition(pos);
+    let pos = 1*piece.location; // ensure this is dealt as an integer!
 
     let up = pos + CONSTANTS.up;
     let down = pos + CONSTANTS.down;

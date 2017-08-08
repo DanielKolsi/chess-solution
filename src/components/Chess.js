@@ -92,7 +92,7 @@ class Chess extends React.Component {
     source.piece = null;
     let destination = squares[dst];
 
-    if (destination.piece) {
+    if (destination !== undefined && destination.piece) {
       console.log('deleting: ' + destination.piece.type + ' id = ' + destination.piece.id + ' n=' + destination.piece.n);
       //pieces[destination.piece.id] = null; //FIXME, is required?
       delete pieces[destination.piece.id];

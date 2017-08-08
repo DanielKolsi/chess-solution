@@ -75,10 +75,10 @@ class Moves extends React.Component {
           acceptedMoves.push(pos + '#' + up2);
         }
       }
-      if (squares[pos].col > CONSTANTS.minCol && (squares[upLeft].piece !== null && squares[upLeft].piece.white === false)) { // eat white
+      if (squares[pos].col > CONSTANTS.minCol && (squares[upLeft].piece !== null && squares[upLeft].piece.white === true)) { // eat white
           acceptedMoves.push(pos + '#' + upLeft);
       }
-      if (squares[pos].col < CONSTANTS.maxCol && (squares[upRight].piece !== null && squares[upRight].piece.white === false)) { // right up eat white
+      if (squares[pos].col < CONSTANTS.maxCol && (squares[upRight].piece !== null && squares[upRight].piece.white === true)) { // right up eat white
         acceptedMoves.push(pos + '#' + upRight);
       }
       if (this.state.enPasse === (pos + CONSTANTS.enPasseUpLeft)) {
