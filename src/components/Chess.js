@@ -3,6 +3,8 @@ import Square from './Square';
 import AutoMove from './AutoMove';
 import update from 'immutability-helper';
 import CONSTANTS from '../config/constants';
+// import white promotions
+
 //import PropTypes from 'prop-types'; // ES6
 
 class Chess extends React.Component {
@@ -11,6 +13,7 @@ class Chess extends React.Component {
     this.state = {
       pieces: {},
       squares: [],
+      promotedWhiteQueenNumber: 64,
       //      ids: [], // raw ref number of the piece, won't change
       white: true,
       move: null,
@@ -66,13 +69,18 @@ class Chess extends React.Component {
     const pos = piece.location;
 
     if (piece.value === CONSTANTS.whitePawnValue && squares[dst].row === CONSTANTS.minRow) {
+
       pieces[piece.n] = pieces[64]; // insert promoted piece to pieces
       piece = pieces[64]; // actual promotion
       piece.location = dst;
+
       this.setState({pieces: pieces});
+
     } else if (piece.value === CONSTANTS.blackPawnValue && squares[dst].row === CONSTANTS.maxRow) {
       pieces[piece.n] = pieces[65]; // insert promoted piece to pieces
       piece = pieces[65]; // actual promotion
+      piece.location = dst;
+      this.setState({pieces: pieces});
     }
 
     let mover = piece;
@@ -160,6 +168,15 @@ class Chess extends React.Component {
 
     if (white === true) {
       let possibleMovesWhite = {};
+
+      for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite; i++) {
+        let piece = pieces[i];
+        if (piece === null || piece === undefined) {
+          continue; // piece has been e.g. eaten
+        }
+        console.log('piece.type = ' + piece.type + ' i = ' + i);
+      }
+
 
       for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite; i++) {
         let piece = pieces[i];

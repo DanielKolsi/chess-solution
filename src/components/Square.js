@@ -20,9 +20,6 @@ import KnightWG from './white/officers/KnightG';
 import RookWA from './white/officers/RookA';
 import RookWH from './white/officers/RookH';
 
-// import white promotions
-import QueenWA from './white/officers/QueenA';
-
 // import black pawns
 import PawnBA from './black/pawns/PawnA';
 import PawnBB from './black/pawns/PawnB';
@@ -43,6 +40,11 @@ import KnightBG from './black/officers/KnightG';
 import RookBA from './black/officers/RookA';
 import RookBH from './black/officers/RookH';
 
+// import promotions
+import QueenW2 from './white/officers/Queen2';
+import QueenB2 from './black/officers/Queen2';
+
+
 //import PropTypes from 'prop-types'; // ES6
 
 const pieces = {
@@ -52,7 +54,7 @@ const pieces = {
   KingB, QueenB, BishopBC, BishopBF, KnightBB, KnightBG,
   RookBA, RookBH, PawnBA, PawnBB, PawnBC, PawnBD, PawnBE,
   PawnBF, PawnBG, PawnBH,
-  QueenWA
+  QueenW2, QueenB2
 };
 
 class Square extends React.Component {
@@ -64,11 +66,12 @@ class Square extends React.Component {
 
   render() {
     let {piece} = this.props;
-    piece = (piece) ? React.createElement(pieces[piece.type], {ref: 'piece', type: piece.type, owner: piece.owner, location: piece.location, n: piece.n}) : '';
+
+    piece = (piece) ? React.createElement(pieces[piece.type], {ref: 'piece', type: 'QueenWA', white: piece.white, location: piece.location, n: piece.n}) : '';
 
     return (
 
-      <div className="square" /*onClick={handleMove.bind(this, index)}*/>
+      <div className="square">
         {piece}
       </div>
     );

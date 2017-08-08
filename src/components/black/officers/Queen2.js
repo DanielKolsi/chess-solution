@@ -1,14 +1,15 @@
 import React from 'react';
 import Moves from '../../Moves';
 
-class QueenA extends Moves {
+class Queen2 extends Moves {
   constructor(props) {
     super(props);
     this.state = {}
   }
 
   getAcceptedMoves(piece, squares) {
-    console.log('White Queen promoted from pawn A');
+    console.log('Black Queen2');
+    if (piece.value !== -9) return undefined;
     return this.getQueenMoves(piece, squares);
   }
 
@@ -20,4 +21,4 @@ class QueenA extends Moves {
     );
   }
 }
-export default QueenA;
+export default Queen2;

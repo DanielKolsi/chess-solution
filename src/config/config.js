@@ -1,6 +1,6 @@
 export default {
   setup: [
-    //[0, 'RookBA', 'bra', 0, false, -5], //location, name, id, n (number-id), white (true/false), value
+    //[0, 'RookBA', 'bra', 0, false, -5], //location, type, id, n (number-id), white (true/false), value
     [1, 'KnightBB', 'bka', 1, false, -3],
     /*[2, 'BishopBC', 'bbc', 2, false, -3.2],
     [3, 'QueenB', 'bq', 3, false, -9],
@@ -32,9 +32,9 @@ export default {
     [61, 'BishopWF','wbf', 61, true, 3.2],
     [62, 'KnightWG','wkg', 62, true, 3],
     [63, 'RookWH','wrh', 63, true, 5],*/
-    [64, 'QueenWA','wqa', 64, true, 9]
-    //[65, 'QueenBA','bqa', 65, true, 9],
-
+    [64, 'QueenW2','wq2', 64, true, 9],
+    //[65, 'QueenW3','wq3', 65, true, 9],
+    [66, 'QueenB2','bq2', 66, true, -9]
   ]
 
   /*setup: [
