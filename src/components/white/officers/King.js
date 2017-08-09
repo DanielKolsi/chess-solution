@@ -44,13 +44,13 @@ class King extends React.Component {
 
       if (squares[pos].col < CONSTANTS.maxCol) { // needs to stay on the board limits
         if (squares[right].piece == null || squares[right].piece.white === false) {
-            acceptedMoves.push(pos + '#' + pos + '' + right);
+            acceptedMoves.push(pos + '#' + right);
         }
       }
 
       if (squares[pos].row < CONSTANTS.minRow && (squares[pos].col < CONSTANTS.minCol)) { // needs to stay on the board limits
         if (squares[upRight].piece == null || squares[upRight].piece.white === false) {
-          acceptedMoves.push(pos + '#' + pos + '' + upRight);
+          acceptedMoves.push(pos + '#' + upRight);
         }
       }
 

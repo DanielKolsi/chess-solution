@@ -67,7 +67,7 @@ class Chess extends React.Component {
     const {squares, pieces} = this.state;
     const square = squares[src];
     let piece = square.piece;
-    const pos = piece.location;
+    const pos = 1*piece.location;
 
     if (piece.value === CONSTANTS.whitePawnValue && squares[dst].row === CONSTANTS.minRow) {
 
@@ -99,6 +99,11 @@ class Chess extends React.Component {
       this.setState({pieces: pieces});
     }
 
+    if (destination === undefined) {
+      console.log('ERROR: dst = ' + dst);
+    } else {
+      console.log('OK: dst = ' + dst);
+    }
     destination.piece = mover;
     destination.piece.location = dst; //destination.index;
 
