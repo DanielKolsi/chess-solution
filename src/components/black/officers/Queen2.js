@@ -16,7 +16,7 @@ class Queen2 extends Moves {
   render() {
     return (
       <div className="piece">
-        {String.fromCharCode(9813)}
+        {String.fromCharCode(9819)}
       </div>
     );
   }
