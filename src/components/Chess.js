@@ -1,6 +1,7 @@
 import React from 'react';
 import Square from './Square';
 import AutoMove from './AutoMove';
+import PrevMove from './PrevMove';
 import update from 'immutability-helper';
 import CONSTANTS from '../config/constants';
 // import white promotions
@@ -17,13 +18,15 @@ class Chess extends React.Component {
       promotedBlackQueenNumber: 66,
       //      ids: [], // raw ref number of the piece, won't change
       white: true,
-      move: null,
+      moves: [],
+      moveNumber: 0,
       acceptedMoves: [],
       previousMove: null
     }
     this.moveMap = this.moveMap.bind(this); //FIXME
     this.removePiece = this.removePiece.bind(this);
     this.autoMove = this.autoMove.bind(this);
+    this.prevMove = this.prevMove.bind(this);
   }
 
   componentWillMount() {
@@ -74,6 +77,7 @@ class Chess extends React.Component {
     let piece = square.piece;
     if (piece === null) {
         console.log('piece was null src='+src + 'dst='+dst);
+        return;
     }
     const pos = 1*piece.location;
 
@@ -125,8 +129,10 @@ class Chess extends React.Component {
         }
       })
     });
+
+    this.state.moves.push(src + '#' + dst);
+    console.log('moves = ' + this.state.moves.length);
     this.setState({pieces: pieces});
-    this.setState({move: null});
   }
 
   initBoard() {
@@ -173,6 +179,9 @@ class Chess extends React.Component {
     //this.setState({ids: ids});
   }
 
+  prevMove() {
+    console.log('Prev move was: '+this.state.previousMove);
+  }
   autoMove(value) {
 
     const {pieces, squares, white} = this.state;
@@ -223,7 +232,6 @@ class Chess extends React.Component {
         console.log('WHITE MOVED * total moves were = ' + possibleMovesWhite.length + ' selected random = ' + possibleMovesWhite[n] + ' i was = ' + n);
         this.setState({white: false});
       }
-
     } else {
       let possibleMovesBlack = {};
 
@@ -250,6 +258,7 @@ class Chess extends React.Component {
         const n = Math.floor(Math.random() * possibleMovesBlack.length);
 
         const blackMoves = possibleMovesBlack[n].split('#');
+        this.setState({previousMove: possibleMovesBlack[n]});
         this.move(blackMoves[0], blackMoves[1]);
         console.log('BLACK MOVED * total moves were = ' + possibleMovesBlack.length + ' selected random = ' + possibleMovesBlack[n] + ' n was = ' + n);
         this.setState({white: true});
@@ -287,7 +296,7 @@ class Chess extends React.Component {
           </div>
           <div className="automove">
             <AutoMove autoMove={this.autoMove}/>
-
+           <PrevMove prevMove={this.prevMove}/>
           </div>
         </main>
       </div>

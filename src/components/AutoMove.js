@@ -10,7 +10,6 @@ class AutoMove extends React.Component {
       prev: 0
     }
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleSubmitPrev = this.handleSubmitPrev.bind(this);
   }
 
   handleSubmit(e) {
@@ -20,12 +19,6 @@ class AutoMove extends React.Component {
     this.setState({value: this.state.value++})
     console.log('value = ' + this.state.value);
     this.props.autoMove(this.state.value++);
-
-  }
-  handleSubmitPrev(e) {
-    e.preventDefault();
-    this.props.autoMove(this.state.prevMove); //FIXME, correct format
-
   }
 
   render() {
@@ -34,9 +27,6 @@ class AutoMove extends React.Component {
 
         <form onSubmit={this.handleSubmit}>
           <button type="submit">Next move = {this.state.value++}</button>
-        </form>
-        <form onSubmit={this.handleSubmitPrev}>
-          <button type="submit">Prev move = {this.state.prev}</button>
         </form>
       </div>
     );
