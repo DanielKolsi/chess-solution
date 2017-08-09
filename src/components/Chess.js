@@ -18,7 +18,8 @@ class Chess extends React.Component {
       //      ids: [], // raw ref number of the piece, won't change
       white: true,
       move: null,
-      acceptedMoves: null
+      acceptedMoves: [],
+      previousMove: null
     }
     this.moveMap = this.moveMap.bind(this); //FIXME
     this.removePiece = this.removePiece.bind(this);
@@ -49,9 +50,13 @@ class Chess extends React.Component {
 
   getPossibleMoves(piece, squares) {
 
-    let location = piece.location; //FIXME
-    let acceptedMoves = {};
+    console.log('piece type = ' + piece.type);
+    let location = piece.location;
+    let acceptedMoves = [];
 
+    if (squares[piece.location] === null) {
+      return acceptedMoves;
+    }
     if (location !== undefined && this.refs[location].refs.piece !== undefined) {
       acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares);
     }
@@ -67,6 +72,9 @@ class Chess extends React.Component {
     const {squares, pieces} = this.state;
     const square = squares[src];
     let piece = square.piece;
+    if (piece === null) {
+        console.log('piece was null src='+src + 'dst='+dst);
+    }
     const pos = 1*piece.location;
 
     if (piece.value === CONSTANTS.whitePawnValue && squares[dst].row === CONSTANTS.minRow) {
@@ -170,20 +178,20 @@ class Chess extends React.Component {
     const {pieces, squares, white} = this.state;
 
     if (white === true) {
-      let possibleMovesWhite = {};
+      let possibleMovesWhite = [];
 
-      for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite; i++) {
+      for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite + 2; i++) { //FIXME, add promotions
         let piece = pieces[i];
-        if (piece === null || piece === undefined) {
+        if (piece === null || piece === undefined || piece.white === false) {
           continue; // piece has been e.g. eaten
         }
         console.log('piece.type = ' + piece.type + ' i = ' + i);
       }
 
-      for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite; i++) {
+      for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite + 2; i++) {
         let piece = pieces[i];
 
-        if (piece === null || piece === undefined) {
+        if (piece === null || piece === undefined || piece.white === false) {
           continue; // piece has been e.g. eaten
         }
 
@@ -205,6 +213,7 @@ class Chess extends React.Component {
       if (possibleMovesWhite !== undefined && possibleMovesWhite.length > 0) { // FIXME, no moves available?
         const n = Math.floor(Math.random() * possibleMovesWhite.length);
         const whiteMoves = possibleMovesWhite[n].split('#');
+        this.setState({previousMove: possibleMovesWhite[n]});
 
         this.move(whiteMoves[0], whiteMoves[1]);
 
@@ -221,7 +230,7 @@ class Chess extends React.Component {
       for (let i = CONSTANTS.minBlack; i <= CONSTANTS.maxBlack; i++) {
         let piece = pieces[i];
 
-        if (piece == null || piece === undefined) {
+        if (piece == null || piece === undefined || piece.white === true) {
           continue; // piece has been e.g. eaten
         }
         let pieceMoves = this.getPossibleMoves(piece, squares);

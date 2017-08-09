@@ -67,7 +67,7 @@ class Moves extends React.Component {
 
     // en passe -> former position
 
-      if (squares[up].piece == null && (squares[pos].row < CONSTANTS.maxRow)) {
+      if (squares[up].piece === null && (squares[pos].row < CONSTANTS.maxRow)) {
         acceptedMoves.push(pos + '#' + up);
 
         if (squares[pos].row === CONSTANTS.blackPawnInitialRow && squares[up2].piece === null) { // hasn't moved yet, double pawn front
