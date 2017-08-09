@@ -46,7 +46,7 @@ class Chess extends React.Component {
     this.move(src, dst);
   }
 
-  //FIXME: get pieceId from index and index from pieceId
+
   getPossibleMoves(piece, squares) {
 
     let location = piece.location; //FIXME
@@ -99,13 +99,9 @@ class Chess extends React.Component {
       this.setState({pieces: pieces});
     }
 
-    if (destination === undefined) {
-      console.log('ERROR: dst = ' + dst);
-    } else {
-      console.log('OK: dst = ' + dst);
-    }
+
     destination.piece = mover;
-    destination.piece.location = dst; //destination.index;
+    destination.piece.location = dst;
 
     this.setState({
       squares: update(squares, {
