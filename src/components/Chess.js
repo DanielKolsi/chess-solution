@@ -21,7 +21,8 @@ class Chess extends React.Component {
       moves: [],
       moveNumber: 0,
       acceptedMoves: [],
-      previousMove: null
+      previousMove: null,
+      candidateWhite: null
     }
     this.moveMap = this.moveMap.bind(this); //FIXME
     this.removePiece = this.removePiece.bind(this);
@@ -189,13 +190,13 @@ class Chess extends React.Component {
     if (white === true) {
       let possibleMovesWhite = [];
 
-      for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite + 2; i++) { //FIXME, add promotions
+      /*for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite + 2; i++) { //FIXME, add promotions
         let piece = pieces[i];
         if (piece === null || piece === undefined || piece.white === false) {
           continue; // piece has been e.g. eaten
         }
         console.log('piece.type = ' + piece.type + ' i = ' + i);
-      }
+      }*/
 
       for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite + 2; i++) {
         let piece = pieces[i];
@@ -224,6 +225,7 @@ class Chess extends React.Component {
         const whiteMoves = possibleMovesWhite[n].split('#');
         this.setState({previousMove: possibleMovesWhite[n]});
 
+        this.setState({candidateWhite: whiteMoves[1]}); // this square is "occupied"
         this.move(whiteMoves[0], whiteMoves[1]);
 
         for (let i = 0; i < possibleMovesWhite.length; i++) {
