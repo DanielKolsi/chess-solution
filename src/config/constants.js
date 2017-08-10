@@ -38,8 +38,7 @@ const CONSTANTS = {
   maxKnightRowUp: 6,
   minKnightRowDown: 1,
   minTwoDigitNumber: 10,
-
-
+  numberOfExtraPieces: 2
 }
 
 export default CONSTANTS;

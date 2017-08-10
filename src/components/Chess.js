@@ -52,7 +52,7 @@ class Chess extends React.Component {
   }
 
 
-  getPossibleMoves(piece, squares) {
+  getPossibleMoves(piece, squares, opponentKing, opponentCandidateMove) {
 
     console.log('piece type = ' + piece.type);
     let location = piece.location;
@@ -62,7 +62,7 @@ class Chess extends React.Component {
       return acceptedMoves;
     }
     if (location !== undefined && this.refs[location].refs.piece !== undefined) {
-      acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares);
+          acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove);
     }
     if (acceptedMoves !== undefined) {
       if (acceptedMoves.length > 0) {
@@ -183,42 +183,75 @@ class Chess extends React.Component {
   prevMove() {
     console.log('Prev move was: '+this.state.previousMove);
   }
+
+
+  getCandidateMovesWhite(squares, pieces) {
+    /*for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite + 2; i++) { //FIXME, add promotions
+      let piece = pieces[i];
+      if (piece === null || piece === undefined || piece.white === false) {
+        continue; // piece has been e.g. eaten
+      }
+      console.log('piece.type = ' + piece.type + ' i = ' + i);
+    }*/
+
+    let possibleMovesWhite = [];
+
+    for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite + CONSTANTS.numberOfExtraPieces; i++) {
+      let piece = pieces[i];
+
+      if (piece === null || piece === undefined || piece.white === false) {
+        continue; // piece has been e.g. eaten
+      }
+
+      //console.log('\n WHITE: piece for moving =' + piece.type + ' white = ' + piece.white + ' value =' + piece.value + ' n=' + piece.n + ' location=' + piece.location);
+      //console.log('piece = ' + piece.type + piece.location + piece.n);
+      let pieceMoves = this.getPossibleMoves(piece, squares);
+
+      if (pieceMoves === undefined)
+        continue;
+      if (pieceMoves.length > 0 && possibleMovesWhite.length === undefined) {
+        possibleMovesWhite = pieceMoves;
+      } else if (pieceMoves.length > 0) {
+        console.log('adding piecemoves, i = ' + i + ' n = ' + pieceMoves.length + ' p m w length = ' + possibleMovesWhite.length);
+        if (!possibleMovesWhite.includes(pieceMoves)) {
+          possibleMovesWhite = possibleMovesWhite.concat(pieceMoves); // possiblemoves, removalmoves, acceptedmoves
+        }
+      }
+    }
+    return possibleMovesWhite;
+  }
+
+  getCandidateMovesBlack(squares, pieces, opponentKing, opponentCandidateMove) {
+
+    let possibleMovesBlack = [];
+    for (let i = CONSTANTS.minBlack; i <= CONSTANTS.maxBlack; i++) {
+      let piece = pieces[i];
+
+      if (piece == null || piece === undefined || piece.white === true) {
+        continue; // piece has been e.g. eaten
+      }
+      let pieceMoves = this.getPossibleMoves(piece, squares, opponentKing, opponentCandidateMove);
+      if (pieceMoves === undefined)
+        continue;
+
+      if (pieceMoves.length > 0 && possibleMovesBlack.length === undefined) {
+        possibleMovesBlack = pieceMoves;
+      } else if (pieceMoves.length > 0) {
+        if (!possibleMovesBlack.includes(pieceMoves)) {
+          possibleMovesBlack = possibleMovesBlack.concat(pieceMoves); // possiblemoves, removalmoves, acceptedmoves
+        }
+      }
+    }
+    return possibleMovesBlack;
+  }
+
   autoMove(value) {
 
     const {pieces, squares, white} = this.state;
 
     if (white === true) {
-      let possibleMovesWhite = [];
+      let possibleMovesWhite = this.getCandidateMovesWhite(squares, pieces);
 
-      /*for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite + 2; i++) { //FIXME, add promotions
-        let piece = pieces[i];
-        if (piece === null || piece === undefined || piece.white === false) {
-          continue; // piece has been e.g. eaten
-        }
-        console.log('piece.type = ' + piece.type + ' i = ' + i);
-      }*/
-
-      for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite + 2; i++) {
-        let piece = pieces[i];
-
-        if (piece === null || piece === undefined || piece.white === false) {
-          continue; // piece has been e.g. eaten
-        }
-
-        //console.log('\n WHITE: piece for moving =' + piece.type + ' white = ' + piece.white + ' value =' + piece.value + ' n=' + piece.n + ' location=' + piece.location);
-        //console.log('piece = ' + piece.type + piece.location + piece.n);
-        let pieceMoves = this.getPossibleMoves(piece, squares);
-        if (pieceMoves === undefined)
-          continue;
-        if (pieceMoves.length > 0 && possibleMovesWhite.length === undefined) {
-          possibleMovesWhite = pieceMoves;
-        } else if (pieceMoves.length > 0) {
-          console.log('adding piecemoves, i = ' + i + ' n = ' + pieceMoves.length + ' p m w length = ' + possibleMovesWhite.length);
-          if (!possibleMovesWhite.includes(pieceMoves)) {
-            possibleMovesWhite = possibleMovesWhite.concat(pieceMoves); // possiblemoves, removalmoves, acceptedmoves
-          }
-        }
-      }
 
       if (possibleMovesWhite !== undefined && possibleMovesWhite.length > 0) { // FIXME, no moves available?
         const n = Math.floor(Math.random() * possibleMovesWhite.length);
@@ -235,26 +268,7 @@ class Chess extends React.Component {
         this.setState({white: false});
       }
     } else {
-      let possibleMovesBlack = {};
-
-      for (let i = CONSTANTS.minBlack; i <= CONSTANTS.maxBlack; i++) {
-        let piece = pieces[i];
-
-        if (piece == null || piece === undefined || piece.white === true) {
-          continue; // piece has been e.g. eaten
-        }
-        let pieceMoves = this.getPossibleMoves(piece, squares);
-        if (pieceMoves === undefined)
-          continue;
-
-        if (pieceMoves.length > 0 && possibleMovesBlack.length === undefined) {
-          possibleMovesBlack = pieceMoves;
-        } else if (pieceMoves.length > 0) {
-          if (!possibleMovesBlack.includes(pieceMoves)) {
-            possibleMovesBlack = possibleMovesBlack.concat(pieceMoves); // possiblemoves, removalmoves, acceptedmoves
-          }
-        }
-      }
+      let possibleMovesBlack = this.getCandidateMovesBlack(squares, pieces);
 
       if (possibleMovesBlack !== undefined && possibleMovesBlack.length > 0) { // FIXME, no moves available?
         const n = Math.floor(Math.random() * possibleMovesBlack.length);
