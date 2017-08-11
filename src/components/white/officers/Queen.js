@@ -8,8 +8,8 @@ class Queen extends Moves {
   }
 
   getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove) {
-    console.log('C-testing diagonal UR, opponentKing = ' + opponentKing + ' opponentCandidateMove = ' + opponentCandidateMove);
-    console.log('White Queen');
+    //console.log('C-testing diagonal UR, opponentKing = ' + opponentKing + ' opponentCandidateMove = ' + opponentCandidateMove);
+    //console.log('White Queen');
     if (piece.value !== 9) return undefined;
     return this.getQueenMoves(piece, squares, opponentKing, opponentCandidateMove);
   }
