@@ -198,6 +198,14 @@ class Moves extends React.Component {
       numberOfSquaresAvailable = squaresAvailableUp;
     }
 
+    let canditSrc = null;
+    let canditDst = null;
+
+    if (opponentCandidateMove !== undefined) {
+        const move = opponentCandidateMove.split('#'); // [1] == dst move
+        canditSrc = move[0];
+        canditDst = move[1];
+    }
 
     for (let i = 1; i <= numberOfSquaresAvailable; i++) {
       let dst = pos + (i * CONSTANTS.upRight);
@@ -207,9 +215,9 @@ class Moves extends React.Component {
       } else {
         console.log('DST='+dst+'KING='+opponentKing);
       }
-      if (squares[dst].piece == null) {
+      if (squares[dst].piece == null || dst === canditSrc) {
         acceptedMoves.push(pos + '#' + dst);
-      } else if ((squares[dst].piece.white !== piece.white) || (dst === opponentCandidateMove)) {
+      } else if ((squares[dst].piece.white !== piece.white) || (dst === canditDst)) {
         acceptedMoves.push(pos + '#' + dst);// eat opponent's piece
         break;
       } else {
