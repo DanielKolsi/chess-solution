@@ -71,7 +71,7 @@ class King extends React.Component {
             acceptedMoves.push(pos + '#' + downLeft);
         }
      }
-     console.log('White king moves size = ' + acceptedMoves.length);
+     //console.log('White king moves size = ' + acceptedMoves.length);
      return acceptedMoves;
   }
 

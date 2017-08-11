@@ -54,7 +54,7 @@ class Chess extends React.Component {
 
   getPossibleMoves(piece, squares, opponentKing, opponentCandidateMove) {
 
-    console.log('piece type = ' + piece.type);
+    //console.log('piece type = ' + piece.type);
     let location = piece.location;
     let acceptedMoves = [];
 
@@ -62,13 +62,14 @@ class Chess extends React.Component {
       return acceptedMoves;
     }
     if (location !== undefined && this.refs[location].refs.piece !== undefined) {
+      console.log('D-testing diagonal UR, opponentKing = ' + opponentKing + ' opponentCandidateMove = ' + opponentCandidateMove);
           acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove);
     }
-    if (acceptedMoves !== undefined) {
+    /*if (acceptedMoves !== undefined) {
       if (acceptedMoves.length > 0) {
           console.log('accepted moves size = ' + acceptedMoves.length + ' piece = ' + piece.type + ' location =' + piece.location);
       }
-    }
+    }*/
     return acceptedMoves
   }
 
@@ -76,6 +77,7 @@ class Chess extends React.Component {
     const {squares, pieces} = this.state;
     const square = squares[src];
     let piece = square.piece;
+
     if (piece === null) {
         console.log('piece was null src='+src + 'dst='+dst);
         return;
@@ -185,7 +187,7 @@ class Chess extends React.Component {
   }
 
 
-  getCandidateMovesWhite(squares, pieces) {
+  getCandidateMovesWhite(squares, pieces, opponentKing, opponentCandidateMove) {
     /*for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite + 2; i++) { //FIXME, add promotions
       let piece = pieces[i];
       if (piece === null || piece === undefined || piece.white === false) {
@@ -196,7 +198,7 @@ class Chess extends React.Component {
 
     let possibleMovesWhite = [];
 
-    for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite + CONSTANTS.numberOfExtraPieces; i++) {
+    for (let i = CONSTANTS.minWhite; i < (CONSTANTS.maxWhite + CONSTANTS.numberOfExtraPieces); i++) {
       let piece = pieces[i];
 
       if (piece === null || piece === undefined || piece.white === false) {
@@ -212,7 +214,7 @@ class Chess extends React.Component {
       if (pieceMoves.length > 0 && possibleMovesWhite.length === undefined) {
         possibleMovesWhite = pieceMoves;
       } else if (pieceMoves.length > 0) {
-        console.log('adding piecemoves, i = ' + i + ' n = ' + pieceMoves.length + ' p m w length = ' + possibleMovesWhite.length);
+        //console.log('adding piecemoves, i = ' + i + ' n = ' + pieceMoves.length + ' p m w length = ' + possibleMovesWhite.length);
         if (!possibleMovesWhite.includes(pieceMoves)) {
           possibleMovesWhite = possibleMovesWhite.concat(pieceMoves); // possiblemoves, removalmoves, acceptedmoves
         }
@@ -234,7 +236,7 @@ class Chess extends React.Component {
       if (pieceMoves === undefined)
         continue;
 
-      if (pieceMoves.length > 0 && possibleMovesBlack.length === undefined) {
+      if (pieceMoves.length > 0 && possibleMovesBlack.length === undefined) { //FIXME,possibleMovesBlack was null
         possibleMovesBlack = pieceMoves;
       } else if (pieceMoves.length > 0) {
         if (!possibleMovesBlack.includes(pieceMoves)) {
@@ -245,12 +247,27 @@ class Chess extends React.Component {
     return possibleMovesBlack;
   }
 
+  getAllowedMovesWhite(possibleMovesWhite, kingPosition, squares, pieces) {
+    let allowedMoves = [];
+    for (let i = 0; i < possibleMovesWhite.length; i++) {
+        const whiteMove = possibleMovesWhite[i].split('#'); // [1] == dst move
+        console.log('TESTING move allowance, move = ' + whiteMove[1] + ' kingPosition = ' + kingPosition);
+        if (this.getCandidateMovesBlack(squares, pieces, kingPosition, whiteMove[1]) == null) {
+           console.log('move rejected: ' + possibleMovesWhite[i]);
+        } else {
+          allowedMoves.push(possibleMovesWhite[i]);
+        }
+    }
+    return allowedMoves;
+  }
+
   autoMove(value) {
 
     const {pieces, squares, white} = this.state;
 
     if (white === true) {
       let possibleMovesWhite = this.getCandidateMovesWhite(squares, pieces);
+      possibleMovesWhite = this.getAllowedMovesWhite(possibleMovesWhite, pieces[60].location, squares, pieces);
 
 
       if (possibleMovesWhite !== undefined && possibleMovesWhite.length > 0) { // FIXME, no moves available?
@@ -261,10 +278,10 @@ class Chess extends React.Component {
         this.setState({candidateWhite: whiteMoves[1]}); // this square is "occupied"
         this.move(whiteMoves[0], whiteMoves[1]);
 
-        for (let i = 0; i < possibleMovesWhite.length; i++) {
+        /*for (let i = 0; i < possibleMovesWhite.length; i++) {
           console.log(' i = ' + i + ' candidate move = ' + possibleMovesWhite[i]);
-        }
-        console.log('WHITE MOVED * total moves were = ' + possibleMovesWhite.length + ' selected random = ' + possibleMovesWhite[n] + ' i was = ' + n);
+        }*/
+        //console.log('WHITE MOVED * total moves were = ' + possibleMovesWhite.length + ' selected random = ' + possibleMovesWhite[n] + ' i was = ' + n);
         this.setState({white: false});
       }
     } else {

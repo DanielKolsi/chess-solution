@@ -68,7 +68,7 @@ class King extends React.Component {
         acceptedMoves.push(pos + '#' + downLeft);
       }
     }
-    console.log('Black king moves size = ' + acceptedMoves.length);
+    //console.log('Black king moves size = ' + acceptedMoves.length);
     return acceptedMoves;
   }
 
