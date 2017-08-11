@@ -71,7 +71,6 @@ class Chess extends React.Component {
 
     if (location !== undefined && this.refs[location].refs.piece !== undefined) {
       //console.log('D-testing diagonal UR, opponentKing = ' + opponentKing + ' opponentCandidateMove = ' + opponentCandidateMove);
-
       acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove);
     }
     /*if (acceptedMoves !== undefined) {
@@ -199,13 +198,6 @@ class Chess extends React.Component {
   }
 
   getCandidateMovesWhite(squares, pieces, opponentKing, opponentCandidateMove) {
-    /*for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite + 2; i++) { //FIXME, add promotions
-      let piece = pieces[i];
-      if (piece === null || piece === undefined || piece.white === false) {
-        continue; // piece has been e.g. eaten
-      }
-      console.log('piece.type = ' + piece.type + ' i = ' + i);
-    }*/
 
     let possibleMovesWhite = [];
 
@@ -300,20 +292,19 @@ class Chess extends React.Component {
         this.setState({candidateWhite: whiteMoves[1]}); // this square is "occupied"
         this.move(whiteMoves[0], whiteMoves[1]);
 
-        /*for (let i = 0; i < possibleMovesWhite.length; i++) {
-          console.log(' i = ' + i + ' candidate move = ' + possibleMovesWhite[i]);
-        }*/
         //console.log('WHITE MOVED * total moves were = ' + possibleMovesWhite.length + ' selected random = ' + possibleMovesWhite[n] + ' i was = ' + n);
         this.setState({white: false});
       }
     } else {
       let possibleMovesBlack = this.getCandidateMovesBlack(squares, pieces);
+      possibleMovesBlack = this.getAllowedMovesBlack(possibleMovesBlack, pieces[CONSTANTS.blackKingId].location, squares, pieces);
 
-      if (possibleMovesBlack !== undefined && possibleMovesBlack.length > 0) { // FIXME, no moves available?
+      if (possibleMovesBlack !== null && possibleMovesBlack.length > 0) { // FIXME, no moves available?
         const n = Math.floor(Math.random() * possibleMovesBlack.length);
 
         const blackMoves = possibleMovesBlack[n].split('#');
         this.setState({previousMove: possibleMovesBlack[n]});
+        this.setState({candidateBlack: blackMoves[1]}); // this square is "occupied"
         this.move(blackMoves[0], blackMoves[1]);
         console.log('BLACK MOVED * total moves were = ' + possibleMovesBlack.length + ' selected random = ' + possibleMovesBlack[n] + ' n was = ' + n);
         this.setState({white: true});

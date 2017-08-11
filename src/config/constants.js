@@ -39,7 +39,9 @@ const CONSTANTS = {
   minKnightRowDown: 1,
   minTwoDigitNumber: 10,
   numberOfExtraPieces: 2,
-  whiteKingId: 60
+  whiteKingId: 60,
+  blackKingId: 4
+
 }
 
 export default CONSTANTS;
