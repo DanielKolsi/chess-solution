@@ -340,6 +340,16 @@ class Moves extends React.Component {
     let DOWN = pos + CONSTANTS.down;
     let LEFT = pos + CONSTANTS.left;
     let RIGHT = pos + CONSTANTS.right;
+    console.log('candit = ' + opponentCandidateMove);
+
+    let canditSrc = null;
+    let canditDst = null;
+
+    if (opponentCandidateMove !== undefined) {
+        const move = opponentCandidateMove.split('#'); // [1] == dst move
+        canditSrc = move[0];
+        canditDst = move[1];
+    }
 
     // move UP
     for (let i = UP; i < squares.length; i += CONSTANTS.up) {
@@ -352,6 +362,7 @@ class Moves extends React.Component {
         console.log('collides with KING');
         return null; //FIXME, move cannot be accepted (king would be eaten)
       }
+      //FIXME, accept canditSrc
       if (squares[i].piece === null) {
         console.log('No PIECE i = ' + i);
         acceptedMoves.push(pos + '#' + i);

@@ -250,9 +250,8 @@ class Chess extends React.Component {
   getAllowedMovesWhite(possibleMovesWhite, kingPosition, squares, pieces) {
     let allowedMoves = [];
     for (let i = 0; i < possibleMovesWhite.length; i++) {
-        const whiteMove = possibleMovesWhite[i].split('#'); // [1] == dst move
-        console.log('TESTING move allowance, move = ' + whiteMove[1] + ' kingPosition = ' + kingPosition);
-        if (this.getCandidateMovesBlack(squares, pieces, kingPosition, whiteMove[1]) == null) {
+
+        if (this.getCandidateMovesBlack(squares, pieces, kingPosition, possibleMovesWhite[i]) == null) {
            console.log('move rejected: ' + possibleMovesWhite[i]);
         } else {
           allowedMoves.push(possibleMovesWhite[i]);
