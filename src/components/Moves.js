@@ -97,13 +97,17 @@ class Moves extends React.Component {
     return acceptedMoves;
   }
 
-  getKnightMoves(piece, squares, opponentKing, opponentCandidateMove) {
+  getKnightMoves(piece, squares, opponentKing, kingDst) {
 
     const pos = 1*piece.location;
     let acceptedMoves = [];
 
     // 2 right, 1 up
     const rightUp = pos + CONSTANTS.twoRightOneUp;
+
+    if (rightUp === kingDst) {
+      return null; // move cannot be accepted (king would be eaten)
+    }
 
     if (squares[pos].row <= 6 && squares[pos].col <= 5) { // check that the move stays on the board
       if (squares[rightUp].piece == null || (squares[rightUp].piece.white !== piece.white)) {
@@ -112,7 +116,9 @@ class Moves extends React.Component {
     }
     // 2 right, 1 down
     let rightDown = pos + CONSTANTS.twoRightOneDown;
-
+    if (rightDown === kingDst) {
+      return null; // move cannot be accepted (king would be eaten)
+    }
     if (squares[pos].row >= 1 && squares[pos].col <= 5) { // check that the move stays on the board
       if (squares[rightDown].piece == null || (squares[rightDown].piece.white !== piece.white)) {
         acceptedMoves.push(pos + '#' + rightDown);
@@ -121,6 +127,9 @@ class Moves extends React.Component {
 
     // 2 up, 1 right
     let upRight = pos + CONSTANTS.twoUpOneRight;
+    if (upRight === kingDst) {
+      return null; // move cannot be accepted (king would be eaten)
+    }
     if (squares[pos].row <= 5 && squares[pos].col <= 6) {
       if (squares[upRight].piece == null || (squares[upRight].piece.white !== piece.white)) {
         acceptedMoves.push(pos + '#' + upRight);
@@ -128,6 +137,9 @@ class Moves extends React.Component {
     }
     // 2 up, 1 left
     let upLeft = pos + 15;
+    if (upLeft === kingDst) {
+      return null; // move cannot be accepted (king would be eaten)
+    }
     if (squares[pos].row <= 5 && squares[pos].col >= 1) {
       if (squares[upLeft].piece == null || (squares[upLeft].piece.white !== piece.white)) {
         acceptedMoves.push(pos + '#' + upLeft);
@@ -135,6 +147,10 @@ class Moves extends React.Component {
     }
     // 2 left, 1 up
     let leftUp = pos + CONSTANTS.twoLeftOneUp;
+
+    if (leftUp === kingDst) {
+      return null; // move cannot be accepted (king would be eaten)
+    }
 
     if (squares[pos].row <= 6 && squares[pos].col >= 2) {
       if (squares[leftUp].piece == null || (squares[leftUp].piece.white !== piece.white)) {
@@ -144,6 +160,10 @@ class Moves extends React.Component {
 
     // 2 left, 1 down
     let leftDown = pos + CONSTANTS.twoLeftOneDown;
+    if (leftDown === kingDst) {
+      return null; // move cannot be accepted (king would be eaten)
+    }
+
     if (squares[pos].row >= 1 && squares[pos].col >= 2) {
       if (squares[leftDown].piece == null || (squares[leftDown].piece.white !== piece.white)) {
         acceptedMoves.push(pos + '#' + leftDown);
@@ -151,6 +171,9 @@ class Moves extends React.Component {
     }
     // 2 down, 1 right
     let downRight = pos + CONSTANTS.twoDownOneRight;
+    if (downRight === kingDst) {
+      return null; // move cannot be accepted (king would be eaten)
+    }
     if (squares[pos].row >= 2 && squares[pos].col <= 6) {
       if (squares[downRight].piece == null || (squares[downRight].piece.white !== piece.white)) {
         acceptedMoves.push(pos + '#' + downRight);
@@ -158,6 +181,9 @@ class Moves extends React.Component {
     }
     // 2 down, 1 left
     let downLeft = pos + CONSTANTS.twoDownOneLeft;
+    if (downLeft === kingDst) {
+      return null; // move cannot be accepted (king would be eaten)
+    }
     if (squares[pos].row >= 2 && squares[pos].col >= 1) {
       if (squares[downLeft].piece == null || (squares[downLeft].piece.white !== piece.white)) {
         acceptedMoves.push(pos + '#' + downLeft);
