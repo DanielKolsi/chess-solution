@@ -54,16 +54,17 @@ class Chess extends React.Component {
   getPossibleMoves(piece, squares, opponentKing, opponentCandidateMove) {
 
     //console.log('piece type = ' + piece.type);
-    let location = piece.location;
+    const location = 1*piece.location;
     let acceptedMoves = [];
 
     if (squares[piece.location] === null) {
       return acceptedMoves;
     }
     if (opponentCandidateMove !== undefined) {
-      const move = opponentCandidateMove.split('#'); // [1] == dst move
-
-      if (location === move[1]) {
+      const dst = 1*opponentCandidateMove.split('#')[1]; // [1] == dst move
+      console.log('candit move eatspiece, location_move =' + dst + ' location='+location);
+      if (location === dst) {
+          console.log('candit move eats_piece, location ='+location);
           return acceptedMoves; // no possible moves, because the canditDst move EATS this piece!
       }
     }
@@ -248,7 +249,7 @@ class Chess extends React.Component {
       }
       let pieceMoves = this.getPossibleMoves(piece, squares, opponentKing, opponentCandidateMove);
       if (pieceMoves == null && opponentCandidateMove != null) {
-        console.log('candidate WHITE move rejected, no possible moves');
+        console.log('candidate WHITE move rejected, no possible moves, rejected_move='+opponentCandidateMove);
         return null; // previous white move candidate is simply rejected!
       } else if (pieceMoves === undefined) {
         console.log('No available moves for this piece.');
@@ -269,17 +270,15 @@ class Chess extends React.Component {
   getAllowedMovesWhite(possibleMovesWhite, kingPosition, squares, pieces) {
     let allowedMoves = [];
 
-    //for (let i = 0; i < possibleMovesWhite.length; i++) {
-    if (this.getCandidateMovesBlack(squares, pieces, kingPosition, '52#44') == null) {
-      //if (this.getCandidateMovesBlack(squares, pieces, kingPosition, possibleMovesWhite[i]) == null) {
-        //console.log('move rejected = ' + possibleMovesWhite[i]);
-        console.log('move rejected = 52#44');
+    for (let i = 0; i < possibleMovesWhite.length; i++) {
+
+      if (this.getCandidateMovesBlack(squares, pieces, kingPosition, possibleMovesWhite[i]) == null) {
+        console.log('move-rejected = ' + possibleMovesWhite[i]);
       } else {
-        console.log('move allowed = 52#44');
-        allowedMoves.push('52#44');
-        //allowedMoves.push(possibleMovesWhite[i]);
+        console.log('move allowed = '+possibleMovesWhite[i]);
+        allowedMoves.push(possibleMovesWhite[i]);
       }
-    //}
+    }
     return allowedMoves;
   }
 
