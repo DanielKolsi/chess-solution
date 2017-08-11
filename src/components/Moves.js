@@ -354,27 +354,26 @@ class Moves extends React.Component {
     // move UP
     for (let i = UP; i <= CONSTANTS.maxWhite; i += CONSTANTS.up) {
 
-
-      console.log('move dst = ' + i + ' KING = ' + opponentKing + ' canditSrc='+canditSrc);
+      console.log('move dst = ' + i + ' KING = ' + opponentKing + ' canditSrc='+canditSrc+ ' canditDst='+canditDst);
       if (i === opponentKing) {
         console.log('collides with KING');
         return null; //FIXME, move cannot be accepted (king would be eaten)
       }
 
       if (i === canditSrc) {
-        console.log('i='+i +'EQUALS canditSrc='+canditSrc);
-      }
-
-      if (i === canditSrc) {
         acceptedMoves.push(pos + '#' + i);
         console.log('i equals candirSrc, i = ' + i);
+      } else if (i === canditDst) {
+        acceptedMoves.push(pos + '#' + i);
+        console.log('Move accepted, collides with candit dst, OK.');
+        break;
       } else if (squares[i].piece === null) {
         console.log('No PIECE i = ' + i);
         acceptedMoves.push(pos + '#' + i);
       } else if (squares[i].piece === undefined) {
         console.log('UNDEF PIECE i = ' + i);
         acceptedMoves.push(pos + '#' + i);
-      } else if (piece.white !== squares[i].piece.white || (i === canditDst)) { // eat
+      } else if (piece.white !== squares[i].piece.white) { // eat
         console.log('EATS PIECE i = ' + i + ' opponentKing = ' + opponentKing + ' canditDst='+canditDst+ 'canditSrc='+canditSrc);
         acceptedMoves.push(pos + '#' + i); //FIXME, handle candidate move SRC, the piece doesn't exist there anymore...
         break; // no more move possibilities after eating

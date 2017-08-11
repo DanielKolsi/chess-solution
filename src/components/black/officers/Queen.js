@@ -9,8 +9,10 @@ class Queen extends Moves {
   }
 
   getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove) {
-    //console.log('Black Queen');
-    if (piece.value !== -9) return undefined;
+    console.log('Black Queen');
+    if (piece.value !== -9) {
+      return undefined;
+    } 
     return this.getQueenMoves(piece, squares, opponentKing, opponentCandidateMove);
   }
 

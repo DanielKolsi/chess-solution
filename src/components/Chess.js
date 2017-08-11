@@ -51,7 +51,6 @@ class Chess extends React.Component {
     this.move(src, dst);
   }
 
-
   getPossibleMoves(piece, squares, opponentKing, opponentCandidateMove) {
 
     //console.log('piece type = ' + piece.type);
@@ -61,9 +60,18 @@ class Chess extends React.Component {
     if (squares[piece.location] === null) {
       return acceptedMoves;
     }
+    if (opponentCandidateMove !== undefined) {
+      const move = opponentCandidateMove.split('#'); // [1] == dst move
+
+      if (location === move[1]) {
+          return acceptedMoves; // no possible moves, because the canditDst move EATS this piece!
+      }
+    }
+
     if (location !== undefined && this.refs[location].refs.piece !== undefined) {
       //console.log('D-testing diagonal UR, opponentKing = ' + opponentKing + ' opponentCandidateMove = ' + opponentCandidateMove);
-        acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove);
+
+      acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove);
     }
     /*if (acceptedMoves !== undefined) {
       if (acceptedMoves.length > 0) {
@@ -79,10 +87,10 @@ class Chess extends React.Component {
     let piece = square.piece;
 
     if (piece === null) {
-        console.log('piece was null src='+src + 'dst='+dst);
-        return;
+      console.log('piece was null src=' + src + 'dst=' + dst);
+      return;
     }
-    const pos = 1*piece.location;
+    const pos = 1 * piece.location;
 
     if (piece.value === CONSTANTS.whitePawnValue && squares[dst].row === CONSTANTS.minRow) {
 
@@ -90,14 +98,18 @@ class Chess extends React.Component {
       pieces[piece.n] = pieces[value]; // insert promoted piece to pieces
       piece = pieces[value]; // actual promotion
       piece.location = dst;
-      this.setState({promotedWhiteQueenNumber: value++});
+      this.setState({
+        promotedWhiteQueenNumber: value++
+      });
       this.setState({pieces: pieces});
     } else if (piece.value === CONSTANTS.blackPawnValue && squares[dst].row === CONSTANTS.maxRow) {
       let value = this.state.promotedBlackQueenNumber;
       pieces[piece.n] = pieces[value]; // insert promoted piece to pieces
       piece = pieces[value]; // actual promotion
       piece.location = dst;
-      this.setState({promotedBlackQueenNumber: value++});
+      this.setState({
+        promotedBlackQueenNumber: value++
+      });
       this.setState({pieces: pieces});
     }
 
@@ -113,7 +125,6 @@ class Chess extends React.Component {
       delete pieces[destination.piece.id];
       this.setState({pieces: pieces});
     }
-
 
     destination.piece = mover;
     destination.piece.location = dst;
@@ -183,9 +194,8 @@ class Chess extends React.Component {
   }
 
   prevMove() {
-    console.log('Prev move was: '+this.state.previousMove);
+    console.log('Prev move was: ' + this.state.previousMove);
   }
-
 
   getCandidateMovesWhite(squares, pieces, opponentKing, opponentCandidateMove) {
     /*for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite + 2; i++) { //FIXME, add promotions
@@ -223,6 +233,10 @@ class Chess extends React.Component {
     return possibleMovesWhite;
   }
 
+  /*
+    This function is both for checking candidate moves for white / black AND for
+    using as a "rejector" for the candidate move when opponentKing and opponentCandidateMove are specified.
+  */
   getCandidateMovesBlack(squares, pieces, opponentKing, opponentCandidateMove) {
 
     let possibleMovesBlack = [];
@@ -241,7 +255,6 @@ class Chess extends React.Component {
         continue;
       }
 
-
       if (pieceMoves.length > 0 && possibleMovesBlack.length === undefined) { //FIXME,possibleMovesBlack was null
         possibleMovesBlack = pieceMoves;
       } else if (pieceMoves.length > 0) {
@@ -255,20 +268,18 @@ class Chess extends React.Component {
 
   getAllowedMovesWhite(possibleMovesWhite, kingPosition, squares, pieces) {
     let allowedMoves = [];
+
     //for (let i = 0; i < possibleMovesWhite.length; i++) {
-
-    const tmp = '52#51';
-
-        //if (this.getCandidateMovesBlack(squares, pieces, kingPosition, possibleMovesWhite[i]) == null) {
-        let move = this.getCandidateMovesBlack(squares, pieces, kingPosition, tmp);
-        console.log('move acceptance = ' + move);
-        if (move == null) {
-          console.log('move rejected: ' + tmp);
-           //console.log('move rejected: ' + possibleMovesWhite[i]);
-        } else {
-          //allowedMoves.push(possibleMovesWhite[i]);
-        }
-  //  }
+    if (this.getCandidateMovesBlack(squares, pieces, kingPosition, '52#44') == null) {
+      //if (this.getCandidateMovesBlack(squares, pieces, kingPosition, possibleMovesWhite[i]) == null) {
+        //console.log('move rejected = ' + possibleMovesWhite[i]);
+        console.log('move rejected = 52#44');
+      } else {
+        console.log('move allowed = 52#44');
+        allowedMoves.push('52#44');
+        //allowedMoves.push(possibleMovesWhite[i]);
+      }
+    //}
     return allowedMoves;
   }
 
@@ -278,9 +289,9 @@ class Chess extends React.Component {
 
     if (white === true) {
       let possibleMovesWhite = this.getCandidateMovesWhite(squares, pieces);
-      console.log('pos white =' +possibleMovesWhite);
-      possibleMovesWhite = this.getAllowedMovesWhite(possibleMovesWhite, pieces[60].location, squares, pieces);
-    console.log('pos white2 =' +possibleMovesWhite);
+      console.log('pos white =' + possibleMovesWhite);
+      possibleMovesWhite = this.getAllowedMovesWhite(possibleMovesWhite, pieces[CONSTANTS.whiteKingId].location, squares, pieces);
+      console.log('pos white2 =' + possibleMovesWhite);
 
       if (possibleMovesWhite !== null && possibleMovesWhite.length > 0) { // FIXME, no moves available?
         const n = Math.floor(Math.random() * possibleMovesWhite.length);
@@ -341,7 +352,7 @@ class Chess extends React.Component {
           </div>
           <div className="automove">
             <AutoMove autoMove={this.autoMove}/>
-           <PrevMove prevMove={this.prevMove}/>
+            <PrevMove prevMove={this.prevMove}/>
           </div>
         </main>
       </div>
