@@ -30,14 +30,13 @@ class King extends React.Component {
         return null; // reject move
       if (right === kingDst)
         return null; // reject move
-      if (downRight === kingDst)
+      if (downRight === kingDst) 
         return null; // reject move
       if (upLeft === kingDst)
         return null; // reject move
       if (downLeft === kingDst)
         return null; // reject move
       }
-
 
     if (squares[pos].row < CONSTANTS.maxRow) { // needs to stay on the board limits
       if (squares[up].piece == null || squares[up].piece.white === false) {
@@ -62,8 +61,6 @@ class King extends React.Component {
         acceptedMoves.push(pos + '#' + right);
       }
     }
-
-
 
     if (squares[pos].row < CONSTANTS.minRow && (squares[pos].col < CONSTANTS.minCol)) { // needs to stay on the board limits
       if (squares[upRight].piece == null || squares[upRight].piece.white === false) {

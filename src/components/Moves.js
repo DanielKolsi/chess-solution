@@ -403,6 +403,7 @@ class Moves extends React.Component {
     let canditDst = 0;
 
     if (opponentCandidateMove !== undefined) {
+
         const move = opponentCandidateMove.split('#'); // [1] == dst move
         canditSrc = 1*move[0]; // ensure that it's an integer! (*1)
         canditDst = 1*move[1];
