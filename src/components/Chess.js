@@ -62,7 +62,7 @@ class Chess extends React.Component {
     }
     if (opponentCandidateMove !== undefined) {
       const dst = 1*opponentCandidateMove.split('#')[1]; // [1] == dst move
-      console.log('candit move eatspiece, location_move =' + dst + ' location='+location);
+
       if (location === dst) {
           console.log('candit move eats_piece, location ='+location);
           return acceptedMoves; // no possible moves, because the canditDst move EATS this piece!
@@ -70,7 +70,7 @@ class Chess extends React.Component {
     }
 
     if (location !== undefined && this.refs[location].refs.piece !== undefined) {
-      //console.log('D-testing diagonal UR, opponentKing = ' + opponentKing + ' opponentCandidateMove = ' + opponentCandidateMove);
+      console.log('D-testing diagonal UR, opponentKing = ' + opponentKing + ' opponentCandidateMove = ' + opponentCandidateMove);
       acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove);
     }
     /*if (acceptedMoves !== undefined) {
@@ -296,9 +296,9 @@ class Chess extends React.Component {
     for (let i = 0; i < possibleMovesBlack.length; i++) {
 
       if (this.getCandidateMovesWhite(squares, pieces, kingPosition, possibleMovesBlack[i]) == null) {
-        console.log('move-rejected-black = ' + possibleMovesBlack[i]);
+        console.log('move-rejected-black = '+possibleMovesBlack[i]);
       } else {
-        console.log('move allowed-black = ' + possibleMovesBlack[i]);
+        console.log('move allowed-black = '+possibleMovesBlack[i]);
         allowedMoves.push(possibleMovesBlack[i]);
       }
     }
