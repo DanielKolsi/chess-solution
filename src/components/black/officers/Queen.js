@@ -12,7 +12,7 @@ class Queen extends Moves {
     console.log('Black Queen');
     if (piece.value !== -9) {
       return undefined;
-    } 
+    }
     return this.getQueenMoves(piece, squares, opponentKing, opponentCandidateMove);
   }
 

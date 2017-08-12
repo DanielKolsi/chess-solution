@@ -21,6 +21,12 @@ class King extends React.Component {
     let upLeft = pos + CONSTANTS.upLeft;
     let upRight = pos + CONSTANTS.upRight;
 
+    /*if (kingDst != undefined) {
+      if ((up || down || left || right || downLeft || downRight || upLeft || upRight) == kingDst) {
+        return null; // cannot accept king move
+      }
+    }*/
+
     if (squares[pos].row < CONSTANTS.maxRow) { // needs to stay on the board limits
       if (squares[up].piece == null || (squares[up].piece.white === true)) {
         acceptedMoves.push(pos + '#' + up);

@@ -210,10 +210,20 @@ class Chess extends React.Component {
 
       //console.log('\n WHITE: piece for moving =' + piece.type + ' white = ' + piece.white + ' value =' + piece.value + ' n=' + piece.n + ' location=' + piece.location);
       //console.log('piece = ' + piece.type + piece.location + piece.n);
-      let pieceMoves = this.getPossibleMoves(piece, squares);
+      let pieceMoves = this.getPossibleMoves(piece, squares, opponentKing, opponentCandidateMove);
 
-      if (pieceMoves === undefined)
+      if (pieceMoves == null && opponentCandidateMove != null) {
+        console.log('candidate BLACK move rejected, no possible moves, rejected_move='+opponentCandidateMove);
+        return null; // previous white move candidate is simply rejected!
+      } else if (pieceMoves === undefined) {
+        console.log('No available moves for this piece.');
         continue;
+      }
+
+      if (pieceMoves === undefined) {
+        continue;
+      }
+
       if (pieceMoves.length > 0 && possibleMovesWhite.length === undefined) {
         possibleMovesWhite = pieceMoves;
       } else if (pieceMoves.length > 0) {
@@ -233,18 +243,24 @@ class Chess extends React.Component {
   getCandidateMovesBlack(squares, pieces, opponentKing, opponentCandidateMove) {
 
     let possibleMovesBlack = [];
-    for (let i = CONSTANTS.minBlack; i <= CONSTANTS.maxBlack; i++) {
+
+    for (let i = CONSTANTS.minBlack; i < (CONSTANTS.maxBlack + CONSTANTS.numberOfExtraPieces); i++) {
       let piece = pieces[i];
 
       if (piece == null || piece === undefined || piece.white === true) {
         continue; // piece has been e.g. eaten
       }
+
       let pieceMoves = this.getPossibleMoves(piece, squares, opponentKing, opponentCandidateMove);
+
       if (pieceMoves == null && opponentCandidateMove != null) {
         console.log('candidate WHITE move rejected, no possible moves, rejected_move='+opponentCandidateMove);
         return null; // previous white move candidate is simply rejected!
       } else if (pieceMoves === undefined) {
         console.log('No available moves for this piece.');
+        continue;
+      }
+      if (pieceMoves === undefined) {
         continue;
       }
 
@@ -274,11 +290,26 @@ class Chess extends React.Component {
     return allowedMoves;
   }
 
+  getAllowedMovesBlack(possibleMovesBlack, kingPosition, squares, pieces) {
+    let allowedMoves = [];
+
+    for (let i = 0; i < possibleMovesBlack.length; i++) {
+
+      if (this.getCandidateMovesWhite(squares, pieces, kingPosition, possibleMovesBlack[i]) == null) {
+        console.log('move-rejected-black = ' + possibleMovesBlack[i]);
+      } else {
+        console.log('move allowed-black = ' + possibleMovesBlack[i]);
+        allowedMoves.push(possibleMovesBlack[i]);
+      }
+    }
+    return allowedMoves;
+  }
+
   autoMove(value) {
 
     const {pieces, squares, white} = this.state;
 
-    if (white === true) {
+    if (white === false) {
       let possibleMovesWhite = this.getCandidateMovesWhite(squares, pieces);
       console.log('pos white =' + possibleMovesWhite);
       possibleMovesWhite = this.getAllowedMovesWhite(possibleMovesWhite, pieces[CONSTANTS.whiteKingId].location, squares, pieces);
