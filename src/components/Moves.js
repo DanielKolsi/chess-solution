@@ -403,7 +403,6 @@ class Moves extends React.Component {
     let canditDst = 0;
 
     if (opponentCandidateMove !== undefined) {
-
         const move = opponentCandidateMove.split('#'); // [1] == dst move
         canditSrc = 1*move[0]; // ensure that it's an integer! (*1)
         canditDst = 1*move[1];
@@ -519,10 +518,17 @@ class Moves extends React.Component {
       return null;
     }
 //    console.log('queen: bishop moves =' + acceptedMovesBishop.length);
-    let acceptedMovesRook = this.getRookMoves(piece, squares, opponentKing, opponentCandidateMove);
-    if (acceptedMovesRook == null) {
-      console.log('QUEEN move rejected');
-      return null;
+    let acceptedMovesRook = [];
+    if (opponentCandidateMove !== undefined) {
+      let row = squares[opponentKing].row;
+      let col = squares[opponentKing].col;
+      if (row !== piece.row && (col !== piece.col)) {
+        acceptedMovesRook = this.getRookMoves(piece, squares, opponentKing, opponentCandidateMove);
+        if (acceptedMovesRook == null) {
+          console.log('QUEEN move rejected');
+          return null;
+        }
+      }
     }
   //  console.log('queen: rook moves =' + acceptedMovesRook.length);
     let acceptedMovesQueen = acceptedMovesBishop.concat(acceptedMovesRook);
