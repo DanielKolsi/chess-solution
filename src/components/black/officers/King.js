@@ -7,10 +7,10 @@ class King extends React.Component {
     this.state = {}
   }
 
-  getAcceptedMoves(piece, squares) {
+  getAcceptedMoves(piece, squares, kingDst) {
 
     let acceptedMoves = [];
-    let pos = 1*piece.location;
+    let pos = 1 * piece.location;
 
     let up = pos + CONSTANTS.up;
     let down = pos + CONSTANTS.down;
@@ -21,11 +21,22 @@ class King extends React.Component {
     let upLeft = pos + CONSTANTS.upLeft;
     let upRight = pos + CONSTANTS.upRight;
 
-    /*if (kingDst != undefined) {
-      if ((up || down || left || right || downLeft || downRight || upLeft || upRight) == kingDst) {
-        return null; // cannot accept king move
+    if (kingDst !== undefined) {
+      if (up === kingDst)
+        return null; // reject move
+      if (down === kingDst)
+        return null; // reject move
+      if (left === kingDst)
+        return null; // reject move
+      if (right === kingDst) 
+        return null; // reject move
+      if (downRight === kingDst)
+        return null; // reject move
+      if (upLeft === kingDst)
+        return null; // reject move
+      if (downLeft === kingDst)
+        return null; // reject move
       }
-    }*/
 
     if (squares[pos].row < CONSTANTS.maxRow) { // needs to stay on the board limits
       if (squares[up].piece == null || (squares[up].piece.white === true)) {

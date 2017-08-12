@@ -55,13 +55,14 @@ class Chess extends React.Component {
 
     //console.log('piece type = ' + piece.type);
     const location = 1*piece.location;
+    let dst = null;
     let acceptedMoves = [];
 
     if (squares[piece.location] === null) {
       return acceptedMoves;
     }
     if (opponentCandidateMove !== undefined) {
-      const dst = 1*opponentCandidateMove.split('#')[1]; // [1] == dst move
+        dst = 1*opponentCandidateMove.split('#')[1]; // [1] == dst move
 
       if (location === dst) {
           console.log('candit move eats_piece, location ='+location);
@@ -69,9 +70,13 @@ class Chess extends React.Component {
       }
     }
 
-    if (location !== undefined && this.refs[location].refs.piece !== undefined) {
+    if (location !== undefined && this.refs[location] !== undefined && this.refs[location].refs.piece !== undefined) {
       console.log('D-testing diagonal UR, opponentKing = ' + opponentKing + ' opponentCandidateMove = ' + opponentCandidateMove);
-      acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove);
+      if (piece.value === 4 || piece.value === -4) {// king
+          acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, dst);
+      } else {
+          acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove);
+      }
     }
     /*if (acceptedMoves !== undefined) {
       if (acceptedMoves.length > 0) {
@@ -309,7 +314,7 @@ class Chess extends React.Component {
 
     const {pieces, squares, white} = this.state;
 
-    if (white === false) {
+    if (white === true) {
       let possibleMovesWhite = this.getCandidateMovesWhite(squares, pieces);
       console.log('pos white =' + possibleMovesWhite);
       possibleMovesWhite = this.getAllowedMovesWhite(possibleMovesWhite, pieces[CONSTANTS.whiteKingId].location, squares, pieces);
@@ -325,6 +330,8 @@ class Chess extends React.Component {
 
         //console.log('WHITE MOVED * total moves were = ' + possibleMovesWhite.length + ' selected random = ' + possibleMovesWhite[n] + ' i was = ' + n);
         this.setState({white: false});
+      } else {
+        console.log('CHECK MATE, BLACK wins or stalemate.'); // FIXME, add staelmate handling
       }
     } else {
       let possibleMovesBlack = this.getCandidateMovesBlack(squares, pieces);
@@ -339,6 +346,8 @@ class Chess extends React.Component {
         this.move(blackMoves[0], blackMoves[1]);
         console.log('BLACK MOVED * total moves were = ' + possibleMovesBlack.length + ' selected random = ' + possibleMovesBlack[n] + ' n was = ' + n);
         this.setState({white: true});
+      } else {
+        console.log('CHECK MATE, WHITE wins or stalemate.');
       }
     }
   }
