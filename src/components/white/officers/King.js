@@ -30,7 +30,7 @@ class King extends React.Component {
         return null; // reject move #3
       if (right === kingDst)
         return null; // reject move #4
-      if (downRight === kingDst)
+      if (downRight === kingDst) 
         return null; // reject move #5
       if (upRight === kingDst)
         return null; // reject move #6

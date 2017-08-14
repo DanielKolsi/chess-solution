@@ -54,7 +54,7 @@ class Chess extends React.Component {
   getPossibleMoves(piece, squares, opponentKing, opponentCandidateMove) {
 
     //console.log('piece type = ' + piece.type);
-    const location = 1*piece.location;
+    const location = 1 * piece.location;
     let dst = null;
     let acceptedMoves = [];
 
@@ -62,20 +62,24 @@ class Chess extends React.Component {
       return acceptedMoves;
     }
     if (opponentCandidateMove !== undefined) {
-        dst = 1*opponentCandidateMove.split('#')[1]; // [1] == dst move
+      dst = 1 * opponentCandidateMove.split('#')[1]; // [1] == dst move
 
       if (location === dst) {
-          console.log('candit move eats_piece, location ='+location);
-          return acceptedMoves; // no possible moves, because the canditDst move EATS this piece!
+        console.log('candit move eats_piece, location =' + location);
+        return acceptedMoves; // no possible moves, because the canditDst move EATS this piece!
       }
     }
 
     if (location !== undefined && this.refs[location] !== undefined && this.refs[location].refs.piece !== undefined) {
       //console.log('D-testing diagonal UR, opponentKing = ' + opponentKing + ' opponentCandidateMove = ' + opponentCandidateMove);
-      if (piece.value === 4 || piece.value === -4) {// king
-          acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, dst);
+
+      if (piece.value === 3 || piece.value === -3) { // knight
+        acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, opponentKing);
+
+      } else if (piece.value === 4 || piece.value === -4) { // king
+        acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, dst);
       } else {
-          acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove);
+        acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove);
       }
     }
     /*if (acceptedMoves !== undefined) {
@@ -202,6 +206,12 @@ class Chess extends React.Component {
     console.log('Prev move was: ' + this.state.previousMove);
   }
 
+   getAcceptedMovesWhite(squares, pieces, opponentKing, opponentCandidateMove) {
+
+   }
+
+
+
   getCandidateMovesWhite(squares, pieces, opponentKing, opponentCandidateMove) {
 
     let possibleMovesWhite = [];
@@ -280,6 +290,14 @@ class Chess extends React.Component {
     return possibleMovesBlack;
   }
 
+  /**
+   * From the possible moves return those moves which are actually allowed.
+   * @param  {[type]} possibleMovesWhite [description]
+   * @param  {[type]} kingPosition       [description]
+   * @param  {[type]} squares            [description]
+   * @param  {[type]} pieces             [description]
+   * @return {[type]}                    allowedMoves
+   */
   getAllowedMovesWhite(possibleMovesWhite, kingPosition, squares, pieces) {
     let allowedMoves = [];
 
@@ -301,9 +319,9 @@ class Chess extends React.Component {
     for (let i = 0; i < possibleMovesBlack.length; i++) {
 
       if (this.getCandidateMovesWhite(squares, pieces, kingPosition, possibleMovesBlack[i]) == null) {
-        console.log('move-rejected-black = '+possibleMovesBlack[i]);
+        console.log('move-rejected-black = ' + possibleMovesBlack[i]);
       } else {
-        console.log('move allowed-black = '+possibleMovesBlack[i]);
+        console.log('move allowed-black = ' + possibleMovesBlack[i]);
         allowedMoves.push(possibleMovesBlack[i]);
       }
     }
