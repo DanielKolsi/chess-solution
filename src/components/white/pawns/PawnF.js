@@ -12,12 +12,10 @@ class PawnF extends Moves {
     }
   }
 
-  getAcceptedMoves(piece, squares) {
+  getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove) {
     console.log('White Pawn F');
-    return this.getWhitePawnMoves(piece, squares);
+    return this.getWhitePawnMoves(piece, squares, opponentKing, opponentCandidateMove);
   }
-
-
     render() {
       return (
         <div className="piece">

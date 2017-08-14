@@ -17,8 +17,8 @@ class PawnA extends Moves {
     }
   }
 
-  getAcceptedMoves(piece, squares) {
-    return this.getWhitePawnMoves(piece, squares);
+  getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove) {
+    return this.getWhitePawnMoves(piece, squares, opponentKing, opponentCandidateMove);
   }
 
     render(value) {

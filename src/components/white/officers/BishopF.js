@@ -8,11 +8,11 @@ class BishopF extends Moves {
     }
   }
 
-  getAcceptedMoves(piece, squares) {
+  getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove) {
     console.log('White Bishop F');
-    return this.getBishopMoves(piece, squares);
+    return this.getBishopMoves(piece, squares, opponentKing, opponentCandidateMove);
   }
-  
+
     render() {
       return (
         <div className="piece">

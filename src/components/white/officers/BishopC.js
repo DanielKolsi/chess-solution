@@ -8,9 +8,9 @@ class BishopC extends Moves {
     }
   }
 
-  getAcceptedMoves(piece, squares) {
+  getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove) {
     console.log('White Bishop C');
-    return this.getBishopMoves(piece, squares);
+    return this.getBishopMoves(piece, squares, opponentKing, opponentCandidateMove);
   }
 
     render() {
