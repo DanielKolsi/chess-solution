@@ -16,12 +16,12 @@ class AutoMove extends React.Component {
     e.preventDefault();
 
     this.setState({prev: this.state.value - 1})
-    this.setState({value: this.state.value++})
-    //console.log('value = ' + this.state.value);
-    this.props.autoMove(this.state.value++);
+    this.props.autoMove(this.state.value);
   }
 
   render() {
+
+
     return (
       <div className="command-form">
 

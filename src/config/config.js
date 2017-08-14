@@ -6,6 +6,7 @@ export default {
     [2, 'BishopBC', 'bbc', 2, false, -3.2],
     [3, 'QueenB', 'bq', 3, false, -9],*/
     [59, 'KingB', 'bk', 4, false, -4],
+    [48, 'PawnWA', 'wpa', 48, true, 1],
   //  [52, 'QueenW','wq', 59, true, 9],
     /*[5, 'BishopBF', 'bbf', 5, false, -3.2],
     [6, 'KnightBG', 'bkg', 6, false, -3],

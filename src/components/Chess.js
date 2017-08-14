@@ -19,7 +19,7 @@ class Chess extends React.Component {
       //      ids: [], // raw ref number of the piece, won't change
       white: true,
       moves: [],
-      moveNumber: 0,
+      nextMove: 1,
       acceptedMoves: [],
       previousMove: null,
       candidateWhite: null
@@ -310,7 +310,10 @@ class Chess extends React.Component {
     return allowedMoves;
   }
 
-  autoMove(value) {
+  autoMove(nextMove) {
+
+    console.log('nextMove = ' + nextMove);
+    this.setState({nextMove: nextMove});
 
     const {pieces, squares, white} = this.state;
 

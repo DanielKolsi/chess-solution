@@ -22,12 +22,14 @@ class Moves extends React.Component {
     let downRight = pos + CONSTANTS.downRight;
 
     let acceptedMoves = [];
+    this.setState({enPasse: down2});
+    console.log('enPasse='+this.state.enPasse);
 
       if (squares[down].piece === null && (squares[pos].row > CONSTANTS.minRow)) {
         acceptedMoves.push(pos + '#' + down);
 
         if (squares[pos].row === CONSTANTS.whitePawnInitialRow && squares[down2].piece == null) { // hasn't moved yet, double pawn front
-          //this.setState({enPasse: pos});
+
           acceptedMoves.push(pos + '#' + down2);
         }
       }
