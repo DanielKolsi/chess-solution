@@ -52,38 +52,6 @@ class Chess extends Moves {
     this.move(src, dst);
   }
 
-  //FIXME: analogous to getPossibleMoves
-  isKingSafeForThisPieceMoves(piece, squares, opponentKing, opponentCandidateMove) {
-    let safe = true;
-    const location = 1 * piece.location;
-    let dst = null;
-
-    dst = 1 * opponentCandidateMove.split('#')[1]; // [1] == dst move
-
-    if (location === dst) {
-      console.log('candit move eats_piece, location =' + location);
-      return safe; // no possible moves, because the canditDst move EATS this piece!
-    }
-
-    if (piece.value === 3 || piece.value === -3) { // knight
-
-    }
-
-    if (location !== undefined && this.refs[location] !== undefined && this.refs[location].refs.piece !== undefined) {
-      //console.log('D-testing diagonal UR, opponentKing = ' + opponentKing + ' opponentCandidateMove = ' + opponentCandidateMove);
-
-      if (piece.value === 3 || piece.value === -3) { // knight
-
-        //acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, opponentKing);
-
-      } else if (piece.value === 4 || piece.value === -4) { // king
-        //acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, dst);
-      } else {
-        //acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove);
-      }
-    }
-    return safe;
-  }
 
   getPossibleMoves(piece, squares, opponentKing, opponentCandidateMove) {
 
@@ -240,7 +208,6 @@ class Chess extends Moves {
     console.log('Prev move was: ' + this.state.previousMove);
   }
 
-  getAcceptedMovesWhite(squares, pieces, opponentKing, opponentCandidateMove) {}
 
   getCandidateMovesWhite(squares, pieces, opponentKing, opponentCandidateMove) {
 
@@ -349,6 +316,7 @@ class Chess extends Moves {
   isWhiteMoveAllowed(squares, pieces, whiteKingPosition, whiteCandidateMove) {
     let allowed = true;
 
+
     const whiteKingRow = pieces[CONSTANTS.whiteKingId].row;
     const whiteKingCol = pieces[CONSTANTS.whiteKingId].col;
 
@@ -364,6 +332,7 @@ class Chess extends Moves {
 
       switch (value) {
         case -1:
+        allowed = this.isAllowedByBlackPawn(piece, whiteKingPosition);
           break;
         case -3:
         allowed = this.isAllowebByKnight(piece, whiteKingPosition);
@@ -377,7 +346,9 @@ class Chess extends Moves {
         }
         break;
         case -6:
-            allowed = this.isAllowedByKing(piece, whiteKingPosition);
+            const move = whiteCandidateMove.split('#'); // [1] == dst move
+            const whiteKingDst = 1 * move[1];
+            allowed = this.isAllowedByKing(piece, whiteKingDst);
         break;
         case -9:
           allowed = this.isAllowedByQueen(piece, squares, whiteKingPosition, whiteCandidateMove, whiteKingRow, whiteKingCol);
@@ -418,7 +389,7 @@ class Chess extends Moves {
     if (white === true) {
       let possibleMovesWhite = this.getCandidateMovesWhite(squares, pieces);
       console.log('candidate white moves =' + possibleMovesWhite);
-      possibleMovesWhite = this.getAllowedMovesWhite(possibleMovesWhite, pieces[CONSTANTS.whiteKingId].location, squares, pieces);
+      possibleMovesWhite = this.getAllowedMovesWhite(squares, pieces, pieces[CONSTANTS.whiteKingId].location, possibleMovesWhite);
       console.log('allowed white moves =' + possibleMovesWhite);
 
       if (possibleMovesWhite !== null && possibleMovesWhite.length > 0) { // FIXME, no moves available?
