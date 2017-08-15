@@ -51,6 +51,38 @@ class Chess extends React.Component {
     this.move(src, dst);
   }
 
+ //FIXME: analogous to getPossibleMoves
+ isKingSafeForThisPieceMoves(piece, squares, opponentKing, opponentCandidateMove) {
+    let safe = true;
+    const location = 1 * piece.location;
+    let dst = null;
+    let acceptedMoves = [];
+
+
+      dst = 1 * opponentCandidateMove.split('#')[1]; // [1] == dst move
+
+      if (location === dst) {
+        console.log('candit move eats_piece, location =' + location);
+        return safe; // no possible moves, because the canditDst move EATS this piece!
+      }
+
+
+    if (location !== undefined && this.refs[location] !== undefined && this.refs[location].refs.piece !== undefined) {
+      //console.log('D-testing diagonal UR, opponentKing = ' + opponentKing + ' opponentCandidateMove = ' + opponentCandidateMove);
+
+      if (piece.value === 3 || piece.value === -3) { // knight
+        acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, opponentKing);
+
+      } else if (piece.value === 4 || piece.value === -4) { // king
+        acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, dst);
+      } else {
+        acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove);
+      }
+    }
+    return safe;
+ }
+
+
   getPossibleMoves(piece, squares, opponentKing, opponentCandidateMove) {
 
     //console.log('piece type = ' + piece.type);
@@ -311,6 +343,20 @@ class Chess extends React.Component {
       }
     }
     return allowedMoves;
+  }
+
+  isWhiteMoveAllowed(squares, pieces, kingPosition, possibleMovesWhite[i]) {
+    for (let i = 0; i < possibleMovesWhite.length; i++) {
+
+      if (this.getCandidateMovesBlack(squares, pieces, kingPosition, possibleMovesWhite[i]) == null) {
+        console.log('move-rejected = ' + possibleMovesWhite[i]);
+      }
+    }
+  }
+
+  // true, if white king is not threatened by any of the next possible black moves
+  isWhiteKingSafe(squares, pieces, whiteKingPosition, whiteCandidateMove) {
+
   }
 
   getAllowedMovesBlack(possibleMovesBlack, kingPosition, squares, pieces) {

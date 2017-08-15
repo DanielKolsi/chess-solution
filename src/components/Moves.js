@@ -516,7 +516,7 @@ class Moves extends React.Component {
     return acceptedMoves;
   }
 
-  allowedByQueen(piece, squares, opponentKing, opponentCandidateMove) {
+  isAllowedByQueen(piece, squares, opponentKing, opponentCandidateMove) {
     let allowed = true;
     const pos = 1 * piece.location;
     //let canditSrc = 0;
