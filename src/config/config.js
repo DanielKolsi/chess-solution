@@ -3,12 +3,12 @@ export default {
     //[12, 'QueenB','bq', 3, false, -9],
   /*  [0, 'RookBA', 'bra', 0, false, -5], //location, type, id, n (number-id), white (true/false), value
     [1, 'KnightBB', 'bka', 1, false, -3],
-    [2, 'BishopBC', 'bbc', 2, false, -3.2],
+    [2, 'BishopBC', 'bbc', 2, false, -4],
     [3, 'QueenB', 'bq', 3, false, -9],*/
-    [59, 'KingB', 'bk', 4, false, -4],
+    [59, 'KingB', 'bk', 4, false, -5],
     [48, 'PawnWA', 'wpa', 48, true, 1],
   //  [52, 'QueenW','wq', 59, true, 9],
-    /*[5, 'BishopBF', 'bbf', 5, false, -3.2],
+    /*[5, 'BishopBF', 'bbf', 5, false, -4],
     [6, 'KnightBG', 'bkg', 6, false, -3],
     [7, 'RookBH', 'brh', 7, false, -5],
     [8, 'PawnBA','bpa', 8, false, -1],
@@ -29,10 +29,10 @@ export default {
     [55, 'PawnWH','wph', 55, true, 1],
     [56, 'RookWA','wra', 56, true, 5],
     [57, 'KnightWB','wkb', 57, true, 3],
-    [58, 'BishopWC','wbc', 58, true, 3.2],
+    [58, 'BishopWC','wbc', 58, true, 4],
     [59, 'QueenW','wq', 59, true, 9],*/
-    [61, 'KingW','wk', 60, true, 4],
-    /*[61, 'BishopWF','wbf', 61, true, 3.2],
+    [61, 'KingW','wk', 60, true, 5],
+    /*[61, 'BishopWF','wbf', 61, true, 4],
     [62, 'KnightWG','wkg', 62, true, 3],
     [63, 'RookWH','wrh', 63, true, 5],*/
     //[24, 'QueenW2','wq2', 65, true, 9]
@@ -52,10 +52,10 @@ export default {
     [55, 'PawnWH','wph', 55, true, 1],
     [25, 'RookWA','wra', 56, true, 5],
     [37, 'KnightWB','wkb', 57, true, 3],
-    [58, 'BishopWC','wbc', 58, true, 3.2],
+    [58, 'BishopWC','wbc', 58, true, 4],
     [30, 'QueenW','wq', 59, true, 9],
-    [18, 'KingW','wk', 60, true, 4],
-    [61, 'BishopWF','wbf', 61, true, 3.2],
+    [18, 'KingW','wk', 60, true, 5],
+    [61, 'BishopWF','wbf', 61, true, 4],
     [62, 'KnightWG','wkg', 62, true, 3],
     [63, 'RookWH','wrh', 63, true, 5]
 

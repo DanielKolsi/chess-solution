@@ -16,6 +16,7 @@ class Queen extends Moves {
     return this.getQueenMoves(piece, squares, opponentKing, opponentCandidateMove);
   }
 
+
     render() {
       return (
         <div className="piece">

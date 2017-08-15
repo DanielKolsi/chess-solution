@@ -4,11 +4,12 @@ import AutoMove from './AutoMove';
 import PrevMove from './PrevMove';
 import update from 'immutability-helper';
 import CONSTANTS from '../config/constants';
+import Moves from './Moves';
 // import white promotions
 
 //import PropTypes from 'prop-types'; // ES6
 
-class Chess extends React.Component {
+class Chess extends Moves {
   constructor(props) {
     super(props);
     this.state = {
@@ -51,26 +52,28 @@ class Chess extends React.Component {
     this.move(src, dst);
   }
 
- //FIXME: analogous to getPossibleMoves
- isKingSafeForThisPieceMoves(piece, squares, opponentKing, opponentCandidateMove) {
+  //FIXME: analogous to getPossibleMoves
+  isKingSafeForThisPieceMoves(piece, squares, opponentKing, opponentCandidateMove) {
     let safe = true;
     const location = 1 * piece.location;
     let dst = null;
 
+    dst = 1 * opponentCandidateMove.split('#')[1]; // [1] == dst move
 
+    if (location === dst) {
+      console.log('candit move eats_piece, location =' + location);
+      return safe; // no possible moves, because the canditDst move EATS this piece!
+    }
 
-      dst = 1 * opponentCandidateMove.split('#')[1]; // [1] == dst move
+    if (piece.value === 3 || piece.value === -3) { // knight
 
-      if (location === dst) {
-        console.log('candit move eats_piece, location =' + location);
-        return safe; // no possible moves, because the canditDst move EATS this piece!
-      }
-
+    }
 
     if (location !== undefined && this.refs[location] !== undefined && this.refs[location].refs.piece !== undefined) {
       //console.log('D-testing diagonal UR, opponentKing = ' + opponentKing + ' opponentCandidateMove = ' + opponentCandidateMove);
 
       if (piece.value === 3 || piece.value === -3) { // knight
+
         //acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, opponentKing);
 
       } else if (piece.value === 4 || piece.value === -4) { // king
@@ -80,8 +83,7 @@ class Chess extends React.Component {
       }
     }
     return safe;
- }
-
+  }
 
   getPossibleMoves(piece, squares, opponentKing, opponentCandidateMove) {
 
@@ -238,11 +240,7 @@ class Chess extends React.Component {
     console.log('Prev move was: ' + this.state.previousMove);
   }
 
-   getAcceptedMovesWhite(squares, pieces, opponentKing, opponentCandidateMove) {
-
-   }
-
-
+  getAcceptedMovesWhite(squares, pieces, opponentKing, opponentCandidateMove) {}
 
   getCandidateMovesWhite(squares, pieces, opponentKing, opponentCandidateMove) {
 
@@ -330,24 +328,25 @@ class Chess extends React.Component {
    * @param  {[type]} pieces             [description]
    * @return {[type]}                    allowedMoves
    */
-  getAllowedMovesWhite(possibleMovesWhite, kingPosition, squares, pieces) {
-    let allowedMoves = [];
+  getAllowedMovesWhite(squares, pieces, whiteKingPosition, possibleMovesWhite) {
+    let allowedMoves = []; // contains only the candidate moves that were eventually verified to be allowed
 
     for (let i = 0; i < possibleMovesWhite.length; i++) {
 
-      if (this.getCandidateMovesBlack(squares, pieces, kingPosition, possibleMovesWhite[i]) == null) {
-        console.log('move-rejected = ' + possibleMovesWhite[i]);
-      } else {
-        //console.log('move allowed = '+possibleMovesWhite[i]);
+      if (this.isWhiteMoveAllowed(squares, pieces, whiteKingPosition, possibleMovesWhite[i])) {
         allowedMoves.push(possibleMovesWhite[i]);
+      } else {
+        continue; // this candidate move was rejected, check the next white candidate move
       }
     }
     return allowedMoves;
   }
 
   // to check whether a white move is allowed, you need to check opponent's next possible moves
-  isWhiteMoveAllowed(squares, pieces, kingPosition, opponentCandidateMove) {
+  isWhiteMoveAllowed(squares, pieces, whiteKingPosition, whiteCandidateMove) {
     let allowed = true;
+    const whiteKingRow = pieces[CONSTANTS.whiteKingId].row;
+    const whiteKingCol = pieces[CONSTANTS.whiteKingId].col;
 
     for (let i = CONSTANTS.minBlack; i < (CONSTANTS.maxBlack + CONSTANTS.numberOfExtraPieces); i++) {
       let piece = pieces[i];
@@ -356,39 +355,40 @@ class Chess extends React.Component {
         continue; // piece has been e.g. eaten
       }
 
-      let pieceMoves = this.getPossibleMoves(piece, squares, kingPosition, opponentCandidateMove); //FIXME, change getPossibleMoves to XXX
+      //let value = Math.abs(piece.value);
+      let value = piece.value;
 
-      if (pieceMoves == null && opponentCandidateMove != null) {
-        //console.log('candidate WHITE move rejected, no possible moves, rejected_move='+opponentCandidateMove);
-        return null; // previous white move candidate is simply rejected!
-      } else if (pieceMoves === undefined) {
-        console.log('No available moves for this piece.');
-        continue;
+      switch (value) {
+        case -1:
+          break;
+        case -3:
+        break;
+        case -4:
+        allowed = this.isAllowedByBishop(piece, squares, whiteKingPosition, whiteCandidateMove);
+        break;
+        case -5:
+        // FIXME, add white king row & col check
+        allowed = this.isAllowedByRook(piece, squares, whiteKingPosition, whiteCandidateMove);
+        break;
+        case -6:
+        break;
+        case -9:
+          allowed = this.isAllowedByQueen(piece, squares, whiteKingPosition, whiteCandidateMove);
+          break;
+        default:
+          break;
       }
-      if (pieceMoves === undefined) {
-        continue;
+      if (!allowed) {
+        return false;
       }
-
-      /*if (pieceMoves.length > 0 && possibleMovesBlack.length === undefined) { //FIXME,possibleMovesBlack was null
-        possibleMovesBlack = pieceMoves;
-      } else if (pieceMoves.length > 0) {
-        if (!possibleMovesBlack.includes(pieceMoves)) {
-          possibleMovesBlack = possibleMovesBlack.concat(pieceMoves); // possiblemoves, removalmoves, acceptedmoves
-        }
-      }*/
     }
     return allowed;
   }
 
-
-   isKingSafe(piece, squares, kingPosition, opponentCandidateMove) {
-
-   }
+  isKingSafe(piece, squares, kingPosition, opponentCandidateMove) {}
 
   // true, if white king is not threatened by any of the next possible black moves
-  isWhiteKingSafe(squares, pieces, whiteKingPosition, whiteCandidateMove) {
-
-  }
+  isWhiteKingSafe(squares, pieces, whiteKingPosition, whiteCandidateMove) {}
 
   getAllowedMovesBlack(possibleMovesBlack, kingPosition, squares, pieces) {
     let allowedMoves = [];
