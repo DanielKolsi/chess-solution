@@ -345,14 +345,14 @@ class Chess extends React.Component {
     return allowedMoves;
   }
 
-  isWhiteMoveAllowed(squares, pieces, kingPosition, possibleMovesWhite[i]) {
+/*  isWhiteMoveAllowed(squares, pieces, kingPosition, move) {
     for (let i = 0; i < possibleMovesWhite.length; i++) {
 
-      if (this.getCandidateMovesBlack(squares, pieces, kingPosition, possibleMovesWhite[i]) == null) {
+      if (this.getCandidateMovesBlack(squares, pieces, kingPosition, move) == false) {
         console.log('move-rejected = ' + possibleMovesWhite[i]);
       }
     }
-  }
+  }*/
 
   // true, if white king is not threatened by any of the next possible black moves
   isWhiteKingSafe(squares, pieces, whiteKingPosition, whiteCandidateMove) {
