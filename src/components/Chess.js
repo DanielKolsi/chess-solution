@@ -253,6 +253,8 @@ class Chess extends Moves {
         continue; // piece has been e.g. eaten
       }
 
+
+
       //console.log('\n WHITE: piece for moving =' + piece.type + ' white = ' + piece.white + ' value =' + piece.value + ' n=' + piece.n + ' location=' + piece.location);
       //console.log('piece = ' + piece.type + piece.location + piece.n);
       let pieceMoves = this.getPossibleMoves(piece, squares, opponentKing, opponentCandidateMove);
@@ -343,8 +345,10 @@ class Chess extends Moves {
   }
 
   // to check whether a white move is allowed, you need to check opponent's next possible moves
+  // if any black move collides with the white king, the white candidate move is rejected immediately
   isWhiteMoveAllowed(squares, pieces, whiteKingPosition, whiteCandidateMove) {
     let allowed = true;
+
     const whiteKingRow = pieces[CONSTANTS.whiteKingId].row;
     const whiteKingCol = pieces[CONSTANTS.whiteKingId].col;
 
@@ -362,18 +366,21 @@ class Chess extends Moves {
         case -1:
           break;
         case -3:
+        allowed = this.isAllowebByKnight(piece, whiteKingPosition);
         break;
         case -4:
         allowed = this.isAllowedByBishop(piece, squares, whiteKingPosition, whiteCandidateMove);
         break;
         case -5:
-        // FIXME, add white king row & col check
-        allowed = this.isAllowedByRook(piece, squares, whiteKingPosition, whiteCandidateMove);
+        if (whiteKingRow === piece.row || (whiteKingCol === piece.col))  {
+            allowed = this.isAllowedByRook(piece, squares, whiteKingPosition, whiteCandidateMove);
+        }
         break;
         case -6:
+            allowed = this.isAllowedByKing(piece, whiteKingPosition);
         break;
         case -9:
-          allowed = this.isAllowedByQueen(piece, squares, whiteKingPosition, whiteCandidateMove);
+          allowed = this.isAllowedByQueen(piece, squares, whiteKingPosition, whiteCandidateMove, whiteKingRow, whiteKingCol);
           break;
         default:
           break;
@@ -385,10 +392,6 @@ class Chess extends Moves {
     return allowed;
   }
 
-  isKingSafe(piece, squares, kingPosition, opponentCandidateMove) {}
-
-  // true, if white king is not threatened by any of the next possible black moves
-  isWhiteKingSafe(squares, pieces, whiteKingPosition, whiteCandidateMove) {}
 
   getAllowedMovesBlack(possibleMovesBlack, kingPosition, squares, pieces) {
     let allowedMoves = [];
