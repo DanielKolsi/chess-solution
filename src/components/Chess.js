@@ -22,8 +22,7 @@ class Chess extends Moves {
       moves: [],
       nextMove: 1,
       acceptedMoves: [],
-      previousMove: null,
-      candidateWhite: null
+      previousMove: null
     }
     this.moveMap = this.moveMap.bind(this); //FIXME
     this.removePiece = this.removePiece.bind(this);
@@ -64,7 +63,7 @@ class Chess extends Moves {
     }
 
     if (location !== undefined && this.refs[location] !== undefined && this.refs[location].refs.piece !== undefined) {
-        acceptedMoves = this.refs[location].refs.piece.getCandidateMoves(piece, squares);
+        acceptedMoves = this.refs[location].refs.piece.getCandidateMoves(piece, squares, this.state.previousMove);
     }
     /*if (acceptedMoves !== undefined) {
       if (acceptedMoves.length > 0) {
@@ -468,13 +467,9 @@ class Chess extends Moves {
 
       if (allowedMovesWhite !== null && allowedMovesWhite.length > 0) { // FIXME, no moves available?
         const n = Math.floor(Math.random() * allowedMovesWhite.length);
-        const whiteMoves = allowedMovesWhite[n].split('#');
         this.setState({previousMove: allowedMovesWhite[n]});
-
-        this.setState({candidateWhite: whiteMoves[1]}); // this square is "occupied"
+        const whiteMoves = allowedMovesWhite[n].split('#');
         this.move(whiteMoves[0], whiteMoves[1]);
-
-        //console.log('WHITE MOVED * total moves were = ' + possibleMovesWhite.length + ' selected random = ' + candidateMovesWhite[n] + ' i was = ' + n);
         this.setState({white: false});
       } else {
         console.log('CHECK MATE, BLACK wins or stalemate.'); // FIXME, add staelmate handling

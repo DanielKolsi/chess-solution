@@ -11,7 +11,7 @@ class PawnB extends Moves {
     }
   }
 
-  getCandidateMoves(piece, squares) {
+  getCandidateMoves(piece, squares, prevMove) {
     console.log('Black Pawn B');
     return this.getCandidateBlackPawnMoves(piece, squares);
   }

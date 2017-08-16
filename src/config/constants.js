@@ -40,7 +40,9 @@ const CONSTANTS = {
   minTwoDigitNumber: 10,
   numberOfExtraPieces: 2,
   whiteKingId: 60,
-  blackKingId: 4
+  blackKingId: 4,
+  whiteEnPasseAllowedRow: 3,
+  blackEnPasseAllowedRow: 4
 
 }
 
