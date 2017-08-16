@@ -8,9 +8,9 @@ class RookH extends Moves {
     }
   }
 
-  getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove) {
+  getCandidateMoves(piece, squares) {
     console.log('Black Rook H');
-    return this.getCandidateRookMoves(piece, squares, opponentKing, opponentCandidateMove);
+    return this.getCandidateRookMoves(piece, squares);
   }
 
     render() {

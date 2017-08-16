@@ -7,9 +7,9 @@ class BishopF extends Moves {
     this.state = {
     }
   }
-  getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove) {
+  getCandidateMoves(piece, squares) {
     console.log('Black Bishop F');
-    return this.getCandidateBishopMoves(piece, squares, opponentKing, opponentCandidateMove);
+    return this.getCandidateBishopMoves(piece, squares);
   }
 
     render() {

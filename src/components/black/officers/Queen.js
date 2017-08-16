@@ -8,12 +8,12 @@ class Queen extends Moves {
     }
   }
 
-  getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove) {
+  getCandidateMoves(piece, squares) {
     console.log('Black Queen');
     if (piece.value !== -9) {
       return undefined;
     }
-    return this.getCandidateQueenMoves(piece, squares, opponentKing, opponentCandidateMove);
+    return this.getCandidateQueenMoves(piece, squares);
   }
 
 
