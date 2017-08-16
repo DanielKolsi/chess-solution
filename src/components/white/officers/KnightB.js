@@ -8,10 +8,10 @@ class KnightB extends Moves {
     }
   }
 
-  getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove) {
+  getCandidateMoves(piece, squares, opponentKing, opponentCandidateMove) {
     console.log('White Knight B');
     if (piece.value !== 3) return undefined;
-    return this.getKnightMoves(piece, squares, opponentKing, opponentCandidateMove);
+    return this.getCandidateKnightMoves(piece, squares, opponentKing, opponentCandidateMove);
   }
     render() {
       return (

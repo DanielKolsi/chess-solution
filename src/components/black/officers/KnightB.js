@@ -12,7 +12,7 @@ class KnightB extends Moves {
 
     console.log('\n **Black Knight B** value = ' + piece.value + ' location = ' + piece.location + ' \n');
     if (piece.value !== -3) return undefined;
-    return this.getKnightMoves(piece, squares, opponentKing);
+    return this.getCandidateKnightMoves(piece, squares, opponentKing);
   }
 
     render() {

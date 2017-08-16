@@ -9,16 +9,14 @@ class PawnA extends Moves {
       value: 1,
       row: 0,
       col: 0
-
-
     //value: 1,// if eaten, value is 0, of promoted, value is the value of the promoted piece (queen, knight, bishop or rook)
     //row: 2,
       //let col: 1
     }
   }
 
-  getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove) {
-    return this.getWhitePawnMoves(piece, squares, opponentKing, opponentCandidateMove);
+  getCandidateMoves(piece, squares, opponentKing, opponentCandidateMove) {
+    return this.getCandidateWhitePawnMoves(piece, squares, opponentKing, opponentCandidateMove);
   }
 
     render(value) {

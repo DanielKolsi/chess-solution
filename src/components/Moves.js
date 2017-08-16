@@ -11,7 +11,7 @@ class Moves extends React.Component {
   }
 
   // en passe -> former position (former from move)
-  getWhitePawnMoves(piece, squares) {
+  getCandidateWhitePawnMoves(piece, squares) {
 
     let pos = 1 * piece.location;
 
@@ -28,7 +28,6 @@ class Moves extends React.Component {
       acceptedMoves.push(pos + '#' + down);
 
       if (squares[pos].row === CONSTANTS.whitePawnInitialRow && squares[down2].piece == null) { // hasn't moved yet, double pawn front
-
         acceptedMoves.push(pos + '#' + down2);
       }
     }
@@ -98,7 +97,7 @@ class Moves extends React.Component {
     return acceptedMoves;
   }
 
-  getKnightMoves(piece, squares, kingPosition) {
+  getCandidateKnightMoves(piece, squares) {
 
     const pos = 1 * piece.location;
     let acceptedMoves = [];
@@ -106,9 +105,6 @@ class Moves extends React.Component {
     // 2 right, 1 up
     const rightUp = pos + CONSTANTS.twoRightOneUp;
 
-    if (rightUp === kingPosition) {
-      return null; // move cannot be accepted (king would be eaten)
-    }
 
     if (squares[pos].row <= 6 && squares[pos].col <= 5) { // check that the move stays on the board
       if (squares[rightUp].piece == null || (squares[rightUp].piece.white !== piece.white)) {
@@ -117,9 +113,7 @@ class Moves extends React.Component {
     }
     // 2 right, 1 down
     let rightDown = pos + CONSTANTS.twoRightOneDown;
-    if (rightDown === kingPosition) {
-      return null; // move cannot be accepted (king would be eaten)
-    }
+
     if (squares[pos].row >= 1 && squares[pos].col <= 5) { // check that the move stays on the board
       if (squares[rightDown].piece == null || (squares[rightDown].piece.white !== piece.white)) {
         acceptedMoves.push(pos + '#' + rightDown);
@@ -128,9 +122,7 @@ class Moves extends React.Component {
 
     // 2 up, 1 right
     let upRight = pos + CONSTANTS.twoUpOneRight;
-    if (upRight === kingPosition) {
-      return null; // move cannot be accepted (king would be eaten)
-    }
+
     if (squares[pos].row <= 5 && squares[pos].col <= 6) {
       if (squares[upRight].piece == null || (squares[upRight].piece.white !== piece.white)) {
         acceptedMoves.push(pos + '#' + upRight);
@@ -138,9 +130,7 @@ class Moves extends React.Component {
     }
     // 2 up, 1 left
     let upLeft = pos + 15;
-    if (upLeft === kingPosition) {
-      return null; // move cannot be accepted (king would be eaten)
-    }
+
     if (squares[pos].row <= 5 && squares[pos].col >= 1) {
       if (squares[upLeft].piece == null || (squares[upLeft].piece.white !== piece.white)) {
         acceptedMoves.push(pos + '#' + upLeft);
@@ -149,9 +139,7 @@ class Moves extends React.Component {
     // 2 left, 1 up
     let leftUp = pos + CONSTANTS.twoLeftOneUp;
 
-    if (leftUp === kingPosition) {
-      return null; // move cannot be accepted (king would be eaten)
-    }
+
 
     if (squares[pos].row <= 6 && squares[pos].col >= 2) {
       if (squares[leftUp].piece == null || (squares[leftUp].piece.white !== piece.white)) {
@@ -161,9 +149,7 @@ class Moves extends React.Component {
 
     // 2 left, 1 down
     let leftDown = pos + CONSTANTS.twoLeftOneDown;
-    if (leftDown === kingPosition) {
-      return null; // move cannot be accepted (king would be eaten)
-    }
+
 
     if (squares[pos].row >= 1 && squares[pos].col >= 2) {
       if (squares[leftDown].piece == null || (squares[leftDown].piece.white !== piece.white)) {
@@ -172,9 +158,7 @@ class Moves extends React.Component {
     }
     // 2 down, 1 right
     let downRight = pos + CONSTANTS.twoDownOneRight;
-    if (downRight === kingPosition) {
-      return null; // move cannot be accepted (king would be eaten)
-    }
+
     if (squares[pos].row >= 2 && squares[pos].col <= 6) {
       if (squares[downRight].piece == null || (squares[downRight].piece.white !== piece.white)) {
         acceptedMoves.push(pos + '#' + downRight);
@@ -182,9 +166,7 @@ class Moves extends React.Component {
     }
     // 2 down, 1 left
     let downLeft = pos + CONSTANTS.twoDownOneLeft;
-    if (downLeft === kingPosition) {
-      return null; // move cannot be accepted (king would be eaten)
-    }
+
     if (squares[pos].row >= 2 && squares[pos].col >= 1) {
       if (squares[downLeft].piece == null || (squares[downLeft].piece.white !== piece.white)) {
         acceptedMoves.push(pos + '#' + downLeft);
@@ -277,36 +259,17 @@ class Moves extends React.Component {
     return allowed;
   }
 
-  getBishopMoves(piece, squares, kingPosition, opponentCandidateMove) {
+  getCandidateBishopMoves(piece, squares) {
 
     let acceptedMoves = [];
-
-    let canditSrc = 0;
-    let canditDst = 0;
-
-    if (opponentCandidateMove !== undefined) {
-      const move = opponentCandidateMove.split('#'); // [1] == dst move
-      canditSrc = 1 * move[0]; // ensure that it's an integer! (*1)
-      canditDst = 1 * move[1];
-    }
-
-    //console.log('A-testing diagonal UR, kingPosition = ' + kingPosition + ' opponentCandidateMove = ' + opponentCandidateMove);
-    acceptedMoves = this.getDiagonalMovesUpRight(piece, squares, acceptedMoves, kingPosition, canditSrc, canditDst);
-    if (acceptedMoves == null)
-      return null;
-    acceptedMoves = this.getDiagonalMovesUpLeft(piece, squares, acceptedMoves, kingPosition, canditSrc, canditDst);
-    if (acceptedMoves == null)
-      return null;
-    acceptedMoves = this.getDiagonalMovesDownLeft(piece, squares, acceptedMoves, kingPosition, canditSrc, canditDst);
-    if (acceptedMoves == null)
-      return null;
-    acceptedMoves = this.getDiagonalMovesDownRight(piece, squares, acceptedMoves, kingPosition, canditSrc, canditDst);
-
+    acceptedMoves = this.getCandidateDiagonalMovesUpRight(piece, squares, acceptedMoves);
+    acceptedMoves = this.getCandidateDiagonalMovesUpLeft(piece, squares, acceptedMoves);
+    acceptedMoves = this.getCandidateDiagonalMovesDownLeft(piece, squares, acceptedMoves);
+    acceptedMoves = this.getCandidateDiagonalMovesDownRight(piece, squares, acceptedMoves);
     return acceptedMoves;
   }
 
-  getDiagonalMovesUpRight(piece, squares, acceptedMoves, kingPosition, canditSrc, canditDst) {
-    console.log('testing diagonal UR, kingPosition = ' + kingPosition + ' canditDst = ' + canditDst + ' white =' + piece.white);
+  getCandidateDiagonalMovesUpRight(piece, squares, acceptedMoves) {
 
     let pos = 1 * piece.location;
 
@@ -323,18 +286,8 @@ class Moves extends React.Component {
 
     for (let i = 1; i <= numberOfSquaresAvailable; i++) {
       let dst = pos + (i * CONSTANTS.upRight);
-      if (dst === kingPosition) {
-        console.log('ERROR: king is eaten.');
-        return null; // move cannot be accepted (king would be eaten)
-      }
-      if (i === canditSrc) {
-        acceptedMoves.push(pos + '#' + i);
-        console.log('i equals candirSrc, i = ' + i);
-      } else if (i === canditDst) {
-        acceptedMoves.push(pos + '#' + i);
-        console.log('Move accepted, collides with candit dst, OK.');
-        break;
-      } else if (squares[dst].piece == null || dst === canditSrc) {
+
+      if (squares[dst].piece == null) {
         acceptedMoves.push(pos + '#' + dst);
       } else if (squares[dst].piece.white !== piece.white) {
         acceptedMoves.push(pos + '#' + dst); // eat opponent's piece
@@ -347,7 +300,7 @@ class Moves extends React.Component {
     return acceptedMoves;
   }
 
-  getDiagonalMovesUpLeft(piece, squares, acceptedMoves, kingPosition, canditSrc, canditDst) {
+  getCandidateDiagonalMovesUpLeft(piece, squares, acceptedMoves) {
 
     let pos = 1 * piece.location;
 
@@ -362,14 +315,8 @@ class Moves extends React.Component {
       numberOfSquaresAvailable = squaresAvailableUp;
     }
 
-    if (pos === canditDst)
-      return acceptedMoves; // this piece has been eaten!
-
     for (let i = 1; i <= numberOfSquaresAvailable; i++) {
       let dst = pos + (i * CONSTANTS.upLeft);
-      if (dst === kingPosition) {
-        return null; //move cannot be accepted (king would be eaten)
-      }
 
       if (squares[dst].piece == null) {
         acceptedMoves.push(pos + '#' + dst);
@@ -384,7 +331,7 @@ class Moves extends React.Component {
     return acceptedMoves;
   }
 
-  getDiagonalMovesDownRight(piece, squares, acceptedMoves, kingPosition, canditSrc, canditDst) {
+  getCandidateDiagonalMovesDownRight(piece, squares, acceptedMoves) {
 
     let pos = 1 * piece.location;
 
@@ -402,18 +349,7 @@ class Moves extends React.Component {
     for (let i = 1; i <= numberOfSquaresAvailable; i++) {
       let dst = pos + (i * CONSTANTS.downRight);
 
-      if (dst === kingPosition) {
-        return null; //move cannot be accepted (king would be eaten)
-      }
-
-      if (dst === canditSrc) {
-        acceptedMoves.push(pos + '#' + dst);
-
-      } else if (dst === canditDst) {
-        acceptedMoves.push(pos + '#' + dst);
-        console.log('Move accepted, collides with candit dst, OK.');
-        break;
-      } else if (squares[dst].piece == null) {
+     if (squares[dst].piece == null) {
         acceptedMoves.push(pos + '#' + dst);
       } else if (squares[dst].piece.white !== piece.white) {
         acceptedMoves.push(pos + '#' + dst); // eat opponent's piece
@@ -426,8 +362,7 @@ class Moves extends React.Component {
     return acceptedMoves;
   }
 
-  getDiagonalMovesDownLeft(piece, squares, acceptedMoves, kingPosition, canditSrc, canditDst) {
-
+  getCandidateDiagonalMovesDownLeft(piece, squares, acceptedMoves) {
 
     let pos = 1 * piece.location;
 
@@ -445,17 +380,7 @@ class Moves extends React.Component {
     for (let i = 1; i <= numberOfSquaresAvailable; i++) {
       let dst = pos + (i * CONSTANTS.downLeft);
 
-      if (dst === kingPosition) {
-        return null; //FIXME, move cannot be accepted (king would be eaten)
-      }
-      if (dst === canditSrc) {
-        acceptedMoves.push(pos + '#' + dst);
-
-      } else if (dst === canditDst) {
-        acceptedMoves.push(pos + '#' + dst);
-        console.log('Move accepted, collides with candit dst, OK.');
-        break;
-      } else if (squares[dst].piece == null) {
+      if (squares[dst].piece == null) {
         acceptedMoves.push(pos + '#' + dst);
       } else if (squares[dst].piece.white !== piece.white) {
         acceptedMoves.push(pos + '#' + dst); // eat opponent's piece
@@ -468,7 +393,7 @@ class Moves extends React.Component {
     return acceptedMoves;
   }
 
-  getRookMoves(piece, squares, kingPosition, opponentCandidateMove) {
+  getCandidateRookMoves(piece, squares) {
 
     console.log('<ROOK> moves </ROOK>');
     let pos = 1 * piece.location;
@@ -478,43 +403,18 @@ class Moves extends React.Component {
     let DOWN = pos + CONSTANTS.down;
     let LEFT = pos + CONSTANTS.left;
     let RIGHT = pos + CONSTANTS.right;
-    console.log('candit = ' + opponentCandidateMove);
 
-    let canditSrc = 0;
-    let canditDst = 0;
-
-    if (opponentCandidateMove !== undefined) {
-      const move = opponentCandidateMove.split('#'); // [1] == dst move
-      canditSrc = 1 * move[0]; // ensure that it's an integer! (*1)
-      canditDst = 1 * move[1];
-      if (canditDst === piece.location)
-        return acceptedMoves; // this piece has been eaten!
-      }
-
-    // move UP
+        // move UP
     for (let i = UP; i <= CONSTANTS.maxWhite; i += CONSTANTS.up) {
 
-      //console.log('*****move dst = ' + i + ' KING = ' + kingPosition + ' canditSrc='+canditSrc+ ' canditDst='+canditDst);
-      if (i === kingPosition) {
-        console.log('collides with KING');
-        return null; //FIXME, move cannot be accepted (king would be eaten)
-      }
-
-      if (i === canditSrc) {
-        acceptedMoves.push(pos + '#' + i);
-        console.log('i equals candirSrc, i = ' + i);
-      } else if (i === canditDst) {
-        acceptedMoves.push(pos + '#' + i);
-        console.log('Move accepted, collides with candit dst, OK.');
-        break;
-      } else if (squares[i].piece === null) {
+      if (squares[i].piece === null) {
         console.log('No PIECE i = ' + i);
         acceptedMoves.push(pos + '#' + i);
       } else if (squares[i].piece === undefined) {
         console.log('UNDEF PIECE i = ' + i);
         acceptedMoves.push(pos + '#' + i);
       } else if (piece.white !== squares[i].piece.white) { // eat
-        console.log('EATS PIECE i = ' + i + ' kingPosition = ' + kingPosition + ' canditDst=' + canditDst + 'canditSrc=' + canditSrc);
+
         acceptedMoves.push(pos + '#' + i); //FIXME, handle candidate move SRC, the piece doesn't exist there anymore...
         break; // no more move possibilities after eating
       } else {
@@ -522,78 +422,46 @@ class Moves extends React.Component {
         break; // own piece blocks
       }
     }
-    //console.log('rook moves UP = ' + acceptedMoves.length);
+
     // move DOWN
     for (let i = DOWN; i >= 0; i += CONSTANTS.down) {
-      console.log('*****move dst = ' + i + ' KING = ' + kingPosition + ' canditSrc=' + canditSrc + ' canditDst=' + canditDst);
-      if (i === kingPosition) {
-        return null; //FIXME, move cannot be accepted (king would be eaten)
-      }
 
-      if (i === canditSrc) {
+     if (squares[i].piece === null) {
         acceptedMoves.push(pos + '#' + i);
-        console.log('i equals candirSrc, i = ' + i);
-      } else if (i === canditDst) {
-        acceptedMoves.push(pos + '#' + i);
-        console.log('Move accepted, collides with candit dst, OK.');
-        break;
-      } else if (squares[i].piece === null) {
-        acceptedMoves.push(pos + '#' + i);
-      } else if (piece.white !== squares[i].piece.white || (i === opponentCandidateMove)) { // eat
+      } else if (piece.white !== squares[i].piece.white) { // eat
         acceptedMoves.push(pos + '#' + i);
         break; // no more move possibilities after eating
       } else
         break; // own piece
       }
-    //console.log('rook moves DOWN = ' + acceptedMoves.length);
 
     // move RIGHT
     let movesRight = CONSTANTS.maxCol - squares[pos].col;
 
     for (let i = RIGHT; i <= (movesRight + pos); i++) {
-      if (i === kingPosition) {
-        return null; //FIXME, move cannot be accepted (king would be eaten)
-      }
-      if (i === canditSrc) {
+
+      if (squares[i].piece === null) {
         acceptedMoves.push(pos + '#' + i);
-        console.log('i equals candirSrc, i = ' + i);
-      } else if (i === canditDst) {
-        acceptedMoves.push(pos + '#' + i);
-        console.log('Move accepted, collides with candit dst, OK.');
-        break;
-      } else if (squares[i].piece === null) {
-        acceptedMoves.push(pos + '#' + i);
-      } else if (piece.white !== squares[i].piece.white || (i === opponentCandidateMove)) { // eat
+      } else if (piece.white !== squares[i].piece.white) { // eat
         acceptedMoves.push(pos + '#' + i);
         break; // no more move possibilities after eating
       } else
         break; // own piece
       }
-    //console.log('rook moves RIGHT = ' + acceptedMoves.length);
+
     // move LEFT
     let movesLeft = squares[pos].col;
 
     for (let i = LEFT; i >= (pos - movesLeft); i--) {
-      if (i === kingPosition) {
-        return null; //FIXME, move cannot be accepted (king would be eaten)
-      }
-
-      if (i === canditSrc) {
+      if (squares[i].piece === null) {
         acceptedMoves.push(pos + '#' + i);
-        console.log('i equals candirSrc, i = ' + i);
-      } else if (i === canditDst) {
-        acceptedMoves.push(pos + '#' + i);
-        console.log('Move accepted, collides with candit dst, OK.');
-        break;
-      } else if (squares[i].piece === null) {
-        acceptedMoves.push(pos + '#' + i);
-      } else if (piece.white !== squares[i].piece.white || (i === opponentCandidateMove)) { // eat
+      } else if (piece.white !== squares[i].piece.white) { // eat
         acceptedMoves.push(pos + '#' + i);
         break; // no more move possibilities after eating
       } else
         break; // own piece
       }
-    //console.log('rook moves LEFT = ' + acceptedMoves.length);
+
     return acceptedMoves;
   }
 
@@ -691,13 +559,12 @@ class Moves extends React.Component {
       canditSrc = 1 * move[0];
       canditDst = 1 * move[1];
 
-      if (canditDst === piece.location) {
+      if (canditDst === pos) {
         return allowed; // this piece has been eaten!
       }
     }
 
     // move UP
-
     for (let i = UP; i <= CONSTANTS.maxWhite; i += CONSTANTS.up) {
 
       //console.log('*****move dst = ' + i + ' KING = ' + kingPosition + ' canditSrc='+canditSrc+ ' canditDst='+canditDst);
@@ -775,7 +642,6 @@ class Moves extends React.Component {
         break; // move accepted; collides with own or eats opponent's piece; both are OK
       }
     }
-
     return allowed;
   }
 
@@ -820,8 +686,6 @@ class Moves extends React.Component {
 
     const squaresAvailableLeft = squares[pos].col;
     const squaresAvailableUp = CONSTANTS.maxRow - squares[pos].row;
-
-
     let numberOfSquaresAvailable;
 
     if (squaresAvailableLeft <= squaresAvailableUp) {
@@ -907,7 +771,6 @@ class Moves extends React.Component {
       if (dst === canditSrc) {
         continue;
       } else if (dst === canditDst) {
-
         console.log('Move accepted, collides with candit dst, OK.');
         break;
       } else if (squares[dst].piece !== null) {
@@ -917,39 +780,13 @@ class Moves extends React.Component {
     return allowed;
   }
 
-
-  getQueenMoves(piece, squares, kingPosition, opponentCandidateMove) {
-    //console.log('B-testing diagonal UR, kingPosition = ' + kingPosition + ' opponentCandidateMove = ' + opponentCandidateMove);
+  getCandidateQueenMoves(piece, squares) {
 
     let acceptedMovesQueen = [];
 
-    if (opponentCandidateMove !== undefined) {
-      const move = opponentCandidateMove.split('#'); // [1] == dst move
-      const canditDst = 1 * move[1];
-      if (canditDst === piece.location)
-        return acceptedMovesQueen; // this piece has been eaten!
-      }
-
-    let acceptedMovesBishop = this.getBishopMoves(piece, squares, kingPosition, opponentCandidateMove);
-    if (acceptedMovesBishop == null) {
-      return null;
-    }
-    //    console.log('queen: bishop moves =' + acceptedMovesBishop.length);
-    let acceptedMovesRook = [];
-    if (opponentCandidateMove !== undefined) {
-      let row = squares[kingPosition].row;
-      let col = squares[kingPosition].col;
-      if (row !== piece.row && (col !== piece.col)) {
-        acceptedMovesRook = this.getRookMoves(piece, squares, kingPosition, opponentCandidateMove);
-        if (acceptedMovesRook == null) {
-          console.log('QUEEN move rejected');
-          return null;
-        }
-      }
-    }
-    //  console.log('queen: rook moves =' + acceptedMovesRook.length);
+    let acceptedMovesBishop = this.getCandidateBishopMoves(piece, squares);
+    let acceptedMovesRook = this.getCandidateRookMoves(piece, squares);
     acceptedMovesQueen = acceptedMovesBishop.concat(acceptedMovesRook);
-    //console.log('\n All accepted queen moves = ' + acceptedMovesQueen + ' for piece: ' + piece.type);
     return acceptedMovesQueen;
   }
 }

@@ -52,7 +52,7 @@ class Chess extends Moves {
     this.move(src, dst);
   }
 
-  getPossibleMoves(piece, squares, opponentKing, opponentCandidateMove) {
+  getCandidateMoves(piece, squares) {
 
     //console.log('piece type = ' + piece.type);
     const location = 1 * piece.location;
@@ -62,26 +62,9 @@ class Chess extends Moves {
     if (squares[piece.location] === null) {
       return acceptedMoves;
     }
-    if (opponentCandidateMove !== undefined) {
-      dst = 1 * opponentCandidateMove.split('#')[1]; // [1] == dst move
-
-      if (location === dst) {
-        console.log('candit move eats_piece, location =' + location);
-        return acceptedMoves; // no possible moves, because the canditDst move EATS this piece!
-      }
-    }
 
     if (location !== undefined && this.refs[location] !== undefined && this.refs[location].refs.piece !== undefined) {
-      //console.log('D-testing diagonal UR, opponentKing = ' + opponentKing + ' opponentCandidateMove = ' + opponentCandidateMove);
-
-      if (piece.value === 3 || piece.value === -3) { // knight
-        acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, opponentKing);
-
-      } else if (piece.value === 4 || piece.value === -4) { // king
-        acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, dst);
-      } else {
-        acceptedMoves = this.refs[location].refs.piece.getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove);
-      }
+        acceptedMoves = this.refs[location].refs.piece.getCandidateMoves(piece, squares);
     }
     /*if (acceptedMoves !== undefined) {
       if (acceptedMoves.length > 0) {
@@ -207,7 +190,7 @@ class Chess extends Moves {
     console.log('Prev move was: ' + this.state.previousMove);
   }
 
-  getCandidateMovesWhite(squares, pieces, opponentKing, opponentCandidateMove) {
+  getCandidateMovesWhite(squares, pieces) {
 
     let possibleMovesWhite = [];
 
@@ -220,17 +203,10 @@ class Chess extends Moves {
 
       //console.log('\n WHITE: piece for moving =' + piece.type + ' white = ' + piece.white + ' value =' + piece.value + ' n=' + piece.n + ' location=' + piece.location);
       //console.log('piece = ' + piece.type + piece.location + piece.n);
-      let pieceMoves = this.getPossibleMoves(piece, squares, opponentKing, opponentCandidateMove);
-
-      if (pieceMoves == null && opponentCandidateMove != null) {
-        //console.log('candidate BLACK move rejected, no possible moves, rejected_move='+opponentCandidateMove);
-        return null; // previous white move candidate is simply rejected!
-      } else if (pieceMoves === undefined) {
-        console.log('No available moves for this piece.');
-        continue;
-      }
+      let pieceMoves = this.getCandidateMoves(piece, squares);
 
       if (pieceMoves === undefined) {
+        console.log('No available moves for this piece.');
         continue;
       }
 
@@ -261,7 +237,7 @@ class Chess extends Moves {
         continue; // piece has been e.g. eaten
       }
 
-      let pieceMoves = this.getPossibleMoves(piece, squares, opponentKing, opponentCandidateMove);
+      let pieceMoves = this.getCandidateMoves(piece, squares, opponentKing, opponentCandidateMove);
 
       if (pieceMoves == null && opponentCandidateMove != null) {
         //console.log('candidate WHITE move rejected, no possible moves, rejected_move='+opponentCandidateMove);

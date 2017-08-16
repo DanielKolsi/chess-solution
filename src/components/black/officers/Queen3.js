@@ -10,7 +10,7 @@ class Queen3 extends Moves {
   getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove) {
     console.log('Black Queen3');
     if (piece.value !== 9) return undefined;
-    return this.getQueenMoves(piece, squares, opponentKing, opponentCandidateMove);
+    return this.getCandidateQueenMoves(piece, squares, opponentKing, opponentCandidateMove);
   }
 
   render() {

@@ -11,9 +11,9 @@ class PawnG extends Moves {
     }
   }
 
-  getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove) {
+  getCandidateMoves(piece, squares, opponentKing, opponentCandidateMove) {
     console.log('Black Pawn G');
-    return this.getBlackPawnMoves(piece, squares, opponentKing, opponentCandidateMove);
+    return this.getCandidateBlackPawnMoves(piece, squares, opponentKing, opponentCandidateMove);
   }
 
 

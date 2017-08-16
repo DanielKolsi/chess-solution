@@ -7,10 +7,10 @@ class Queen2 extends Moves {
     this.state = {}
   }
 
-  getAcceptedMoves(piece, squares, opponentKing, opponentCandidateMove) {
+  getCandidateMoves(piece, squares, opponentKing, opponentCandidateMove) {
     console.log('White Queen2');
     if (piece.value !== 9) return undefined;
-    return this.getQueenMoves(piece, squares, opponentKing, opponentCandidateMove);
+    return this.getCandidateQueenMoves(piece, squares, opponentKing, opponentCandidateMove);
   }
 
   render() {

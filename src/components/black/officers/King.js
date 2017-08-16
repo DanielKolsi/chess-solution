@@ -7,7 +7,7 @@ class King extends React.Component {
     this.state = {}
   }
 
-  getAcceptedMoves(piece, squares, kingDst) {
+  getCandidateMoves(piece, squares) {
 
     let acceptedMoves = [];
     let pos = 1 * piece.location;
@@ -21,7 +21,7 @@ class King extends React.Component {
     let upLeft = pos + CONSTANTS.upLeft;
     let upRight = pos + CONSTANTS.upRight;
 
-    
+
     if (squares[pos].row < CONSTANTS.maxRow) { // needs to stay on the board limits
       if (squares[up].piece == null || (squares[up].piece.white === true)) {
         acceptedMoves.push(pos + '#' + up);
