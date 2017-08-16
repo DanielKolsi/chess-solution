@@ -52,7 +52,6 @@ class Chess extends Moves {
     this.move(src, dst);
   }
 
-
   getPossibleMoves(piece, squares, opponentKing, opponentCandidateMove) {
 
     //console.log('piece type = ' + piece.type);
@@ -208,7 +207,6 @@ class Chess extends Moves {
     console.log('Prev move was: ' + this.state.previousMove);
   }
 
-
   getCandidateMovesWhite(squares, pieces, opponentKing, opponentCandidateMove) {
 
     let possibleMovesWhite = [];
@@ -299,26 +297,26 @@ class Chess extends Moves {
 
     let allowedMoves = []; // contains only the candidate moves that were eventually verified to be allowed
 
-    console.log('white_king_pos='+whiteKingPosition);
+    console.log('white_king_pos=' + whiteKingPosition);
 
     for (let i = 0; i < possibleMovesWhite.length; i++) {
 
       const move = possibleMovesWhite[i].split('#'); // [1] == dst move
-      const src = 1*move[0];
-      const dst = 1*move[1];
+      const src = 1 * move[0];
+      const dst = 1 * move[1];
       let kingPosition = whiteKingPosition;
 
-      console.log('pos_move='+move+'src='+src+'whiteKingPosition=' + whiteKingPosition);
+      console.log('pos_move=' + move + 'src=' + src + 'whiteKingPosition=' + whiteKingPosition);
 
       if (src === whiteKingPosition) { // white king move candidate!
-           kingPosition = dst;
-           console.log('king_move, dst='+dst);
+        kingPosition = dst;
+        console.log('king_move, dst=' + dst);
       }
 
       if (this.isWhiteMoveAllowed(squares, pieces, kingPosition, possibleMovesWhite[i])) {
         allowedMoves.push(possibleMovesWhite[i]);
       } else {
-        console.log('rejected: '+possibleMovesWhite[i]);
+        console.log('rejected: ' + possibleMovesWhite[i]);
         continue; // this candidate move was rejected, check the next white candidate move
       }
     }
@@ -329,26 +327,26 @@ class Chess extends Moves {
 
     let allowedMoves = []; // contains only the candidate moves that were eventually verified to be allowed
 
-    console.log('black_king_pos='+blackKingPosition);
+    console.log('black_king_pos=' + blackKingPosition);
 
     for (let i = 0; i < possibleMovesBlack.length; i++) {
 
       const move = possibleMovesBlack[i].split('#'); // [1] == dst move
-      const src = 1*move[0];
-      const dst = 1*move[1];
+      const src = 1 * move[0];
+      const dst = 1 * move[1];
       let kingPosition = blackKingPosition;
 
-      console.log('pos_move='+move+'src='+src+'blackKingPosition=' + blackKingPosition);
+      console.log('pos_move=' + move + 'src=' + src + 'blackKingPosition=' + blackKingPosition);
 
       if (src === blackKingPosition) { // black king move candidate!
-           kingPosition = dst;
-           console.log('king_move, dst='+dst);
+        kingPosition = dst;
+        console.log('king_move, dst=' + dst);
       }
 
-      if (this.isblackMoveAllowed(squares, pieces, kingPosition, possibleMovesBlack[i])) {
+      if (this.isBlackMoveAllowed(squares, pieces, kingPosition, possibleMovesBlack[i])) {
         allowedMoves.push(possibleMovesBlack[i]);
       } else {
-        console.log('rejected: '+possibleMovesBlack[i]);
+        console.log('rejected-black: ' + possibleMovesBlack[i]);
         continue; // this candidate move was rejected, check the next white candidate move
       }
     }
@@ -372,29 +370,28 @@ class Chess extends Moves {
 
       //let value = Math.abs(piece.value);
       let value = piece.value;
-      console.log('black_value='+value);
+      console.log('black_value=' + value);
       switch (value) {
-        case -1:
-        allowed = this.isAllowedByBlackPawn(piece, whiteKingPosition);
+        case - 1:
+          allowed = this.isAllowedByBlackPawn(piece, whiteKingPosition);
           break;
-        case -3:
-        allowed = this.isAllowebByKnight(piece, whiteKingPosition);
-        break;
-        case -4:
-        allowed = this.isAllowedByBishop(piece, squares, whiteKingPosition, whiteCandidateMove);
-        break;
-        case -5:
-        if (whiteKingRow === piece.row || (whiteKingCol === piece.col))  {
+        case - 3:
+          allowed = this.isAllowebByKnight(piece, whiteKingPosition);
+          break;
+        case - 4:
+          allowed = this.isAllowedByBishop(piece, squares, whiteKingPosition, whiteCandidateMove);
+          break;
+        case - 5:
+          if (whiteKingRow === piece.row || (whiteKingCol === piece.col)) {
             allowed = this.isAllowedByRook(piece, squares, whiteKingPosition, whiteCandidateMove);
-        }
-        break;
-        case -6:
-            // FIXME add eating generally
-
-            allowed = this.isAllowedByKing(piece, whiteKingPosition);
-            console.log('allowedByKing='+allowed + ' whiteKingDst='+whiteKingPosition);
-        break;
-        case -9:
+          }
+          break;
+        case - 6:
+          // FIXME add eating generally
+          allowed = this.isAllowedByKing(piece, whiteKingPosition);
+          console.log('allowedByKing=' + allowed + ' whiteKingDst=' + whiteKingPosition);
+          break;
+        case - 9:
           allowed = this.isAllowedByQueen(piece, squares, whiteKingPosition, whiteCandidateMove, whiteKingRow, whiteKingCol);
           break;
         default:
@@ -407,16 +404,16 @@ class Chess extends Moves {
     return allowed;
   }
 
-
   // to check whether a white move is allowed, you need to check opponent's next possible moves
   // if any black move collides with the white king, the white candidate move is rejected immediately
   isBlackMoveAllowed(squares, pieces, blackKingPosition, blackCandidateMove) {
+
     let allowed = true;
 
     const blackKingRow = pieces[CONSTANTS.blackKingId].row;
     const blackKingCol = pieces[CONSTANTS.blackKingId].col;
 
-    for (let i = CONSTANTS.minBlack; i < (CONSTANTS.maxBlack + CONSTANTS.numberOfExtraPieces); i++) {
+    for (let i = CONSTANTS.minWhite; i < (CONSTANTS.maxWhite + CONSTANTS.numberOfExtraPieces); i++) {
       let piece = pieces[i];
 
       if (piece === null || piece === undefined) {
@@ -427,26 +424,28 @@ class Chess extends Moves {
       let value = piece.value;
 
       switch (value) {
-        case -1:
-        allowed = this.isAllowedByBlackPawn(piece, blackKingPosition);
+        case - 1:
+
+          allowed = this.isAllowedByBlackPawn(piece, blackKingPosition);
           break;
-        case -3:
-        allowed = this.isAllowebByKnight(piece, blackKingPosition);
-        break;
-        case -4:
-        allowed = this.isAllowedByBishop(piece, squares, blackKingPosition, blackCandidateMove);
-        break;
-        case -5:
-        if (blackKingRow === piece.row || (blackKingCol === piece.col))  {
+        case - 3:
+          allowed = this.isAllowebByKnight(piece, blackKingPosition);
+          break;
+        case - 4:
+          allowed = this.isAllowedByBishop(piece, squares, blackKingPosition, blackCandidateMove);
+          break;
+        case - 5:
+          if (blackKingRow === piece.row || (blackKingCol === piece.col)) {
             allowed = this.isAllowedByRook(piece, squares, blackKingPosition, blackCandidateMove);
-        }
-        break;
-        case -6:
-            const move = blackCandidateMove.split('#'); // [1] == dst move
-            const blackKingDst = 1 * move[1];
-            allowed = this.isAllowedByKing(piece, blackKingDst);
-        break;
-        case -9:
+          }
+          break;
+        case - 6:
+          // FIXME add eating generally
+          allowed = this.isAllowedByKing(piece, blackKingPosition);
+          console.log('allowedByKing=' + allowed + ' blackKingDst=' + blackKingPosition);
+          break;
+        case - 9:
+          // FIXME, if queene is eaten straight away as the candidate move? -> allow = true
           allowed = this.isAllowedByQueen(piece, squares, blackKingPosition, blackCandidateMove, blackKingRow, blackKingCol);
           break;
         default:
@@ -488,7 +487,7 @@ class Chess extends Moves {
     } else {
       let candidateMovesBlack = this.getCandidateMovesBlack(squares, pieces);
       console.log('candidate black moves =' + candidateMovesBlack);
-      let allowedMovesBlack = this.getAllowedMovesBlack(candidateMovesBlack, pieces[CONSTANTS.blackKingId].location, squares, pieces);
+      let allowedMovesBlack = this.getAllowedMovesBlack(squares, pieces, pieces[CONSTANTS.blackKingId].location, candidateMovesBlack);
       console.log('allowed black moves =' + allowedMovesBlack);
 
       if (allowedMovesBlack !== null && allowedMovesBlack.length > 0) { // FIXME, no moves available?

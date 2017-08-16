@@ -262,7 +262,6 @@ class Moves extends React.Component {
     if (upRight === kingPosition) return false;
 
     return allowed;
-
   }
 
   isAllowedByWhitePawn(piece, kingPosition) {
