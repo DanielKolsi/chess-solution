@@ -361,11 +361,21 @@ class Chess extends Moves {
     const whiteKingRow = pieces[CONSTANTS.whiteKingId].row;
     const whiteKingCol = pieces[CONSTANTS.whiteKingId].col;
 
+
     for (let i = CONSTANTS.minBlack; i < (CONSTANTS.maxBlack + CONSTANTS.numberOfExtraPieces); i++) {
       let piece = pieces[i];
 
       if (piece === null || piece === undefined) {
         continue; // piece has been e.g. eaten
+      }
+
+      if (whiteCandidateMove !== undefined) {
+        const pos = 1 * piece.location;
+        const move = whiteCandidateMove.split('#'); // [1] == dst move
+        const canditDst = 1 * move[1];
+        if (canditDst === pos) {
+          return allowed; // this white piece has been eaten (for this candidate move)!
+        }
       }
 
       //let value = Math.abs(piece.value);
@@ -422,6 +432,15 @@ class Chess extends Moves {
 
       //let value = Math.abs(piece.value);
       let value = piece.value;
+
+      if (blackCandidateMove !== undefined) {
+        const pos = 1 * piece.location;
+        const move = blackCandidateMove.split('#'); // [1] == dst move
+        const canditDst = 1 * move[1];
+        if (canditDst === pos) {
+          return allowed; // this white piece has been eaten (for this candidate move)!
+        }
+      }
 
       switch (value) {
         case - 1:
