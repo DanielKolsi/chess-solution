@@ -22,7 +22,6 @@ class Moves extends React.Component {
 
     let acceptedMoves = [];
 
-
     if (squares[down].piece === null && (squares[pos].row > CONSTANTS.minRow)) {
       acceptedMoves.push(pos + '#' + down);
 
@@ -48,8 +47,7 @@ class Moves extends React.Component {
         const rightPiece = squares[pos + CONSTANTS.right].piece;
         const leftPiece = squares[pos - CONSTANTS.left].piece;
 
-
-        if (rightPiece !== null && rightPiece.value === -1) {
+        if (rightPiece !== null && rightPiece.value === CONSTANTS.blackPawn) {
           const dst = pos + CONSTANTS.right;
           const src = dst + CONSTANTS.down2;
 
@@ -60,7 +58,7 @@ class Moves extends React.Component {
               acceptedMoves.push(pos + 'P' + downRight); // en passe black pawn; P for en passe
           }
 
-        } else if (leftPiece !== null && leftPiece.value === -1) {
+        } else if (leftPiece !== null && leftPiece.value === CONSTANTS.blackPawn) {
           const dst = pos + CONSTANTS.left;
           const src = dst + CONSTANTS.down2;
           const tmp =  src + '#' + dst;
@@ -112,7 +110,7 @@ class Moves extends React.Component {
         const rightPiece = squares[pos + CONSTANTS.right].piece;
         const leftPiece = squares[pos - CONSTANTS.left].piece;
 
-        if (rightPiece !== null && rightPiece.value === 1) {
+        if (rightPiece !== null && rightPiece.value === CONSTANTS.whitePawn) {
           const dst = pos + CONSTANTS.right;
           const src = dst + CONSTANTS.up2;
           const tmp =  src + '#' + dst;
@@ -122,7 +120,7 @@ class Moves extends React.Component {
               acceptedMoves.push(pos + 'P' + upRight); // en passe black pawn; P for en passe
           }
 
-        } else if (leftPiece !== null && leftPiece.value === 1) {
+        } else if (leftPiece !== null && leftPiece.value === CONSTANTS.whitePawn) {
           const dst = pos + CONSTANTS.left;
           const src = dst + CONSTANTS.up2;
           const tmp =  src + '#' + dst;

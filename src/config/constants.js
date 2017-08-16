@@ -1,4 +1,6 @@
 const CONSTANTS = {
+  whitePawn: 1,
+  blackPawn: -1,
   minWhite: 48, // white piece minimum value
   maxWhite: 64,
   minBlack: -2,
