@@ -56,7 +56,7 @@ class Chess extends Moves {
 
     //console.log('piece type = ' + piece.type);
     const location = 1 * piece.location;
-    
+
     let acceptedMoves = [];
 
     if (squares[piece.location] === null) {
