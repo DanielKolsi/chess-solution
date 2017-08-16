@@ -7,11 +7,11 @@ class Queen extends Moves {
     this.state = {}
   }
 
-  getCandidateMoves(piece, squares, opponentKing, opponentCandidateMove) {
-    //console.log('C-testing diagonal UR, opponentKing = ' + opponentKing + ' opponentCandidateMove = ' + opponentCandidateMove);
-    //console.log('White Queen');
+  getCandidateMoves(piece, squares) {
+
+    console.log('White Queen');
     if (piece.value !== 9) return undefined;
-    return this.getCandidateQueenMoves(piece, squares, opponentKing, opponentCandidateMove);
+    return this.getCandidateQueenMoves(piece, squares);
   }
 
   render() {

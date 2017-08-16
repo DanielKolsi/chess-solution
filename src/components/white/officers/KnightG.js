@@ -7,10 +7,10 @@ class KnightG extends Moves {
     this.state = {
     }
   }
-  getCandidateMoves(piece, squares, opponentKing, opponentCandidateMove) {
+  getCandidateMoves(piece, squares) {
 
     console.log('White Knight G');
-    return this.getCandidateKnightMoves(piece, squares, opponentKing, opponentCandidateMove);
+    return this.getCandidateKnightMoves(piece, squares);
   }
 
     render() {

@@ -7,9 +7,9 @@ class RookA extends Moves {
     this.state = {
     }
   }
-    getCandidateMoves(piece, squares, opponentKing, opponentCandidateMove) {
+    getCandidateMoves(piece, squares) {
       console.log('White Rook A');
-      return this.getCandidateRookMoves(piece, squares, opponentKing, opponentCandidateMove);
+      return this.getCandidateRookMoves(piece, squares);
     }
 
     render() {
