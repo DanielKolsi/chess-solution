@@ -12,9 +12,9 @@ class PawnH extends Moves {
     }
   }
 
-  getCandidateMoves(piece, squares) {
+  getCandidateMoves(piece, squares, prevMove) {
     console.log('White Pawn H');
-    return this.getCandidateWhitePawnMoves(piece, squares);
+    return this.getCandidateWhitePawnMoves(piece, squares, prevMove);
   }
 
     render() {

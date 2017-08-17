@@ -12,9 +12,9 @@ class PawnB extends Moves {
     }
   }
 
-    getCandidateMoves(piece, squares) {
+    getCandidateMoves(piece, squares, prevMove) {
       console.log('\n**White Pawn B**\n');
-      return this.getCandidateWhitePawnMoves(piece, squares);
+      return this.getCandidateWhitePawnMoves(piece, squares, prevMove);
     }
 
 //{String.fromCharCode(9817)}

@@ -63,6 +63,7 @@ class Chess extends Moves {
     }
 
     if (location !== undefined && this.refs[location] !== undefined && this.refs[location].refs.piece !== undefined) {
+        console.log('prev-move='+this.state.previousMove);
         candidateMoves = this.refs[location].refs.piece.getCandidateMoves(piece, squares, this.state.previousMove);
     }
     /*if (candidateMoves !== undefined) {
@@ -467,6 +468,7 @@ class Chess extends Moves {
 
       if (allowedMovesWhite !== null && allowedMovesWhite.length > 0) { // FIXME, no moves available?
         const n = Math.floor(Math.random() * allowedMovesWhite.length);
+        console.log('previousMove:'+allowedMovesWhite[n]);
         this.setState({previousMove: allowedMovesWhite[n]});
         const whiteMoves = allowedMovesWhite[n].split('#');
         this.move(whiteMoves[0], whiteMoves[1]);

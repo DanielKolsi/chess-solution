@@ -6,12 +6,12 @@ class Moves extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      //enPasse: 0 // candidate for en passe, check the opponent's previous pawn move if en passe is allowed!
     }
   }
 
   // en passe -> former position (former from move)
   getCandidateWhitePawnMoves(piece, squares, prevMove) {
+    console.log('prevmove='+prevMove);
 
     let pos = 1 * piece.location;
 
@@ -37,17 +37,17 @@ class Moves extends React.Component {
       acceptedMoves.push(pos + '#' + downRight); // eats black piece
     }
 
-
     if (squares[pos].row === CONSTANTS.whiteEnPasseAllowedRow) {
         const rightPiece = squares[pos + CONSTANTS.right].piece;
-        const leftPiece = squares[pos - CONSTANTS.left].piece;
-        console.log('Left piece en passe (for WHITE)');
+        const leftPiece = squares[pos + CONSTANTS.left].piece;
+
 
         if (rightPiece !== null && rightPiece.value === CONSTANTS.blackPawn) {
           const dst = pos + CONSTANTS.right;
           const src = dst + CONSTANTS.down2;
 
           const tmp =  src + '#' + dst;
+
 
           if (this.state.prevMove === tmp) {
               const downRight = pos + CONSTANTS.upDown;
@@ -59,7 +59,7 @@ class Moves extends React.Component {
           const src = dst + CONSTANTS.down2;
           const tmp =  src + '#' + dst;
           console.log('Left piece en passe (for WHITE)');
-
+          console.log('tmp='+tmp + ' prevMove='+prevMove);
           if (this.state.prevMove === tmp) {
               const downLeft = pos + CONSTANTS.downLeft;
               acceptedMoves.push(pos + 'P' + downLeft); // en passe black pawn; P for en passe
@@ -69,7 +69,7 @@ class Moves extends React.Component {
     return acceptedMoves;
   }
 
-  getCandidateBlackPawnMoves(piece, squares, prevMove) {
+  getCandidateBlackPawnMoves(piece, squares) {
 
     const pos = 1 * piece.location; // ensure this is a number
 
@@ -99,7 +99,7 @@ class Moves extends React.Component {
 
     if (squares[pos].row === CONSTANTS.blackEnPasseAllowedRow) {
         const rightPiece = squares[pos + CONSTANTS.right].piece;
-        const leftPiece = squares[pos - CONSTANTS.left].piece;
+        const leftPiece = squares[pos + CONSTANTS.left].piece;
 
         if (rightPiece !== null && rightPiece.value === CONSTANTS.whitePawn) {
           const dst = pos + CONSTANTS.right;
@@ -122,7 +122,6 @@ class Moves extends React.Component {
           }
         }
     }
-
     return acceptedMoves;
   }
 
@@ -167,8 +166,6 @@ class Moves extends React.Component {
     }
     // 2 left, 1 up
     let leftUp = pos + CONSTANTS.twoLeftOneUp;
-
-
 
     if (squares[pos].row <= 6 && squares[pos].col >= 2) {
       if (squares[leftUp].piece == null || (squares[leftUp].piece.white !== piece.white)) {
