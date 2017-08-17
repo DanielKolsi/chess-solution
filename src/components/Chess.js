@@ -21,7 +21,7 @@ class Chess extends Moves {
       white: true,
       moves: [],
       nextMove: 1,
-      acceptedMoves: [],
+      candidateMoves: [],
       previousMove: null
     }
     this.moveMap = this.moveMap.bind(this); //FIXME
@@ -56,21 +56,21 @@ class Chess extends Moves {
     //console.log('piece type = ' + piece.type);
     const location = 1 * piece.location;
 
-    let acceptedMoves = [];
+    let candidateMoves = [];
 
     if (squares[piece.location] === null) {
-      return acceptedMoves;
+      return candidateMoves;
     }
 
     if (location !== undefined && this.refs[location] !== undefined && this.refs[location].refs.piece !== undefined) {
-        acceptedMoves = this.refs[location].refs.piece.getCandidateMoves(piece, squares, this.state.previousMove);
+        candidateMoves = this.refs[location].refs.piece.getCandidateMoves(piece, squares, this.state.previousMove);
     }
-    /*if (acceptedMoves !== undefined) {
-      if (acceptedMoves.length > 0) {
-          console.log('accepted moves size = ' + acceptedMoves.length + ' piece = ' + piece.type + ' location =' + piece.location);
+    /*if (candidateMoves !== undefined) {
+      if (candidateMoves.length > 0) {
+          console.log('accepted moves size = ' + candidateMoves.length + ' piece = ' + piece.type + ' location =' + piece.location);
       }
     }*/
-    return acceptedMoves
+    return candidateMoves
   }
 
   move(src, dst) {
@@ -214,7 +214,7 @@ class Chess extends Moves {
       } else if (pieceMoves.length > 0) {
         //console.log('adding piecemoves, i = ' + i + ' n = ' + pieceMoves.length + ' p m w length = ' + possibleMovesWhite.length);
         if (!possibleMovesWhite.includes(pieceMoves)) {
-          possibleMovesWhite = possibleMovesWhite.concat(pieceMoves); // possiblemoves, removalmoves, acceptedmoves
+          possibleMovesWhite = possibleMovesWhite.concat(pieceMoves); // possiblemoves, removalmoves, candidateMoves
         }
       }
     }
@@ -253,7 +253,7 @@ class Chess extends Moves {
         possibleMovesBlack = pieceMoves;
       } else if (pieceMoves.length > 0) {
         if (!possibleMovesBlack.includes(pieceMoves)) {
-          possibleMovesBlack = possibleMovesBlack.concat(pieceMoves); // possiblemoves, removalmoves, acceptedmoves
+          possibleMovesBlack = possibleMovesBlack.concat(pieceMoves); // possiblemoves, removalmoves, candidateMoves
         }
       }
     }

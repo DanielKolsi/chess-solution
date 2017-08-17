@@ -6,7 +6,7 @@ class Moves extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      enPasse: 0 // candidate for en passe, check the opponent's previous pawn move if en passe is allowed!
+      //enPasse: 0 // candidate for en passe, check the opponent's previous pawn move if en passe is allowed!
     }
   }
 
