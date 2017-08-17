@@ -471,7 +471,7 @@ class Chess extends Moves {
         console.log('previousMove:'+allowedMovesWhite[n]);
         this.setState({previousMove: allowedMovesWhite[n]});
         const whiteMoves = allowedMovesWhite[n].split('#');
-        this.move(whiteMoves[0], whiteMoves[1]);
+        this.move(whiteMoves[0], whiteMoves[1]); // FIXME: add special handling for en passe
         this.setState({white: false});
       } else {
         console.log('CHECK MATE, BLACK wins or stalemate.'); // FIXME, add staelmate handling

@@ -11,7 +11,6 @@ class Moves extends React.Component {
 
   // en passe -> former position (former from move)
   getCandidateWhitePawnMoves(piece, squares, prevMove) {
-    console.log('prevmove='+prevMove);
 
     let pos = 1 * piece.location;
 
@@ -45,9 +44,7 @@ class Moves extends React.Component {
         if (rightPiece !== null && rightPiece.value === CONSTANTS.blackPawn) {
           const dst = pos + CONSTANTS.right;
           const src = dst + CONSTANTS.down2;
-
           const tmp =  src + '#' + dst;
-
 
           if (this.state.prevMove === tmp) {
               const downRight = pos + CONSTANTS.upDown;
@@ -58,9 +55,11 @@ class Moves extends React.Component {
           const dst = pos + CONSTANTS.left;
           const src = dst + CONSTANTS.down2;
           const tmp =  src + '#' + dst;
-          console.log('Left piece en passe (for WHITE)');
-          console.log('tmp='+tmp + ' prevMove='+prevMove);
-          if (this.state.prevMove === tmp) {
+
+          prevMove = '11#27'; //FIXME, remove this
+
+          if (prevMove === tmp) {
+            console.log('Left piece en passe (for WHITE), prevMove='+prevMove + 'tmp='+tmp);
               const downLeft = pos + CONSTANTS.downLeft;
               acceptedMoves.push(pos + 'P' + downLeft); // en passe black pawn; P for en passe
           }
@@ -69,7 +68,7 @@ class Moves extends React.Component {
     return acceptedMoves;
   }
 
-  getCandidateBlackPawnMoves(piece, squares) {
+  getCandidateBlackPawnMoves(piece, squares, prevMove) {
 
     const pos = 1 * piece.location; // ensure this is a number
 
@@ -80,13 +79,11 @@ class Moves extends React.Component {
 
     let acceptedMoves = [];
 
-    // en passe -> former position
 
     if (squares[up].piece === null && (squares[pos].row < CONSTANTS.maxRow)) {
       acceptedMoves.push(pos + '#' + up);
 
       if (squares[pos].row === CONSTANTS.blackPawnInitialRow && squares[up2].piece === null) { // hasn't moved yet, double pawn front
-        //this.setState({enPasse: pos});
         acceptedMoves.push(pos + '#' + up2);
       }
     }
@@ -116,7 +113,7 @@ class Moves extends React.Component {
           const src = dst + CONSTANTS.up2;
           const tmp =  src + '#' + dst;
 
-          if (this.state.prevMove === tmp) {
+          if (prevMove === tmp) {
               const upLeft = pos + CONSTANTS.upLeft;
               acceptedMoves.push(pos + 'P' + upLeft); // en passe black pawn; P for en passe
           }
