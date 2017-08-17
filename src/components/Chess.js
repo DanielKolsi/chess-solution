@@ -355,7 +355,7 @@ class Chess extends Moves {
 
       //let value = Math.abs(piece.value);
       let value = piece.value;
-      console.log('black_value=' + value);
+      //console.log('black_value=' + value);
       switch (value) {
         case - 1:
           allowed = this.isAllowedByBlackPawn(piece, whiteKingPosition);
