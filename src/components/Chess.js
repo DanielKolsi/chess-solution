@@ -74,7 +74,7 @@ class Chess extends Moves {
     return candidateMoves
   }
 
-  move(src, dst) {
+  move(src, dst, special) {
     const {squares, pieces} = this.state;
     const square = squares[src];
     let piece = square.piece;
@@ -115,7 +115,7 @@ class Chess extends Moves {
     if (destination !== undefined && destination.piece) {
       console.log('deleting: ' + destination.piece.type + ' id = ' + destination.piece.id + ' n=' + destination.piece.n);
       //pieces[destination.piece.id] = null; //FIXME, is required?
-      delete pieces[destination.piece.id];
+      delete pieces[destination.piece.id]; //FIXME, en passe special case handling
       this.setState({pieces: pieces});
     }
 
@@ -468,10 +468,17 @@ class Chess extends Moves {
 
       if (allowedMovesWhite !== null && allowedMovesWhite.length > 0) { // FIXME, no moves available?
         const n = Math.floor(Math.random() * allowedMovesWhite.length);
-        console.log('previousMove:'+allowedMovesWhite[n]);
-        this.setState({previousMove: allowedMovesWhite[n]});
-        const whiteMoves = allowedMovesWhite[n].split('#');
-        this.move(whiteMoves[0], whiteMoves[1]); // FIXME: add special handling for en passe
+        const str = allowedMovesWhite[n];
+        console.log('previousMove:'+str);
+        this.setState({previousMove: str});
+
+        if (str.includes('P')) {
+            console.log('whitemoves-P='+str);
+        } else {
+            const whiteMoves = str.split('#');
+            this.move(whiteMoves[0], whiteMoves[1]); // FIXME: add special handling for en passe
+        }
+
         this.setState({white: false});
       } else {
         console.log('CHECK MATE, BLACK wins or stalemate.'); // FIXME, add staelmate handling
