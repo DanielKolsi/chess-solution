@@ -63,8 +63,8 @@ class Chess extends Moves {
     }
 
     if (location !== undefined && this.refs[location] !== undefined && this.refs[location].refs.piece !== undefined) {
-        console.log('prev-move='+this.state.previousMove);
-        candidateMoves = this.refs[location].refs.piece.getCandidateMoves(piece, squares, this.state.previousMove);
+      console.log('prev-move=' + this.state.previousMove);
+      candidateMoves = this.refs[location].refs.piece.getCandidateMoves(piece, squares, this.state.previousMove);
     }
     /*if (candidateMoves !== undefined) {
       if (candidateMoves.length > 0) {
@@ -115,7 +115,21 @@ class Chess extends Moves {
     if (destination !== undefined && destination.piece) {
       console.log('deleting: ' + destination.piece.type + ' id = ' + destination.piece.id + ' n=' + destination.piece.n);
       //pieces[destination.piece.id] = null; //FIXME, is required?
-      delete pieces[destination.piece.id]; //FIXME, en passe special case handling
+
+      if (special === 'P') { // en passe etc.
+        if (dst = (src + CONSTANTS.downLeft)) {
+          const id = squares[src + CONSTANTS.left].piece.n;
+        } else if (dst = (src + CONSTANTS.downRight)) {
+          const id = squares[src + CONSTANTS.right].piece.n;
+        } else if (dst = (src + CONSTANTS.upLeft)) {
+          const id = squares[src + CONSTANTS.left].piece.n;
+        } else if (dst = (src + CONSTANTS.upRight)) {
+          const id = squares[src + CONSTANTS.right].piece.n;
+        }
+        delete pieces[id];
+      } else {
+        delete pieces[destination.piece.n];
+      }
       this.setState({pieces: pieces});
     }
 
@@ -337,7 +351,6 @@ class Chess extends Moves {
     const whiteKingRow = pieces[CONSTANTS.whiteKingId].row;
     const whiteKingCol = pieces[CONSTANTS.whiteKingId].col;
 
-
     for (let i = CONSTANTS.minBlack; i < (CONSTANTS.maxBlack + CONSTANTS.numberOfExtraPieces); i++) {
       let piece = pieces[i];
 
@@ -469,14 +482,15 @@ class Chess extends Moves {
       if (allowedMovesWhite !== null && allowedMovesWhite.length > 0) { // FIXME, no moves available?
         const n = Math.floor(Math.random() * allowedMovesWhite.length);
         const str = allowedMovesWhite[n];
-        console.log('previousMove:'+str);
+        console.log('previousMove:' + str);
         this.setState({previousMove: str});
 
         if (str.includes('P')) {
-            console.log('whitemoves-P='+str);
+          console.log('whitemoves-P=' + str);
+          this.move(whiteMoves[0], whiteMoves[1], 'P'); // FIXME: add special handling for en passe
         } else {
-            const whiteMoves = str.split('#');
-            this.move(whiteMoves[0], whiteMoves[1]); // FIXME: add special handling for en passe
+          const whiteMoves = str.split('#');
+          this.move(whiteMoves[0], whiteMoves[1]); // FIXME: add special handling for en passe
         }
 
         this.setState({white: false});
