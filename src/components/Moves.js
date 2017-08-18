@@ -493,16 +493,16 @@ class Moves extends React.Component {
     let allowed = true;
     const pos = 1 * piece.location;
     if (pos < 0) return allowed; // ignore to-be-promoted pieces
-    console.log('kingRow = ' + kingRow + ' kingCol = ' + kingCol + ' sqrow='+squares[pos].row + ' sqrcol= ' + squares[pos].col);
+    //console.log('kingRow = ' + kingRow + ' kingCol = ' + kingCol + ' sqrow='+squares[pos].row + ' sqrcol= ' + squares[pos].col);
 
     if (kingRow === squares[pos].row || (kingCol === squares[pos].col)) {
-      console.log('Threat row or col');
       allowed = this.isAllowedByRook(piece, squares, kingPosition, opponentCandidateMove);
+      console.log('allowedByRook='+allowed);
       if (!allowed)
         return false;
       }
     allowed = this.isAllowedByBishop(piece, squares, kingPosition, opponentCandidateMove);
-    console.log('allowed by queen');
+    console.log('allowedBy='+allowed);
     return allowed
   }
 
@@ -584,10 +584,6 @@ class Moves extends React.Component {
       const move = opponentCandidateMove.split('#'); // [1] == dst move
       canditSrc = 1 * move[0];
       canditDst = 1 * move[1];
-
-      if (canditDst === pos) {
-        return allowed; // this piece has been eaten!
-      }
     }
 
     // move UP
