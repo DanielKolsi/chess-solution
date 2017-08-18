@@ -15,8 +15,8 @@ class Chess extends Moves {
     this.state = {
       pieces: {},
       squares: [],
-      promotedWhiteQueenNumber: 64,
-      promotedBlackQueenNumber: 66,
+      promotedWhiteQueenNumber: -30,
+      promotedBlackQueenNumber: -1,
       //      ids: [], // raw ref number of the piece, won't change
       white: true,
       moves: [],
@@ -90,18 +90,20 @@ class Chess extends Moves {
       let value = this.state.promotedWhiteQueenNumber;
       pieces[piece.n] = pieces[value]; // insert promoted piece to pieces
       piece = pieces[value]; // actual promotion
+      console.log('promonumber_white='+value);
       piece.location = dst;
       this.setState({
-        promotedWhiteQueenNumber: value++
+        promotedWhiteQueenNumber: value--
       });
       this.setState({pieces: pieces});
     } else if (piece.value === CONSTANTS.blackPawnValue && squares[dst].row === CONSTANTS.maxRow) {
       let value = this.state.promotedBlackQueenNumber;
+      console.log('promonumber_black='+value);
       pieces[piece.n] = pieces[value]; // insert promoted piece to pieces
       piece = pieces[value]; // actual promotion
       piece.location = dst;
       this.setState({
-        promotedBlackQueenNumber: value++
+        promotedBlackQueenNumber: value--
       });
       this.setState({pieces: pieces});
     }
@@ -117,14 +119,15 @@ class Chess extends Moves {
       //pieces[destination.piece.id] = null; //FIXME, is required?
 
       if (special === 'P') { // en passe etc.
-        if (dst = (src + CONSTANTS.downLeft)) {
-          const id = squares[src + CONSTANTS.left].piece.n;
-        } else if (dst = (src + CONSTANTS.downRight)) {
-          const id = squares[src + CONSTANTS.right].piece.n;
-        } else if (dst = (src + CONSTANTS.upLeft)) {
-          const id = squares[src + CONSTANTS.left].piece.n;
-        } else if (dst = (src + CONSTANTS.upRight)) {
-          const id = squares[src + CONSTANTS.right].piece.n;
+          let id = null;
+        if (dst === (src + CONSTANTS.downLeft)) {
+          id = squares[src + CONSTANTS.left].piece.n;
+        } else if (dst === (src + CONSTANTS.downRight)) {
+           id = squares[src + CONSTANTS.right].piece.n;
+        } else if (dst === (src + CONSTANTS.upLeft)) {
+           id = squares[src + CONSTANTS.left].piece.n;
+        } else if (dst === (src + CONSTANTS.upRight)) {
+           id = squares[src + CONSTANTS.right].piece.n;
         }
         delete pieces[id];
       } else {
@@ -160,7 +163,7 @@ class Chess extends Moves {
     const squares = [];
 
     // fill board with squares
-    for (let idx = 0, i = 0; i < 9; i++) {
+    for (let idx = 0, i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
 
         let square = {
@@ -191,7 +194,10 @@ class Chess extends Moves {
         //value: //exact piece value in relation to other pieces
       }
 
-      squares[item[0]].piece = piece;
+      if (item[0] >= 0) {
+          squares[item[0]].piece = piece;
+      }
+
       pieces[piece.n] = piece;
     });
 
@@ -208,14 +214,14 @@ class Chess extends Moves {
 
     let possibleMovesWhite = [];
 
-    for (let i = CONSTANTS.minWhite; i < (CONSTANTS.maxWhite + CONSTANTS.numberOfExtraPieces); i++) {
+    for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite; i++) {
       let piece = pieces[i];
 
       if (piece === null || piece === undefined || piece.white === false) {
         continue; // piece has been e.g. eaten
       }
 
-      //console.log('\n WHITE: piece for moving =' + piece.type + ' white = ' + piece.white + ' value =' + piece.value + ' n=' + piece.n + ' location=' + piece.location);
+      console.log('\n WHITE: piece for moving =' + piece.type + ' white = ' + piece.white + ' value =' + piece.value + ' n=' + piece.n + ' location=' + piece.location);
       //console.log('piece = ' + piece.type + piece.location + piece.n);
       let pieceMoves = this.getCandidateMoves(piece, squares);
 
@@ -233,6 +239,7 @@ class Chess extends Moves {
         }
       }
     }
+
     return possibleMovesWhite;
   }
 
@@ -244,7 +251,7 @@ class Chess extends Moves {
 
     let possibleMovesBlack = [];
 
-    for (let i = CONSTANTS.minBlack; i < (CONSTANTS.maxBlack + CONSTANTS.numberOfExtraPieces); i++) {
+    for (let i = CONSTANTS.minBlack; i < CONSTANTS.maxBlack; i++) {
       let piece = pieces[i];
 
       if (piece == null || piece === undefined || piece.white === true) {
@@ -348,10 +355,14 @@ class Chess extends Moves {
   isWhiteMoveAllowed(squares, pieces, whiteKingPosition, whiteCandidateMove) {
     let allowed = true;
 
-    const whiteKingRow = pieces[CONSTANTS.whiteKingId].row;
-    const whiteKingCol = pieces[CONSTANTS.whiteKingId].col;
+    const piece = pieces[CONSTANTS.whiteKingId];
+    const whiteKingLocation = piece.location;
+    const whiteKingRow = squares[whiteKingLocation].row;
 
-    for (let i = CONSTANTS.minBlack; i < (CONSTANTS.maxBlack + CONSTANTS.numberOfExtraPieces); i++) {
+    const whiteKingCol = squares[whiteKingLocation].col;
+    console.log('row====='+whiteKingRow);
+
+    for (let i = CONSTANTS.minBlack; i < CONSTANTS.maxBlack; i++) {
       let piece = pieces[i];
 
       if (piece === null || piece === undefined) {
@@ -412,7 +423,7 @@ class Chess extends Moves {
     const blackKingRow = pieces[CONSTANTS.blackKingId].row;
     const blackKingCol = pieces[CONSTANTS.blackKingId].col;
 
-    for (let i = CONSTANTS.minWhite; i < (CONSTANTS.maxWhite + CONSTANTS.numberOfExtraPieces); i++) {
+    for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite; i++) {
       let piece = pieces[i];
 
       if (piece === null || piece === undefined) {
@@ -486,6 +497,7 @@ class Chess extends Moves {
         this.setState({previousMove: str});
 
         if (str.includes('P')) {
+          const whiteMoves = str.split('P');
           console.log('whitemoves-P=' + str);
           this.move(whiteMoves[0], whiteMoves[1], 'P'); // FIXME: add special handling for en passe
         } else {
