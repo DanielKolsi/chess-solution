@@ -44,7 +44,13 @@ const CONSTANTS = {
   whiteKingId: 60,
   blackKingId: 4,
   whiteEnPasseAllowedRow: 3,
-  blackEnPasseAllowedRow: 4
+  blackEnPasseAllowedRow: 4,
+  enPasse: 'P',
+  castlingShortWhite: '(',
+  castlingShortBlack: ')',
+  castlingLongWhite: '[',
+  castlingLongBlack: ']'
+
 
 }
 

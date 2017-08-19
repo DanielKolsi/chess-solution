@@ -48,7 +48,7 @@ class Moves extends React.Component {
 
           if (this.state.prevMove === tmp) {
               const downRight = pos + CONSTANTS.upDown;
-              candidateMoves.push(pos + 'P' + downRight); // en passe black pawn; P for en passe
+              candidateMoves.push(pos + CONSTANTS.enPasse + downRight); // en passe black pawn; P for en passe
           }
 
         } else if (leftPiece !== null && leftPiece.value === CONSTANTS.blackPawn) {
@@ -60,7 +60,7 @@ class Moves extends React.Component {
           if (prevMove === tmp) {
             console.log('Left piece en passe (for WHITE), prevMove='+prevMove + 'tmp='+tmp);
               const downLeft = pos + CONSTANTS.downLeft;
-              candidateMoves.push(pos + 'P' + downLeft); // en passe black pawn; P for en passe
+              candidateMoves.push(pos + CONSTANTS.enPasse + downLeft); // en passe black pawn; P for en passe
           }
         }
     }

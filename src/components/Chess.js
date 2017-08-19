@@ -90,7 +90,7 @@ class Chess extends Moves {
       let value = this.state.promotedWhiteQueenNumber;
       pieces[piece.n] = pieces[value]; // insert promoted piece to pieces
       piece = pieces[value]; // actual promotion
-      console.log('promonumber_white='+value);
+      console.log('promonumber_white=' + value);
       piece.location = dst;
       this.setState({
         promotedWhiteQueenNumber: value++
@@ -98,7 +98,7 @@ class Chess extends Moves {
       this.setState({pieces: pieces});
     } else if (piece.value === CONSTANTS.blackPawnValue && squares[dst].row === CONSTANTS.maxRow) {
       let value = this.state.promotedBlackQueenNumber;
-      console.log('promonumber_black='+value);
+      console.log('promonumber_black=' + value);
       pieces[piece.n] = pieces[value]; // insert promoted piece to pieces
       piece = pieces[value]; // actual promotion
       piece.location = dst;
@@ -119,21 +119,37 @@ class Chess extends Moves {
       //pieces[destination.piece.id] = null; //FIXME, is required?
 
       if (special === 'P') { // en passe etc.
-          let id = null;
+        let id = null;
+        let pieceToBeRemovedLocation = null;
+
         if (dst === (src + CONSTANTS.downLeft)) {
-          id = squares[src + CONSTANTS.left].piece.n;
+          pieceToBeRemovedLocation = src + CONSTANTS.left;
+          id = squares[pieceToBeRemovedLocation].piece.n;
         } else if (dst === (src + CONSTANTS.downRight)) {
-           id = squares[src + CONSTANTS.right].piece.n;
+          pieceToBeRemovedLocation = src + CONSTANTS.right;
+          id = squares[pieceToBeRemovedLocation].piece.n;
         } else if (dst === (src + CONSTANTS.upLeft)) {
-           id = squares[src + CONSTANTS.left].piece.n;
+          pieceToBeRemovedLocation = src + CONSTANTS.upLeft;
+          id = squares[src + CONSTANTS.left].piece.n;
         } else if (dst === (src + CONSTANTS.upRight)) {
-           id = squares[src + CONSTANTS.right].piece.n;
+          pieceToBeRemovedLocation = src + CONSTANTS.upRight;
+          id = squares[src + CONSTANTS.right].piece.n;
         }
         delete pieces[id];
+        delete this.state.squares[pieceToBeRemovedLocation].piece;
+
+      } else if (special === '(') {
+
+      } else if (special === ')') {
+
+      } else if (special === '[') {
+
+      } else if (special === ']') {
+
       } else {
         delete pieces[destination.piece.n];
       }
-      delete this.state.squares[dst].piece;
+      //delete this.state.squares[dst].piece;
       this.setState({pieces: pieces});
     }
 
@@ -196,7 +212,7 @@ class Chess extends Moves {
       }
 
       if (item[0] >= 0 && (item[0] <= CONSTANTS.maxWhite)) {
-          squares[item[0]].piece = piece;
+        squares[item[0]].piece = piece;
       }
 
       pieces[piece.n] = piece;
@@ -251,7 +267,7 @@ class Chess extends Moves {
 
     let possibleMovesBlack = [];
 
-    for (let i = 1+this.state.promotedBlackQueenNumber; i < CONSTANTS.maxBlack; i++) {
+    for (let i = 1 + this.state.promotedBlackQueenNumber; i < CONSTANTS.maxBlack; i++) {
       let piece = pieces[i];
 
       if (piece === null || piece === undefined || piece.white === true) {
@@ -303,13 +319,12 @@ class Chess extends Moves {
       const dst = 1 * move[1];
       let kingPosition = 1 * whiteKingPosition;
 
-
       if (src === kingPosition) { // white king move candidate! //FIXME, not ok with ===
         console.log('pos_move=' + move + 'src=' + src + 'whiteKingPosition=' + whiteKingPosition);
         kingPosition = dst;
       }
       if (this.isWhiteMoveAllowed(squares, pieces, kingPosition, possibleMovesWhite[i])) {
-        console.log('king_move, kingPosition=' + kingPosition + ' dst='+dst+' src='+src);
+        console.log('king_move, kingPosition=' + kingPosition + ' dst=' + dst + ' src=' + src);
         allowedMoves.push(possibleMovesWhite[i]);
       } else {
         console.log('rejected: ' + possibleMovesWhite[i]);
@@ -346,7 +361,6 @@ class Chess extends Moves {
     return allowedMoves;
   }
 
-
   // to check whether a white move is allowed, you need to check opponent's next possible moves
   // if any black move collides with the white king, the white candidate move is rejected immediately
   isWhiteMoveAllowed(squares, pieces, whiteKingPosition, whiteCandidateMove) {
@@ -356,7 +370,6 @@ class Chess extends Moves {
     const whiteKingLocation = piece.location;
     const whiteKingRow = squares[whiteKingLocation].row;
     const whiteKingCol = squares[whiteKingLocation].col;
-
 
     for (let i = CONSTANTS.minBlack; i < CONSTANTS.maxBlack; i++) {
       let piece = pieces[i];
@@ -418,7 +431,6 @@ class Chess extends Moves {
     const blackKingLocation = piece.location;
     const blackKingRow = squares[blackKingLocation].row;
     const blackKingCol = squares[blackKingLocation].col;
-
 
     for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite; i++) {
       let piece = pieces[i];

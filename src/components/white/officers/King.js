@@ -4,7 +4,13 @@ import CONSTANTS from '../../../config/constants';
 class King extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {}
+    this.state = {
+      hasMoved: false
+    }
+  }
+
+  setHasMoved() {
+    this.this.setState({hasMoved: true});
   }
 
   getCandidateMoves(piece, squares) {
