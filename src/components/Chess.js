@@ -299,18 +299,17 @@ class Chess extends Moves {
     for (let i = 0; i < possibleMovesWhite.length; i++) {
 
       const move = possibleMovesWhite[i].split('#'); // [1] == dst move
-      const src = 1 * move[0];
+      let src = 1 * move[0];
       const dst = 1 * move[1];
-      let kingPosition = whiteKingPosition;
+      let kingPosition = 1 * whiteKingPosition;
 
-      //console.log('pos_move=' + move + 'src=' + src + 'whiteKingPosition=' + whiteKingPosition);
 
-      if (src === whiteKingPosition) { // white king move candidate!
+      if (src == whiteKingPosition) { // white king move candidate! //FIXME, not ok with ===
+        console.log('pos_move=' + move + 'src=' + src + 'whiteKingPosition=' + whiteKingPosition);
         kingPosition = dst;
-        console.log('king_move, dst=' + dst);
       }
-
       if (this.isWhiteMoveAllowed(squares, pieces, kingPosition, possibleMovesWhite[i])) {
+        console.log('king_move, kingPosition=' + kingPosition + ' dst='+dst+' src='+src);
         allowedMoves.push(possibleMovesWhite[i]);
       } else {
         console.log('rejected: ' + possibleMovesWhite[i]);
@@ -333,7 +332,7 @@ class Chess extends Moves {
       const dst = 1 * move[1];
       let kingPosition = blackKingPosition;
 
-      if (src === blackKingPosition) { // black king move candidate!
+      if (src == blackKingPosition) { // black king move candidate!
         kingPosition = dst;
       }
 
@@ -347,6 +346,7 @@ class Chess extends Moves {
     return allowedMoves;
   }
 
+
   // to check whether a white move is allowed, you need to check opponent's next possible moves
   // if any black move collides with the white king, the white candidate move is rejected immediately
   isWhiteMoveAllowed(squares, pieces, whiteKingPosition, whiteCandidateMove) {
@@ -356,8 +356,6 @@ class Chess extends Moves {
     const whiteKingLocation = piece.location;
     const whiteKingRow = squares[whiteKingLocation].row;
     const whiteKingCol = squares[whiteKingLocation].col;
-
-    let kingDst = whiteKingPosition;
 
 
     for (let i = CONSTANTS.minBlack; i < CONSTANTS.maxBlack; i++) {
@@ -370,12 +368,10 @@ class Chess extends Moves {
       if (whiteCandidateMove !== undefined) {
         const pos = 1 * piece.location;
         const move = whiteCandidateMove.split('#'); // [1] == dst move
-        const canditSrc = 1 * move[0];
+
         const canditDst = 1 * move[1];
-        if (canditDst === pos) {
+        if (canditDst == pos) {
           return allowed; // this white piece has been eaten (for this candidate move)!
-        } else if (canditSrc === whiteKingPosition) {
-          kingDst = canditDst; // king has been moved as the candidate move!
         }
       }
 
@@ -384,26 +380,23 @@ class Chess extends Moves {
       //console.log('black_value=' + value);
       switch (value) {
         case - 1:
-          allowed = this.isAllowedByBlackPawn(piece, kingDst);
+          allowed = this.isAllowedByBlackPawn(piece, whiteKingPosition);
           break;
         case - 3:
-          allowed = this.isAllowebByKnight(piece, kingDst);
+          allowed = this.isAllowebByKnight(piece, whiteKingPosition);
           break;
         case - 4:
-          allowed = this.isAllowedByBishop(piece, squares, kingDst, whiteCandidateMove);
+          allowed = this.isAllowedByBishop(piece, squares, whiteKingPosition, whiteCandidateMove);
           break;
         case - 5:
-          if (whiteKingRow === piece.row || (whiteKingCol === piece.col)) {
-            allowed = this.isAllowedByRook(piece, squares, kingDst, whiteCandidateMove);
-          }
+          allowed = this.isAllowedByRook(piece, squares, whiteKingPosition, whiteCandidateMove);
           break;
         case - 6:
-
-          allowed = this.isAllowedByKing(piece, kingDst);
-          //console.log('allowedByKing=' + allowed + ' whiteKingDst=' + kingDst);
+          allowed = this.isAllowedByKing(piece, whiteKingPosition);
+          //console.log('allowedByKing=' + allowed + ' whitewhiteKingPosition=' + whiteKingPosition);
           break;
         case - 9:
-          allowed = this.isAllowedByQueen(piece, squares, kingDst, whiteCandidateMove, whiteKingRow, whiteKingCol);
+          allowed = this.isAllowedByQueen(piece, squares, whiteKingPosition, whiteCandidateMove, whiteKingRow, whiteKingCol);
           break;
         default:
           break;
@@ -426,7 +419,6 @@ class Chess extends Moves {
     const blackKingRow = squares[blackKingLocation].row;
     const blackKingCol = squares[blackKingLocation].col;
 
-    let kingDst = blackKingPosition;
 
     for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite; i++) {
       let piece = pieces[i];
@@ -441,12 +433,10 @@ class Chess extends Moves {
       if (blackCandidateMove !== undefined) {
         const pos = 1 * piece.location;
         const move = blackCandidateMove.split('#'); // [1] == dst move
-        const canditSrc = 1 * move[0];
+
         const canditDst = 1 * move[1];
-        if (canditDst === pos) {
+        if (canditDst == pos) {
           return allowed; // this white piece has been eaten (for this candidate move)!
-        } else if (canditSrc === blackKingPosition) {
-          kingDst = canditDst; // black king has been moved as the candidate move!
         }
       }
 
@@ -461,17 +451,15 @@ class Chess extends Moves {
           allowed = this.isAllowedByBishop(piece, squares, blackKingPosition, blackCandidateMove);
           break;
         case - 5:
-          if (blackKingRow === piece.row || (blackKingCol === piece.col)) {
-            allowed = this.isAllowedByRook(piece, squares, blackKingPosition, blackCandidateMove);
-          }
+          allowed = this.isAllowedByRook(piece, squares, blackKingPosition, blackCandidateMove);
           break;
         case - 6:
-          allowed = this.isAllowedByKing(piece, kingDst);
-          console.log('allowedByKing=' + allowed + ' blackKingDst=' + kingDst);
+          allowed = this.isAllowedByKing(piece, blackKingPosition);
+          console.log('allowedByKing=' + allowed + ' blackKingDst=' + blackKingPosition);
           break;
         case - 9:
           // FIXME, if queene is eaten straight away as the candidate move? -> allow = true
-          allowed = this.isAllowedByQueen(piece, squares, kingDst, blackCandidateMove, blackKingRow, blackKingCol);
+          allowed = this.isAllowedByQueen(piece, squares, blackKingPosition, blackCandidateMove, blackKingRow, blackKingCol);
           break;
         default:
           break;
