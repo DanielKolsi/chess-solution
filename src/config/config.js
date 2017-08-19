@@ -37,7 +37,7 @@ export default {
     /*[61, 'BishopWF','wbf', 61, true, 4],
     [62, 'KnightWG','wkg', 62, true, 3],
     [63, 'RookWH','wrh', 63, true, 5],*/
-    [-30, 'QueenW2','wq2', -30, true, 9]
+    [64, 'QueenW2','wq2', 64, true, 9]
 
 
   ]
