@@ -75,6 +75,7 @@ class Chess extends Moves {
   }
 
   move(src, dst, special) {
+
     const {squares, pieces} = this.state;
     const square = squares[src];
     let piece = square.piece;
@@ -137,14 +138,6 @@ class Chess extends Moves {
         }
         delete pieces[id];
         delete this.state.squares[pieceToBeRemovedLocation].piece;
-
-      } else if (special === '(') {
-
-      } else if (special === ')') {
-
-      } else if (special === '[') {
-
-      } else if (special === ']') {
 
       } else {
         delete pieces[destination.piece.n];
@@ -229,7 +222,7 @@ class Chess extends Moves {
 
   getCandidateMovesWhite(squares, pieces) {
 
-    let possibleMovesWhite = [];
+    let candidateMovesWhite = [];
 
     for (let i = CONSTANTS.minWhite; i < this.state.promotedWhiteQueenNumber; i++) {
       let piece = pieces[i];
@@ -242,30 +235,39 @@ class Chess extends Moves {
       //console.log('piece = ' + piece.type + piece.location + piece.n);
       let pieceMoves = this.getCandidateMoves(piece, squares);
 
+      if (piece.n === CONSTANTS.whiteKingId) {
+        console.log('xx white king castling checks'); //FIXME, castling checks
+
+        let hasMoved = this.refs[piece.location].refs.piece.getHasMoved();
+        console.log('hasmoved = ' + hasMoved);
+      }
+
       if (pieceMoves === undefined) {
         console.log('No available moves for this piece.');
         continue;
       }
 
-      if (pieceMoves.length > 0 && possibleMovesWhite.length === undefined) {
-        possibleMovesWhite = pieceMoves;
+      if (pieceMoves.length > 0 && candidateMovesWhite.length === undefined) {
+        candidateMovesWhite = pieceMoves;
       } else if (pieceMoves.length > 0) {
-        //console.log('adding piecemoves, i = ' + i + ' n = ' + pieceMoves.length + ' p m w length = ' + possibleMovesWhite.length);
-        if (!possibleMovesWhite.includes(pieceMoves)) {
-          possibleMovesWhite = possibleMovesWhite.concat(pieceMoves); // possiblemoves, removalmoves, candidateMoves
+        //console.log('adding piecemoves, i = ' + i + ' n = ' + pieceMoves.length + ' p m w length = ' + candidateMovesWhite.length);
+        if (!candidateMovesWhite.includes(pieceMoves)) {
+          candidateMovesWhite = candidateMovesWhite.concat(pieceMoves); // candidateMoves, removalmoves, candidateMoves
         }
       }
     }
-    return possibleMovesWhite;
+
+
+    return candidateMovesWhite;
   }
 
   /*
     This function is both for checking candidate moves for white / black AND for
     using as a "rejector" for the candidate move when opponentKing and opponentCandidateMove are specified.
   */
-  getCandidateMovesBlack(squares, pieces, opponentKing, opponentCandidateMove) {
+  getCandidateMovesBlack(squares, pieces) {
 
-    let possibleMovesBlack = [];
+    let candidateMovesBlack = [];
 
     for (let i = 1 + this.state.promotedBlackQueenNumber; i < CONSTANTS.maxBlack; i++) {
       let piece = pieces[i];
@@ -274,47 +276,41 @@ class Chess extends Moves {
         continue; // piece has been e.g. eaten
       }
 
-      let pieceMoves = this.getCandidateMoves(piece, squares, opponentKing, opponentCandidateMove);
+      let pieceMoves = this.getCandidateMoves(piece, squares);
 
-      if (pieceMoves === null && opponentCandidateMove != null) {
-        //console.log('candidate WHITE move rejected, no possible moves, rejected_move='+opponentCandidateMove);
-        return null; // previous white move candidate is simply rejected!
-      } else if (pieceMoves === undefined) {
+      if (pieceMoves === undefined) {
         console.log('No available moves for this piece.');
         continue;
       }
-      if (pieceMoves === undefined) {
-        continue;
-      }
 
-      if (pieceMoves.length > 0 && possibleMovesBlack.length === undefined) { //FIXME,possibleMovesBlack was null
-        possibleMovesBlack = pieceMoves;
+      if (pieceMoves.length > 0 && candidateMovesBlack.length === undefined) { //FIXME,candidateMovesBlack was null
+        candidateMovesBlack = pieceMoves;
       } else if (pieceMoves.length > 0) {
-        if (!possibleMovesBlack.includes(pieceMoves)) {
-          possibleMovesBlack = possibleMovesBlack.concat(pieceMoves); // possiblemoves, removalmoves, candidateMoves
+        if (!candidateMovesBlack.includes(pieceMoves)) {
+          candidateMovesBlack = candidateMovesBlack.concat(pieceMoves); // candidateMoves, removalmoves, candidateMoves
         }
       }
     }
-    return possibleMovesBlack;
+    return candidateMovesBlack;
   }
 
   /**
    * From the possible moves return those moves which are actually allowed.
-   * @param  {[type]} possibleMovesWhite [description]
+   * @param  {[type]} candidateMovesWhite [description]
    * @param  {[type]} kingPosition       [description]
    * @param  {[type]} squares            [description]
    * @param  {[type]} pieces             [description]
    * @return {[type]}                    allowedMoves
    */
-  getAllowedMovesWhite(squares, pieces, whiteKingPosition, possibleMovesWhite) {
+  getAllowedMovesWhite(squares, pieces, whiteKingPosition, candidateMovesWhite) {
 
     let allowedMoves = []; // contains only the candidate moves that were eventually verified to be allowed
 
     console.log('white_king_pos=' + whiteKingPosition);
 
-    for (let i = 0; i < possibleMovesWhite.length; i++) {
+    for (let i = 0; i < candidateMovesWhite.length; i++) {
 
-      const move = possibleMovesWhite[i].split('#'); // [1] === dst move
+      const move = candidateMovesWhite[i].split('#'); // [1] === dst move
       let src = 1 * move[0];
       const dst = 1 * move[1];
       let kingPosition = 1 * whiteKingPosition;
@@ -323,26 +319,26 @@ class Chess extends Moves {
         console.log('pos_move=' + move + 'src=' + src + 'whiteKingPosition=' + whiteKingPosition);
         kingPosition = dst;
       }
-      if (this.isWhiteMoveAllowed(squares, pieces, kingPosition, possibleMovesWhite[i])) {
+      if (this.isWhiteMoveAllowed(squares, pieces, kingPosition, candidateMovesWhite[i])) {
         console.log('king_move, kingPosition=' + kingPosition + ' dst=' + dst + ' src=' + src);
-        allowedMoves.push(possibleMovesWhite[i]);
+        allowedMoves.push(candidateMovesWhite[i]);
       } else {
-        console.log('rejected: ' + possibleMovesWhite[i]);
+        console.log('rejected: ' + candidateMovesWhite[i]);
         continue; // this candidate move was rejected, check the next white candidate move
       }
     }
     return allowedMoves;
   }
 
-  getAllowedMovesBlack(squares, pieces, blackKingPosition, possibleMovesBlack) {
+  getAllowedMovesBlack(squares, pieces, blackKingPosition, candidateMovesBlack) {
 
     let allowedMoves = []; // contains only the candidate moves that were eventually verified to be allowed
 
     console.log('black_king_pos=' + blackKingPosition);
 
-    for (let i = 0; i < possibleMovesBlack.length; i++) {
+    for (let i = 0; i < candidateMovesBlack.length; i++) {
 
-      const move = possibleMovesBlack[i].split('#'); // [1] === dst move
+      const move = candidateMovesBlack[i].split('#'); // [1] === dst move
       let src = 1 * move[0];
       const dst = 1 * move[1];
       let kingPosition = 1 * blackKingPosition;
@@ -351,10 +347,10 @@ class Chess extends Moves {
         kingPosition = dst;
       }
 
-      if (this.isBlackMoveAllowed(squares, pieces, kingPosition, possibleMovesBlack[i])) {
-        allowedMoves.push(possibleMovesBlack[i]);
+      if (this.isBlackMoveAllowed(squares, pieces, kingPosition, candidateMovesBlack[i])) {
+        allowedMoves.push(candidateMovesBlack[i]);
       } else {
-        console.log('rejected-black: ' + possibleMovesBlack[i]);
+        console.log('rejected-black: ' + candidateMovesBlack[i]);
         continue; // this candidate move was rejected, check the next white candidate move
       }
     }
@@ -505,17 +501,25 @@ class Chess extends Moves {
         if (str.includes('P')) {
           const whiteMoves = str.split('P');
           console.log('whitemoves-P=' + str);
-          this.move(whiteMoves[0], whiteMoves[1], 'P'); // FIXME: add special handling for en passe
+          this.move(whiteMoves[0], whiteMoves[1], 'P');
+        } else if (str.includes('(')) { // white left castling
+          const whiteMoves = str.split('(');
+          this.move(whiteMoves[0], whiteMoves[1]); // king move left castling
+          this.move(56, 59); // rook move left castling
+        } else if (str.includes('(')) {
+          const whiteMoves = str.split(')');
+          this.move(whiteMoves[0], whiteMoves[1]);
+          this.move(63, 61);
         } else {
           const whiteMoves = str.split('#');
-          this.move(whiteMoves[0], whiteMoves[1]); // FIXME: add special handling for en passe
+          this.move(whiteMoves[0], whiteMoves[1]);
         }
 
         this.setState({white: false});
       } else {
         console.log('CHECK MATE, BLACK wins or stalemate.'); // FIXME, add staelmate handling
       }
-    } else {
+    } else { //black move
       let candidateMovesBlack = this.getCandidateMovesBlack(squares, pieces);
       console.log('candidate black moves =' + candidateMovesBlack);
       let allowedMovesBlack = this.getAllowedMovesBlack(squares, pieces, pieces[CONSTANTS.blackKingId].location, candidateMovesBlack);
@@ -523,14 +527,28 @@ class Chess extends Moves {
 
       if (allowedMovesBlack !== null && allowedMovesBlack.length > 0) { // FIXME, no moves available?
         const n = Math.floor(Math.random() * allowedMovesBlack.length);
+        const str = allowedMovesBlack[n];
+        console.log('previousMove:' + str);
+        this.setState({previousMove: str});
 
-        const blackMoves = allowedMovesBlack[n].split('#');
-        this.setState({previousMove: allowedMovesBlack[n]});
-        this.setState({candidateBlack: blackMoves[1]}); // this square is "occupied"
-        this.move(blackMoves[0], blackMoves[1]);
-        console.log('BLACK MOVED * total moves were = ' + allowedMovesBlack.length + ' selected random = ' + allowedMovesBlack[n] + ' n was = ' + n);
+        if (str.includes('P')) {
+          const blackMoves = str.split('P');
+          this.move(blackMoves[0], blackMoves[1], 'P');
+        } else if (str.includes('[')) { //black castling
+          const whiteMoves = str.split('[');
+          this.move(whiteMoves[0], whiteMoves[1]);
+          this.move(0, 3);
+        } else if (str.includes(']')) {
+          const whiteMoves = str.split(']');
+          this.move(whiteMoves[0], whiteMoves[1]);
+          this.move(7, 5);
+        } else {
+          const blackMoves = allowedMovesBlack[n].split('#');
+          this.move(blackMoves[0], blackMoves[1]);
+        }
+        //console.log('BLACK MOVED * total moves were = ' + allowedMovesBlack.length + ' selected random = ' + allowedMovesBlack[n] + ' n was = ' + n);
         this.setState({white: true});
-      } else {
+      }  else {
         console.log('CHECK MATE, WHITE wins or stalemate.');
       }
     }

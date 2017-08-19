@@ -10,7 +10,11 @@ class King extends React.Component {
   }
 
   setHasMoved() {
-    this.this.setState({hasMoved: true});
+    this.setState({hasMoved: true});
+  }
+
+  getHasMoved() {
+    return this.state.hasMoved;
   }
 
   getCandidateMoves(piece, squares) {
