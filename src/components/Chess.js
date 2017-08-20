@@ -328,6 +328,7 @@ class Chess extends Moves {
       } else if (str.includes('R')) {
         move = candidateMovesWhite[i].split('R');
       } else if (str.includes('K')) {
+        //FIXME: check if castling (left + right) is allowed (no threated pieces between or check)
         move = candidateMovesWhite[i].split('K');
       } else if (str.includes('P')) {
         move = candidateMovesWhite[i].split('P');
@@ -423,7 +424,7 @@ class Chess extends Moves {
           allowed = this.isAllowedByRook(piece, squares, whiteKingPosition, whiteCandidateMove);
           break;
         case - 6:
-          allowed = this.isAllowedByKing(piece, whiteKingPosition);
+          allowed = this.isAllowedByKing(piece, whiteKingPosition); //FIXME, is castling allowed?
           //console.log('allowedByKing=' + allowed + ' whitewhiteKingPosition=' + whiteKingPosition);
           break;
         case - 9:
@@ -510,6 +511,7 @@ class Chess extends Moves {
 
     if (white === true) {
       let candidateMovesWhite = this.getCandidateMovesWhite(squares, pieces);
+
       console.log('candidate white moves =' + candidateMovesWhite);
       let allowedMovesWhite = this.getAllowedMovesWhite(squares, pieces, pieces[CONSTANTS.whiteKingId].location, candidateMovesWhite);
       console.log('allowed white moves =' + allowedMovesWhite);
@@ -526,6 +528,8 @@ class Chess extends Moves {
           this.move(whiteMoves[0], whiteMoves[1], 'P');
         } else if (str.includes('(')) { // white left castling
           const whiteMoves = str.split('(');
+          //let candidateMovesBlack = this.getCandidateMovesBlack(squares, pieces); //FIXME, check for castling
+          // if candidateMovesBlack.includes(check_these_squares);
           this.move(whiteMoves[0], whiteMoves[1]); // king move left castling
           this.move(56, 59); // rook move left castling
         } else if (str.includes('(')) {
