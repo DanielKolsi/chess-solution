@@ -15,7 +15,7 @@ class RookA extends Moves {
 
   getCandidateMoves(piece, squares) {
     console.log('Black Rook A');
-    return this.getCandidateRookMoves(piece, squares);
+    return this.getCandidateRookMoves(piece, squares, 'R');
   }
 
     render() {

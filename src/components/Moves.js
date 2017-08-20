@@ -415,7 +415,7 @@ class Moves extends React.Component {
     return candidateMoves;
   }
 
-  getCandidateRookMoves(piece, squares) {
+  getCandidateRookMoves(piece, squares, delim) {
 
     console.log('<ROOK> moves </ROOK>');
     let pos = 1 * piece.location;
@@ -430,11 +430,11 @@ class Moves extends React.Component {
     for (let i = UP; i <= CONSTANTS.maxWhite; i += CONSTANTS.up) {
 
       if (squares[i].piece === null) {
-        candidateMoves.push(pos + '#' + i);
+        candidateMoves.push(pos + delim + i);
       } else if (squares[i].piece === undefined) {
-        candidateMoves.push(pos + '#' + i);
+        candidateMoves.push(pos + delim + i);
       } else if (piece.white !== squares[i].piece.white) { // eat
-        candidateMoves.push(pos + '#' + i); //FIXME, handle candidate move SRC, the piece doesn't exist there anymore...
+        candidateMoves.push(pos + delim + i); //FIXME, handle candidate move SRC, the piece doesn't exist there anymore...
         break; // no more move possibilities after eating
       } else {
         console.log('OWN PIECE i = ' + i);
@@ -806,7 +806,7 @@ class Moves extends React.Component {
     let candidateMovesQueen = [];
 
     let candidateMovesBishop = this.getCandidateBishopMoves(piece, squares);
-    let candidateMovesRook = this.getCandidateRookMoves(piece, squares);
+    let candidateMovesRook = this.getCandidateRookMoves(piece, squares, '#');
     candidateMovesQueen = candidateMovesBishop.concat(candidateMovesRook);
     return candidateMovesQueen;
   }

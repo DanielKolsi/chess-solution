@@ -22,7 +22,13 @@ class Chess extends Moves {
       moves: [],
       nextMove: 1,
       candidateMoves: [],
-      previousMove: null
+      previousMove: null,
+      whiteKingMoved: false, // castling initial condition: rooks and king shall not be moved
+      whiteLeftRookMoved: false,
+      whiteRightRookMoved: false,
+      blackKingMoved: false,
+      blackLeftRookMoved: false,
+      blackRightRookMoved: false
     }
     this.moveMap = this.moveMap.bind(this); //FIXME
     this.removePiece = this.removePiece.bind(this);
@@ -235,11 +241,16 @@ class Chess extends Moves {
       //console.log('piece = ' + piece.type + piece.location + piece.n);
       let pieceMoves = this.getCandidateMoves(piece, squares);
 
-      if (piece.n === CONSTANTS.whiteKingId) {
-        console.log('xx white king castling checks'); //FIXME, castling checks
+      if (this.state.whiteKingMoved === false) {
+        if (piece.n === CONSTANTS.whiteKingId) {
+          console.log('xx white king castling checks'); //FIXME, castling checks
+          this.setState({whiteKingMoved: this.refs[piece.location].refs.piece.getHasMoved()});
 
-        let hasMoved = this.refs[piece.location].refs.piece.getHasMoved();
-        console.log('hasmoved = ' + hasMoved);
+        } else if (piece.n === CONSTANTS.whiteLeftRookId) {
+          this.setState({whiteLeftRookMoved: this.refs[piece.location].refs.piece.getHasMoved()});
+        } else if (piece.n === CONSTANTS.whiteRighttRookId) {
+          this.setState({whiteRightRookMoved: this.refs[piece.location].refs.piece.getHasMoved()});
+        }
       }
 
       if (pieceMoves === undefined) {
@@ -309,8 +320,19 @@ class Chess extends Moves {
     console.log('white_king_pos=' + whiteKingPosition);
 
     for (let i = 0; i < candidateMovesWhite.length; i++) {
+      const str = candidateMovesWhite[i];
+      let move = null;
 
-      const move = candidateMovesWhite[i].split('#'); // [1] === dst move
+      if (str.includes('#')) {
+        move = candidateMovesWhite[i].split('#'); // [1] === dst move
+      } else if (str.includes('R')) {
+        move = candidateMovesWhite[i].split('R');
+      } else if (str.includes('K')) {
+        move = candidateMovesWhite[i].split('K');
+      } else if (str.includes('P')) {
+        move = candidateMovesWhite[i].split('P');
+      }
+
       let src = 1 * move[0];
       const dst = 1 * move[1];
       let kingPosition = 1 * whiteKingPosition;
@@ -510,7 +532,14 @@ class Chess extends Moves {
           const whiteMoves = str.split(')');
           this.move(whiteMoves[0], whiteMoves[1]);
           this.move(63, 61);
-        } else {
+        } else if (str.includes('K')) {
+          const whiteMoves = str.split('K');
+          this.move(whiteMoves[0], whiteMoves[1]);
+        } else if (str.includes('R')) {
+          const whiteMoves = str.split('R');
+          this.move(whiteMoves[0], whiteMoves[1]);
+        }
+        else {
           const whiteMoves = str.split('#');
           this.move(whiteMoves[0], whiteMoves[1]);
         }

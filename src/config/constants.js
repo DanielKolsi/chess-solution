@@ -43,6 +43,11 @@ const CONSTANTS = {
   numberOfExtraPieces: 2,
   whiteKingId: 60,
   blackKingId: 4,
+  whiteLeftRookId: 56,
+  whiteRightRookId: 63,
+  blackLeftRookId: 0,
+  blackRightRookId: 7,
+
   whiteEnPasseAllowedRow: 3,
   blackEnPasseAllowedRow: 4,
   enPasse: 'P',
