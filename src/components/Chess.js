@@ -386,6 +386,39 @@ class Chess extends Moves {
         move = candidateMovesWhite[i].split('K');
       } else if (str.includes('P')) {
         move = candidateMovesWhite[i].split('P');
+      } else if (str.includes('(')) {
+        move = str.split('(');
+        let blackCandidateMoves = this.getCandidateMovesBlack(squares, pieces);
+        let allowLeftCastling = true;
+        const re = .60||.59||.58||.57;
+
+        for (let i = 0; i < blackCandidateMoves.length; i++) {
+            const move = blackCandidateMoves[i];
+            if (move.match(re) !== null) {
+              allowLeftCastling = false;
+              break;
+            }
+        }
+        if (allowLeftCastling) {
+            allowedMoves.push(str);
+        }
+
+      } else if (str.includes(')')) {
+        move = str.split(')');
+        let blackCandidateMoves = this.getCandidateMovesBlack(squares, pieces);
+        let allowRightCastling = true;
+        const re = .60||.61||.62;
+
+        for (let i = 0; i < blackCandidateMoves.length; i++) {
+            const move = blackCandidateMoves[i];
+            if (move.match(re) !== null) {
+              allowRightCastling = false;
+              break;
+            }
+        }
+        if (allowRightCastling) {
+            allowedMoves.push(str);
+        }
       }
 
       let src = 1 * move[0];
@@ -582,8 +615,6 @@ class Chess extends Moves {
           this.move(whiteMoves[0], whiteMoves[1], 'P');
         } else if (str.includes('(')) { // white left castling
           const whiteMoves = str.split('(');
-          //let candidateMovesBlack = this.getCandidateMovesBlack(squares, pieces); //FIXME, check for castling
-          // if candidateMovesBlack.includes(check_these_squares);
           this.move(whiteMoves[0], whiteMoves[1]); // king move left castling
           this.move(56, 59); // rook move left castling
         } else if (str.includes('(')) {
@@ -621,12 +652,12 @@ class Chess extends Moves {
           const blackMoves = str.split('P');
           this.move(blackMoves[0], blackMoves[1], 'P');
         } else if (str.includes('[')) { //black castling
-          const whiteMoves = str.split('[');
-          this.move(whiteMoves[0], whiteMoves[1]);
+          const blackMoves = str.split('[');
+          this.move(blackMoves[0], blackMoves[1]);
           this.move(0, 3);
         } else if (str.includes(']')) {
-          const whiteMoves = str.split(']');
-          this.move(whiteMoves[0], whiteMoves[1]);
+          const blackMoves = str.split(']');
+          this.move(blackMoves[0], blackMoves[1]);
           this.move(7, 5);
         } else if (str.includes('K')) {
           const blackMoves = str.split('K');
