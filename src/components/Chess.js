@@ -252,6 +252,18 @@ class Chess extends Moves {
           this.setState({whiteRightRookMoved: this.refs[piece.location].refs.piece.getHasMoved()});
         }
       }
+      if (!this.state.whiteKingMoved) {
+          if (!this.state.whiteLeftRookMoved) {
+            if (squares[57] === null && squares[58] === null && squares[59] === null) {
+              //FIXME, push castling white left as the CANDIDATE move
+            }
+          }
+          if (!this.state.whiteRightRookMoved) {
+
+          }
+        // FIXME: check empty squares
+      }
+
 
       if (pieceMoves === undefined) {
         console.log('No available moves for this piece.');
