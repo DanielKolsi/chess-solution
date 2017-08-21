@@ -126,7 +126,7 @@ class Chess extends Moves {
       console.log('deleting: ' + destination.piece.type + ' id = ' + destination.piece.id + ' n=' + destination.piece.n);
       //pieces[destination.piece.id] = null; //FIXME, is required?
 
-      if (special === 'P') { // en passe etc.
+      if (special === 'P') { // en passe
         let id = null;
         let pieceToBeRemovedLocation = null;
 
@@ -379,12 +379,8 @@ class Chess extends Moves {
       let move = null;
 
       if (str.includes('#')) {
-        move = candidateMovesWhite[i].split('#'); // [1] === dst move
-      } else if (str.includes('R')) {
-        move = candidateMovesWhite[i].split('R');
-      } else if (str.includes('K')) {
-        move = candidateMovesWhite[i].split('K');
-      } else if (str.includes('P')) {
+        move = candidateMovesWhite[i].split('#');
+      } else if (str.includes('P')) { // en passe
         move = candidateMovesWhite[i].split('P');
       } else if (str.includes('(')) {
         move = str.split('(');
@@ -455,10 +451,6 @@ class Chess extends Moves {
 
       if (str.includes('#')) {
         move = candidateMovesBlack[i].split('#'); // [1] === dst move
-      } else if (str.includes('R')) {
-        move = candidateMovesBlack[i].split('R');
-      } else if (str.includes('K')) {
-        move = candidateMovesBlack[i].split('K');
       } else if (str.includes('P')) {
         move = candidateMovesBlack[i].split('P');
       } else if (str.includes('[')) {
@@ -670,12 +662,6 @@ class Chess extends Moves {
           const whiteMoves = str.split(')');
           this.move(whiteMoves[0], whiteMoves[1]); // white king move (right castling)
           this.move(63, 61); // white rook move right castling
-        } else if (str.includes('K')) {
-          const whiteMoves = str.split('K');
-          this.move(whiteMoves[0], whiteMoves[1]);
-        } else if (str.includes('R')) {
-          const whiteMoves = str.split('R');
-          this.move(whiteMoves[0], whiteMoves[1]);
         } else {
           const whiteMoves = str.split('#');
           this.move(whiteMoves[0], whiteMoves[1]);
@@ -702,18 +688,12 @@ class Chess extends Moves {
           this.move(blackMoves[0], blackMoves[1], 'P');
         } else if (str.includes('[')) { //black castling
           const blackMoves = str.split('[');
-          this.move(blackMoves[0], blackMoves[1]);
-          this.move(0, 3);
+          this.move(blackMoves[0], blackMoves[1]); // king move
+          this.move(0, 3); // rook move
         } else if (str.includes(']')) {
           const blackMoves = str.split(']');
-          this.move(blackMoves[0], blackMoves[1]);
-          this.move(7, 5);
-        } else if (str.includes('K')) {
-          const blackMoves = str.split('K');
-          this.move(blackMoves[0], blackMoves[1]);
-        } else if (str.includes('R')) {
-          const blackMoves = str.split('R');
-          this.move(blackMoves[0], blackMoves[1]);
+          this.move(blackMoves[0], blackMoves[1]); // king move
+          this.move(7, 5); // rook move
         } else {
           const blackMoves = allowedMovesBlack[n].split('#');
           this.move(blackMoves[0], blackMoves[1]);
