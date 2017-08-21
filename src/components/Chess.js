@@ -268,13 +268,13 @@ class Chess extends Moves {
 
         if (!castlingLeftAdded && !whiteLeftRookHasMoved) {
           if (squares[57].piece === null && squares[58].piece === null && squares[59].piece === null) {
-            candidateMoves.push(60 + '(' + 58); //add white castling left as a candidate move
+            candidateMoves.push(CONSTANTS.whiteKingId + '(' + 58); //add white castling (white king move!) left as a candidate move
             castlingLeftAdded = true;
           }
         }
         if (!castlingRightAdded && !whiteRightRookHasMoved) {
           if (squares[61].piece === null && squares[62].piece === null) {
-            candidateMoves.push(60 + ')' + 62); //add white castling right as a candidate move
+            candidateMoves.push(CONSTANTS.whiteKingId + ')' + 62); //add white castling right (king move!) as a candidate move
             castlingRightAdded = true;
           }
         }
@@ -337,13 +337,13 @@ class Chess extends Moves {
 
         if (!castlingLeftAdded && !blackLeftRookHasMoved) {
           if (squares[1].piece === null && squares[2].piece === null && squares[3].piece === null) {
-            candidateMoves.push(4 + '[' + 2); //add black castling left as a candidate move
+            candidateMoves.push(CONSTANTS.blackKingId + '[' + 2); //add black castling (king move!) left as a candidate move
             castlingLeftAdded = true;
           }
         }
         if (!castlingRightAdded && !blackRightRookHasMoved) {
           if (squares[5].piece === null && squares[6].piece === null) {
-            candidateMoves.push(4 + ']' + 6); //add black castling right as a candidate move
+            candidateMoves.push(CONSTANTS.blackKingId + ']' + 6); //add black castling right (king move!) as a candidate move
             castlingRightAdded = true;
           }
         }
@@ -664,12 +664,12 @@ class Chess extends Moves {
           this.move(whiteMoves[0], whiteMoves[1], 'P');
         } else if (str.includes('(')) { // white left castling
           const whiteMoves = str.split('(');
-          this.move(whiteMoves[0], whiteMoves[1]); // king move left castling
-          this.move(56, 59); // rook move left castling
+          this.move(whiteMoves[0], whiteMoves[1]); // white king move left castling
+          this.move(56, 59); // white rook move left castling
         } else if (str.includes('(')) {
           const whiteMoves = str.split(')');
-          this.move(whiteMoves[0], whiteMoves[1]);
-          this.move(63, 61);
+          this.move(whiteMoves[0], whiteMoves[1]); // white king move (right castling)
+          this.move(63, 61); // white rook move right castling
         } else if (str.includes('K')) {
           const whiteMoves = str.split('K');
           this.move(whiteMoves[0], whiteMoves[1]);
