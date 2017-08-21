@@ -83,6 +83,7 @@ class Chess extends Moves {
   move(src, dst, special) {
 
     const {squares, pieces} = this.state;
+    console.log('src='+src + ' dst =' + dst + ' special='+special);
     const square = squares[src];
     let piece = square.piece;
 
@@ -229,6 +230,11 @@ class Chess extends Moves {
   getCandidateMovesWhite(squares, pieces) {
 
     let candidateMovesWhite = [];
+    let whiteKingHasMoved = true;
+    let whiteLeftRookHasMoved = true;
+    let whiteRightRookHasMoved = true;
+    let castlingLeftAdded = false;
+    let castlingRightAdded = false;
 
     for (let i = CONSTANTS.minWhite; i < this.state.promotedWhiteQueenNumber; i++) {
       let piece = pieces[i];
@@ -239,48 +245,50 @@ class Chess extends Moves {
 
       console.log('\n WHITE: piece for moving =' + piece.type + ' white = ' + piece.white + ' value =' + piece.value + ' n=' + piece.n + ' location=' + piece.location);
       //console.log('piece = ' + piece.type + piece.location + piece.n);
-      let pieceMoves = this.getCandidateMoves(piece, squares);
-
-      if (this.state.whiteKingMoved === false) {
-        if (piece.n === CONSTANTS.whiteKingId) {
-          console.log('xx white king castling checks'); //FIXME, castling checks
-          this.setState({whiteKingMoved: this.refs[piece.location].refs.piece.getHasMoved()});
-
-        } else if (piece.n === CONSTANTS.whiteLeftRookId) {
-          this.setState({whiteLeftRookMoved: this.refs[piece.location].refs.piece.getHasMoved()});
-        } else if (piece.n === CONSTANTS.whiteRighttRookId) {
-          this.setState({whiteRightRookMoved: this.refs[piece.location].refs.piece.getHasMoved()});
-        }
-      }
-      if (!this.state.whiteKingMoved) {
-          if (!this.state.whiteLeftRookMoved) {
-            if (squares[57] === null && squares[58] === null && squares[59] === null) {
-              //FIXME, push castling white left as the CANDIDATE move
-            }
-          }
-          if (!this.state.whiteRightRookMoved) {
-
-          }
-        // FIXME: check empty squares
-      }
-
-
-      if (pieceMoves === undefined) {
+      let candidateMoves = this.getCandidateMoves(piece, squares);
+      if (candidateMoves === undefined) {
         console.log('No available moves for this piece.');
         continue;
       }
 
-      if (pieceMoves.length > 0 && candidateMovesWhite.length === undefined) {
-        candidateMovesWhite = pieceMoves;
-      } else if (pieceMoves.length > 0) {
-        //console.log('adding piecemoves, i = ' + i + ' n = ' + pieceMoves.length + ' p m w length = ' + candidateMovesWhite.length);
-        if (!candidateMovesWhite.includes(pieceMoves)) {
-          candidateMovesWhite = candidateMovesWhite.concat(pieceMoves); // candidateMoves, removalmoves, candidateMoves
+      if (whiteKingHasMoved === false) {
+        if (piece.n === CONSTANTS.whiteKingId) {
+          whiteKingHasMoved = this.refs[piece.location].refs.piece.getHasMoved();
+          console.log('xx white king castling checks');
+          this.setState({whiteKingMoved: whiteKingHasMoved});
+        } else if (piece.n === CONSTANTS.whiteLeftRookId) {
+          whiteLeftRookHasMoved = this.refs[piece.location].refs.piece.getHasMoved();
+          this.setState({
+            whiteLeftRookMoved: this.refs[piece.location].refs.piece.getHasMoved()
+          });
+        } else if (piece.n === CONSTANTS.whiteRighttRookId) {
+          whiteRightRookHasMoved = this.refs[piece.location].refs.piece.getHasMoved();
+          this.setState({whiteRightRookMoved: whiteRightRookHasMoved});
+        }
+
+        if (!castlingLeftAdded && !whiteLeftRookHasMoved) {
+          if (squares[57].piece === null && squares[58].piece === null && squares[59].piece === null) {
+            candidateMoves.push(60 + '(' + 58); //add white castling left as a candidate move
+            castlingLeftAdded = true;
+          }
+        }
+        if (!castlingRightAdded && !whiteRightRookHasMoved) {
+          if (squares[61].piece === null && squares[62].piece === null) {
+            candidateMoves.push(60 + ')' + 62); //add white castling right as a candidate move
+            castlingRightAdded = true;
+          }
+        }
+      }
+
+      if (candidateMoves.length > 0 && candidateMovesWhite.length === undefined) {
+        candidateMovesWhite = candidateMoves;
+      } else if (candidateMoves.length > 0) {
+        //console.log('adding candidateMoves, i = ' + i + ' n = ' + candidateMoves.length + ' p m w length = ' + candidateMovesWhite.length);
+        if (!candidateMovesWhite.includes(candidateMoves)) {
+          candidateMovesWhite = candidateMovesWhite.concat(candidateMoves); // candidateMoves, removalmoves, candidateMoves
         }
       }
     }
-
-
     return candidateMovesWhite;
   }
 
@@ -291,6 +299,12 @@ class Chess extends Moves {
   getCandidateMovesBlack(squares, pieces) {
 
     let candidateMovesBlack = [];
+    let blackKingHasMoved = true;
+    let blackLeftRookHasMoved = true;
+    let blackRightRookHasMoved = true;
+    let castlingLeftAdded = false;
+    let castlingRightAdded = false;
+
 
     for (let i = 1 + this.state.promotedBlackQueenNumber; i < CONSTANTS.maxBlack; i++) {
       let piece = pieces[i];
@@ -299,18 +313,47 @@ class Chess extends Moves {
         continue; // piece has been e.g. eaten
       }
 
-      let pieceMoves = this.getCandidateMoves(piece, squares);
+      let candidateMoves = this.getCandidateMoves(piece, squares);
 
-      if (pieceMoves === undefined) {
+      if (candidateMoves === undefined) {
         console.log('No available moves for this piece.');
         continue;
       }
 
-      if (pieceMoves.length > 0 && candidateMovesBlack.length === undefined) { //FIXME,candidateMovesBlack was null
-        candidateMovesBlack = pieceMoves;
-      } else if (pieceMoves.length > 0) {
-        if (!candidateMovesBlack.includes(pieceMoves)) {
-          candidateMovesBlack = candidateMovesBlack.concat(pieceMoves); // candidateMoves, removalmoves, candidateMoves
+      if (blackKingHasMoved === false) {
+        if (piece.n === CONSTANTS.blackKingId) {
+          blackKingHasMoved = this.refs[piece.location].refs.piece.getHasMoved();
+          console.log('xx black king castling checks');
+          this.setState({blackKingMoved: blackKingHasMoved});
+        } else if (piece.n === CONSTANTS.blackLeftRookId) {
+          blackLeftRookHasMoved = this.refs[piece.location].refs.piece.getHasMoved();
+          this.setState({
+            blackLeftRookMoved: this.refs[piece.location].refs.piece.getHasMoved()
+          });
+        } else if (piece.n === CONSTANTS.blackRighttRookId) {
+          blackRightRookHasMoved = this.refs[piece.location].refs.piece.getHasMoved();
+          this.setState({blackRightRookMoved: blackRightRookHasMoved});
+        }
+
+        if (!castlingLeftAdded && !blackLeftRookHasMoved) {
+          if (squares[1].piece === null && squares[2].piece === null && squares[3].piece === null) {
+            candidateMoves.push(4 + '[' + 2); //add black castling left as a candidate move
+            castlingLeftAdded = true;
+          }
+        }
+        if (!castlingRightAdded && !blackRightRookHasMoved) {
+          if (squares[5].piece === null && squares[6].piece === null) {
+            candidateMoves.push(4 + ']' + 6); //add black castling right as a candidate move
+            castlingRightAdded = true;
+          }
+        }
+      }
+
+      if (candidateMoves.length > 0 && candidateMovesBlack.length === undefined) { //FIXME,candidateMovesBlack was null
+        candidateMovesBlack = candidateMoves;
+      } else if (candidateMoves.length > 0) {
+        if (!candidateMovesBlack.includes(candidateMoves)) {
+          candidateMovesBlack = candidateMovesBlack.concat(candidateMoves); // candidateMoves, removalmoves, candidateMoves
         }
       }
     }
@@ -340,7 +383,6 @@ class Chess extends Moves {
       } else if (str.includes('R')) {
         move = candidateMovesWhite[i].split('R');
       } else if (str.includes('K')) {
-        //FIXME: check if castling (left + right) is allowed (no threated pieces between or check)
         move = candidateMovesWhite[i].split('K');
       } else if (str.includes('P')) {
         move = candidateMovesWhite[i].split('P');
@@ -350,7 +392,7 @@ class Chess extends Moves {
       const dst = 1 * move[1];
       let kingPosition = 1 * whiteKingPosition;
 
-      if (src === kingPosition) { // white king move candidate! //FIXME, not ok with ===
+      if (src === kingPosition) { // white king move candidate!
         console.log('pos_move=' + move + 'src=' + src + 'whiteKingPosition=' + whiteKingPosition);
         kingPosition = dst;
       }
@@ -554,8 +596,7 @@ class Chess extends Moves {
         } else if (str.includes('R')) {
           const whiteMoves = str.split('R');
           this.move(whiteMoves[0], whiteMoves[1]);
-        }
-        else {
+        } else {
           const whiteMoves = str.split('#');
           this.move(whiteMoves[0], whiteMoves[1]);
         }
@@ -587,13 +628,19 @@ class Chess extends Moves {
           const whiteMoves = str.split(']');
           this.move(whiteMoves[0], whiteMoves[1]);
           this.move(7, 5);
+        } else if (str.includes('K')) {
+          const blackMoves = str.split('K');
+          this.move(blackMoves[0], blackMoves[1]);
+        } else if (str.includes('R')) {
+          const blackMoves = str.split('R');
+          this.move(blackMoves[0], blackMoves[1]);
         } else {
           const blackMoves = allowedMovesBlack[n].split('#');
           this.move(blackMoves[0], blackMoves[1]);
         }
         //console.log('BLACK MOVED * total moves were = ' + allowedMovesBlack.length + ' selected random = ' + allowedMovesBlack[n] + ' n was = ' + n);
         this.setState({white: true});
-      }  else {
+      } else {
         console.log('CHECK MATE, WHITE wins or stalemate.');
       }
     }
