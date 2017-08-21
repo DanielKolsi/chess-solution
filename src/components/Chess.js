@@ -390,7 +390,7 @@ class Chess extends Moves {
         move = str.split('(');
         let blackCandidateMoves = this.getCandidateMovesBlack(squares, pieces);
         let allowLeftCastling = true;
-        const re = .60||.59||.58||.57;
+        const re = .60|.59|.58|.57;
 
         for (let i = 0; i < blackCandidateMoves.length; i++) {
             const move = blackCandidateMoves[i];
@@ -401,13 +401,14 @@ class Chess extends Moves {
         }
         if (allowLeftCastling) {
             allowedMoves.push(str);
+            continue; // no further allowance checks required!
         }
 
       } else if (str.includes(')')) {
         move = str.split(')');
         let blackCandidateMoves = this.getCandidateMovesBlack(squares, pieces);
         let allowRightCastling = true;
-        const re = .60||.61||.62;
+        const re = .60|.61|.62;
 
         for (let i = 0; i < blackCandidateMoves.length; i++) {
             const move = blackCandidateMoves[i];
@@ -418,6 +419,7 @@ class Chess extends Moves {
         }
         if (allowRightCastling) {
             allowedMoves.push(str);
+            continue;
         }
       }
 
@@ -429,11 +431,11 @@ class Chess extends Moves {
         console.log('pos_move=' + move + 'src=' + src + 'whiteKingPosition=' + whiteKingPosition);
         kingPosition = dst;
       }
-      if (this.isWhiteMoveAllowed(squares, pieces, kingPosition, candidateMovesWhite[i])) {
+      if (this.isWhiteMoveAllowed(squares, pieces, kingPosition, str)) {
         console.log('king_move, kingPosition=' + kingPosition + ' dst=' + dst + ' src=' + src);
-        allowedMoves.push(candidateMovesWhite[i]);
+        allowedMoves.push(str);
       } else {
-        console.log('rejected: ' + candidateMovesWhite[i]);
+        console.log('rejected: ' + str);
         continue; // this candidate move was rejected, check the next white candidate move
       }
     }
@@ -447,21 +449,68 @@ class Chess extends Moves {
     console.log('black_king_pos=' + blackKingPosition);
 
     for (let i = 0; i < candidateMovesBlack.length; i++) {
+      const str = candidateMovesBlack[i];
 
-      const move = candidateMovesBlack[i].split('#'); // [1] === dst move
+      let move = null;
+
+      if (str.includes('#')) {
+        move = candidateMovesBlack[i].split('#'); // [1] === dst move
+      } else if (str.includes('R')) {
+        move = candidateMovesBlack[i].split('R');
+      } else if (str.includes('K')) {
+        move = candidateMovesBlack[i].split('K');
+      } else if (str.includes('P')) {
+        move = candidateMovesBlack[i].split('P');
+      } else if (str.includes('[')) {
+        move = str.split('[');
+        let whiteCandidateMoves = this.getCandidateMovesWhite(squares, pieces);
+        let allowLeftCastling = true;
+        const re = .1|.2|.3|.4;
+
+        for (let i = 0; i < whiteCandidateMoves.length; i++) {
+            const move = whiteCandidateMoves[i];
+            if (move.match(re) !== null) {
+              allowLeftCastling = false;
+              break;
+            }
+        }
+        if (allowLeftCastling) {
+            allowedMoves.push(str);
+            continue;
+        }
+
+      } else if (str.includes(']')) {
+        move = str.split(']');
+        let whiteCandidateMoves = this.getCandidateMovesWhite(squares, pieces);
+        let allowRightCastling = true;
+        const re = .4|.5|.6;
+
+        for (let i = 0; i < whiteCandidateMoves.length; i++) {
+            const move = whiteCandidateMoves[i];
+            if (move.match(re) !== null) {
+              allowRightCastling = false;
+              break;
+            }
+        }
+        if (allowRightCastling) {
+            allowedMoves.push(str);
+            continue;
+        }
+      }
+
       let src = 1 * move[0];
       const dst = 1 * move[1];
       let kingPosition = 1 * blackKingPosition;
 
       if (src === kingPosition) { // black king move candidate!
-        kingPosition = dst;
+          kingPosition = dst;
       }
 
-      if (this.isBlackMoveAllowed(squares, pieces, kingPosition, candidateMovesBlack[i])) {
-        allowedMoves.push(candidateMovesBlack[i]);
+      if (this.isBlackMoveAllowed(squares, pieces, kingPosition, str)) {
+        allowedMoves.push(str);
       } else {
-        console.log('rejected-black: ' + candidateMovesBlack[i]);
-        continue; // this candidate move was rejected, check the next white candidate move
+        console.log('rejected-black: ' + str);
+        continue; // this candidate move was rejected, check the next Black candidate move
       }
     }
     return allowedMoves;
