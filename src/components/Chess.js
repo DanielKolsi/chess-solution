@@ -664,6 +664,14 @@ class Chess extends Moves {
           this.move(63, 61); // white rook move right castling
         } else {
           const whiteMoves = str.split('#');
+          const src = whiteMoves[0];
+          if (src === 60) {
+            this.setState({whiteKingMoved: true});
+          } else if (src === 56) {
+            this.setState({whiteLeftRookMoved: true});
+          } else if (src === 63) {
+            this.setState({whiteRightRookMoved: true});
+          }
           this.move(whiteMoves[0], whiteMoves[1]);
         }
 
@@ -696,6 +704,15 @@ class Chess extends Moves {
           this.move(7, 5); // rook move
         } else {
           const blackMoves = allowedMovesBlack[n].split('#');
+          const src = blackMoves[0];
+
+          if (src === 4) {
+            this.setState({blackKingMoved: true});
+          } else if (src === 0) {
+            this.setState({blackLeftRookMoved: true});
+          } else if (src === 7) {
+            this.setState({blackRightRookMoved: true});
+          }
           this.move(blackMoves[0], blackMoves[1]);
         }
         //console.log('BLACK MOVED * total moves were = ' + allowedMovesBlack.length + ' selected random = ' + allowedMovesBlack[n] + ' n was = ' + n);
