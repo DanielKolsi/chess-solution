@@ -5,7 +5,7 @@ class RookH extends Moves {
   constructor(props) {
     super(props);
     this.state = {
-      hasMoved: false
+      
     }
   }
 

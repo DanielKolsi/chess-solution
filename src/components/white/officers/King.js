@@ -5,17 +5,10 @@ class King extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      hasMoved: false
+
     }
   }
 
-  setHasMoved() {
-    this.setState({hasMoved: true});
-  }
-
-  getHasMoved() {
-    return this.state.hasMoved;
-  }
 
   getCandidateMoves(piece, squares) {
     console.log('White king candit moves');
