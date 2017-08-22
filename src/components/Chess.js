@@ -230,9 +230,7 @@ class Chess extends Moves {
   getCandidateMovesWhite(squares, pieces) {
 
     let candidateMovesWhite = [];
-    let whiteKingHasMoved = true;
-    let whiteLeftRookHasMoved = true;
-    let whiteRightRookHasMoved = true;
+
     let castlingLeftAdded = false;
     let castlingRightAdded = false;
 
@@ -251,28 +249,15 @@ class Chess extends Moves {
         continue;
       }
 
-      if (whiteKingHasMoved === false) {
-        if (piece.n === CONSTANTS.whiteKingId) {
-          whiteKingHasMoved = this.refs[piece.location].refs.piece.getHasMoved();
-          console.log('xx white king castling checks');
-          this.setState({whiteKingMoved: whiteKingHasMoved});
-        } else if (piece.n === CONSTANTS.whiteLeftRookId) {
-          whiteLeftRookHasMoved = this.refs[piece.location].refs.piece.getHasMoved();
-          this.setState({
-            whiteLeftRookMoved: this.refs[piece.location].refs.piece.getHasMoved()
-          });
-        } else if (piece.n === CONSTANTS.whiteRighttRookId) {
-          whiteRightRookHasMoved = this.refs[piece.location].refs.piece.getHasMoved();
-          this.setState({whiteRightRookMoved: whiteRightRookHasMoved});
-        }
+      if (this.state.whiteKingMoved === false) {
 
-        if (!castlingLeftAdded && !whiteLeftRookHasMoved) {
+        if (!castlingLeftAdded && !this.state.whiteLeftRookMoved) {
           if (squares[57].piece === null && squares[58].piece === null && squares[59].piece === null) {
             candidateMoves.push(CONSTANTS.whiteKingId + '(' + 58); //add white castling (white king move!) left as a candidate move
             castlingLeftAdded = true;
           }
         }
-        if (!castlingRightAdded && !whiteRightRookHasMoved) {
+        if (!castlingRightAdded && !this.state.whiteRightRookMoved) {
           if (squares[61].piece === null && squares[62].piece === null) {
             candidateMoves.push(CONSTANTS.whiteKingId + ')' + 62); //add white castling right (king move!) as a candidate move
             castlingRightAdded = true;
@@ -299,12 +284,8 @@ class Chess extends Moves {
   getCandidateMovesBlack(squares, pieces) {
 
     let candidateMovesBlack = [];
-    let blackKingHasMoved = true;
-    let blackLeftRookHasMoved = true;
-    let blackRightRookHasMoved = true;
     let castlingLeftAdded = false;
     let castlingRightAdded = false;
-
 
     for (let i = 1 + this.state.promotedBlackQueenNumber; i < CONSTANTS.maxBlack; i++) {
       let piece = pieces[i];
@@ -320,28 +301,15 @@ class Chess extends Moves {
         continue;
       }
 
-      if (blackKingHasMoved === false) {
-        if (piece.n === CONSTANTS.blackKingId) {
-          blackKingHasMoved = this.refs[piece.location].refs.piece.getHasMoved();
-          console.log('xx black king castling checks');
-          this.setState({blackKingMoved: blackKingHasMoved});
-        } else if (piece.n === CONSTANTS.blackLeftRookId) {
-          blackLeftRookHasMoved = this.refs[piece.location].refs.piece.getHasMoved();
-          this.setState({
-            blackLeftRookMoved: this.refs[piece.location].refs.piece.getHasMoved()
-          });
-        } else if (piece.n === CONSTANTS.blackRighttRookId) {
-          blackRightRookHasMoved = this.refs[piece.location].refs.piece.getHasMoved();
-          this.setState({blackRightRookMoved: blackRightRookHasMoved});
-        }
+      if (this.state.blackKingMoved === false) {
 
-        if (!castlingLeftAdded && !blackLeftRookHasMoved) {
+        if (!castlingLeftAdded && !this.state.blackLeftRookMoved) {
           if (squares[1].piece === null && squares[2].piece === null && squares[3].piece === null) {
             candidateMoves.push(CONSTANTS.blackKingId + '[' + 2); //add black castling (king move!) left as a candidate move
             castlingLeftAdded = true;
           }
         }
-        if (!castlingRightAdded && !blackRightRookHasMoved) {
+        if (!castlingRightAdded && !this.state.blackRightRookMoved) {
           if (squares[5].piece === null && squares[6].piece === null) {
             candidateMoves.push(CONSTANTS.blackKingId + ']' + 6); //add black castling right (king move!) as a candidate move
             castlingRightAdded = true;
