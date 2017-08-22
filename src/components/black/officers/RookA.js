@@ -5,15 +5,13 @@ class RookA extends Moves {
   constructor(props) {
     super(props);
     this.state = {
-  
+
     }
   }
 
-
-
   getCandidateMoves(piece, squares) {
     console.log('Black Rook A');
-    return this.getCandidateRookMoves(piece, squares, 'R');
+    return this.getCandidateRookMoves(piece, squares);
   }
 
     render() {

@@ -659,7 +659,7 @@ class Chess extends Moves {
         console.log('previousMove:' + str);
         this.setState({previousMove: str});
 
-        if (str.includes('P')) {
+        if (str.includes('P')) { // en passe
           const blackMoves = str.split('P');
           this.move(blackMoves[0], blackMoves[1], 'P');
         } else if (str.includes('[')) { //black castling

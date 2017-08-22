@@ -5,12 +5,12 @@ class RookH extends Moves {
   constructor(props) {
     super(props);
     this.state = {
-      
+
     }
   }
   getCandidateMoves(piece, squares) {
     console.log('White Rook H');
-    return this.getCandidateRookMoves(piece, squares, 'R');
+    return this.getCandidateRookMoves(piece, squares);
   }
 
     render() {
