@@ -69,7 +69,7 @@ class Chess extends Moves {
     }
 
     if (location !== undefined && this.refs[location] !== undefined && this.refs[location].refs.piece !== undefined) {
-      console.log('prev-move=' + this.state.previousMove);
+      //console.log('prev-move=' + this.state.previousMove);
       candidateMoves = this.refs[location].refs.piece.getCandidateMoves(piece, squares, this.state.previousMove);
     }
     /*if (candidateMoves !== undefined) {
@@ -82,8 +82,9 @@ class Chess extends Moves {
 
   move(src, dst, special) {
 
+    console.log('ACTUAL move: src =' + src + ' dst=' + dst + ' special = ' + special);
     const {squares, pieces} = this.state;
-    console.log('src='+src + ' dst =' + dst + ' special='+special);
+    //console.log('src='+src + ' dst =' + dst + ' special='+special);
     const square = squares[src];
     let piece = square.piece;
 
@@ -241,7 +242,7 @@ class Chess extends Moves {
         continue; // piece has been e.g. eaten
       }
 
-      console.log('\n WHITE: piece for moving =' + piece.type + ' white = ' + piece.white + ' value =' + piece.value + ' n=' + piece.n + ' location=' + piece.location);
+      //console.log('\n WHITE: piece for moving =' + piece.type + ' white = ' + piece.white + ' value =' + piece.value + ' n=' + piece.n + ' location=' + piece.location);
       //console.log('piece = ' + piece.type + piece.location + piece.n);
       let candidateMoves = this.getCandidateMoves(piece, squares);
       if (candidateMoves === undefined) {
@@ -274,6 +275,7 @@ class Chess extends Moves {
         }
       }
     }
+    console.log('White has: ' +candidateMovesWhite.length + ' candidate moves.');
     return candidateMovesWhite;
   }
 
@@ -503,7 +505,7 @@ class Chess extends Moves {
         }
       }
 
-      //let value = Math.abs(piece.value);
+
       let value = piece.value;
       //console.log('black_value=' + value);
       switch (value) {
@@ -568,24 +570,23 @@ class Chess extends Moves {
       }
 
       switch (value) {
-        case - 1:
+        case 1:
           allowed = this.isAllowedByBlackPawn(piece, blackKingPosition);
           break;
-        case - 3:
+        case 3:
           allowed = this.isAllowebByKnight(piece, blackKingPosition);
           break;
-        case - 4:
+        case 4:
           allowed = this.isAllowedByBishop(piece, squares, blackKingPosition, blackCandidateMove);
           break;
-        case - 5:
+        case 5:
           allowed = this.isAllowedByRook(piece, squares, blackKingPosition, blackCandidateMove);
           break;
-        case - 6:
+        case 6:
           allowed = this.isAllowedByKing(piece, blackKingPosition);
           console.log('allowedByKing=' + allowed + ' blackKingDst=' + blackKingPosition);
           break;
-        case - 9:
-          // FIXME, if queene is eaten straight away as the candidate move? -> allow = true
+        case 9:
           allowed = this.isAllowedByQueen(piece, squares, blackKingPosition, blackCandidateMove, blackKingRow, blackKingCol);
           break;
         default:
@@ -600,9 +601,7 @@ class Chess extends Moves {
 
   autoMove(nextMove) {
 
-    console.log('nextMove = ' + nextMove);
     this.setState({nextMove: nextMove});
-
     const {pieces, squares, white} = this.state;
 
     if (white === true) {
@@ -615,7 +614,8 @@ class Chess extends Moves {
       if (allowedMovesWhite !== null && allowedMovesWhite.length > 0) { // FIXME, no moves available?
         const n = Math.floor(Math.random() * allowedMovesWhite.length);
         const str = allowedMovesWhite[n];
-        console.log('previousMove:' + str);
+
+        console.log('selected move added as previous:' + str);
         this.setState({previousMove: str});
 
         if (str.includes('P')) {
@@ -626,14 +626,16 @@ class Chess extends Moves {
           const whiteMoves = str.split('(');
           this.move(whiteMoves[0], whiteMoves[1]); // white king move left castling
           this.move(56, 59); // white rook move left castling
-        } else if (str.includes('(')) {
+          this.setState({whiteKingMoved: true});
+        } else if (str.includes(')')) {
           const whiteMoves = str.split(')');
           this.move(whiteMoves[0], whiteMoves[1]); // white king move (right castling)
           this.move(63, 61); // white rook move right castling
+          this.setState({whiteKingMoved: true});
         } else {
           const whiteMoves = str.split('#');
           const src = whiteMoves[0];
-          if (src === 60) {
+          if (src === CONSTANTS.whiteKingId) {
             this.setState({whiteKingMoved: true});
           } else if (src === 56) {
             this.setState({whiteLeftRookMoved: true});
@@ -645,7 +647,7 @@ class Chess extends Moves {
 
         this.setState({white: false});
       } else {
-        console.log('CHECK MATE, BLACK wins or stalemate.'); // FIXME, add staelmate handling
+        console.log('CHECK MATE, BLACK wins or stalemate.'); // FIXME, add stalemate handling
       }
     } else { //black move
       let candidateMovesBlack = this.getCandidateMovesBlack(squares, pieces);
@@ -666,15 +668,17 @@ class Chess extends Moves {
           const blackMoves = str.split('[');
           this.move(blackMoves[0], blackMoves[1]); // king move
           this.move(0, 3); // rook move
+          this.setState({blackKingMoved: true});
         } else if (str.includes(']')) {
           const blackMoves = str.split(']');
           this.move(blackMoves[0], blackMoves[1]); // king move
           this.move(7, 5); // rook move
+          this.setState({blackKingMoved: true});
         } else {
           const blackMoves = allowedMovesBlack[n].split('#');
           const src = blackMoves[0];
 
-          if (src === 4) {
+          if (src === CONSTANTS.blackKingId) {
             this.setState({blackKingMoved: true});
           } else if (src === 0) {
             this.setState({blackLeftRookMoved: true});

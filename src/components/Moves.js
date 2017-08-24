@@ -417,7 +417,7 @@ class Moves extends React.Component {
 
   getCandidateRookMoves(piece, squares) {
 
-    console.log('<ROOK> moves </ROOK>');
+    //console.log('<ROOK> moves </ROOK>');
     let pos = 1 * piece.location;
 
     let candidateMoves = [];
@@ -569,7 +569,7 @@ class Moves extends React.Component {
     let DOWN = pos + CONSTANTS.down;
     let LEFT = pos + CONSTANTS.left;
     let RIGHT = pos + CONSTANTS.right;
-    console.log('candit = ' + opponentCandidateMove);
+    //console.log('candit = ' + opponentCandidateMove);
 
     let canditSrc = 0;
     let canditDst = 0;
@@ -624,7 +624,7 @@ class Moves extends React.Component {
     let movesRight = CONSTANTS.maxCol - squares[pos].col;
 
     for (let i = RIGHT; i <= (movesRight + pos); i++) {
-        console.log('checking rook_right, i = ' + i + ' candit move='+opponentCandidateMove);
+        //console.log('checking rook_right, i = ' + i + ' candit move='+opponentCandidateMove);
 
       if (i === kingPosition) {
         console.log('rook_right not accepted, canditdst='+opponentCandidateMove);
