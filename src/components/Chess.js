@@ -430,40 +430,40 @@ class Chess extends Moves {
       } else if (str.includes('P')) {
         move = candidateMovesBlack[i].split('P');
       } else if (str.includes('[')) {
-        move = str.split('[');
         let whiteCandidateMoves = this.getCandidateMovesWhite(squares, pieces);
         let allowLeftCastling = true;
-        const re = /.1|.2|.3|.4/;
+        const re = /.1|.2|.3|.4/; //FIXME, check correct dst
 
         for (let i = 0; i < whiteCandidateMoves.length; i++) {
-            const move = whiteCandidateMoves[i];
-            if (move.match(re) !== null) {
+          let match = whiteCandidateMoves[i].match(re);
+
+            if (match !== null && match.length === 2) {
+              console.log('match_length='+match);
               allowLeftCastling = false;
               break;
             }
         }
         if (allowLeftCastling) {
             allowedMoves.push(str);
-            continue;
         }
-
+        continue;
       } else if (str.includes(']')) {
-        move = str.split(']');
         let whiteCandidateMoves = this.getCandidateMovesWhite(squares, pieces);
         let allowRightCastling = true;
         const re = /.4|.5|.6/;
 
         for (let i = 0; i < whiteCandidateMoves.length; i++) {
-            const move = whiteCandidateMoves[i];
-            if (move.match(re) !== null) {
+
+            let match = whiteCandidateMoves[i].match(re);
+            if (match !== null && match.length === 2) {
               allowRightCastling = false;
               break;
             }
         }
         if (allowRightCastling) {
             allowedMoves.push(str);
-            continue;
         }
+        continue;
       }
 
       let src = 1 * move[0];
