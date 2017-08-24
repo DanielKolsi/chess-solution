@@ -424,12 +424,16 @@ class Chess extends Moves {
       } else if (str.includes('[')) {
         let whiteCandidateMoves = this.getCandidateMovesWhite(squares, pieces);
         let allowLeftCastling = true;
-        const re = /.1|.2|.3|.4/g; // numbers of the not-allowed squares
+        const re = /1|2|3|4/g; // numbers of the not-allowed squares
 
         for (let i = 0; i < whiteCandidateMoves.length; i++) {
-          let match = whiteCandidateMoves[i].match(re);
+          const canditMove = whiteCandidateMoves[i].split('#');
+          const dst = canditMove[1];
+          if (dst === undefined) continue; // P , ()
+          if (dst.length !== 1) continue;
+          let match = dst.match(re);
 
-            if (match !== null && match.length === 2) {
+            if (match !== null) {
               allowLeftCastling = false;
               break;
             }
@@ -441,12 +445,16 @@ class Chess extends Moves {
       } else if (str.includes(']')) {
         let whiteCandidateMoves = this.getCandidateMovesWhite(squares, pieces);
         let allowRightCastling = true;
-        const re = /.4|.5|.6/g;// numbers of the not-allowed squares
+        const re = /4|5|6/g;// numbers of the not-allowed squares
 
         for (let i = 0; i < whiteCandidateMoves.length; i++) {
+             const canditMove = whiteCandidateMoves[i].split('#');
+             const dst = canditMove[1];
+             if (dst === undefined) continue; // P or ()
+             if (dst.length !== 1) continue;
+             let match = dst.match(re);
 
-            let match = whiteCandidateMoves[i].match(re);
-            if (match !== null && match.length === 2) {
+            if (match !== null) {
               allowRightCastling = false;
               break;
             }
