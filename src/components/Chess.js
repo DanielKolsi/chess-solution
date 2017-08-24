@@ -636,9 +636,10 @@ class Chess extends Moves {
           this.setState({whiteKingMoved: true});
         } else {
           const whiteMoves = str.split('#');
-          const src = whiteMoves[0];
+          const src = 1 * whiteMoves[0];
           if (src === CONSTANTS.whiteKingId) {
             this.setState({whiteKingMoved: true});
+            console.log('setting white king MOVED');
           } else if (src === 56) {
             this.setState({whiteLeftRookMoved: true});
           } else if (src === 63) {
@@ -678,7 +679,7 @@ class Chess extends Moves {
           this.setState({blackKingMoved: true});
         } else {
           const blackMoves = allowedMovesBlack[n].split('#');
-          const src = blackMoves[0];
+          const src = 1 * blackMoves[0];
 
           if (src === CONSTANTS.blackKingId) {
             this.setState({blackKingMoved: true});
