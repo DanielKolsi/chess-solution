@@ -342,7 +342,7 @@ class Chess extends Moves {
 
     let allowedMoves = []; // contains only the candidate moves that were eventually verified to be allowed
 
-    console.log('white_king_pos=' + whiteKingPosition);
+    //console.log('white_king_pos=' + whiteKingPosition);
 
     for (let i = 0; i < candidateMovesWhite.length; i++) {
       const str = candidateMovesWhite[i];
@@ -353,40 +353,46 @@ class Chess extends Moves {
       } else if (str.includes('P')) { // en passe
         move = candidateMovesWhite[i].split('P');
       } else if (str.includes('(')) {
-        move = str.split('(');
+
         let blackCandidateMoves = this.getCandidateMovesBlack(squares, pieces);
+        console.log('castling check: black candit moves: ' + blackCandidateMoves + ' length = ' + blackCandidateMoves.length);
         let allowLeftCastling = true;
-        const re = .60|.59|.58|.57;
+        const re = /.60|.59|.58|.57/;
 
         for (let i = 0; i < blackCandidateMoves.length; i++) {
-            const move = blackCandidateMoves[i];
-            if (move.match(re) !== null) {
+            const canditMove = blackCandidateMoves[i];
+            console.log('castling check: black move match: ' + canditMove + ' re = ' + re);
+            let match = canditMove.match(re);
+
+            if (match !== null) {
+              console.log('castling check: left castling NOT allowed, candit ='+ str + ' match='+match);
               allowLeftCastling = false;
               break;
             }
         }
         if (allowLeftCastling) {
             allowedMoves.push(str);
-            continue; // no further allowance checks required!
+            console.log('castling check: left castling allowed, str ='+str);
         }
-
+        continue; // no further allowance checks required!
       } else if (str.includes(')')) {
-        move = str.split(')');
+
         let blackCandidateMoves = this.getCandidateMovesBlack(squares, pieces);
         let allowRightCastling = true;
-        const re = .60|.61|.62;
+        const re = /.60|.61|.62/;
 
         for (let i = 0; i < blackCandidateMoves.length; i++) {
-            const move = blackCandidateMoves[i];
-            if (move.match(re) !== null) {
+            const canditMove = blackCandidateMoves[i];
+            if (canditMove.match(re) !== null) {
               allowRightCastling = false;
+              console.log('castling check: right castling NOT allowed, candit =' + str);
               break;
             }
         }
         if (allowRightCastling) {
             allowedMoves.push(str);
-            continue;
         }
+        continue;
       }
 
       let src = 1 * move[0];
@@ -427,7 +433,7 @@ class Chess extends Moves {
         move = str.split('[');
         let whiteCandidateMoves = this.getCandidateMovesWhite(squares, pieces);
         let allowLeftCastling = true;
-        const re = .1|.2|.3|.4;
+        const re = /.1|.2|.3|.4/;
 
         for (let i = 0; i < whiteCandidateMoves.length; i++) {
             const move = whiteCandidateMoves[i];
@@ -445,7 +451,7 @@ class Chess extends Moves {
         move = str.split(']');
         let whiteCandidateMoves = this.getCandidateMovesWhite(squares, pieces);
         let allowRightCastling = true;
-        const re = .4|.5|.6;
+        const re = /.4|.5|.6/;
 
         for (let i = 0; i < whiteCandidateMoves.length; i++) {
             const move = whiteCandidateMoves[i];
