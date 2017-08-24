@@ -585,13 +585,11 @@ class Moves extends React.Component {
 
       //console.log('*****move dst = ' + i + ' KING = ' + kingPosition + ' canditSrc='+canditSrc+ ' canditDst='+canditDst);
       if (i === kingPosition) {
-        console.log('collides with KING');
         return false; // this move wasn't allowed by the rook
       }
       let squarePiece =  squares[i].piece;
 
-      if (i === canditDst) {
-        console.log('Move accepted, collides with candit dst, OK.');
+      if (i === canditDst) {        
         break;
       } else if (canditSrc === i) {
         continue;
@@ -603,14 +601,12 @@ class Moves extends React.Component {
     // move DOWN
     for (let i = DOWN; i >= 0; i += CONSTANTS.down) {
 
-      console.log('*****move dst = ' + i + ' KING = ' + kingPosition + ' canditSrc=' + canditSrc + ' canditDst=' + canditDst);
       if (i === kingPosition) {
         return false;
       }
       let squarePiece =  squares[i].piece;
 
       if (i === canditDst) {
-        console.log('Move accepted, collides with candit dst, OK.');
         break;
       } else if (canditSrc === i) {
         continue;
@@ -633,7 +629,6 @@ class Moves extends React.Component {
       let squarePiece =  squares[i].piece;
 
       if (i === canditDst) {
-        console.log('Move accepted, collides with candit dst, OK.');
         break;
       } else if (canditSrc === i) {
         continue;

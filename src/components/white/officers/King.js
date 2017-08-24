@@ -11,8 +11,7 @@ class King extends React.Component {
 
 
   getCandidateMoves(piece, squares) {
-    console.log('White king candit moves');
-
+    
     let candidateMoves = [];
     let pos = 1 * piece.location; // ensure this is dealt as an integer!
 
