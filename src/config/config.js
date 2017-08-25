@@ -7,6 +7,8 @@ export default {
     [2, 'BishopBC', 'bbc', 2, false, -4],
     [3, 'QueenB', 'bq', 3, false, -9],*/
     [0, 'KingB', 'bk', 4, false, -6],
+    [36, 'PawnBE','bpe', 12, false, -1],
+    [53, 'PawnWF','wpf', 53, true, 1],
     //[28, 'PawnWE', 'wpe', 52, true, 1],
     //[27, 'PawnBD', 'bpd', 11, false, -1],
   //  [52, 'QueenW','wq', 59, true, 9],
@@ -64,3 +66,18 @@ export default {
 
   ]*/
 };
+
+/*
+export default {
+  setupNormal: [
+
+  ]
+};
+export default {
+  setupCastling: [
+  ]
+};
+export default {
+  setupPromotion: [
+  ]
+};*/
