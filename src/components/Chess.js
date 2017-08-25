@@ -235,8 +235,10 @@ class Chess extends Moves {
     let castlingLeftAdded = false;
     let castlingRightAdded = false;
 
-    for (let i = CONSTANTS.minWhite; i < this.state.promotedWhiteQueenNumber; i++) {
+
+    for (let i = CONSTANTS.minWhite; i <= CONSTANTS.maxWhite; i++) {
       let piece = pieces[i];
+
 
       if (piece === null || piece === undefined || piece.white === false) {
         continue; // piece has been e.g. eaten
@@ -288,7 +290,7 @@ class Chess extends Moves {
     let castlingLeftAdded = false;
     let castlingRightAdded = false;
 
-    for (let i = 1 + this.state.promotedBlackQueenNumber; i < CONSTANTS.maxBlack; i++) {
+    for (let i = 0; i <= CONSTANTS.maxBlack; i++) {
       let piece = pieces[i];
 
       if (piece === null || piece === undefined || piece.white === true) {
@@ -485,12 +487,12 @@ class Chess extends Moves {
   isWhiteMoveAllowed(squares, pieces, whiteKingPosition, whiteCandidateMove) {
     let allowed = true;
 
-    const piece = pieces[CONSTANTS.whiteKingId];
-    const whiteKingLocation = piece.location;
+    const whiteKing = pieces[CONSTANTS.whiteKingId];
+    const whiteKingLocation = whiteKing.location;
     const whiteKingRow = squares[whiteKingLocation].row;
     const whiteKingCol = squares[whiteKingLocation].col;
 
-    for (let i = CONSTANTS.minBlack; i < CONSTANTS.maxBlack; i++) {
+    for (let i = 0; i <= CONSTANTS.maxBlack; i++) {
       let piece = pieces[i];
 
       if (piece === null || piece === undefined) {
@@ -544,20 +546,26 @@ class Chess extends Moves {
   // if any black move collides with the white king, the white candidate move is rejected immediately
   isBlackMoveAllowed(squares, pieces, blackKingPosition, blackCandidateMove) {
 
+    console.log('checking if black: ' + blackCandidateMove + ' is allowed, black king pos = ' + blackKingPosition);
+
     let allowed = true;
 
-    const piece = pieces[CONSTANTS.blackKingId];
-    const blackKingLocation = piece.location;
+    const blackKing = pieces[CONSTANTS.blackKingId];
+    const blackKingLocation = blackKing.location;
     const blackKingRow = squares[blackKingLocation].row;
     const blackKingCol = squares[blackKingLocation].col;
 
-    for (let i = CONSTANTS.minWhite; i < CONSTANTS.maxWhite; i++) {
+    const rook = pieces[63];
+    console.log('piece type rook ='+rook.type);
+
+    for (let i = CONSTANTS.minWhite; i <= CONSTANTS.maxWhite; i++) {
       let piece = pieces[i];
+
 
       if (piece === null || piece === undefined) {
         continue; // piece has been e.g. eaten
       }
-
+      console.log('piece type ='+piece.type);
       //let value = Math.abs(piece.value);
       let value = piece.value;
 
@@ -571,9 +579,11 @@ class Chess extends Moves {
         }
       }
 
+      console.log('value='+value + ' location='+piece.location + 'n='+piece.n);
       switch (value) {
+
         case 1:
-          allowed = this.isAllowedByBlackPawn(piece, blackKingPosition);
+          allowed = this.isAllowedByWhitePawn(piece, blackKingPosition);
           break;
         case 3:
           allowed = this.isAllowebByKnight(piece, blackKingPosition);
@@ -582,7 +592,9 @@ class Chess extends Moves {
           allowed = this.isAllowedByBishop(piece, squares, blackKingPosition, blackCandidateMove);
           break;
         case 5:
+          console.log('is allowed by white rook, piece = ' + piece.value);
           allowed = this.isAllowedByRook(piece, squares, blackKingPosition, blackCandidateMove);
+
           break;
         case 6:
           allowed = this.isAllowedByKing(piece, blackKingPosition);
@@ -604,9 +616,11 @@ class Chess extends Moves {
   autoMove(nextMove) {
 
     this.setState({nextMove: nextMove});
-    const {pieces, squares, white} = this.state;
+    let {pieces, squares, white} = this.state;
+
 
     if (white === true) {
+
       let candidateMovesWhite = this.getCandidateMovesWhite(squares, pieces);
 
       console.log('candidate white moves =' + candidateMovesWhite);

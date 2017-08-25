@@ -583,13 +583,13 @@ class Moves extends React.Component {
     // move UP
     for (let i = UP; i <= CONSTANTS.maxWhite; i += CONSTANTS.up) {
 
-      //console.log('*****move dst = ' + i + ' KING = ' + kingPosition + ' canditSrc='+canditSrc+ ' canditDst='+canditDst);
+
       if (i === kingPosition) {
         return false; // this move wasn't allowed by the rook
       }
       let squarePiece =  squares[i].piece;
 
-      if (i === canditDst) {        
+      if (i === canditDst) {
         break;
       } else if (canditSrc === i) {
         continue;
@@ -600,6 +600,7 @@ class Moves extends React.Component {
 
     // move DOWN
     for (let i = DOWN; i >= 0; i += CONSTANTS.down) {
+      console.log('rook down, i = ' + i);
 
       if (i === kingPosition) {
         return false;
