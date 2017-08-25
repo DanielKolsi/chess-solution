@@ -97,7 +97,7 @@ class Chess extends Moves {
     if (piece.value === CONSTANTS.whitePawnValue && squares[dst].row === CONSTANTS.minRow) {
 
       let value = this.state.promotedWhiteQueenNumber;
-      pieces[piece.n] = pieces[value]; // insert promoted piece to pieces
+      pieces[piece.n] = pieces[value]; // replace pawn with the promoted piece
       piece = pieces[value]; // actual promotion
       console.log('promonumber_white=' + value);
       piece.location = dst;
@@ -252,7 +252,7 @@ class Chess extends Moves {
         continue;
       }
 
-      if (this.state.whiteKingMoved === false) {
+      if (squares[CONSTANTS.whiteKingId].piece !== null && this.state.whiteKingMoved === false) {
 
         if (!castlingLeftAdded && !this.state.whiteLeftRookMoved) {
           if (squares[57].piece === null && squares[58].piece === null && squares[59].piece === null) {
@@ -304,7 +304,7 @@ class Chess extends Moves {
         continue;
       }
 
-      if (this.state.blackKingMoved === false) {
+      if (squares[CONSTANTS.blackKingId].piece !== null && this.state.blackKingMoved === false) {
 
         if (!castlingLeftAdded && !this.state.blackLeftRookMoved) {
           if (squares[1].piece === null && squares[2].piece === null && squares[3].piece === null) {
@@ -555,8 +555,6 @@ class Chess extends Moves {
     const blackKingRow = squares[blackKingLocation].row;
     const blackKingCol = squares[blackKingLocation].col;
 
-    const rook = pieces[63];
-    console.log('piece type rook ='+rook.type);
 
     for (let i = CONSTANTS.minWhite; i <= CONSTANTS.maxWhite; i++) {
       let piece = pieces[i];
@@ -565,7 +563,7 @@ class Chess extends Moves {
       if (piece === null || piece === undefined) {
         continue; // piece has been e.g. eaten
       }
-      console.log('piece type ='+piece.type);
+
       //let value = Math.abs(piece.value);
       let value = piece.value;
 
@@ -579,7 +577,6 @@ class Chess extends Moves {
         }
       }
 
-      console.log('value='+value + ' location='+piece.location + 'n='+piece.n);
       switch (value) {
 
         case 1:
@@ -617,7 +614,6 @@ class Chess extends Moves {
 
     this.setState({nextMove: nextMove});
     let {pieces, squares, white} = this.state;
-
 
     if (white === true) {
 
