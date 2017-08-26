@@ -35,7 +35,7 @@ export default {
     [57, 'KnightWB','wkb', 57, true, 3],
     [58, 'BishopWC','wbc', 58, true, 4],
     [59, 'QueenW','wq', 59, true, 9],*/
-    [17, 'KingW','wk', 60, true, 6],
+    [17, 'KingW','wk', 60, true, 6]
     /*[61, 'BishopWF','wbf', 61, true, 4],
     [62, 'KnightWG','wkg', 62, true, 3],*/
     //[0, 'RookBA', 'bra', 0, false, -5],

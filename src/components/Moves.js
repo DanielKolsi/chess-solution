@@ -37,6 +37,7 @@ class Moves extends React.Component {
     }
 
     if (squares[pos].row === CONSTANTS.whiteEnPasseAllowedRow) {
+      console.log('en passe allowed white row');
         const rightPiece = squares[pos + CONSTANTS.right].piece;
         const leftPiece = squares[pos + CONSTANTS.left].piece;
 
@@ -56,7 +57,6 @@ class Moves extends React.Component {
           const src = dst + CONSTANTS.down2;
           const tmp =  src + '#' + dst;
 
-          //prevMove = '11#27'; //FIXME, remove this
           if (prevMove === tmp) {
             console.log('Left piece en passe (for WHITE), prevMove='+prevMove + 'tmp='+tmp);
               const downLeft = pos + CONSTANTS.downLeft;
@@ -101,7 +101,8 @@ class Moves extends React.Component {
           const dst = pos + CONSTANTS.right;
           const src = dst + CONSTANTS.up2;
           const tmp =  src + '#' + dst;
-
+          console.log('black en passe preps');
+          
           if (this.state.prevMove === tmp) {
               const upRight = pos + CONSTANTS.upRight;
               candidateMoves.push(pos + 'P' + upRight); // en passe black pawn; P for en passe

@@ -655,7 +655,8 @@ class Chess extends Moves {
           } else if (src === 63) {
             this.setState({whiteRightRookMoved: true});
           }
-          this.move(whiteMoves[0], whiteMoves[1]);
+          this.move(53,37);
+          //this.move(whiteMoves[0], whiteMoves[1]);
         }
 
         this.setState({white: false});
