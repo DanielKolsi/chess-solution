@@ -76,6 +76,8 @@ class Chess extends Moves {
 
   move(src, dst, special) {
 
+    src = 1*src;
+    dst = 1*dst;
     console.log('ACTUAL move: src =' + src + ' dst=' + dst + ' special = ' + special);
     const {squares, pieces} = this.state;
     //console.log('src='+src + ' dst =' + dst + ' special='+special);
@@ -117,33 +119,28 @@ class Chess extends Moves {
     source.piece = null;
     let destination = squares[dst];
 
-    if (destination !== undefined && destination.piece) {
-      console.log('deleting: ' + destination.piece.type + ' id = ' + destination.piece.id + ' n=' + destination.piece.n);
+    console.log('dst='+destination.piece);
+
+    if (special === CONSTANTS.enPasse) { // en passe
+      let pieceToBeRemovedLocation = null;
+
+      if (dst === (src + CONSTANTS.downLeft)) {
+        pieceToBeRemovedLocation = src + CONSTANTS.left;
+      } else if (dst === (src + CONSTANTS.downRight)) {
+        pieceToBeRemovedLocation = src + CONSTANTS.right;
+      } else if (dst === (src + CONSTANTS.upLeft)) {
+        pieceToBeRemovedLocation = src + CONSTANTS.left;
+      } else if (dst === (src + CONSTANTS.upRight)) {
+        pieceToBeRemovedLocation = src + CONSTANTS.right;
+      }
+
+      delete this.state.squares[pieceToBeRemovedLocation].piece;
+
+    } else if (destination !== undefined && destination.piece) {
+      //console.log('deleting: ' + destination.piece.type + ' id = ' + destination.piece.id + ' n=' + destination.piece.n);
       //pieces[destination.piece.id] = null; //FIXME, is required?
 
-      if (special === CONSTANTS.enPasse) { // en passe
-        let id = null;
-        let pieceToBeRemovedLocation = null;
-
-        if (dst === (src + CONSTANTS.downLeft)) {
-          pieceToBeRemovedLocation = src + CONSTANTS.left;
-          id = squares[pieceToBeRemovedLocation].piece.n;
-        } else if (dst === (src + CONSTANTS.downRight)) {
-          pieceToBeRemovedLocation = src + CONSTANTS.right;
-          id = squares[pieceToBeRemovedLocation].piece.n;
-        } else if (dst === (src + CONSTANTS.upLeft)) {
-          pieceToBeRemovedLocation = src + CONSTANTS.upLeft;
-          id = squares[src + CONSTANTS.left].piece.n;
-        } else if (dst === (src + CONSTANTS.upRight)) {
-          pieceToBeRemovedLocation = src + CONSTANTS.upRight;
-          id = squares[src + CONSTANTS.right].piece.n;
-        }
-        delete pieces[id];
-        delete this.state.squares[pieceToBeRemovedLocation].piece;
-
-      } else {
-        delete pieces[destination.piece.n];
-      }
+      delete pieces[destination.piece.n];
       //delete this.state.squares[dst].piece;
       this.setState({pieces: pieces});
     }
@@ -611,6 +608,8 @@ class Chess extends Moves {
     this.setState({nextMove: nextMove});
     let {pieces, squares, white} = this.state;
 
+
+
     if (white === true) {
 
       let candidateMovesWhite = this.getCandidateMovesWhite(squares, pieces);
@@ -660,6 +659,7 @@ class Chess extends Moves {
         console.log('CHECK MATE, BLACK wins or stalemate.'); // FIXME, add stalemate handling
       }
     } else { //black move
+
       let candidateMovesBlack = this.getCandidateMovesBlack(squares, pieces);
       console.log('candidate black moves =' + candidateMovesBlack);
       let allowedMovesBlack = this.getAllowedMovesBlack(squares, pieces, pieces[CONSTANTS.blackKingId].location, candidateMovesBlack);
@@ -667,7 +667,8 @@ class Chess extends Moves {
 
       if (allowedMovesBlack !== null && allowedMovesBlack.length > 0) { // FIXME, no moves available?
         const n = Math.floor(Math.random() * allowedMovesBlack.length);
-        const str = allowedMovesBlack[n];
+        const str = '36P45'; // FIXME, remove thisallowedMovesBlack[n];
+
         console.log('previousMove:' + str);
         this.setState({previousMove: str});
 
