@@ -102,10 +102,10 @@ class Moves extends React.Component {
           const src = dst + CONSTANTS.up2;
           const tmp =  src + '#' + dst;
           console.log('black en passe preps');
-          
+
           if (this.state.prevMove === tmp) {
               const upRight = pos + CONSTANTS.upRight;
-              candidateMoves.push(pos + 'P' + upRight); // en passe black pawn; P for en passe
+              candidateMoves.push(pos + CONSTANTS.enPasse + upRight); // en passe black pawn; P for en passe
           }
 
         } else if (leftPiece !== null && leftPiece.value === CONSTANTS.whitePawn) {
@@ -115,7 +115,7 @@ class Moves extends React.Component {
 
           if (prevMove === tmp) {
               const upLeft = pos + CONSTANTS.upLeft;
-              candidateMoves.push(pos + 'P' + upLeft); // en passe black pawn; P for en passe
+              candidateMoves.push(pos + CONSTANTS.enPasse + upLeft); // en passe black pawn; P for en passe
           }
         }
     }

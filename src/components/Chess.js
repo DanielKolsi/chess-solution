@@ -61,7 +61,6 @@ class Chess extends Moves {
 
     //console.log('piece type = ' + piece.type);
     const location = 1 * piece.location;
-
     let candidateMoves = [];
 
     if (squares[piece.location] === null) {
@@ -72,11 +71,6 @@ class Chess extends Moves {
       //console.log('prev-move=' + this.state.previousMove);
       candidateMoves = this.refs[location].refs.piece.getCandidateMoves(piece, squares, this.state.previousMove);
     }
-    /*if (candidateMoves !== undefined) {
-      if (candidateMoves.length > 0) {
-          console.log('accepted moves size = ' + candidateMoves.length + ' piece = ' + piece.type + ' location =' + piece.location);
-      }
-    }*/
     return candidateMoves
   }
 
@@ -127,7 +121,7 @@ class Chess extends Moves {
       console.log('deleting: ' + destination.piece.type + ' id = ' + destination.piece.id + ' n=' + destination.piece.n);
       //pieces[destination.piece.id] = null; //FIXME, is required?
 
-      if (special === 'P') { // en passe
+      if (special === CONSTANTS.enPasse) { // en passe
         let id = null;
         let pieceToBeRemovedLocation = null;
 
@@ -215,7 +209,6 @@ class Chess extends Moves {
       if (item[0] >= 0 && (item[0] <= CONSTANTS.maxWhite)) {
         squares[item[0]].piece = piece;
       }
-
       pieces[piece.n] = piece;
     });
 
@@ -238,7 +231,6 @@ class Chess extends Moves {
 
     for (let i = CONSTANTS.minWhite; i <= CONSTANTS.maxWhite; i++) {
       let piece = pieces[i];
-
 
       if (piece === null || piece === undefined || piece.white === false) {
         continue; // piece has been e.g. eaten
@@ -345,14 +337,16 @@ class Chess extends Moves {
 
     //console.log('white_king_pos=' + whiteKingPosition);
 
+    const P = CONSTANTS.enPasse;
+
     for (let i = 0; i < candidateMovesWhite.length; i++) {
       const str = candidateMovesWhite[i];
       let move = null;
 
       if (str.includes('#')) {
         move = candidateMovesWhite[i].split('#');
-      } else if (str.includes('P')) { // en passe
-        move = candidateMovesWhite[i].split('P');
+      } else if (str.includes(P)) { // en passe
+        move = candidateMovesWhite[i].split(P);
       } else if (str.includes('(')) {
 
         let blackCandidateMoves = this.getCandidateMovesBlack(squares, pieces);
@@ -413,6 +407,7 @@ class Chess extends Moves {
   getAllowedMovesBlack(squares, pieces, blackKingPosition, candidateMovesBlack) {
 
     let allowedMoves = []; // contains only the candidate moves that were eventually verified to be allowed
+    const P = CONSTANTS.enPasse;
 
     for (let i = 0; i < candidateMovesBlack.length; i++) {
       const str = candidateMovesBlack[i];
@@ -421,8 +416,8 @@ class Chess extends Moves {
 
       if (str.includes('#')) {
         move = candidateMovesBlack[i].split('#'); // [1] === dst move
-      } else if (str.includes('P')) {
-        move = candidateMovesBlack[i].split('P');
+      } else if (str.includes(P)) {
+        move = candidateMovesBlack[i].split(P);
       } else if (str.includes('[')) {
         let whiteCandidateMoves = this.getCandidateMovesWhite(squares, pieces);
         let allowLeftCastling = true;
@@ -612,6 +607,7 @@ class Chess extends Moves {
 
   autoMove(nextMove) {
 
+    const P = CONSTANTS.enPasse;
     this.setState({nextMove: nextMove});
     let {pieces, squares, white} = this.state;
 
@@ -630,10 +626,10 @@ class Chess extends Moves {
         console.log('selected move added as previous:' + str);
         this.setState({previousMove: str});
 
-        if (str.includes('P')) {
-          const whiteMoves = str.split('P');
+        if (str.includes(P)) {
+          const whiteMoves = str.split(P);
           console.log('whitemoves-P=' + str);
-          this.move(whiteMoves[0], whiteMoves[1], 'P');
+          this.move(whiteMoves[0], whiteMoves[1], P);
         } else if (str.includes('(')) { // white left castling
           const whiteMoves = str.split('(');
           this.move(whiteMoves[0], whiteMoves[1]); // white king move left castling
@@ -675,9 +671,9 @@ class Chess extends Moves {
         console.log('previousMove:' + str);
         this.setState({previousMove: str});
 
-        if (str.includes('P')) { // en passe
-          const blackMoves = str.split('P');
-          this.move(blackMoves[0], blackMoves[1], 'P');
+        if (str.includes(P)) { // en passe
+          const blackMoves = str.split(P);
+          this.move(blackMoves[0], blackMoves[1], P);
         } else if (str.includes('[')) { //black castling
           const blackMoves = str.split('[');
           this.move(blackMoves[0], blackMoves[1]); // king move
