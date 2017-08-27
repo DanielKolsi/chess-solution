@@ -15,7 +15,7 @@ class Chess extends Moves {
     this.state = {
       pieces: {},
       squares: [],
-      promotedWhiteQueenNumber: 64,
+      promotedWhiteQueenNumber: CONSTANTS.maxWhite + 1,
       promotedBlackQueenNumber: -1,
       //      ids: [], // raw ref number of the piece, won't change
       white: true,
@@ -119,8 +119,6 @@ class Chess extends Moves {
     source.piece = null;
     let destination = squares[dst];
 
-    console.log('dst='+destination.piece);
-
     if (special === CONSTANTS.enPasse) { // en passe
       let pieceToBeRemovedLocation = null;
 
@@ -133,9 +131,7 @@ class Chess extends Moves {
       } else if (dst === (src + CONSTANTS.upRight)) {
         pieceToBeRemovedLocation = src + CONSTANTS.right;
       }
-
       delete this.state.squares[pieceToBeRemovedLocation].piece;
-
     } else if (destination !== undefined && destination.piece) {
       //console.log('deleting: ' + destination.piece.type + ' id = ' + destination.piece.id + ' n=' + destination.piece.n);
       //pieces[destination.piece.id] = null; //FIXME, is required?
@@ -145,7 +141,7 @@ class Chess extends Moves {
       this.setState({pieces: pieces});
     }
 
-    destination.piece = mover;
+    destination.piece = mover; // mover = the currently moving piece
     destination.piece.location = dst;
 
     this.setState({
