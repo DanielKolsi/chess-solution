@@ -16,7 +16,6 @@ class PawnC extends Moves {
     return this.getCandidateBlackPawnMoves(piece, squares, prevMove);
   }
 
-
     render() {
       return (
         <div className="piece">

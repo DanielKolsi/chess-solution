@@ -69,9 +69,7 @@ class Chess extends Moves {
 
     if (location !== undefined && this.refs[location] !== undefined && this.refs[location].refs.piece !== undefined) {
       //console.log('prev-move=' + this.state.previousMove);
-      console.log('A-location='+location + 'piece='+piece.type);
       candidateMoves = this.refs[location].refs.piece.getCandidateMoves(piece, squares, this.state.previousMove);
-      console.log('B-location='+location + 'piece='+piece.type);
     }
     return candidateMoves
   }

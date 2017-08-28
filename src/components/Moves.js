@@ -434,7 +434,6 @@ class Moves extends React.Component {
         candidateMoves.push(pos + '#' + i);
         break; // no more move possibilities after eating
       } else {
-        console.log('OWN PIECE i = ' + i);
         break; // own piece blocks
       }
     }
@@ -488,9 +487,8 @@ class Moves extends React.Component {
     if (pos < 0) return allowed; // ignore to-be-promoted extra pieces
 
     allowed = this.isAllowedByRook(piece, squares, kingPosition, opponentCandidateMove);
-    
-    if (!allowed) return false;
 
+    if (!allowed) return false;
 
     allowed = this.isAllowedByBishop(piece, squares, kingPosition, opponentCandidateMove);
     return allowed

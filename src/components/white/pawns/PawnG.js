@@ -13,7 +13,7 @@ class PawnG extends Moves {
   }
 
   getCandidateMoves(piece, squares, prevMove) {
-    console.log('White Pawn G');
+    //console.log('White Pawn G');
     return this.getCandidateWhitePawnMoves(piece, squares, prevMove);
   }
 
