@@ -401,6 +401,7 @@ class Chess extends Moves {
 
     let allowedMoves = []; // contains only the candidate moves that were eventually verified to be allowed
     const P = CONSTANTS.enPasse;
+    //const # = CONSTANTS.defaultDelim;
 
     for (let i = 0; i < candidateMovesBlack.length; i++) {
       const str = candidateMovesBlack[i];
@@ -646,8 +647,8 @@ class Chess extends Moves {
           } else if (src === 63) {
             this.setState({whiteRightRookMoved: true});
           }
-          this.move(53,37);
-          //this.move(whiteMoves[0], whiteMoves[1]);
+          //this.move(53,37); // en passe test
+          this.move(whiteMoves[0], whiteMoves[1]);
         }
 
         this.setState({white: false});
@@ -663,7 +664,7 @@ class Chess extends Moves {
 
       if (allowedMovesBlack !== null && allowedMovesBlack.length > 0) { // FIXME, no moves available?
         const n = Math.floor(Math.random() * allowedMovesBlack.length);
-        const str = '36P45'; // FIXME, remove thisallowedMovesBlack[n];
+        const str = allowedMovesBlack[n]; //'36P45'; // FIXME, remove thisallowedMovesBlack[n];
 
         console.log('previousMove:' + str);
         this.setState({previousMove: str});

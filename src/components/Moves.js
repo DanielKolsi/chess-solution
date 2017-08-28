@@ -37,7 +37,7 @@ class Moves extends React.Component {
     }
 
     if (squares[pos].row === CONSTANTS.whiteEnPasseAllowedRow) {
-      console.log('en passe allowed white row');
+
         const rightPiece = squares[pos + CONSTANTS.right].piece;
         const leftPiece = squares[pos + CONSTANTS.left].piece;
 
@@ -79,6 +79,7 @@ class Moves extends React.Component {
     let candidateMoves = [];
 
 
+
     if (squares[up].piece === null && (squares[pos].row < CONSTANTS.maxRow)) {
       candidateMoves.push(pos + '#' + up);
 
@@ -100,8 +101,7 @@ class Moves extends React.Component {
         if (rightPiece !== null && rightPiece.value === CONSTANTS.whitePawn) {
           const dst = pos + CONSTANTS.right;
           const src = dst + CONSTANTS.up2;
-          const tmp =  src + '#' + dst;
-          console.log('black en passe preps');
+          const tmp =  src + '#' + dst;          
 
           if (this.state.prevMove === tmp) {
               const upRight = pos + CONSTANTS.upRight;

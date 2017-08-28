@@ -1,4 +1,5 @@
 const CONSTANTS = {
+  defaultDelim: '#',
   whitePawn: 1,
   blackPawn: -1,
   minWhite: 48, // white piece minimum value
