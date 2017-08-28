@@ -8,7 +8,7 @@ class KnightG extends Moves {
     }
   }
   getCandidateMoves(piece, squares) {
-    console.log('Black Knight G');
+    //console.log('Black Knight G');
     return this.getCandidateKnightMoves(piece, squares);
   }
 

@@ -9,7 +9,7 @@ class KnightB extends Moves {
   }
 
   getCandidateMoves(piece, squares) {
-    console.log('White Knight B');
+    //console.log('White Knight B');
     if (piece.value !== 3) return undefined;
     return this.getCandidateKnightMoves(piece, squares);
   }

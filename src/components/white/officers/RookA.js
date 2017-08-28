@@ -8,6 +8,7 @@ class RookA extends Moves {
 
     }
   }
+  
     getCandidateMoves(piece, squares) {
       return this.getCandidateRookMoves(piece, squares);
     }

@@ -9,7 +9,7 @@ class BishopF extends Moves {
   }
 
   getCandidateMoves(piece, squares) {
-    console.log('White Bishop F');
+    //console.log('White Bishop F');
     return this.getCandidateBishopMoves(piece, squares);
   }
 

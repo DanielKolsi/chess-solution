@@ -8,7 +8,7 @@ class BishopF extends Moves {
     }
   }
   getCandidateMoves(piece, squares) {
-    console.log('Black Bishop F');
+    //console.log('Black Bishop F');
     return this.getCandidateBishopMoves(piece, squares);
   }
 

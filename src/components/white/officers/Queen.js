@@ -7,9 +7,10 @@ class Queen extends Moves {
     this.state = {}
   }
 
-  getCandidateMoves(piece, squares) {
 
-    console.log('White Queen');
+
+  getCandidateMoves(piece, squares) {
+    //console.log('White Queen');
     if (piece.value !== 9) return undefined;
     return this.getCandidateQueenMoves(piece, squares);
   }

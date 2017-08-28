@@ -17,7 +17,7 @@ class Chess extends Moves {
       squares: [],
       promotedWhiteQueenNumber: CONSTANTS.maxWhite + 1,
       promotedBlackQueenNumber: -1,
-      //      ids: [], // raw ref number of the piece, won't change
+
       white: true,
       moves: [],
       nextMove: 1,
@@ -69,7 +69,9 @@ class Chess extends Moves {
 
     if (location !== undefined && this.refs[location] !== undefined && this.refs[location].refs.piece !== undefined) {
       //console.log('prev-move=' + this.state.previousMove);
+      console.log('A-location='+location + 'piece='+piece.type);
       candidateMoves = this.refs[location].refs.piece.getCandidateMoves(piece, squares, this.state.previousMove);
+      console.log('B-location='+location + 'piece='+piece.type);
     }
     return candidateMoves
   }
@@ -95,7 +97,6 @@ class Chess extends Moves {
       let value = this.state.promotedWhiteQueenNumber;
       pieces[piece.n] = pieces[value]; // replace piece at pawn piece position with the promoted piece
       piece = pieces[value]; // actual promotion
-      console.log('promonumber_white=' + value);
       piece.location = dst;
       this.setState({
         promotedWhiteQueenNumber: value++
@@ -103,8 +104,6 @@ class Chess extends Moves {
       this.setState({pieces: pieces});
     } else if (piece.value === CONSTANTS.blackPawnValue && squares[dst].row === CONSTANTS.maxRow) {
       let value = this.state.promotedBlackQueenNumber;
-      console.log('promonumber_black=' + value + ' type='+pieces[value].type + ' to pos ='+piece.n);
-
       pieces[piece.n] = pieces[value]; // insert promoted piece to pieces
       piece = pieces[value]; // actual promotion
       piece.location = dst;
@@ -134,9 +133,6 @@ class Chess extends Moves {
       }
       delete this.state.squares[pieceToBeRemovedLocation].piece;
     } else if (destination !== undefined && destination.piece) {
-      //console.log('deleting: ' + destination.piece.type + ' id = ' + destination.piece.id + ' n=' + destination.piece.n);
-      //pieces[destination.piece.id] = null; //FIXME, is required?
-
       delete pieces[destination.piece.n];
       //delete this.state.squares[dst].piece;
       this.setState({pieces: pieces});
@@ -208,7 +204,6 @@ class Chess extends Moves {
 
     this.setState({pieces: pieces});
     this.setState({squares: squares});
-    //this.setState({ids: ids});
   }
 
   prevMove() {
@@ -229,7 +224,6 @@ class Chess extends Moves {
       }
 
       //console.log('\n WHITE: piece for moving =' + piece.type + ' white = ' + piece.white + ' value =' + piece.value + ' n=' + piece.n + ' location=' + piece.location);
-      //console.log('piece = ' + piece.type + piece.location + piece.n);
       let candidateMoves = this.getCandidateMoves(piece, squares);
       if (candidateMoves === undefined) {
         console.log('No available moves for this piece.');

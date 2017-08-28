@@ -9,7 +9,6 @@ class King extends React.Component {
     }
   }
 
-
   getCandidateMoves(piece, squares) {
 
     let candidateMoves = [];
