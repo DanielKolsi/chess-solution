@@ -80,7 +80,7 @@ class Chess extends Moves {
     dst = 1*dst;
     console.log('ACTUAL move: src =' + src + ' dst=' + dst + ' special = ' + special);
     const {squares, pieces} = this.state;
-    //console.log('src='+src + ' dst =' + dst + ' special='+special);
+
     const square = squares[src];
     let piece = square.piece;
 
@@ -93,7 +93,7 @@ class Chess extends Moves {
     if (piece.value === CONSTANTS.whitePawnValue && squares[dst].row === CONSTANTS.minRow) {
 
       let value = this.state.promotedWhiteQueenNumber;
-      pieces[piece.n] = pieces[value]; // replace pawn with the promoted piece
+      pieces[piece.n] = pieces[value]; // replace piece at pawn piece position with the promoted piece
       piece = pieces[value]; // actual promotion
       console.log('promonumber_white=' + value);
       piece.location = dst;
@@ -103,7 +103,8 @@ class Chess extends Moves {
       this.setState({pieces: pieces});
     } else if (piece.value === CONSTANTS.blackPawnValue && squares[dst].row === CONSTANTS.maxRow) {
       let value = this.state.promotedBlackQueenNumber;
-      console.log('promonumber_black=' + value);
+      console.log('promonumber_black=' + value + ' type='+pieces[value].type + ' to pos ='+piece.n);
+
       pieces[piece.n] = pieces[value]; // insert promoted piece to pieces
       piece = pieces[value]; // actual promotion
       piece.location = dst;
@@ -217,15 +218,13 @@ class Chess extends Moves {
   getCandidateMovesWhite(squares, pieces) {
 
     let candidateMovesWhite = [];
-
     let castlingLeftAdded = false;
     let castlingRightAdded = false;
-
 
     for (let i = CONSTANTS.minWhite; i <= CONSTANTS.maxWhite; i++) {
       let piece = pieces[i];
 
-      if (piece === null || piece === undefined || piece.white === false) {
+      if (piece === null || piece === undefined) {
         continue; // piece has been e.g. eaten
       }
 
@@ -256,7 +255,6 @@ class Chess extends Moves {
       if (candidateMoves.length > 0 && candidateMovesWhite.length === undefined) {
         candidateMovesWhite = candidateMoves;
       } else if (candidateMoves.length > 0) {
-        //console.log('adding candidateMoves, i = ' + i + ' n = ' + candidateMoves.length + ' p m w length = ' + candidateMovesWhite.length);
         if (!candidateMovesWhite.includes(candidateMoves)) {
           candidateMovesWhite = candidateMovesWhite.concat(candidateMoves); // candidateMoves, removalmoves, candidateMoves
         }
@@ -275,18 +273,19 @@ class Chess extends Moves {
     let castlingLeftAdded = false;
     let castlingRightAdded = false;
 
+
     for (let i = 0; i <= CONSTANTS.maxBlack; i++) {
+
       let piece = pieces[i];
 
-      if (piece === null || piece === undefined || piece.white === true) {
+      if (piece === null || piece === undefined) {
         continue; // piece has been e.g. eaten
       }
 
       let candidateMoves = this.getCandidateMoves(piece, squares);
 
       if (candidateMoves === undefined) {
-        console.log('No available moves for this piece.');
-        continue;
+        continue; // no available moves for this piece
       }
 
       if (squares[CONSTANTS.blackKingId].piece !== null && this.state.blackKingMoved === false) {
@@ -327,9 +326,6 @@ class Chess extends Moves {
   getAllowedMovesWhite(squares, pieces, whiteKingPosition, candidateMovesWhite) {
 
     let allowedMoves = []; // contains only the candidate moves that were eventually verified to be allowed
-
-    //console.log('white_king_pos=' + whiteKingPosition);
-
     const P = CONSTANTS.enPasse;
 
     for (let i = 0; i < candidateMovesWhite.length; i++) {
@@ -578,9 +574,7 @@ class Chess extends Moves {
           allowed = this.isAllowedByBishop(piece, squares, blackKingPosition, blackCandidateMove);
           break;
         case 5:
-          console.log('is allowed by white rook, piece = ' + piece.value);
           allowed = this.isAllowedByRook(piece, squares, blackKingPosition, blackCandidateMove);
-
           break;
         case 6:
           allowed = this.isAllowedByKing(piece, blackKingPosition);
@@ -605,8 +599,6 @@ class Chess extends Moves {
     this.setState({nextMove: nextMove});
     let {pieces, squares, white} = this.state;
 
-
-
     if (white === true) {
 
       let candidateMovesWhite = this.getCandidateMovesWhite(squares, pieces);
@@ -624,7 +616,6 @@ class Chess extends Moves {
 
         if (str.includes(P)) {
           const whiteMoves = str.split(P);
-          console.log('whitemoves-P=' + str);
           this.move(whiteMoves[0], whiteMoves[1], P);
         } else if (str.includes('(')) { // white left castling
           const whiteMoves = str.split('(');
@@ -641,7 +632,6 @@ class Chess extends Moves {
           const src = 1 * whiteMoves[0];
           if (src === CONSTANTS.whiteKingId) {
             this.setState({whiteKingMoved: true});
-            console.log('setting white king MOVED');
           } else if (src === 56) {
             this.setState({whiteLeftRookMoved: true});
           } else if (src === 63) {
