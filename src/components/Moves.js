@@ -53,12 +53,12 @@ class Moves extends React.Component {
           }
 
         } else if (leftPiece !== null && leftPiece.value === CONSTANTS.blackPawn) {
+
           const dst = pos + CONSTANTS.left;
           const src = dst + CONSTANTS.down2;
-          const tmp =  src + '#' + dst;
+          const tmp = src + '#' + dst;
 
           if (prevMove === tmp) {
-            console.log('Left piece en passe (for WHITE), prevMove='+prevMove + 'tmp='+tmp);
               const downLeft = pos + CONSTANTS.downLeft;
               candidateMoves.push(pos + CONSTANTS.enPasse + downLeft); // en passe black pawn; P for en passe
           }
@@ -77,8 +77,6 @@ class Moves extends React.Component {
     let upRight = pos + CONSTANTS.upRight;
 
     let candidateMoves = [];
-
-
 
     if (squares[up].piece === null && (squares[pos].row < CONSTANTS.maxRow)) {
       candidateMoves.push(pos + '#' + up);
@@ -101,7 +99,7 @@ class Moves extends React.Component {
         if (rightPiece !== null && rightPiece.value === CONSTANTS.whitePawn) {
           const dst = pos + CONSTANTS.right;
           const src = dst + CONSTANTS.up2;
-          const tmp =  src + '#' + dst;          
+          const tmp =  src + '#' + dst;
 
           if (this.state.prevMove === tmp) {
               const upRight = pos + CONSTANTS.upRight;
@@ -223,7 +221,7 @@ class Moves extends React.Component {
     }
 
     // 2 up, 1 left
-    const upLeft = pos + 15;
+    const upLeft = pos + CONSTANTS.twoUpOneLeft;
     if (upLeft === kingPosition) {
       return false; // move cannot be accepted (king would be eaten)
     }
@@ -252,7 +250,6 @@ class Moves extends React.Component {
     if (downLeft === kingPosition) {
       return false; // move cannot be accepted (king would be eaten)
     }
-
     return allowed;
   }
 

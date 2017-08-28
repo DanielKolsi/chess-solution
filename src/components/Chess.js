@@ -535,7 +535,7 @@ class Chess extends Moves {
   // if any black move collides with the white king, the white candidate move is rejected immediately
   isBlackMoveAllowed(squares, pieces, blackKingPosition, blackCandidateMove) {
 
-    console.log('checking if black: ' + blackCandidateMove + ' is allowed, black king pos = ' + blackKingPosition);
+    //console.log('checking if black: ' + blackCandidateMove + ' is allowed, black king pos = ' + blackKingPosition);
 
     let allowed = true;
 
