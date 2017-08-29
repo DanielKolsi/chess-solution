@@ -54,7 +54,9 @@ const CONSTANTS = {
   castlingShortWhite: '(',
   castlingShortBlack: ')',
   castlingLongWhite: '[',
-  castlingLongBlack: ']'
+  castlingLongBlack: ']',
+  blackRookCastlingRightSrc: 7,
+  blackRookCastlingRightDst: 5
   // add other castling square position constants, black & white
 
 

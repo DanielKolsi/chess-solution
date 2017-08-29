@@ -6,9 +6,6 @@ class PawnA extends Moves {
     super(props);
     //console.log('props PawnA = ' + props.type);
     this.state = {
-    //value: 1,// if eaten, value is 0, of promoted, value is the value of the promoted piece (queen, knight, bishop or rook)
-    //row: 2,
-      //let col: 1
     }
   }
 

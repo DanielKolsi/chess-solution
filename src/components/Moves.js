@@ -444,7 +444,7 @@ class Moves extends React.Component {
      if (squares[i].piece === null) {
         candidateMoves.push(pos + '#' + i);
       } else if (piece.white !== squares[i].piece.white) { // eat
-        candidateMoves.push(pos + '#' + i);
+        candidateMoves.push(pos + '#' + i); // FIXME: # could be changed to X for eating
         break; // no more move possibilities after eating
       } else
         break; // own piece
@@ -476,7 +476,6 @@ class Moves extends React.Component {
       } else
         break; // own piece
       }
-
     return candidateMoves;
   }
 
@@ -563,7 +562,6 @@ class Moves extends React.Component {
     let DOWN = pos + CONSTANTS.down;
     let LEFT = pos + CONSTANTS.left;
     let RIGHT = pos + CONSTANTS.right;
-    //console.log('candit = ' + opponentCandidateMove);
 
     let canditSrc = 0;
     let canditDst = 0;
@@ -576,7 +574,6 @@ class Moves extends React.Component {
 
     // move UP
     for (let i = UP; i <= CONSTANTS.maxWhite; i += CONSTANTS.up) {
-
 
       if (i === kingPosition) {
         return false; // this move wasn't allowed by the rook
@@ -630,6 +627,7 @@ class Moves extends React.Component {
       }
     }
     //console.log('rook moves RIGHT = ' + candidateMoves.length);
+
     // move LEFT
     let movesLeft = squares[pos].col;
 
@@ -665,7 +663,6 @@ class Moves extends React.Component {
     } else {
       numberOfSquaresAvailable = squaresAvailableUp;
     }
-
 
     for (let i = 1; i <= numberOfSquaresAvailable; i++) {
       let dst = pos + (i * CONSTANTS.upRight);

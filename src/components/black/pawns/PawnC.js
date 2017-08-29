@@ -4,10 +4,7 @@ import Moves from '../../Moves';
 class PawnC extends Moves {
   constructor(props) {
     super(props);
-    this.state = {
-    //value: 1,// if eaten, value is 0, of promoted, value is the value of the promoted piece (queen, knight, bishop or rook)
-    //row: 2,
-      //let col: 1
+    this.state = {    
     }
   }
 
