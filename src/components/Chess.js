@@ -520,12 +520,10 @@ class Chess extends Moves {
     for (let i = CONSTANTS.minWhite; i <= CONSTANTS.maxWhite; i++) {
       let piece = pieces[i];
 
-
       if (piece === null || piece === undefined) {
         continue; // piece has been e.g. eaten
       }
 
-      //let value = Math.abs(piece.value);
       let value = piece.value;
 
       if (blackCandidateMove !== undefined) {
@@ -612,13 +610,12 @@ class Chess extends Moves {
           } else if (src === 63) {
             this.setState({whiteRightRookMoved: true});
           }
-          //this.move(53,37); // en passe test
           this.move(whiteMoves[0], whiteMoves[1]);
         }
-
         this.setState({white: false});
       } else {
-        console.log('CHECK MATE, BLACK wins or stalemate.'); // FIXME, add stalemate handling
+        console.log('Game over, black wins. (Or stalemate)');
+        return;
       }
     } else { //black move
 
@@ -629,7 +626,7 @@ class Chess extends Moves {
 
       if (allowedMovesBlack !== null && allowedMovesBlack.length > 0) { // FIXME, no moves available?
         const n = Math.floor(Math.random() * allowedMovesBlack.length);
-        const str = allowedMovesBlack[n]; //'36P45'; // FIXME, remove thisallowedMovesBlack[n];
+        const str = allowedMovesBlack[n];
 
         console.log('previousMove:' + str);
         this.setState({previousMove: str});
@@ -660,10 +657,10 @@ class Chess extends Moves {
           }
           this.move(blackMoves[0], blackMoves[1]);
         }
-        //console.log('BLACK MOVED * total moves were = ' + allowedMovesBlack.length + ' selected random = ' + allowedMovesBlack[n] + ' n was = ' + n);
         this.setState({white: true});
       } else {
-        console.log('CHECK MATE, WHITE wins or stalemate.');
+        console.log('Game over, white wins. (Or stalemate)');
+        return;
       }
     }
   }

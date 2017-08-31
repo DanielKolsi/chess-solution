@@ -16,7 +16,6 @@ class PawnA extends Moves {
 
     render(value) {
       //String.fromCharCode(9817
-
         return (
           <div className="piece">
             {'a'}
