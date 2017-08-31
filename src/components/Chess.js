@@ -30,7 +30,7 @@ class Chess extends Moves {
       blackLeftRookMoved: false,
       blackRightRookMoved: false
     }
-    this.moveMap = this.moveMap.bind(this); //FIXME
+    this.moveMap = this.moveMap.bind(this);
     this.removePiece = this.removePiece.bind(this);
     this.autoMove = this.autoMove.bind(this);
     this.prevMove = this.prevMove.bind(this);
@@ -581,8 +581,8 @@ class Chess extends Moves {
       console.log('allowed white moves =' + allowedMovesWhite);
 
       if (allowedMovesWhite !== null && allowedMovesWhite.length > 0) { // FIXME, no moves available?
-        const n = Math.floor(Math.random() * allowedMovesWhite.length);
-        const str = allowedMovesWhite[n];
+
+        const str = this.getBestWhiteMove(squares, allowedMovesWhite);
 
         console.log('selected move added as previous:' + str);
         this.setState({previousMove: str});
@@ -624,7 +624,7 @@ class Chess extends Moves {
       let allowedMovesBlack = this.getAllowedMovesBlack(squares, pieces, pieces[CONSTANTS.blackKingId].location, candidateMovesBlack);
       console.log('allowed black moves =' + allowedMovesBlack);
 
-      if (allowedMovesBlack !== null && allowedMovesBlack.length > 0) { // FIXME, no moves available?
+      if (allowedMovesBlack !== null && allowedMovesBlack.length > 0) {
         const n = Math.floor(Math.random() * allowedMovesBlack.length);
         const str = allowedMovesBlack[n];
 

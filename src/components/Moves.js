@@ -790,6 +790,24 @@ class Moves extends React.Component {
     candidateMovesQueen = candidateMovesBishop.concat(candidateMovesRook);
     return candidateMovesQueen;
   }
+
+  getBestWhiteMove(squares, allowedMovesWhite) {
+
+    for (let i = 0; i < allowedMovesWhite.length; i++) {
+       const move = allowedMovesWhite[i].split('#');
+       //const src = move[0];
+       const dst = move[1];
+       if (squares[dst].piece !== null) {
+         // compare piece values, if valueable, possibly worth eating..?!
+         console.log('Eat black candidate move = ' + move);
+       }
+
+    }
+    const n = Math.floor(Math.random() * allowedMovesWhite.length);
+    const str = allowedMovesWhite[n];
+    return str;
+  }
+
 }
 
 export default Moves;
