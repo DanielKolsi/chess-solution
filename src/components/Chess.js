@@ -131,7 +131,7 @@ class Chess extends Moves {
       }
       delete this.state.squares[pieceToBeRemovedLocation].piece;
     } else if (destination !== undefined && destination.piece) {
-      delete pieces[destination.piece.n];
+      delete pieces[destination.piece.n]; //piece is eaten
       //delete this.state.squares[dst].piece;
       this.setState({pieces: pieces});
     }
@@ -190,7 +190,7 @@ class Chess extends Moves {
         id: item[2], // piece id, e.g. bra
         n: item[3], // ORIGINAL number 0..63, won't change (unique identifier)
         white: item[4], // true if white
-        value: item[5]
+        value: item[5] // piece value ( black has negative corresponding values)
         //value: //exact piece value in relation to other pieces
       }
 
@@ -449,10 +449,12 @@ class Chess extends Moves {
       let kingPosition = 1 * blackKingPosition;
 
       if (src === kingPosition) { // black king move candidate!
+          console.log('real black king pos = ' +dst);
           kingPosition = dst;
       }
 
       if (this.isBlackMoveAllowed(squares, pieces, kingPosition, str)) {
+        console.log('black king pos = ' + kingPosition);
         allowedMoves.push(str);
       }
     }
@@ -471,17 +473,9 @@ class Chess extends Moves {
         continue; // piece has been e.g. eaten
       }
 
-      if (whiteCandidateMove !== undefined) {
-        const pos = 1 * piece.location;
-        const move = whiteCandidateMove.split('#'); // [1] === dst move
 
-        const canditDst = 1 * move[1];
-        if (canditDst === pos) {
-          return allowed; // this white piece has been eaten (for this candidate move)!
-        }
-      }
+      const value = piece.value;
 
-      let value = piece.value;
       switch (value) {
         case - 1:
           allowed = this.isAllowedByBlackPawn(piece, whiteKingPosition);
@@ -517,6 +511,8 @@ class Chess extends Moves {
 
     let allowed = true;
 
+    console.log('b-k-p='+blackKingPosition);
+
     for (let i = CONSTANTS.minWhite; i <= CONSTANTS.maxWhite; i++) {
       let piece = pieces[i];
 
@@ -524,17 +520,7 @@ class Chess extends Moves {
         continue; // piece has been e.g. eaten
       }
 
-      let value = piece.value;
-
-      if (blackCandidateMove !== undefined) {
-        const pos = 1 * piece.location;
-        const move = blackCandidateMove.split('#'); // [1] === dst move
-
-        const canditDst = 1 * move[1];
-        if (canditDst === pos) {
-          return allowed; // this white piece has been eaten (for this candidate move)!
-        }
-      }
+      const value = piece.value;
 
       switch (value) {
 
@@ -572,6 +558,7 @@ class Chess extends Moves {
     this.setState({nextMove: nextMove});
     let {pieces, squares, white} = this.state;
 
+
     if (white === true) {
 
       let candidateMovesWhite = this.getCandidateMovesWhite(squares, pieces);
@@ -580,7 +567,7 @@ class Chess extends Moves {
       let allowedMovesWhite = this.getAllowedMovesWhite(squares, pieces, pieces[CONSTANTS.whiteKingId].location, candidateMovesWhite);
       console.log('allowed white moves =' + allowedMovesWhite);
 
-      if (allowedMovesWhite !== null && allowedMovesWhite.length > 0) { // FIXME, no moves available?
+      if (allowedMovesWhite !== null && allowedMovesWhite.length > 0) {
 
         const str = this.getBestWhiteMove(squares, allowedMovesWhite);
 

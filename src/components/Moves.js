@@ -506,6 +506,8 @@ class Moves extends React.Component {
     let upLeft = pos + CONSTANTS.upLeft;
     let upRight = pos + CONSTANTS.upRight;
 
+    console.log('isallowedby king, piece =  ' + piece.type + ' king pos = ' + kingPosition);
+
     if (up === kingPosition)
       return false; // reject move #1
     if (down === kingPosition)
@@ -797,8 +799,8 @@ class Moves extends React.Component {
        const move = allowedMovesWhite[i].split('#');
        //const src = move[0];
        const dst = move[1];
-       if (squares[dst].piece !== null) {
-         // compare piece values, if valueable, possibly worth eating..?!
+       if (squares[dst] !== undefined && squares[dst].piece !== null) {
+         // compare piece values, if valueable, possibly worth eating..?!, piece.value
          console.log('Eat black candidate move = ' + move);
        }
 
