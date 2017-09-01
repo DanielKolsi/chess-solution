@@ -449,12 +449,10 @@ class Chess extends Moves {
       let kingPosition = 1 * blackKingPosition;
 
       if (src === kingPosition) { // black king move candidate!
-          console.log('real black king pos = ' +dst);
           kingPosition = dst;
       }
 
       if (this.isBlackMoveAllowed(squares, pieces, kingPosition, str)) {
-        console.log('black king pos = ' + kingPosition);
         allowedMoves.push(str);
       }
     }
@@ -511,8 +509,7 @@ class Chess extends Moves {
 
     let allowed = true;
 
-    console.log('b-k-p='+blackKingPosition);
-
+  
     for (let i = CONSTANTS.minWhite; i <= CONSTANTS.maxWhite; i++) {
       let piece = pieces[i];
 
