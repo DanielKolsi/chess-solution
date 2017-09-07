@@ -509,7 +509,7 @@ class Chess extends Moves {
 
     let allowed = true;
 
-  
+
     for (let i = CONSTANTS.minWhite; i <= CONSTANTS.maxWhite; i++) {
       let piece = pieces[i];
 
@@ -609,8 +609,8 @@ class Chess extends Moves {
       console.log('allowed black moves =' + allowedMovesBlack);
 
       if (allowedMovesBlack !== null && allowedMovesBlack.length > 0) {
-        const n = Math.floor(Math.random() * allowedMovesBlack.length);
-        const str = allowedMovesBlack[n];
+
+        const str = this.getBestBlackMove(squares, allowedMovesBlack);
 
         console.log('previousMove:' + str);
         this.setState({previousMove: str});
@@ -629,7 +629,7 @@ class Chess extends Moves {
           this.move(CONSTANTS.blackRookCastlingRightSrc, CONSTANTS.blackRookCastlingRightDst); // rook move
           this.setState({blackKingMoved: true});
         } else {
-          const blackMoves = allowedMovesBlack[n].split('#');
+          const blackMoves = str.split('#');
           const src = 1 * blackMoves[0];
 
           if (src === CONSTANTS.blackKingId) {

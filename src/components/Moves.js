@@ -793,23 +793,42 @@ class Moves extends React.Component {
     return candidateMovesQueen;
   }
 
+ // best move strategy for white
   getBestWhiteMove(squares, allowedMovesWhite) {
 
     for (let i = 0; i < allowedMovesWhite.length; i++) {
        const move = allowedMovesWhite[i].split('#');
-       //const src = move[0];
+       const src = move[0];
        const dst = move[1];
        if (squares[dst] !== undefined && squares[dst].piece !== null) {
          // compare piece values, if valueable, possibly worth eating..?!, piece.value
-         console.log('Eat black candidate move = ' + move);
+          if (squares[src].piece.value  < squares[dst].piece.value ) {
+            console.log('Eat black candidate move = ' + move);
+            return allowedMovesWhite[i];
+          }
        }
-
     }
     const n = Math.floor(Math.random() * allowedMovesWhite.length);
-    const str = allowedMovesWhite[n];
-    return str;
+    return allowedMovesWhite[n];
   }
 
-}
+  // best move strategy for black
+  getBestBlackMove(squares, allowedMovesBlack) {
 
+    for (let i = 0; i < allowedMovesBlack.length; i++) {
+       const move = allowedMovesBlack[i].split('#');
+
+       const dst = move[1];
+       if (squares[dst] !== undefined && squares[dst].piece !== null) {
+         // compare piece values, if valueable, possibly worth eating..?!, piece.value
+          if (squares[dst].piece.value > 1) {
+            console.log('Eat white candidate move = ' + move);
+            return allowedMovesBlack[i];
+          }
+       }
+    }
+    const n = Math.floor(Math.random() * allowedMovesBlack.length);
+    return allowedMovesBlack[n];
+  }
+}
 export default Moves;
