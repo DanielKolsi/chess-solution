@@ -1,9 +1,11 @@
 const CONSTANTS = {
-  defaultDelim: '#',
+  defaultDelim: "⇒",
+  WHITE_KING: "KingW",
+  BLACK_KING: "KingB",
   whitePawn: 1,
   blackPawn: -1,
   minWhite: 48, // white piece minimum value
-  maxWhite: 63,
+  maxWhite: 63, // 0..63
   maxBlack: 15, // black piece max value
   squaresInRow: 8,
   minBlackPawn: 8,
@@ -50,16 +52,16 @@ const CONSTANTS = {
 
   whiteEnPasseAllowedRow: 3,
   blackEnPasseAllowedRow: 4,
-  enPasse: 'P',
-  castlingShortWhite: '(',
-  castlingShortBlack: ')',
-  castlingLongWhite: '[',
-  castlingLongBlack: ']',
+  enPasse: "P",
+
+  castlingKingSide: ">", // King side
+  castlingQueenSide: "<", // Queen side
+  promotionToQueen: "Q",
+  promotionToRook: "R",
+  promotionToBishop: "B",
+  promotionToKnight: "N",
   blackRookCastlingRightSrc: 7,
-  blackRookCastlingRightDst: 5
+  blackRookCastlingRightDst: 5,
   // add other castling square position constants, black & white
-
-
-}
-
+};
 export default CONSTANTS;

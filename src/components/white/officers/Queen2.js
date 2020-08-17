@@ -8,14 +8,18 @@ class Queen2 extends Moves {
   }
 
   getCandidateMoves(piece, squares) {
-    console.log('White Queen2');
+   // console.log('White Queen2');
     if (piece.value !== 9) return undefined;
     return this.getCandidateQueenMoves(piece, squares);
   }
 
   render() {
+    const divStyle = {
+      color: '#aaaaaa',
+      fontSize: 85,
+    };
     return (
-      <div className="piece">
+      <div style={divStyle} className="piece">
         {String.fromCharCode(9813)}
       </div>
     );

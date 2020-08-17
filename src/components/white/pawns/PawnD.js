@@ -12,13 +12,19 @@ class PawnD extends Moves {
     //console.log('White Pawn D');
     return this.getCandidateWhitePawnMoves(piece, squares, prevMove);
   }
-    render() {
-      return (
-        <div className="piece">
-          {'d'}
-        </div>
-      );
-    }
+  render() {
+    const divStyle = {
+      color: '#aaaaaa',
+      fontSize: 80,
+    };        
+    
+    return (
+      <div style={divStyle} className="piece">          
+        {String.fromCharCode(9817)}
+      </div>
+    );
+  }
+
 }
 
 export default PawnD;

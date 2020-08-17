@@ -18,8 +18,11 @@ class PawnH extends Moves {
 
 
     render() {
+      const divStyle = {
+        fontSize: 80,
+      };
       return (
-        <div className="piece">
+        <div style={divStyle} className="piece">
           {String.fromCharCode(9823)}
         </div>
       );

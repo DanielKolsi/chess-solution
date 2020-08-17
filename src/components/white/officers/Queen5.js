@@ -1,21 +1,21 @@
 import React from 'react';
 import Moves from '../../Moves';
 
-class Queen3 extends Moves {
+class Queen5 extends Moves {
   constructor(props) {
     super(props);
     this.state = {}
   }
 
   getCandidateMoves(piece, squares) {
-    console.log('Black Queen3');
-    if (piece.value !== -9) return undefined;
+    console.log('White Queen5');
+    if (piece.value !== 9) return undefined;
     return this.getCandidateQueenMoves(piece, squares);
   }
 
   render() {
-    
     const divStyle = {
+      color: '#aaaaaa',
       fontSize: 85,
     };
     return (
@@ -25,4 +25,4 @@ class Queen3 extends Moves {
     );
   }
 }
-export default Queen3;
+export default Queen5;

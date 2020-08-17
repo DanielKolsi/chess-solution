@@ -14,9 +14,13 @@ class PawnG extends Moves {
   }
 
     render() {
+      const divStyle = {
+        color: '#aaaaaa',        
+        fontSize: 80,
+      }; 
       return (
-        <div className="piece">
-          {'g'}
+        <div style = {divStyle} className="piece">
+          {String.fromCharCode(9817)}
         </div>
       );
     }

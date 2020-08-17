@@ -3,17 +3,156 @@ import CONSTANTS from '../config/constants';
 
 class Moves extends React.Component {
 
+  /*
   constructor(props) {
     super(props);
     this.state = {
     }
   }
+*/
+
+  getCandidateWhiteKingMoves(piece, squares) {
+    
+    const DLM = CONSTANTS.defaultDelim;
+    let candidateMoves = [];
+    let pos = 1 * piece.currentSquare; // ensure this is dealt as an integer!
+
+    let up = pos + CONSTANTS.up;
+    let down = pos + CONSTANTS.down;
+    let left = pos + CONSTANTS.left;
+    let right = pos + CONSTANTS.right;
+    let downLeft = pos + CONSTANTS.downLeft;
+    let downRight = pos + CONSTANTS.downRight;
+    let upLeft = pos + CONSTANTS.upLeft;
+    let upRight = pos + CONSTANTS.upRight;
+
+
+    if (squares[pos].row < CONSTANTS.maxRow) { // needs to stay on the board limits
+      if (squares[up].piece == null || squares[up].piece.white === false) {
+        candidateMoves.push(pos + DLM + up);
+      }
+    }
+
+    if (squares[pos].row > CONSTANTS.minRow) { // needs to stay on the board limits
+      if (squares[down].piece == null || squares[down].piece.white === false) {
+        candidateMoves.push(pos + DLM + down);
+      }
+    }
+
+    if (squares[pos].col > CONSTANTS.minCol) { // needs to stay on the board limits
+      if (squares[left].piece == null || squares[left].piece.white === false) {
+        candidateMoves.push(pos + DLM + left);
+      }
+    }
+
+    if (squares[pos].col < CONSTANTS.maxCol) { // needs to stay on the board limits
+      if (squares[right].piece == null || squares[right].piece.white === false) {
+        candidateMoves.push(pos + DLM + right);
+      }
+    }
+
+    if (squares[pos].row < CONSTANTS.maxRow && (squares[pos].col < CONSTANTS.maxCol)) { // needs to stay on the board limits
+      if (squares[upRight].piece == null || squares[upRight].piece.white === false) {
+        candidateMoves.push(pos + DLM + upRight);
+      }
+    }
+
+    if (squares[pos].row > CONSTANTS.minRow && squares[pos].col < CONSTANTS.maxCol) { // needs to stay on the board limits
+      if (squares[downRight].piece == null || squares[downRight].piece.white === false) {
+        candidateMoves.push(pos + DLM + downRight);
+      }
+    }
+
+    if (squares[pos].row < CONSTANTS.maxRow && squares[pos].col > CONSTANTS.minCol) { // needs to stay on the board limits
+      if (squares[upLeft].piece == null || squares[upLeft].piece.white === false) {
+        candidateMoves.push(pos + DLM + upLeft);
+      }
+    }
+
+    if (squares[pos].row > CONSTANTS.minRow && squares[pos].col > CONSTANTS.minCol) { // needs to stay on the board limits
+      if (squares[downLeft].piece == null || squares[downLeft].piece.white === false) {
+        candidateMoves.push(pos + DLM + downLeft);
+      }
+    }
+    //console.log('White king moves size = ' + candidateMoves.length);
+    return candidateMoves;
+  }
+
+  getCandidateBlacKingMoves(piece, squares) {
+
+    const DLM = CONSTANTS.defaultDelim;
+    let candidateMoves = [];
+    let pos = 1 * piece.currentSquare;
+
+    let up = pos + CONSTANTS.up;
+    let down = pos + CONSTANTS.down;
+    let left = pos + CONSTANTS.left;
+    let right = pos + CONSTANTS.right;
+    let downLeft = pos + CONSTANTS.downLeft;
+    let downRight = pos + CONSTANTS.downRight;
+    let upLeft = pos + CONSTANTS.upLeft;
+    let upRight = pos + CONSTANTS.upRight;
+
+
+    if (squares[pos].row < CONSTANTS.maxRow) { // needs to stay on the board limits
+      if (squares[up].piece === null || (squares[up].piece.white === true)) {
+        candidateMoves.push(pos + DLM + up);
+      }
+    }
+
+    if (squares[pos].row > CONSTANTS.minRow) { // needs to stay on the board limits
+      if (squares[down].piece === null || (squares[down].piece.white === true)) {
+        candidateMoves.push(pos + DLM + down);
+      }
+    }
+
+    if (squares[pos].col > CONSTANTS.minCol) { // needs to stay on the board limits
+      if (squares[left].piece === null || (squares[left].piece.white === true)) {
+        candidateMoves.push(pos + DLM + left);
+      }
+    }
+
+    if (squares[pos].col < CONSTANTS.maxCol) { // needs to stay on the board limits
+      if (squares[right].piece === null || (squares[right].piece.white === true)) {
+        candidateMoves.push(pos + DLM + right);
+      }
+    }
+
+    if (squares[pos].row < CONSTANTS.maxRow && (squares[pos].col < CONSTANTS.maxCol)) { // needs to stay on the board limits
+      if (squares[upRight].piece === null || (squares[upRight].piece.white === true)) {
+        candidateMoves.push(pos + DLM + upRight);
+      }
+    }
+
+    if (squares[pos].row > CONSTANTS.minRow && squares[pos].col < CONSTANTS.maxCol) { // needs to stay on the board limits
+      if (squares[downRight].piece === null || (squares[downRight].piece.white === true)) {
+        candidateMoves.push(pos + DLM + downRight);
+      }
+    }
+
+    if (squares[pos].row < CONSTANTS.maxRow && squares[pos].col > CONSTANTS.minCol) { // needs to stay on the board limits
+      if (squares[upLeft].piece === null || (squares[upLeft].piece.white === true)) {
+        candidateMoves.push(pos + DLM + upLeft);
+      }
+    }
+
+    if (squares[pos].row > CONSTANTS.minRow && squares[pos].col > CONSTANTS.minCol) { // needs to stay on the board limits
+      if (squares[downLeft].piece === null || (squares[downLeft].piece.white === true)) {
+        candidateMoves.push(pos + DLM + downLeft);
+      }
+    }
+    //console.log('Black king moves size = ' + candidateMoves.length);
+    return candidateMoves;
+  }
+
 
   // en passe -> former position (former from move)
+  
   getCandidateWhitePawnMoves(piece, squares, prevMove) {
 
-    let pos = 1 * piece.location;
+    let pos = 1 * piece.currentSquare;
 
+    const DLM = CONSTANTS.defaultDelim;
     const down = pos + CONSTANTS.down;
     let down2 = pos + CONSTANTS.down2;
     let downLeft = pos + CONSTANTS.downLeft;
@@ -21,19 +160,23 @@ class Moves extends React.Component {
 
     let candidateMoves = [];
 
+    //console.log("down = " + down + " piece pos = " + pos);
+    if (down < 0 || downRight < 0 || downLeft < 0) return candidateMoves;
     if (squares[down].piece === null && (squares[pos].row > CONSTANTS.minRow)) {
-      candidateMoves.push(pos + '#' + down);
+      candidateMoves.push(pos + DLM + down);
 
       if (squares[pos].row === CONSTANTS.whitePawnInitialRow && squares[down2].piece === null) { // hasn't moved yet, double pawn front
-        candidateMoves.push(pos + '#' + down2);
+        candidateMoves.push(pos + DLM + down2);
       }
     }
+    // TODO: add promotions as candidate moves here (+underpromotions!)
+    // direct promotion & promotion by eating (downright & downleft): Q, R, N, B
 
     if (squares[pos].col > CONSTANTS.minCol && (squares[downLeft].piece !== null && squares[downLeft].piece.white === false)) { // eat black
-      candidateMoves.push(pos + '#' + downLeft); // eats black piece
+      candidateMoves.push(pos + DLM + downLeft); // eats black piece
     }
     if (squares[pos].col < CONSTANTS.maxCol && (squares[downRight].piece !== null && squares[downRight].piece.white === false)) { // right up eat black
-      candidateMoves.push(pos + '#' + downRight); // eats black piece
+      candidateMoves.push(pos + DLM + downRight); // eats black piece
     }
 
     if (squares[pos].row === CONSTANTS.whiteEnPasseAllowedRow) {
@@ -45,7 +188,7 @@ class Moves extends React.Component {
         if (rightPiece !== null && rightPiece.value === CONSTANTS.blackPawn) {
           const dst = pos + CONSTANTS.right;
           const src = dst + CONSTANTS.down2;
-          const tmp =  src + '#' + dst;
+          const tmp =  src + DLM + dst;
 
           if (this.state.prevMove === tmp) {
               const downRight = pos + CONSTANTS.upDown;
@@ -56,7 +199,7 @@ class Moves extends React.Component {
 
           const dst = pos + CONSTANTS.left;
           const src = dst + CONSTANTS.down2;
-          const tmp = src + '#' + dst;
+          const tmp = src + DLM + dst;
 
           if (prevMove === tmp) {
               const downLeft = pos + CONSTANTS.downLeft;
@@ -69,7 +212,8 @@ class Moves extends React.Component {
 
   getCandidateBlackPawnMoves(piece, squares, prevMove) {
 
-    const pos = 1 * piece.location; // ensure this is a number
+    const DLM = CONSTANTS.defaultDelim;
+    const pos = 1 * piece.currentSquare; // ensure this is a number
 
     let up = pos + CONSTANTS.up;
     let up2 = pos + CONSTANTS.up2;
@@ -79,17 +223,17 @@ class Moves extends React.Component {
     let candidateMoves = [];
 
     if (squares[up].piece === null && (squares[pos].row < CONSTANTS.maxRow)) {
-      candidateMoves.push(pos + '#' + up);
+      candidateMoves.push(pos + DLM + up);
 
       if (squares[pos].row === CONSTANTS.blackPawnInitialRow && squares[up2].piece === null) { // hasn't moved yet, double pawn front
-        candidateMoves.push(pos + '#' + up2);
+        candidateMoves.push(pos + DLM + up2);
       }
     }
     if (squares[pos].col > CONSTANTS.minCol && (squares[upLeft].piece !== null && squares[upLeft].piece.white === true)) { // eat white
-      candidateMoves.push(pos + '#' + upLeft);
+      candidateMoves.push(pos + DLM + upLeft);
     }
     if (squares[pos].col < CONSTANTS.maxCol && (squares[upRight].piece !== null && squares[upRight].piece.white === true)) { // right up eat white
-      candidateMoves.push(pos + '#' + upRight);
+      candidateMoves.push(pos + DLM + upRight);
     }
 
     if (squares[pos].row === CONSTANTS.blackEnPasseAllowedRow) {
@@ -99,7 +243,7 @@ class Moves extends React.Component {
         if (rightPiece !== null && rightPiece.value === CONSTANTS.whitePawn) {
           const dst = pos + CONSTANTS.right;
           const src = dst + CONSTANTS.up2;
-          const tmp =  src + '#' + dst;
+          const tmp =  src + DLM + dst;
 
           if (this.state.prevMove === tmp) {
               const upRight = pos + CONSTANTS.upRight;
@@ -109,7 +253,7 @@ class Moves extends React.Component {
         } else if (leftPiece !== null && leftPiece.value === CONSTANTS.whitePawn) {
           const dst = pos + CONSTANTS.left;
           const src = dst + CONSTANTS.up2;
-          const tmp =  src + '#' + dst;
+          const tmp =  src + DLM + dst;
 
           if (prevMove === tmp) {
               const upLeft = pos + CONSTANTS.upLeft;
@@ -122,15 +266,17 @@ class Moves extends React.Component {
 
   getCandidateKnightMoves(piece, squares) {
 
-    const pos = 1 * piece.location;
+    const pos = 1 * piece.currentSquare;
+    const DLM = CONSTANTS.defaultDelim;
     let candidateMoves = [];
 
     // 2 right, 1 up
     const rightUp = pos + CONSTANTS.twoRightOneUp;
 
+
     if (squares[pos].row <= 6 && squares[pos].col <= 5) { // check that the move stays on the board
       if (squares[rightUp].piece === null || (squares[rightUp].piece.white !== piece.white)) {
-        candidateMoves.push(pos + '#' + rightUp);
+        candidateMoves.push(pos + DLM + rightUp);
       }
     }
     // 2 right, 1 down
@@ -138,7 +284,7 @@ class Moves extends React.Component {
 
     if (squares[pos].row >= 1 && squares[pos].col <= 5) { // check that the move stays on the board
       if (squares[rightDown].piece === null || (squares[rightDown].piece.white !== piece.white)) {
-        candidateMoves.push(pos + '#' + rightDown);
+        candidateMoves.push(pos + DLM + rightDown);
       }
     }
 
@@ -147,7 +293,7 @@ class Moves extends React.Component {
 
     if (squares[pos].row <= 5 && squares[pos].col <= 6) {
       if (squares[upRight].piece === null || (squares[upRight].piece.white !== piece.white)) {
-        candidateMoves.push(pos + '#' + upRight);
+        candidateMoves.push(pos + DLM + upRight);
       }
     }
     // 2 up, 1 left
@@ -155,7 +301,7 @@ class Moves extends React.Component {
 
     if (squares[pos].row <= 5 && squares[pos].col >= 1) {
       if (squares[upLeft].piece === null || (squares[upLeft].piece.white !== piece.white)) {
-        candidateMoves.push(pos + '#' + upLeft);
+        candidateMoves.push(pos + DLM + upLeft);
       }
     }
     // 2 left, 1 up
@@ -163,7 +309,7 @@ class Moves extends React.Component {
 
     if (squares[pos].row <= 6 && squares[pos].col >= 2) {
       if (squares[leftUp].piece === null || (squares[leftUp].piece.white !== piece.white)) {
-        candidateMoves.push(pos + '#' + leftUp);
+        candidateMoves.push(pos + DLM + leftUp);
       }
     }
 
@@ -173,7 +319,7 @@ class Moves extends React.Component {
 
     if (squares[pos].row >= 1 && squares[pos].col >= 2) {
       if (squares[leftDown].piece === null || (squares[leftDown].piece.white !== piece.white)) {
-        candidateMoves.push(pos + '#' + leftDown);
+        candidateMoves.push(pos + DLM + leftDown);
       }
     }
     // 2 down, 1 right
@@ -181,7 +327,7 @@ class Moves extends React.Component {
 
     if (squares[pos].row >= 2 && squares[pos].col <= 6) {
       if (squares[downRight].piece === null || (squares[downRight].piece.white !== piece.white)) {
-        candidateMoves.push(pos + '#' + downRight);
+        candidateMoves.push(pos + DLM + downRight);
       }
     }
     // 2 down, 1 left
@@ -189,15 +335,15 @@ class Moves extends React.Component {
 
     if (squares[pos].row >= 2 && squares[pos].col >= 1) {
       if (squares[downLeft].piece === null || (squares[downLeft].piece.white !== piece.white)) {
-        candidateMoves.push(pos + '#' + downLeft);
+        candidateMoves.push(pos + DLM + downLeft);
       }
     }
     return candidateMoves;
   }
 
-  isAllowebByKnight(piece, kingPosition) {
+  isAllowedByOpponentKnight(piece, kingPosition) {
 
-    const pos = 1 * piece.location;
+    const pos = 1 * piece.currentSquare;
 
     // 2 right, 1 up
     const rightUp = pos + CONSTANTS.twoRightOneUp;
@@ -252,10 +398,10 @@ class Moves extends React.Component {
     return allowed;
   }
 
-  isAllowedByBlackPawn(piece, kingPosition) {
+  isAllowedByOpponentBlackPawn(piece, kingPosition) {
     const allowed = true;
 
-    const pos = 1 * piece.location; // ensure this is a number
+    const pos = 1 * piece.currentSquare; // ensure this is a number
 
     let upLeft = pos + CONSTANTS.upLeft;
     let upRight = pos + CONSTANTS.upRight;
@@ -265,10 +411,10 @@ class Moves extends React.Component {
     return allowed;
   }
 
-  isAllowedByWhitePawn(piece, kingPosition) {
+  isAllowedByOpponentWhitePawn(piece, kingPosition) {
     const allowed = true;
 
-    let pos = 1 * piece.location;
+    let pos = 1 * piece.currentSquare;
 
     let downLeft = pos + CONSTANTS.downLeft;
     let downRight = pos + CONSTANTS.downRight;
@@ -290,7 +436,8 @@ class Moves extends React.Component {
 
   getCandidateDiagonalMovesUpRight(piece, squares, candidateMoves) {
 
-    let pos = 1 * piece.location;
+    const DLM = CONSTANTS.defaultDelim;
+    let pos = 1 * piece.currentSquare;
 
     let squaresAvailableRight = CONSTANTS.maxCol - squares[pos].col;
     let squaresAvailableUp = CONSTANTS.maxRow - squares[pos].row;
@@ -307,9 +454,9 @@ class Moves extends React.Component {
       let dst = pos + (i * CONSTANTS.upRight);
 
       if (squares[dst].piece === null) {
-        candidateMoves.push(pos + '#' + dst);
+        candidateMoves.push(pos + DLM + dst);
       } else if (squares[dst].piece.white !== piece.white) {
-        candidateMoves.push(pos + '#' + dst); // eat opponent's piece
+        candidateMoves.push(pos + DLM + dst); // eat opponent's piece
         break;
       } else {
         break; // own piece
@@ -321,7 +468,8 @@ class Moves extends React.Component {
 
   getCandidateDiagonalMovesUpLeft(piece, squares, candidateMoves) {
 
-    let pos = 1 * piece.location;
+    const DLM = CONSTANTS.defaultDelim;
+    let pos = 1 * piece.currentSquare;
 
     const squaresAvailableLeft = squares[pos].col;
     const squaresAvailableUp = CONSTANTS.maxRow - squares[pos].row;
@@ -338,9 +486,9 @@ class Moves extends React.Component {
       let dst = pos + (i * CONSTANTS.upLeft);
 
       if (squares[dst].piece === null) {
-        candidateMoves.push(pos + '#' + dst);
+        candidateMoves.push(pos + DLM + dst);
       } else if (squares[dst].piece.white !== piece.white) {
-        candidateMoves.push(pos + '#' + dst); // eat opponent's piece
+        candidateMoves.push(pos + DLM + dst); // eat opponent's piece
         break;
       } else {
         break; // own piece
@@ -352,7 +500,8 @@ class Moves extends React.Component {
 
   getCandidateDiagonalMovesDownRight(piece, squares, candidateMoves) {
 
-    let pos = 1 * piece.location;
+    const DLM = CONSTANTS.defaultDelim;
+    let pos = 1 * piece.currentSquare;
 
     let squaresAvailableRight = CONSTANTS.maxCol - squares[pos].col;
     let squaresAvailableDown = squares[pos].row;
@@ -369,9 +518,9 @@ class Moves extends React.Component {
       let dst = pos + (i * CONSTANTS.downRight);
 
      if (squares[dst].piece === null) {
-        candidateMoves.push(pos + '#' + dst);
+        candidateMoves.push(pos + DLM + dst);
       } else if (squares[dst].piece.white !== piece.white) {
-        candidateMoves.push(pos + '#' + dst); // eat opponent's piece
+        candidateMoves.push(pos + DLM + dst); // eat opponent's piece
         break;
       } else {
         break; // own piece
@@ -383,7 +532,8 @@ class Moves extends React.Component {
 
   getCandidateDiagonalMovesDownLeft(piece, squares, candidateMoves) {
 
-    let pos = 1 * piece.location;
+    const DLM = CONSTANTS.defaultDelim;
+    let pos = 1 * piece.currentSquare;
 
     let squaresAvailableLeft = squares[pos].col;
     let squaresAvailableDown = squares[pos].row;
@@ -400,9 +550,9 @@ class Moves extends React.Component {
       let dst = pos + (i * CONSTANTS.downLeft);
 
       if (squares[dst].piece === null) {
-        candidateMoves.push(pos + '#' + dst);
+        candidateMoves.push(pos + DLM + dst);
       } else if (squares[dst].piece.white !== piece.white) {
-        candidateMoves.push(pos + '#' + dst); // eat opponent's piece
+        candidateMoves.push(pos + DLM + dst); // eat opponent's piece
         break;
       } else {
         break; // own piece
@@ -415,7 +565,8 @@ class Moves extends React.Component {
   getCandidateRookMoves(piece, squares) {
 
     //console.log('<ROOK> moves </ROOK>');
-    let pos = 1 * piece.location;
+    const DLM = CONSTANTS.defaultDelim;
+    let pos = 1 * piece.currentSquare;
 
     let candidateMoves = [];
     let UP = pos + CONSTANTS.up;
@@ -427,11 +578,11 @@ class Moves extends React.Component {
     for (let i = UP; i <= CONSTANTS.maxWhite; i += CONSTANTS.up) {
 
       if (squares[i].piece === null) {
-        candidateMoves.push(pos + '#' + i);
+        candidateMoves.push(pos + DLM + i);
       } else if (squares[i].piece === undefined) {
-        candidateMoves.push(pos + '#' + i);
+        candidateMoves.push(pos + DLM + i);
       } else if (piece.white !== squares[i].piece.white) { // eat
-        candidateMoves.push(pos + '#' + i);
+        candidateMoves.push(pos + DLM + i);
         break; // no more move possibilities after eating
       } else {
         break; // own piece blocks
@@ -442,9 +593,9 @@ class Moves extends React.Component {
     for (let i = DOWN; i >= 0; i += CONSTANTS.down) {
 
      if (squares[i].piece === null) {
-        candidateMoves.push(pos + '#' + i);
+        candidateMoves.push(pos + DLM + i);
       } else if (piece.white !== squares[i].piece.white) { // eat
-        candidateMoves.push(pos + '#' + i); // FIXME: # could be changed to X for eating
+        candidateMoves.push(pos + DLM + i); // FIXME: # could be changed to X for eating
         break; // no more move possibilities after eating
       } else
         break; // own piece
@@ -456,9 +607,9 @@ class Moves extends React.Component {
     for (let i = RIGHT; i <= (movesRight + pos); i++) {
 
       if (squares[i].piece === null) {
-        candidateMoves.push(pos + '#' + i);
+        candidateMoves.push(pos + DLM + i);
       } else if (piece.white !== squares[i].piece.white) { // eat
-        candidateMoves.push(pos + '#' + i);
+        candidateMoves.push(pos + DLM + i);
         break; // no more move possibilities after eating
       } else
         break; // own piece
@@ -469,9 +620,9 @@ class Moves extends React.Component {
 
     for (let i = LEFT; i >= (pos - movesLeft); i--) {
       if (squares[i].piece === null) {
-        candidateMoves.push(pos + '#' + i);
+        candidateMoves.push(pos + DLM + i);
       } else if (piece.white !== squares[i].piece.white) { // eat
-        candidateMoves.push(pos + '#' + i);
+        candidateMoves.push(pos + DLM + i);
         break; // no more move possibilities after eating
       } else
         break; // own piece
@@ -479,23 +630,24 @@ class Moves extends React.Component {
     return candidateMoves;
   }
 
-  isAllowedByQueen(piece, squares, kingPosition, opponentCandidateMove) {
+  isAllowedByOpponentQueen(piece, squares, kingPosition, opponentCandidateMove) {
 
     let allowed = true;
-    const pos = 1 * piece.location;
+    const pos = 1 * piece.currentSquare;
     if (pos < 0) return allowed; // ignore to-be-promoted extra pieces
 
-    allowed = this.isAllowedByRook(piece, squares, kingPosition, opponentCandidateMove);
+    allowed = this.isAllowedByOpponentRook(piece, squares, kingPosition, opponentCandidateMove);
 
     if (!allowed) return false;
 
-    allowed = this.isAllowedByBishop(piece, squares, kingPosition, opponentCandidateMove);
+    allowed = this.isAllowedByOpponentBishop(piece, squares, kingPosition, opponentCandidateMove);
+    
     return allowed
   }
 
-  isAllowedByKing(piece, kingPosition) {
+  isAllowedByOpponentKing(piece, kingPosition) {
     let allowed = true;
-    let pos = 1 * piece.location; // ensure this is dealt as an integer!
+    let pos = 1 * piece.currentSquare; // ensure this is dealt as an integer!
 
     let up = pos + CONSTANTS.up;
     let down = pos + CONSTANTS.down;
@@ -506,7 +658,7 @@ class Moves extends React.Component {
     let upLeft = pos + CONSTANTS.upLeft;
     let upRight = pos + CONSTANTS.upRight;
 
-    console.log('isallowedby king, piece =  ' + piece.type + ' king pos = ' + kingPosition);
+    //console.log('isallowedby king, piece =  ' + piece.type + ' king pos = ' + kingPosition);
 
     if (up === kingPosition)
       return false; // reject move #1
@@ -528,15 +680,16 @@ class Moves extends React.Component {
     return allowed;
   }
 
-  isAllowedByBishop(piece, squares, kingPosition, opponentCandidateMove) {
+  isAllowedByOpponentBishop(piece, squares, kingPosition, opponentCandidateMove) {
 
+    const DLM = CONSTANTS.defaultDelim;
     let canditSrc = 0;
     let canditDst = 0;
 
     let allowed = true;
 
     if (opponentCandidateMove !== undefined) {
-      const move = opponentCandidateMove.split('#'); // [1] === dst move
+      const move = opponentCandidateMove.split(DLM); // [1] === dst move
       canditDst = 1 * move[1];
       canditSrc = 1 * move[0]; // ensure that it's an integer! (*1)
       }
@@ -555,10 +708,12 @@ class Moves extends React.Component {
     return allowed;
   }
 
-  isAllowedByRook(piece, squares, kingPosition, opponentCandidateMove) {
+  isAllowedByOpponentRook(piece, squares, kingPosition, opponentCandidateMove) {
+    
+    const DLM = CONSTANTS.defaultDelim;
     let allowed = true;
 
-    let pos = 1 * piece.location;
+    let pos = 1 * piece.currentSquare;
 
     let UP = pos + CONSTANTS.up;
     let DOWN = pos + CONSTANTS.down;
@@ -569,7 +724,7 @@ class Moves extends React.Component {
     let canditDst = 0;
 
     if (opponentCandidateMove !== undefined) {
-      const move = opponentCandidateMove.split('#'); // [1] === dst move
+      const move = opponentCandidateMove.split(DLM); // [1] === dst move
       canditSrc = 1 * move[0];
       canditDst = 1 * move[1];
     }
@@ -652,7 +807,7 @@ class Moves extends React.Component {
   }
 
   isDiagonalMovesUpRightAllowed(piece, squares, kingPosition, canditSrc, canditDst) {
-    let pos = 1 * piece.location;
+    let pos = 1 * piece.currentSquare;
     let allowed = true;
 
     let squaresAvailableRight = CONSTANTS.maxCol - squares[pos].col;
@@ -685,7 +840,7 @@ class Moves extends React.Component {
 
 
   isDiagonalMovesUpLeftAllowed(piece, squares, kingPosition, canditSrc, canditDst) {
-    let pos = 1 * piece.location;
+    let pos = 1 * piece.currentSquare;
     let allowed = true;
 
     const squaresAvailableLeft = squares[pos].col;
@@ -717,7 +872,7 @@ class Moves extends React.Component {
   }
 
   isDiagonalMovesDownRightAllowed(piece, squares, kingPosition, canditSrc, canditDst) {
-    let pos = 1 * piece.location;
+    let pos = 1 * piece.currentSquare;
     let allowed = true;
 
     let squaresAvailableRight = CONSTANTS.maxCol - squares[pos].col;
@@ -741,7 +896,7 @@ class Moves extends React.Component {
       if (dst === canditSrc) {
         continue;
       } else if (dst === canditDst) {
-        console.log('Move accepted, collides with candit dst, OK.');
+        //console.log('Move accepted, collides with candit dst, OK.');
         break;
       } else if (squares[dst].piece !== null) {
         break;
@@ -751,7 +906,7 @@ class Moves extends React.Component {
   }
 
   isDiagonalMovesDownLeftAllowed(piece, squares, kingPosition, canditSrc, canditDst) {
-    let pos = 1 * piece.location;
+    let pos = 1 * piece.currentSquare;
     let allowed = true;
 
     let squaresAvailableLeft = squares[pos].col;
@@ -774,7 +929,7 @@ class Moves extends React.Component {
       if (dst === canditSrc) {
         continue;
       } else if (dst === canditDst) {
-        console.log('Move accepted, collides with candit dst, OK.');
+        //console.log('Move accepted, collides with candit dst, OK.');
         break;
       } else if (squares[dst].piece !== null) {
         break;
@@ -795,9 +950,10 @@ class Moves extends React.Component {
 
  // best move strategy for white
   getBestWhiteMove(squares, allowedMovesWhite) {
+    const DLM = CONSTANTS.defaultDelim;
 
     for (let i = 0; i < allowedMovesWhite.length; i++) {
-       const move = allowedMovesWhite[i].split('#');
+       const move = allowedMovesWhite[i].split(DLM);
        const src = move[0];
        const dst = move[1];
        if (squares[dst] !== undefined && squares[dst].piece !== null) {
@@ -808,15 +964,19 @@ class Moves extends React.Component {
           }
        }
     }
+     // just a random move initially, replace with point functions & heuristics
     const n = Math.floor(Math.random() * allowedMovesWhite.length);
+    
     return allowedMovesWhite[n];
   }
 
   // best move strategy for black
   getBestBlackMove(squares, allowedMovesBlack) {
 
+    const DLM = CONSTANTS.defaultDelim;
+
     for (let i = 0; i < allowedMovesBlack.length; i++) {
-       const move = allowedMovesBlack[i].split('#');
+       const move = allowedMovesBlack[i].split(DLM);
 
        const dst = move[1];
        if (squares[dst] !== undefined && squares[dst].piece !== null) {

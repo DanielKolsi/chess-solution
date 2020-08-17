@@ -43,10 +43,14 @@ import RookBH from './black/officers/RookH';
 // import promotions
 import QueenW2 from './white/officers/Queen2';
 import QueenW3 from './white/officers/Queen3';
+import QueenW4 from './white/officers/Queen4';
+import QueenW5 from './white/officers/Queen5';
+import KnightW3 from './white/officers/Knight3'; // for underpromotion
+
 
 import QueenB2 from './black/officers/Queen2';
 import QueenB3 from './black/officers/Queen3';
-
+import KnightB3 from './black/officers/Knight3'; // for underpromotion
 
 //import PropTypes from 'prop-types'; // ES6
 
@@ -57,25 +61,21 @@ const pieces = {
   KingB, QueenB, BishopBC, BishopBF, KnightBB, KnightBG,
   RookBA, RookBH, PawnBA, PawnBB, PawnBC, PawnBD, PawnBE,
   PawnBF, PawnBG, PawnBH,
-  QueenW2, QueenW3, QueenB2, QueenB3
+  QueenW2, QueenW3, QueenW4, QueenW5, KnightW3, QueenB2, QueenB3, KnightB3
 };
 
 class Square extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    }
-  }
-
+  
   render() {
+    
     let {piece} = this.props;
-
-    piece = (piece) ? React.createElement(pieces[piece.type], {ref: 'piece', type: piece.type, white: piece.white, location: piece.location, n: piece.n}) : '';
-
+    
+    piece = (piece) ? React.createElement(pieces[piece.type], {ref: 'piece', type: piece.type, white: piece.white, currentSquare: piece.currentSquare, n: piece.n}) : '';
+    
     return (
-
       <div className="square">
-        {piece}
+        {this.props.index}         
+        {piece}         
       </div>
     );
   }

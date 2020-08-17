@@ -14,8 +14,12 @@ class KnightB extends Moves {
     return this.getCandidateKnightMoves(piece, squares);
   }
     render() {
+      const divStyle = {
+        color: '#aaaaaa',
+        fontSize: 85,
+      };
       return (
-        <div className="piece">
+        <div style={divStyle} className="piece">
           {String.fromCharCode(9816)}
         </div>
       );

@@ -15,8 +15,11 @@ class KnightB extends Moves {
   }
 
     render() {
+      const divStyle = {
+        fontSize: 85,
+      };
       return (
-        <div className="piece">
+        <div style={divStyle} className="piece">
           {String.fromCharCode(9822)}
         </div>
       );

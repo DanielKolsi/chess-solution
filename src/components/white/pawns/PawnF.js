@@ -13,9 +13,14 @@ class PawnF extends Moves {
     return this.getCandidateWhitePawnMoves(piece, squares, prevMove);
   }
     render() {
+      const divStyle = {
+        color: '#aaaaaa',
+        fontSize: 80,
+      };        
+      
       return (
-        <div className="piece">
-          {'f'}
+        <div style={divStyle} className="piece">          
+          {String.fromCharCode(9817)}
         </div>
       );
     }

@@ -13,13 +13,19 @@ class PawnH extends Moves {
     return this.getCandidateWhitePawnMoves(piece, squares, prevMove);
   }
 
-    render() {
-      return (
-        <div className="piece">
-          {'h'}
-        </div>
-      );
-    }
+  render() {
+    const divStyle = {
+      color: '#aaaaaa',
+      fontSize: 80,
+    };        
+    
+    return (
+      <div style={divStyle} className="piece">          
+        {String.fromCharCode(9817)}
+      </div>
+    );
+  }
+
 }
 
 export default PawnH;
