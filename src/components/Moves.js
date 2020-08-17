@@ -179,6 +179,7 @@ class Moves extends React.Component {
       candidateMoves.push(pos + DLM + downRight); // eats black piece
     }
 
+    // TODO: add promotion symbols!!!
     if (squares[pos].row === CONSTANTS.whiteEnPasseAllowedRow) {
 
         const rightPiece = squares[pos + CONSTANTS.right].piece;
