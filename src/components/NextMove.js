@@ -13,11 +13,11 @@ class NextMove extends React.Component {
   }
 
   getTurnColor() {
-    console.log("coloring..");
+    
     if (this.state.white) {
-      return "WHITE ";
+      return String.fromCharCode(9898) + " ";
     } else {
-      return "BLACK ";
+      return String.fromCharCode(9899) + " ";
     }
   }
 
