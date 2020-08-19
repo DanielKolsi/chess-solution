@@ -22,12 +22,12 @@ class Chess extends Moves {
       promotedBlackQueenNumber: -1,
 
       // underpromotions
-      promotedWhiteRookNumber: CONSTANTS.maxWhite + 1,
-      promotedBlackRookNumber: -1,
-      promotedWhiteBishopNumber: CONSTANTS.maxWhite + 1,
-      promotedBlackBishopNumber: -1,
-      promotedWhiteKnightNumber: CONSTANTS.maxWhite + 1,
-      promotedBlacKnightNumber: -1,
+      promotedWhiteRookNumber: 70,
+      promotedBlackRookNumber: -10,
+      promotedWhiteBishopNumber: 80,
+      promotedBlackBishopNumber: -20,
+      promotedWhiteKnightNumber: 90,
+      promotedBlacKnightNumber: -30,
 
       white: true,
       previousBoards: [], // array (stack with push/pop) of previous boards
@@ -149,31 +149,51 @@ class Chess extends Moves {
     return candidateMoves;
   }
 
+  getMovesString(move) {
+    console.log("MOVE = " + move);
+    if (move.includes(CONSTANTS.promotionToQueen)) {
+      return move.split(CONSTANTS.promotionToQueen); // src = moves[0], dst = moves[1]
+    } else if (move.includes(CONSTANTS.promotionToRook)) {
+      return move.split(CONSTANTS.promotionToRook); // src = moves[0], dst = moves[1]
+    } else if (move.includes(CONSTANTS.promotionToBishop)) {
+      return move.split(CONSTANTS.promotionToRook); // src = moves[0], dst = moves[1]
+    } else if (move.includes(CONSTANTS.promotionToKnight)) {
+      return move.split(CONSTANTS.promotionToKnight);
+    } else return move.split(CONSTANTS.defaultDelim); 
+  }
+
   getCandidateBoardCorrespondingAllowedMove(allowedMove, board, white) {
     let moves = allowedMove.split(CONSTANTS.defaultDelim); // src = moves[0], dst = moves[1]
 
+    // handle promotions and underpromotions
     if (allowedMove.includes(CONSTANTS.promotionToQueen)) {
       moves = allowedMove.split(CONSTANTS.promotionToQueen); // src = moves[0], dst = moves[1]
       if (white) {
-        // white promotion to queen!
-        let { pieces, promotedWhiteQueenNumber } = this.state;
-        board[moves[1]].piece = pieces[promotedWhiteQueenNumber];
-        board[moves[1]].piece.currentSquare = moves[1];
-        board[moves[0]].piece = null;
+        this.doPromote(board, moves, this.state.promotedWhiteQueenNumber);
       } else {
-        // black promotion to queen!
-        let { pieces, promotedBlackQueenNumber } = this.state;
-        board[moves[1]].piece = pieces[promotedBlackQueenNumber];
-        board[moves[1]].piece.currentSquare = moves[1];
-        board[moves[0]].piece = null;
+        this.doPromote(board, moves, this.state.promotedBlackQueenNumber);
       }
     } else if (allowedMove.includes(CONSTANTS.promotionToRook)) {
-      // TODO: add all underpromotions!
       moves = allowedMove.split(CONSTANTS.promotionToRook); // src = moves[0], dst = moves[1]
+      if (white) {
+        this.doPromote(board, moves, this.state.promotedWhiteRookNumber);
+      } else {
+        this.doPromote(board, moves, this.state.promotedBlackRookNumber);
+      }
     } else if (allowedMove.includes(CONSTANTS.promotionToBishop)) {
       moves = allowedMove.split(CONSTANTS.promotionToBishop); // src = moves[0], dst = moves[1]
+      if (white) {
+        this.doPromote(board, moves, this.state.promotedWhiteBishopNumber);
+      } else {
+        this.doPromote(board, moves, this.state.promotedBlackBishopNumber);
+      }
     } else if (allowedMove.includes(CONSTANTS.promotionToKnight)) {
       moves = allowedMove.split(CONSTANTS.promotionToKnight); // src = moves[0], dst = moves[1]
+      if (white) {
+        this.doPromote(board, moves, this.state.promotedWhiteKnightNumber);
+      } else {
+        this.doPromote(board, moves, this.state.promotedBlackKnightNumber);
+      }
     } else if (allowedMove.includes(CONSTANTS.castlingQueenSide)) {
       moves = allowedMove.split(CONSTANTS.castlingQueenSide);
       this.castleQueenSideAllowedBoard(white, board); // castle queen side was the allowed move, create the corresponding board
@@ -181,7 +201,7 @@ class Chess extends Moves {
       moves = allowedMove.split(CONSTANTS.castlingKingSide);
       this.castleKingSideAllowedBoard(white, board);
     } else {
-      // normal move
+      // normal move, includes eats
 
       board[moves[1]].piece = board[moves[0]].piece; // the move: dst square's piece becomes src square's piece
       board[moves[1]].piece.currentSquare = moves[1];
@@ -190,10 +210,19 @@ class Chess extends Moves {
     return board;
   }
 
+  doPromote(board, moves, promotedPieceNumber) {
+    let { pieces } = this.state;
+
+    board[moves[1]].piece = pieces[promotedPieceNumber];
+    board[moves[1]].piece.currentSquare = moves[1];
+    board[moves[0]].piece = null;
+  }
+
+  /*
   doBasicMove(srcSquare, dstSquare) {
     dstSquare.piece = srcSquare.piece; // this handles a capture as well!
     srcSquare.piece = null;
-  }
+  }*/
   doEnPasse(srcSquare, dstSquare, pieceToBeRemovedSquare) {
     dstSquare.piece = srcSquare.piece; // this handles a capture as well!
     srcSquare.piece = null;
@@ -204,19 +233,15 @@ class Chess extends Moves {
     if (white) {
       console.log("WHITE queen side castling allowed...");
       this.castleQueenSideWhite(board);
-      //this.setState({ whiteKingMoved: true });
     } else {
       this.castleQueenSideBlack(board);
-      //this.setState({ blackKingMoved: true });
     }
   }
   castleKingSideAllowedBoard(white, board) {
     if (white) {
       this.castleKingSideWhite(board);
-      //this.setState({ whiteKingMoved: true });
     } else {
       this.castleKingSideBlack(board);
-      //this.setState({ blackKingMoved: true });
     }
     return board;
   }
@@ -273,30 +298,6 @@ class Chess extends Moves {
         "ERROR: KingW or RookWH has moved alread, castling not allowed!"
       );
     }
-  }
-
-  castleQueenSide(white, board) {
-    console.log("castle queen side, white = " + white);
-    if (white) {
-      this.castleQueenSideWhite(board);
-      this.setState({ whiteKingMoved: true });
-    } else {
-      this.castleQueenSideBlack(board);
-      this.setState({ blackKingMoved: true });
-    }
-  }
-
-  castleKingSide(white, board) {
-    console.log("castle king side, white = " + white);
-
-    if (white) {
-      this.castleKingSideWhite(board);
-      this.setState({ whiteKingMoved: true });
-    } else {
-      this.castleKingSideBlack(board);
-      this.setState({ blackKingMoved: true });
-    }
-    return board;
   }
 
   // board needs to be constructed before pieces are added
@@ -889,14 +890,14 @@ class Chess extends Moves {
         white
       );
 
-      /*console.log(
+      console.log(
         "White previous move:" +
           allowedMoves[i] +
-          " | Points=" +
+          " | Points = " +
           numberOfPossibleNextMoves[i] +
           " | board number = " +
           i
-      );*/
+      );
     } // ..for
 
     maxIdx = this.getMaxMovesIndexWhileAvoidingStalemate(
@@ -921,7 +922,7 @@ class Chess extends Moves {
       );
     } else {
       selectedMove = allowedMoves[maxIdx];
-      max = numberOfPossibleNextMoves.length;
+      max = numberOfPossibleNextMoves[maxIdx];
     }
 
     console.log("boards = " + candidateBoards.length);
@@ -935,32 +936,34 @@ class Chess extends Moves {
         allowedMoves[maxIdx]
     );
 
-    let moveStr = selectedMove.split(CONSTANTS.defaultDelim); // move = src->dst
+    let moveStr = this.getMovesString(selectedMove); // TODO: how about castling and en passe?
 
-    if (white && candidateBoards[maxIdx][moveStr[1]].piece.n > 63) {
+    console.log("moveStr = " + moveStr);
+    const pieceNumberId = candidateBoards[maxIdx][moveStr[1]].piece.n;
+
+    if (white && pieceNumberId > 63 && pieceNumberId < 70) {
+      // white promoted queen = [63, 69]
       console.error("UPDATE next promoted WHITE queen number!!");
       this.setState({
         promotedWhiteQueenNumber: ++this.state.promotedWhiteQueenNumber,
       });
-    } // TODO: add black promotion handling
+    } else if (!white && pieceNumberId < 0 && pieceNumberId > -8) {
+      this.setState({
+        promotedBlackQueenNumber: --this.state.promotedBlackQueenNumber,
+      });
+    } // TODO: add underpromotion piece number counters! (white & black)
 
     if (selectedMove.includes(DLM)) {
       console.log(
         "SELECTED MOVE = " +
           allowedMoves[maxIdx] +
-          "src = " +
+          " src = " +
           moveStr[0] +
-          "dst = " +
+          " dst = " +
           moveStr[1]
       );
-      //this.doBasicMove(srcSquare, dstSquare); // let's do the move that had the most possible moves as the next move; includes captures
-    } else if (selectedMove.includes(CONSTANTS.castlingQueenSide)) {
-      // this.castleQueenSide(white, squares); // TODO, not needed!
-    } else if (selectedMove.includes(CONSTANTS.castleKingSide)) {
-      // this.castleKingSide(white, squares); // TODO, not needed, as part of the selected BOARD!
     } else if (selectedMove.includes(P)) {
       // en passe
-
       moveStr = selectedMove.split(P);
       let srcSquare = squares[moveStr[0]];
       let dstSquare = squares[moveStr[1]];
@@ -975,10 +978,10 @@ class Chess extends Moves {
       } else if (dstSquare === srcSquare + CONSTANTS.upRight) {
         pieceToBeRemovedSquare = srcSquare + CONSTANTS.right;
       }
-      this.doEnPasse(srcSquare, dstSquare, pieceToBeRemovedSquare);
+      this.doEnPasse(srcSquare, dstSquare, pieceToBeRemovedSquare); // TODO: should this be added as a BOARD instead of explicit move?
     }
 
-    this.handleCastlingAllowedCondition(squares[moveStr[0]]);
+    this.handleCastlingAllowedCondition(squares[moveStr[0]]); // we need to check if the selected move caused restrictions that block future castling
 
     this.setState(
       {
@@ -1001,21 +1004,22 @@ class Chess extends Moves {
     let max = 0;
     let maxIdx = 0;
 
-    //console.log("Rook board = " + candidateBoards[1][5].type);
     for (let i = 0; i < candidateBoards.length; ++i) {
       if (numberOfPossibleNextMoves[i] > max) {
         max = numberOfPossibleNextMoves[i]; // select the move from the allowed moves which got the highest points
-        //console.log("max = " + max + " idx = " + i);
         maxIdx = i;
       }
     }
+    console.log("INITIALLY SELECTED max = " + max + " idx = " + maxIdx);
 
     let candidateOpponentMoves;
     let allowedOpponentMoves;
+
     if (white) {
       candidateOpponentMoves = this.getCandidateMovesBlack(
         candidateBoards[maxIdx]
       );
+      console.log("candit opponent moves = " + candidateOpponentMoves.length);
       allowedOpponentMoves = this.getAllowedMovesBlack(
         candidateBoards[maxIdx],
         candidateOpponentMoves
@@ -1030,11 +1034,15 @@ class Chess extends Moves {
       );
     }
 
-    if (allowedOpponentMoves.length === 0) {
+    // TODO: add selection for "immediate mate" move! BEFORE checking for stalemate
+    if (allowedOpponentMoves.length === 0 /*&& notCheck*/) {
       // opponent can't move -> stalemate!
       const { pieces } = this.state;
       console.log(
-        "STALEMATE PREVENTION, SKIP THIS MOVE: " + allowedMoves[maxIdx]
+        "STALEMATE PREVENTION, SKIP THIS MOVE: " +
+          allowedMoves[maxIdx] +
+          " ** max rejected: " +
+          max
       );
       let moves = allowedMoves[maxIdx].split(CONSTANTS.defaultDelim);
       let board = candidateBoards[maxIdx];
@@ -1057,7 +1065,15 @@ class Chess extends Moves {
           numberOfPossibleNextMoves
         ); // recursion is OK here
       }
-      //this.setState({currentBoardSquares: board, candidateBoards: candidateBoards});
+    } else {
+      console.log(
+        "MAX accepted, max = " +
+          max +
+          " idx = " +
+          maxIdx +
+          " move = " +
+          allowedMoves[maxIdx]
+      );
     }
     console.log(
       "returning: max = " +
@@ -1065,7 +1081,9 @@ class Chess extends Moves {
         " max_idx=" +
         maxIdx +
         " numberOfPossibleNextMoves = " +
-        numberOfPossibleNextMoves
+        numberOfPossibleNextMoves +
+        " allowedMoves[maxIdx] = " +
+        allowedMoves[maxIdx]
     );
     return maxIdx;
   }
