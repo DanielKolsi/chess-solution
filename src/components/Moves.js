@@ -284,7 +284,7 @@ class Moves extends React.Component {
 
         if (this.state.prevMove === tmp) {
           const downRight = pos + CONSTANTS.upDown;
-          candidateMoves.push(pos + CONSTANTS.enPasse + downRight); // en passe black pawn; P for en passe
+          candidateMoves.push(pos + CONSTANTS.enPassant + downRight); // en passe black pawn; P for en passe
         }
       } else if (
         leftPiece !== null &&
@@ -296,7 +296,7 @@ class Moves extends React.Component {
 
         if (prevMove === tmp) {
           const downLeft = pos + CONSTANTS.downLeft;
-          candidateMoves.push(pos + CONSTANTS.enPasse + downLeft); // en passe black pawn; P for en passe
+          candidateMoves.push(pos + CONSTANTS.enPassant + downLeft); // en passe black pawn; P for en passe
         }
       }
     }
@@ -368,7 +368,7 @@ class Moves extends React.Component {
 
         if (this.state.prevMove === tmp) {
           const upRight = pos + CONSTANTS.upRight;
-          candidateMoves.push(pos + CONSTANTS.enPasse + upRight); // en passe black pawn; P for en passe
+          candidateMoves.push(pos + CONSTANTS.enPassant + upRight); // en passe black pawn; P for en passe
         }
       } else if (
         leftPiece !== null &&
@@ -380,7 +380,7 @@ class Moves extends React.Component {
 
         if (prevMove === tmp) {
           const upLeft = pos + CONSTANTS.upLeft;
-          candidateMoves.push(pos + CONSTANTS.enPasse + upLeft); // en passe black pawn; P for en passe
+          candidateMoves.push(pos + CONSTANTS.enPassant + upLeft); // en passe black pawn; P for en passe
         }
       }
     }
