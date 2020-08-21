@@ -53,7 +53,7 @@ const CONSTANTS = {
   whiteEnPasseAllowedRow: 3,
   blackEnPasseAllowedRow: 4,
   enPassant: "P",
-
+  check: "+",
   castlingKingSide: ">", // King side
   castlingQueenSide: "<", // Queen side
   promotionToQueen: "Q",

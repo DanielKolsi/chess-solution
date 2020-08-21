@@ -1,7 +1,7 @@
 export default {
   setupPieceData: [
     [15, "KingB", "bk", 4, false, -6],
-    [38, "QueenW", "wq", 59, true, 9],
+    [30, "QueenW", "wq", 59, true, 9],
     [13, "PawnWF", "wpf", 53, true, 1],
     [56, "BishopWC", "wbc", 58, true, 4],
     [60, "KingW", "wk", 60, true, 6],

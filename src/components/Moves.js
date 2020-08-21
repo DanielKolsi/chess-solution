@@ -227,20 +227,20 @@ class Moves extends React.Component {
     if (down < 0 || downRight < 0 || downLeft < 0) return candidateMoves;
     if (squares[down].piece === null && down <= 7) {
       // promotion -> DOWN & DOWNLEFT & DOWNRIGHT
-      this.addWhitePromotion(candidateMoves, pos, down);      
+      this.addWhitePromotion(candidateMoves, pos, down);
     } else if (
       downRight <= 7 &&
       squares[downRight].piece !== null &&
       squares[downRight].piece.white === false
     ) {
       // promotion by eating
-      this.addWhitePromotion(candidateMoves, pos, downRight);      
+      this.addWhitePromotion(candidateMoves, pos, downRight);
     } else if (
       downLeft <= 7 &&
       squares[downLeft].piece !== null &&
       squares[downLeft].piece.white === false
     ) {
-      this.addWhitePromotion(candidateMoves, pos, downLeft);      
+      this.addWhitePromotion(candidateMoves, pos, downLeft);
     } else if (
       squares[down].piece === null &&
       squares[pos].row > CONSTANTS.minRow
@@ -390,10 +390,24 @@ class Moves extends React.Component {
   getCandidateKnightMoves(piece, squares) {
     const pos = 1 * piece.currentSquare;
     const DLM = CONSTANTS.defaultDelim;
-    let candidateMoves = [];
+    const CHECK = CONSTANTS.check;
 
     // 2 right, 1 up
     const rightUp = pos + CONSTANTS.twoRightOneUp;
+    const rightDown = pos + CONSTANTS.twoRightOneDown;
+    const upRight = pos + CONSTANTS.twoUpOneRight;
+    // 2 up, 1 left
+    const upLeft = pos + CONSTANTS.twoUpOneLeft;
+    // 2 left, 1 up
+    const leftUp = pos + CONSTANTS.twoLeftOneUp;
+    // 2 left, 1 down
+    const leftDown = pos + CONSTANTS.twoLeftOneDown;
+    // 2 down, 1 right
+    const downRight = pos + CONSTANTS.twoDownOneRight;
+    // 2 down, 1 left
+    const downLeft = pos + CONSTANTS.twoDownOneLeft;
+
+    let candidateMoves = [];
 
     if (squares[pos].row <= 6 && squares[pos].col <= 5) {
       // check that the move stays on the board
@@ -401,24 +415,39 @@ class Moves extends React.Component {
         squares[rightUp].piece === null ||
         squares[rightUp].piece.white !== piece.white
       ) {
-        candidateMoves.push(pos + DLM + rightUp);
+        if (
+          squares[rightUp].piece !== null &&
+          ((piece.white && squares[rightUp].piece.value === -6) ||
+            (!piece.white && squares[rightUp].piece.value === 6))
+        ) {
+          candidateMoves.push(pos + CHECK + rightUp);
+          console.error("CHECK DETECTED!!");
+        } else {
+          candidateMoves.push(pos + DLM + rightUp);
+        }
       }
     }
-    // 2 right, 1 down
-    let rightDown = pos + CONSTANTS.twoRightOneDown;
 
+    // 2 right, 1 down
     if (squares[pos].row >= 1 && squares[pos].col <= 5) {
       // check that the move stays on the board
       if (
         squares[rightDown].piece === null ||
         squares[rightDown].piece.white !== piece.white
       ) {
-        candidateMoves.push(pos + DLM + rightDown);
+        if (
+          squares[rightUp].piece !== null &&
+          ((piece.white && squares[rightDown].piece.value === 6) ||
+            (!piece.white && squares[rightDown].piece.value === 6))
+        ) {
+          candidateMoves.push(pos + CHECK + rightDown);
+        } else {
+          candidateMoves.push(pos + DLM + rightDown);
+        }
       }
     }
 
     // 2 up, 1 right
-    let upRight = pos + CONSTANTS.twoUpOneRight;
 
     if (squares[pos].row <= 5 && squares[pos].col <= 6) {
       if (
@@ -428,8 +457,6 @@ class Moves extends React.Component {
         candidateMoves.push(pos + DLM + upRight);
       }
     }
-    // 2 up, 1 left
-    let upLeft = pos + CONSTANTS.twoUpOneLeft;
 
     if (squares[pos].row <= 5 && squares[pos].col >= 1) {
       if (
@@ -439,8 +466,6 @@ class Moves extends React.Component {
         candidateMoves.push(pos + DLM + upLeft);
       }
     }
-    // 2 left, 1 up
-    let leftUp = pos + CONSTANTS.twoLeftOneUp;
 
     if (squares[pos].row <= 6 && squares[pos].col >= 2) {
       if (
@@ -451,9 +476,6 @@ class Moves extends React.Component {
       }
     }
 
-    // 2 left, 1 down
-    let leftDown = pos + CONSTANTS.twoLeftOneDown;
-
     if (squares[pos].row >= 1 && squares[pos].col >= 2) {
       if (
         squares[leftDown].piece === null ||
@@ -462,8 +484,6 @@ class Moves extends React.Component {
         candidateMoves.push(pos + DLM + leftDown);
       }
     }
-    // 2 down, 1 right
-    let downRight = pos + CONSTANTS.twoDownOneRight;
 
     if (squares[pos].row >= 2 && squares[pos].col <= 6) {
       if (
@@ -473,8 +493,6 @@ class Moves extends React.Component {
         candidateMoves.push(pos + DLM + downRight);
       }
     }
-    // 2 down, 1 left
-    let downLeft = pos + CONSTANTS.twoDownOneLeft;
 
     if (squares[pos].row >= 2 && squares[pos].col >= 1) {
       if (
