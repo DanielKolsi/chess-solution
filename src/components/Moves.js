@@ -273,7 +273,7 @@ class Moves extends React.Component {
       candidateMoves.push(pos + DLM + downRight); // eats black piece
     }
 
-    if (squares[pos].row === CONSTANTS.whiteEnPasseAllowedRow) {
+    if (squares[pos].row === CONSTANTS.whiteEnPassatAllowedRow) {
       const rightPiece = squares[pos + CONSTANTS.right].piece;
       const leftPiece = squares[pos + CONSTANTS.left].piece;
 
@@ -357,7 +357,7 @@ class Moves extends React.Component {
       candidateMoves.push(pos + DLM + upRight);
     }
 
-    if (squares[pos].row === CONSTANTS.blackEnPasseAllowedRow) {
+    if (squares[pos].row === CONSTANTS.blackEnPassatAllowedRow) {
       const rightPiece = squares[pos + CONSTANTS.right].piece;
       const leftPiece = squares[pos + CONSTANTS.left].piece;
 

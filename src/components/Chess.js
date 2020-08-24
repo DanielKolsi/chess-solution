@@ -49,7 +49,7 @@ class Chess extends Moves {
     this.prevMove = this.prevMove.bind(this);
   }
 
-  getWhiteKingPosition(board) {
+  /*getWhiteKingPosition(board) {
     for (let i = 63; i >= 0; i--) {
       if (
         board[i].piece !== null &&
@@ -68,7 +68,7 @@ class Chess extends Moves {
         return i;
       }
     }
-  }
+  }*/
 
   componentWillMount() {
     this.initBoard();
@@ -148,92 +148,50 @@ class Chess extends Moves {
     return candidateMoves;
   }
 
+  getDelim(move) {
+    const chr = move.charAt(2);
+    return isNaN(chr) ? chr : move.charAt(1);
+  }
+
   getMovesString(move) {
-    console.log("MOVE = " + move);
-    if (move.includes(CONSTANTS.promotionToQueen)) {
-      return move.split(CONSTANTS.promotionToQueen); // src = moves[0], dst = moves[1]
-    } else if (move.includes(CONSTANTS.promotionToRook)) {
-      return move.split(CONSTANTS.promotionToRook); // src = moves[0], dst = moves[1]
-    } else if (move.includes(CONSTANTS.promotionToBishop)) {
-      return move.split(CONSTANTS.promotionToRook); // src = moves[0], dst = moves[1]
-    } else if (move.includes(CONSTANTS.promotionToKnight)) {
-      return move.split(CONSTANTS.promotionToKnight);
-    } else return move.split(CONSTANTS.defaultDelim);
+    const delim = this.getDelim(move);
+    return move.split(delim);
   }
 
   getCandidateBoardCorrespondingAllowedMove(allowedMove, board, white) {
-    let moves = allowedMove.split(CONSTANTS.defaultDelim); // src = moves[0], dst = moves[1]
+    const delim = this.getDelim(allowedMove);
+    let moves = this.getMovesString(allowedMove); // src = moves[0], dst = moves[1]
 
     // handle promotions and underpromotions
-    if (allowedMove.includes(CONSTANTS.promotionToQueen)) {
-      moves = allowedMove.split(CONSTANTS.promotionToQueen); // src = moves[0], dst = moves[1]
-      if (white) {
-        board = this.doPromote(
-          board,
-          moves,
-          this.state.promotedWhiteQueenNumber
-        );
-      } else {
-        board = this.doPromote(
-          board,
-          moves,
-          this.state.promotedBlackQueenNumber
-        );
-      }
-    } else if (allowedMove.includes(CONSTANTS.promotionToRook)) {
-      moves = allowedMove.split(CONSTANTS.promotionToRook); // src = moves[0], dst = moves[1]
-      if (white) {
-        board = this.doPromote(
-          board,
-          moves,
-          this.state.promotedWhiteRookNumber
-        );
-      } else {
-        board = this.doPromote(
-          board,
-          moves,
-          this.state.promotedBlackRookNumber
-        );
-      }
-    } else if (allowedMove.includes(CONSTANTS.promotionToBishop)) {
-      moves = allowedMove.split(CONSTANTS.promotionToBishop); // src = moves[0], dst = moves[1]
-      if (white) {
-        board = this.doPromote(
-          board,
-          moves,
-          this.state.promotedWhiteBishopNumber
-        );
-      } else {
-        board = this.doPromote(
-          board,
-          moves,
-          this.state.promotedBlackBishopNumber
-        );
-      }
-    } else if (allowedMove.includes(CONSTANTS.promotionToKnight)) {
-      moves = allowedMove.split(CONSTANTS.promotionToKnight); // src = moves[0], dst = moves[1]
-      if (white) {
-        board = this.doPromote(
-          board,
-          moves,
-          this.state.promotedWhiteKnightNumber
-        );
-      } else {
-        board = this.doPromote(
-          board,
-          moves,
-          this.state.promotedBlackKnightNumber
-        );
-      }
-    } else if (allowedMove.includes(CONSTANTS.castlingQueenSide)) {
-      moves = allowedMove.split(CONSTANTS.castlingQueenSide);
-      board = this.castleQueenSideAllowedBoard(white, board); // castle queen side was the allowed move, create the corresponding board
-    } else if (allowedMove.includes(CONSTANTS.castlingKingSide)) {
-      moves = allowedMove.split(CONSTANTS.castlingKingSide);
-      board = this.castleKingSideAllowedBoard(white, board);
-    } else if (allowedMove.includes(CONSTANTS.enPassant)) {
-      moves = allowedMove.split(CONSTANTS.enPassant);
+    if (delim === CONSTANTS.promotionToQueen) {
+      let promotedQueenNumber = white
+        ? this.state.promotedWhiteQueenNumber
+        : this.state.promotedBlackQueenNumber;
 
+      board = this.doPromote(board, moves, promotedQueenNumber);
+    } else if (delim === CONSTANTS.promotionToRook) {
+      let promotedRookNumber = white
+        ? this.state.promotedWhiteRookNumber
+        : this.state.promotedBlackRookNumber;
+
+      board = this.doPromote(board, moves, promotedRookNumber);
+    } else if (delim === CONSTANTS.promotionToBishop) {
+      let promotedBishopNumber = white
+        ? this.state.promotedWhiteBishopNumber
+        : this.state.promotedBlackBishopNumber;
+
+      board = this.doPromote(board, moves, promotedBishopNumber);
+    } else if (delim === CONSTANTS.promotionToKnight) {
+      let promotedKnightNumber = white
+        ? this.state.promotedWhiteKnightNumber
+        : this.state.promotedBlackKnightNumber;
+
+      board = this.doPromote(board, moves, promotedKnightNumber);
+    } else if (delim === CONSTANTS.castlingQueenSide) {
+      board = this.castleQueenSideAllowedBoard(white, board); // castle queen side was the allowed move, create the corresponding board
+    } else if (delim === CONSTANTS.castlingKingSide) {
+      board = this.castleKingSideAllowedBoard(white, board);
+    } else if (delim === CONSTANTS.enPassant) {
       board = this.doEnPassantComplete(board, moves);
     } else {
       // normal move, includes eats
@@ -341,7 +299,6 @@ class Chess extends Moves {
     }
     return board;
   }
-
   castleKingSideWhite(board) {
     if (board[60].piece && board[63].piece) {
       // this condition is sufficient!
@@ -399,7 +356,7 @@ class Chess extends Moves {
       pieces[piece.n] = piece;
     });
 
-    this.setState({ pieces: pieces });
+    this.setState({ pieces });
     //this.makeNumberOfMoves(3); // check game over condition!
   }
 
@@ -620,41 +577,27 @@ class Chess extends Moves {
    * @return {[type]}                    allowedMoves
    */
   getAllowedMovesWhite(board, candidateMovesWhite, boardIdx) {
-    const { candidateBoards } = this.state;
+    const { candidateBoards, pieces } = this.state;
     let allowedMoves = []; // contains only the candidate moves that were eventually verified to be allowed
-    let whiteKingPosition = this.getWhiteKingPosition(board);
-    const P = CONSTANTS.enPassant;
-    const DLM = CONSTANTS.defaultDelim;
+    let whiteKingPosition = pieces[60].currentSquare;
 
     for (let i = 0; i < candidateMovesWhite.length; i++) {
       const whiteCandidateMove = candidateMovesWhite[i];
-      let moves = null;
+      let moves = this.getMovesString(candidateMovesWhite[i]);
+      const delim = this.getDelim(candidateMovesWhite[i]);
 
-      if (whiteCandidateMove.includes(DLM)) {
-        moves = candidateMovesWhite[i].split(DLM);
-      } else if (whiteCandidateMove.includes(CONSTANTS.promotionToQueen)) {
-        moves = candidateMovesWhite[i].split(CONSTANTS.promotionToQueen);
-      } else if (whiteCandidateMove.includes(CONSTANTS.promotionToRook)) {
-        moves = candidateMovesWhite[i].split(CONSTANTS.promotionToRook);
-      } else if (whiteCandidateMove.includes(CONSTANTS.promotionToBishop)) {
-        moves = candidateMovesWhite[i].split(CONSTANTS.promotionToBishop);
-      } else if (whiteCandidateMove.includes(CONSTANTS.promotionToKnight)) {
-        moves = candidateMovesWhite[i].split(CONSTANTS.promotionToKnight);
-      } else if (whiteCandidateMove.includes(CONSTANTS.check)) {
+      if (delim === CONSTANTS.check) {
         moves = candidateMovesWhite[i].split(CONSTANTS.check);
         board[64] = "X"; // TODO, added flag for check!
         candidateBoards[boardIdx] = board;
         console.error("CHECK flagged: " + board[64]);
 
-        this.setState({ candidateBoards: candidateBoards });
+        this.setState({ candidateBoards });
         console.error(
           "CHECK revised as an possible allowed move, candit move = " +
             whiteCandidateMove
         );
-      } else if (whiteCandidateMove.includes(P)) {
-        // en passe
-        moves = candidateMovesWhite[i].split(P);
-      } else if (whiteCandidateMove.includes(CONSTANTS.castlingQueenSide)) {
+      } else if (delim === CONSTANTS.castlingQueenSide) {
         console.log("Checking allowance of white queen side castling...");
         let blackCandidateMoves = this.getCandidateMovesBlack(board);
 
@@ -684,7 +627,7 @@ class Chess extends Moves {
           // console.log("castling check: left castling allowed, str =" + str);
         }
         continue; // no further allowance checks required!
-      } else if (whiteCandidateMove.includes(CONSTANTS.castlingKingSide)) {
+      } else if (delim === CONSTANTS.castlingKingSide) {
         let blackCandidateMoves = this.getCandidateMovesBlack(board);
         let allowKingSideCastling = true;
         const re = /.60|.61|.62/g; // numbers of the not-allowed squares
@@ -714,9 +657,6 @@ class Chess extends Moves {
       if (
         this.isWhiteMoveAllowed(board, whiteKingPosition, whiteCandidateMove)
       ) {
-        if (whiteCandidateMove.includes(CONSTANTS.check)) {
-          console.error("adding to allowed moves");
-        }
         allowedMoves.push(whiteCandidateMove);
       }
     } // ..for
@@ -726,20 +666,16 @@ class Chess extends Moves {
 
   getAllowedMovesBlack(board, candidateMovesBlack) {
     let allowedMoves = []; // contains only the candidate moves that were eventually verified to be allowed
-    const P = CONSTANTS.enPassant;
+
     const DLM = CONSTANTS.defaultDelim;
-    const blackKingPosition = this.getBlackKingPosition(board);
+    const blackKingPosition = this.state.pieces[4].currentSquare;
 
     for (let i = 0; i < candidateMovesBlack.length; i++) {
       const str = candidateMovesBlack[i];
 
-      let move = null;
+      let moves = this.getMovesString(str);
 
-      if (str.includes(DLM)) {
-        move = candidateMovesBlack[i].split(DLM); // [1] === dst move
-      } else if (str.includes(P)) {
-        move = candidateMovesBlack[i].split(P);
-      } else if (str.includes(CONSTANTS.castlingQueenSide)) {
+      if (str.includes(CONSTANTS.castlingQueenSide)) {
         let whiteCandidateMoves = this.getCandidateMovesWhite(board);
         let allowLeftCastling = true;
         const re = /1|2|3|4/g; // numbers of the not-allowed squares
@@ -783,8 +719,8 @@ class Chess extends Moves {
         continue;
       }
 
-      let src = 1 * move[0];
-      const dst = 1 * move[1];
+      let src = 1 * moves[0];
+      const dst = 1 * moves[1];
       let kingPosition = 1 * blackKingPosition;
 
       if (src === kingPosition) {
@@ -910,9 +846,14 @@ class Chess extends Moves {
   }
 
   nextMove(nextMove) {
-    this.setState({ nextMove: nextMove });
+    this.setState({ nextMove });
 
-    let { currentBoardSquares: squares, white, candidateBoards } = this.state;
+    let {
+      currentBoardSquares: squares,
+      white,
+      candidateBoards,
+      pieces,
+    } = this.state;
     const previousBoard = _.cloneDeep(squares);
     this.state.previousBoards.push(previousBoard); // stack of previous boards, Lodash deep clone is required!
 
@@ -1009,7 +950,10 @@ class Chess extends Moves {
     console.log("moveStr = " + moveStr);
     const pieceNumberId = candidateBoards[maxIdx][moveStr[1]].piece.n;
 
-    if (white && pieceNumberId > 63 && pieceNumberId < 70) {
+    if (pieceNumberId === 60 || pieceNumberId === 4) {
+      // king moved
+      pieces[pieceNumberId].currentSquare = moveStr[1];
+    } else if (white && pieceNumberId > 63 && pieceNumberId < 70) {
       // white promoted queen = [63, 69]
       console.error("UPDATE next promoted WHITE queen number!!");
       this.setState({
@@ -1021,39 +965,12 @@ class Chess extends Moves {
       });
     } // TODO: add underpromotion piece number counters! (white & black)
 
-    if (selectedMove.includes(this.DLM)) {
-      console.log(
-        "SELECTED MOVE = " +
-          allowedMoves[maxIdx] +
-          " src = " +
-          moveStr[0] +
-          " dst = " +
-          moveStr[1]
-      );
-    } /* else if (selectedMove.includes(CONSTANTS.enPassant)) {
-      // en passe
-      moveStr = selectedMove.split(CONSTANTS.enPassant);
-      let srcSquare = squares[moveStr[0]];
-      let dstSquare = squares[moveStr[1]];
-      let pieceToBeRemovedSquare = null;
-
-      if (dstSquare === srcSquare + CONSTANTS.downLeft) {
-        pieceToBeRemovedSquare = srcSquare + CONSTANTS.left;
-      } else if (dstSquare === srcSquare + CONSTANTS.downRight) {
-        pieceToBeRemovedSquare = srcSquare + CONSTANTS.right;
-      } else if (dstSquare === srcSquare + CONSTANTS.upLeft) {
-        pieceToBeRemovedSquare = srcSquare + CONSTANTS.left;
-      } else if (dstSquare === srcSquare + CONSTANTS.upRight) {
-        pieceToBeRemovedSquare = srcSquare + CONSTANTS.right;
-      }
-      this.doEnPassant(srcSquare, dstSquare, pieceToBeRemovedSquare); // TODO: should this be added as a BOARD instead of explicit move?
-    }*/
-
     this.handleCastlingAllowedCondition(squares[moveStr[0]]); // we need to check if the selected move caused restrictions that block future castling
 
     this.setState(
       {
-        candidateBoards: candidateBoards,
+        pieces,
+        candidateBoards,
         currentBoardSquares: candidateBoards[maxIdx],
         white: !white,
       },
@@ -1092,34 +1009,24 @@ class Chess extends Moves {
       this.getNumberOfAllowedOpponentMoves(white, maxIdx, candidateBoards) === 0
     ) {
       // opponent can't move -> stalemate!
-      const { pieces } = this.state;
+
       console.log(
         "STALEMATE PREVENTION, SKIP THIS MOVE: " +
           allowedMoves[maxIdx] +
           " ** max rejected: " +
           max
       );
-      let moves = allowedMoves[maxIdx].split(CONSTANTS.defaultDelim);
-      let board = candidateBoards[maxIdx];
-      if (white && moves[1] <= 7) {
-        // white promotion!
-        board[moves[1]].piece = pieces[72]; // underpromotion to a knight to avoid stalemate
-        board[moves[1]].piece.currentSquare = moves[1];
-      } else if (!white && moves[1] >= 56) {
-        board[moves[1]].piece = pieces[-9]; // underpromotion to a knight to avoid stalemate
-        board[moves[1]].piece.currentSquare = moves[1];
-      } else {
-        numberOfPossibleNextMoves.splice(maxIdx, 1); // remove allowedMoves[maxIdx] from the array to avoid stalemate
-        candidateBoards.splice(maxIdx, 1);
-        allowedMoves.splice(maxIdx, 1); // to get the counter right, we need to remove from here too
 
-        maxIdx = this.getMaxMovesIndexWhileAvoidingStalemate(
-          white,
-          candidateBoards,
-          allowedMoves,
-          numberOfPossibleNextMoves
-        ); // recursion is OK here
-      }
+      numberOfPossibleNextMoves.splice(maxIdx, 1); // remove allowedMoves[maxIdx] from the array to avoid stalemate
+      candidateBoards.splice(maxIdx, 1);
+      allowedMoves.splice(maxIdx, 1); // to get the counter right, we need to remove from here too
+
+      maxIdx = this.getMaxMovesIndexWhileAvoidingStalemate(
+        white,
+        candidateBoards,
+        allowedMoves,
+        numberOfPossibleNextMoves
+      ); // recursion is OK here
     } else {
       console.log(
         "MAX accepted, max = " +
