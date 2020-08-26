@@ -120,8 +120,10 @@ class Chess extends Moves {
   getCandidateMovesForBlackPiece(piece, board) {
     let candidateMoves = [];
 
+    
     switch (piece.value) {
       case -1:
+        
         candidateMoves = this.getCandidateBlackPawnMoves(
           piece,
           board,
@@ -338,8 +340,8 @@ class Chess extends Moves {
   initPieces() {
     const { currentBoardSquares, pieces } = this.state;
 
-    this.props.setupPieceData.forEach((item) => {
-      //console.log('item='+item);
+    this.props.chess.forEach((item) => {
+      
       let piece = {
         currentSquare: item[0], // number 0..63, changes
         type: item[1], // actual piece, e.g. RookBA
@@ -480,7 +482,7 @@ class Chess extends Moves {
     using as a "rejector" for the candidate move when opponentKing and opponentCandidateMove are specified.
   */
   getCandidateMovesBlack(board) {
-    let candidateMovesBlack = [];
+    let candidateCastlingMovesForBlack = [];
     let castlingLeftAdded = false;
     let castlingRightAdded = false;
 
@@ -493,6 +495,7 @@ class Chess extends Moves {
       if (piece.white === true) continue; // it was white!
 
       const candidateMoves = this.getCandidateMovesForBlackPiece(piece, board);
+      
 
       if (candidateMoves === undefined) {
         continue; // no available moves for this piece
@@ -502,7 +505,10 @@ class Chess extends Moves {
         board[CONSTANTS.blackKingId].piece !== null &&
         this.state.blackKingMoved === false
       ) {
-        if (!castlingLeftAdded && !this.state.blackLeftRookMoved) {
+
+        
+
+        if (!castlingLeftAdded && !this.state.blackLeftRookMoved && board[0].piece !== null) {
           if (
             board[1].piece === null &&
             board[2].piece === null &&
@@ -514,7 +520,7 @@ class Chess extends Moves {
             castlingLeftAdded = true;
           }
         }
-        if (!castlingRightAdded && !this.state.blackRightRookMoved) {
+        if (!castlingRightAdded && !this.state.blackRightRookMoved && board[7].piece !== null) {
           if (board[5].piece === null && board[6].piece === null) {
             candidateMoves.push(
               CONSTANTS.blackKingId + CONSTANTS.castlingKingSide + 6
@@ -523,20 +529,21 @@ class Chess extends Moves {
           }
         }
       }
-
+      
       if (
         candidateMoves.length > 0 &&
-        candidateMovesBlack.length === undefined
+        candidateCastlingMovesForBlack.length === undefined
       ) {
-        //FIXME,candidateMovesBlack was null
-        candidateMovesBlack = candidateMoves;
+        
+        candidateCastlingMovesForBlack = candidateMoves;
+        
       } else if (candidateMoves.length > 0) {
-        if (!candidateMovesBlack.includes(candidateMoves)) {
-          candidateMovesBlack = candidateMovesBlack.concat(candidateMoves); // candidateMoves, removalmoves, candidateMoves
+        if (!candidateCastlingMovesForBlack.includes(candidateMoves)) {
+          candidateCastlingMovesForBlack = candidateCastlingMovesForBlack.concat(candidateMoves); // candidateMoves, removalmoves, candidateMoves
         }
       }
     }
-    return candidateMovesBlack;
+    return candidateCastlingMovesForBlack;
   }
 
   getMovePointsWhiteTrivial(allowedMoveWhite) {

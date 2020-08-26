@@ -1,5 +1,5 @@
 export default {
-  setupPieceData: [
+  pieces: [
     [15, "KingB", "bk", 4, false, -6],
     [30, "QueenW", "wq", 59, true, 9],
     [13, "PawnWF", "wpf", 53, true, 1],

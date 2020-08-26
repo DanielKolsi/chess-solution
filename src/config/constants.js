@@ -50,8 +50,8 @@ const CONSTANTS = {
   blackLeftRookId: 0,
   blackRightRookId: 7,
 
-  whiteEnPassatAllowedRow: 3,
-  blackEnPassatAllowedRow: 4,
+  whiteEnPassatAllowedRow: 4,
+  blackEnPassatAllowedRow: 3,
   enPassant: "P",
   check: "+",
   castlingKingSide: ">", // King side

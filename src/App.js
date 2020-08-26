@@ -1,5 +1,5 @@
-import React from 'react';
-import Chess from './components/Chess';
+import React from "react";
+import Chess from "./components/Chess";
 //import update from "immutability-helper";
 //import PropTypes from 'prop-types'; // ES6
 
@@ -21,12 +21,12 @@ import Chess from './components/Chess';
     });
 */
 
-const App = ({setupPieceData}) => {
+const App = ({ chess }) => {
   return (
     <div>
-      <Chess setupPieceData={setupPieceData}/>
+      <Chess chess={chess} />
     </div>
   );
-}
+};
 
 export default App;
