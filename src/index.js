@@ -1,6 +1,6 @@
-//import config from './config/normal'; // normal chess board setup
+import config from './config/normal'; // normal chess board setup
 //import config from './config/whiteCastling'; // castling
-import config from './config/blackEnPasse'; // en passe white
+//import config from './config/whiteCanCaptureWithEnPassant'; 
 //import config from "./config/staleMate";
 
 

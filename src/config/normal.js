@@ -1,5 +1,5 @@
 export default {
-  setupPieceData: [
+  pieces: [
     // black pieces 0-15
     [0, "RookBA", "bra", 0, false, -5], //currentSquare, type, id, n (number-id), white (true/false), value
     [1, "KnightBB", "bka", 1, false, -3],

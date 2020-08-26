@@ -1,6 +1,6 @@
 import React from "react";
 
-class NextMove extends React.Component {
+class NextTurn extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,7 +24,7 @@ class NextMove extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
 
-    this.props.nextMove(this.state.value);
+    this.props.nextTurn(this.state.value);
     this.setState({ white: !this.state.white, prev: this.state.value - 1 });
   }
 
@@ -44,4 +44,4 @@ class NextMove extends React.Component {
   }
 }
 
-export default NextMove;
+export default NextTurn;

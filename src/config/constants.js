@@ -1,4 +1,17 @@
 const CONSTANTS = {
+  CHECK: "X", // indicating a check against a king
+  WHITE_PAWN_CODE: 1,
+  WHITE_KNIGHT_CODE: 3,
+  WHITE_BISHOP_CODE: 4,
+  WHITE_ROOK_CODE: 5,
+  WHITE_KING_CODE: 6,
+  WHITE_QUEEN_CODE: 9,
+  BLACK_PAWN_CODE: -1,
+  BLACK_KNIGHT_CODE: -3,
+  BLACK_BISHOP_CODE: -4,
+  BLACK_ROOK_CODE: -5,
+  BLACK_KING_CODE: -6,
+  BLACK_QUEEN_CODE: -9,
   defaultDelim: "⇒",
   WHITE_KING: "KingW",
   BLACK_KING: "KingB",
@@ -37,8 +50,7 @@ const CONSTANTS = {
   twoLeftOneDown: -10,
   twoDownOneRight: -15,
   twoDownOneLeft: -17,
-  whitePawnValue: 1,
-  blackPawnValue: -1,
+  
   maxKnightRowUp: 6,
   minKnightRowDown: 1,
   minTwoDigitNumber: 10,
@@ -50,8 +62,8 @@ const CONSTANTS = {
   blackLeftRookId: 0,
   blackRightRookId: 7,
 
-  whiteEnPassatAllowedRow: 4,
-  blackEnPassatAllowedRow: 3,
+  whitePawnInThisRowCanCaptureWithEnPassant: 3, // rows start from 0
+  blackPawnInThisRowCanCaptureWithEnPassant: 4,
   enPassant: "P",
   check: "+",
   castlingKingSide: ">", // King side
