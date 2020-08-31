@@ -75,5 +75,6 @@ const CONSTANTS = {
   blackRookCastlingRightSrc: 7,
   blackRookCastlingRightDst: 5,
   // add other castling square position constants, black & white
+  DOBLE_PAWN_STRING:'48⇒3249⇒3350⇒3451⇒3552⇒3653⇒3754⇒3855⇒39',
 };
 export default CONSTANTS;

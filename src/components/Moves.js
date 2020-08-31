@@ -212,7 +212,7 @@ class Moves extends React.Component {
 
   // en passe -> former position (former from move)
 
-  getCandidateWhitePawnMoves(piece, squares, prevMove) {
+  getCandidateWhitePawnMoves(piece, board, prevMove) {
     const CURRENT_PIECE_SQUARE = piece.currentSquare;
 
     const DELIMITER = CONSTANTS.defaultDelim;
@@ -224,31 +224,31 @@ class Moves extends React.Component {
     let candidateMoves = [];
 
     if (DOWN < 0 || DOWN_RIGHT < 0 || DOWN_LEFT < 0) return candidateMoves;
-    if (squares[DOWN].piece === null && DOWN <= 7) {
+    if (board[DOWN].piece === null && DOWN <= 7) {
       // promotion -> DOWN & DOWNLEFT & DOWNRIGHT
       this.addWhitePromotion(candidateMoves, CURRENT_PIECE_SQUARE, DOWN);
     } else if (
       DOWN_RIGHT <= 7 &&
-      squares[DOWN_RIGHT].piece !== null &&
-      squares[DOWN_RIGHT].piece.white === false
+      board[DOWN_RIGHT].piece !== null &&
+      board[DOWN_RIGHT].piece.white === false
     ) {
       // promotion by eating
       this.addWhitePromotion(candidateMoves, CURRENT_PIECE_SQUARE, DOWN_RIGHT);
     } else if (
       DOWN_LEFT <= 7 &&
-      squares[DOWN_LEFT].piece !== null &&
-      squares[DOWN_LEFT].piece.white === false
+      board[DOWN_LEFT].piece !== null &&
+      board[DOWN_LEFT].piece.white === false
     ) {
       this.addWhitePromotion(candidateMoves, CURRENT_PIECE_SQUARE, DOWN_LEFT);
     } else if (
-      squares[DOWN].piece === null &&
-      squares[CURRENT_PIECE_SQUARE].row > CONSTANTS.minRow
+      board[DOWN].piece === null &&
+      board[CURRENT_PIECE_SQUARE].row > CONSTANTS.minRow
     ) {
       candidateMoves.push(CURRENT_PIECE_SQUARE + DELIMITER + DOWN);
 
       if (
-        squares[CURRENT_PIECE_SQUARE].row === CONSTANTS.whitePawnInitialRow &&
-        squares[DOWN2].piece === null
+        board[CURRENT_PIECE_SQUARE].row === CONSTANTS.whitePawnInitialRow &&
+        board[DOWN2].piece === null
       ) {
         // hasn't moved yet, double pawn front
         candidateMoves.push(CURRENT_PIECE_SQUARE + DELIMITER + DOWN2);
@@ -256,28 +256,28 @@ class Moves extends React.Component {
     }
 
     if (
-      squares[CURRENT_PIECE_SQUARE].col > 7 &&
-      squares[DOWN_LEFT].piece !== null &&
-      squares[DOWN_LEFT].piece.white === false
+      board[CURRENT_PIECE_SQUARE].col > 7 &&
+      board[DOWN_LEFT].piece !== null &&
+      board[DOWN_LEFT].piece.white === false
     ) {
       // eat black
       candidateMoves.push(CURRENT_PIECE_SQUARE + DELIMITER + DOWN_LEFT); // eats black piece
     }
     if (
-      squares[CURRENT_PIECE_SQUARE].col < CONSTANTS.maxCol &&
-      squares[DOWN_RIGHT].piece !== null &&
-      squares[DOWN_RIGHT].piece.white === false
+      board[CURRENT_PIECE_SQUARE].col < CONSTANTS.maxCol &&
+      board[DOWN_RIGHT].piece !== null &&
+      board[DOWN_RIGHT].piece.white === false
     ) {
       // right up eat black
       candidateMoves.push(CURRENT_PIECE_SQUARE + DELIMITER + DOWN_RIGHT); // eats black piece
     }
 
     if (
-      squares[CURRENT_PIECE_SQUARE].row ===
+      board[CURRENT_PIECE_SQUARE].row ===
       CONSTANTS.whitePawnInThisRowCanCaptureWithEnPassant
     ) {
-      const RIGHT_PIECE = squares[CURRENT_PIECE_SQUARE + CONSTANTS.right].piece;
-      const LEFT_PIECE = squares[CURRENT_PIECE_SQUARE + CONSTANTS.left].piece;
+      const RIGHT_PIECE = board[CURRENT_PIECE_SQUARE + CONSTANTS.right].piece;
+      const LEFT_PIECE = board[CURRENT_PIECE_SQUARE + CONSTANTS.left].piece;
 
       if (RIGHT_PIECE !== null && RIGHT_PIECE.value === CONSTANTS.blackPawn) {
         const DST = CURRENT_PIECE_SQUARE + CONSTANTS.right;
@@ -325,7 +325,7 @@ class Moves extends React.Component {
     ); // underpromotion to knight
   }
 
-  getCandidateBlackPawnMoves(piece, squares, prevMove) {
+  getCandidateBlackPawnMoves(piece, board, prevMove) {
     const DELIMITER = CONSTANTS.defaultDelim;
     const currentPieceSquare = piece.currentSquare; // ensure this is a number
 
@@ -337,42 +337,42 @@ class Moves extends React.Component {
     let candidateMoves = [];
 
     if (
-      squares[up].piece === null &&
-      squares[currentPieceSquare].row < CONSTANTS.maxRow
+      board[up].piece === null &&
+      board[currentPieceSquare].row < CONSTANTS.maxRow
     ) {
       candidateMoves.push(currentPieceSquare + DELIMITER + up); // one up
 
       if (
-        squares[currentPieceSquare].row === CONSTANTS.blackPawnInitialRow &&
-        squares[up2].piece === null
+        board[currentPieceSquare].row === CONSTANTS.blackPawnInitialRow &&
+        board[up2].piece === null
       ) {
         // hasn't moved yet, double pawn front
         candidateMoves.push(currentPieceSquare + DELIMITER + up2);
       }
     }
     if (
-      squares[currentPieceSquare].col > CONSTANTS.minCol &&
-      squares[upLeft].piece !== null &&
-      squares[upLeft].piece.white === true
+      board[currentPieceSquare].col > CONSTANTS.minCol &&
+      board[upLeft].piece !== null &&
+      board[upLeft].piece.white === true
     ) {
       // eat white
       candidateMoves.push(currentPieceSquare + DELIMITER + upLeft);
     }
     if (
-      squares[currentPieceSquare].col < CONSTANTS.maxCol &&
-      squares[upRight].piece !== null &&
-      squares[upRight].piece.white === true
+      board[currentPieceSquare].col < CONSTANTS.maxCol &&
+      board[upRight].piece !== null &&
+      board[upRight].piece.white === true
     ) {
       // right up eat white
       candidateMoves.push(currentPieceSquare + DELIMITER + upRight);
     }
 
     if (
-      squares[currentPieceSquare].row ===
+      board[currentPieceSquare].row ===
       CONSTANTS.blackPawnInThisRowCanCaptureWithEnPassant
     ) {
-      const rightPiece = squares[currentPieceSquare + CONSTANTS.right].piece;
-      const leftPiece = squares[currentPieceSquare + CONSTANTS.left].piece;
+      const rightPiece = board[currentPieceSquare + CONSTANTS.right].piece;
+      const leftPiece = board[currentPieceSquare + CONSTANTS.left].piece;
 
       if (rightPiece !== null && rightPiece.value === CONSTANTS.whitePawn) {
         const dst = currentPieceSquare + CONSTANTS.right;
@@ -405,7 +405,7 @@ class Moves extends React.Component {
     return candidateMoves;
   }
 
-  getCandidateKnightMoves(piece, squares) {
+  getCandidateKnightMoves(piece, board) {
     const CURRENT_PIECE_SQUARE = piece.currentSquare;
     const DLM = CONSTANTS.defaultDelim;
     const CHECK = CONSTANTS.check;
@@ -422,18 +422,18 @@ class Moves extends React.Component {
     let candidateMoves = [];
 
     if (
-      squares[CURRENT_PIECE_SQUARE].row <= 6 &&
-      squares[CURRENT_PIECE_SQUARE].col <= 5
+      board[CURRENT_PIECE_SQUARE].row <= 6 &&
+      board[CURRENT_PIECE_SQUARE].col <= 5
     ) {
       // check that the move stays on the board
       if (
-        squares[TWO_RIGHT_ONE_UP].piece === null ||
-        squares[TWO_RIGHT_ONE_UP].piece.white !== piece.white
+        board[TWO_RIGHT_ONE_UP].piece === null ||
+        board[TWO_RIGHT_ONE_UP].piece.white !== piece.white
       ) {
         if (
-          squares[TWO_RIGHT_ONE_UP].piece !== null &&
-          ((piece.white && squares[TWO_RIGHT_ONE_UP].piece.value === -6) ||
-            (!piece.white && squares[TWO_RIGHT_ONE_UP].piece.value === 6))
+          board[TWO_RIGHT_ONE_UP].piece !== null &&
+          ((piece.white && board[TWO_RIGHT_ONE_UP].piece.value === -6) ||
+            (!piece.white && board[TWO_RIGHT_ONE_UP].piece.value === 6))
         ) {
           candidateMoves.push(CURRENT_PIECE_SQUARE + CHECK + TWO_RIGHT_ONE_UP);
           console.error("CHECK DETECTED!!");
@@ -445,19 +445,19 @@ class Moves extends React.Component {
 
     // 2 right, 1 down
     if (
-      squares[CURRENT_PIECE_SQUARE].row >= 1 &&
-      squares[CURRENT_PIECE_SQUARE].col <= 5
+      board[CURRENT_PIECE_SQUARE].row >= 1 &&
+      board[CURRENT_PIECE_SQUARE].col <= 5
     ) {
       // check that the move stays on the board
 
       if (
-        squares[TWO_RIGHT_ONE_DOWN].piece === null ||
-        squares[TWO_RIGHT_ONE_DOWN].piece.white !== piece.white
+        board[TWO_RIGHT_ONE_DOWN].piece === null ||
+        board[TWO_RIGHT_ONE_DOWN].piece.white !== piece.white
       ) {
         if (
-          squares[TWO_RIGHT_ONE_DOWN].piece !== null &&
-          ((piece.white && squares[TWO_RIGHT_ONE_DOWN].piece.value === -6) ||
-            (!piece.white && squares[TWO_RIGHT_ONE_DOWN].piece.value === 6))
+          board[TWO_RIGHT_ONE_DOWN].piece !== null &&
+          ((piece.white && board[TWO_RIGHT_ONE_DOWN].piece.value === -6) ||
+            (!piece.white && board[TWO_RIGHT_ONE_DOWN].piece.value === 6))
         ) {
           candidateMoves.push(
             CURRENT_PIECE_SQUARE + CHECK + TWO_RIGHT_ONE_DOWN
@@ -471,72 +471,72 @@ class Moves extends React.Component {
     // 2 up, 1 right
 
     if (
-      squares[CURRENT_PIECE_SQUARE].row <= 5 &&
-      squares[CURRENT_PIECE_SQUARE].col <= 6
+      board[CURRENT_PIECE_SQUARE].row <= 5 &&
+      board[CURRENT_PIECE_SQUARE].col <= 6
     ) {
       if (
-        squares[TWO_UP_ONE_RIGHT].piece === null ||
-        squares[TWO_UP_ONE_RIGHT].piece.white !== piece.white
+        board[TWO_UP_ONE_RIGHT].piece === null ||
+        board[TWO_UP_ONE_RIGHT].piece.white !== piece.white
       ) {
         candidateMoves.push(CURRENT_PIECE_SQUARE + DLM + TWO_UP_ONE_RIGHT);
       }
     }
 
     if (
-      squares[CURRENT_PIECE_SQUARE].row <= 5 &&
-      squares[CURRENT_PIECE_SQUARE].col >= 1
+      board[CURRENT_PIECE_SQUARE].row <= 5 &&
+      board[CURRENT_PIECE_SQUARE].col >= 1
     ) {
       if (
-        squares[TWO_UP_ONE_LEFT].piece === null ||
-        squares[TWO_UP_ONE_LEFT].piece.white !== piece.white
+        board[TWO_UP_ONE_LEFT].piece === null ||
+        board[TWO_UP_ONE_LEFT].piece.white !== piece.white
       ) {
         candidateMoves.push(CURRENT_PIECE_SQUARE + DLM + TWO_UP_ONE_LEFT);
       }
     }
 
     if (
-      squares[CURRENT_PIECE_SQUARE].row <= 6 &&
-      squares[CURRENT_PIECE_SQUARE].col >= 2
+      board[CURRENT_PIECE_SQUARE].row <= 6 &&
+      board[CURRENT_PIECE_SQUARE].col >= 2
     ) {
       if (
-        squares[TWO_LEFT_ONE_UP].piece === null ||
-        squares[TWO_LEFT_ONE_UP].piece.white !== piece.white
+        board[TWO_LEFT_ONE_UP].piece === null ||
+        board[TWO_LEFT_ONE_UP].piece.white !== piece.white
       ) {
         candidateMoves.push(CURRENT_PIECE_SQUARE + DLM + TWO_LEFT_ONE_UP);
       }
     }
 
     if (
-      squares[CURRENT_PIECE_SQUARE].row >= 1 &&
-      squares[CURRENT_PIECE_SQUARE].col >= 2
+      board[CURRENT_PIECE_SQUARE].row >= 1 &&
+      board[CURRENT_PIECE_SQUARE].col >= 2
     ) {
       if (
-        squares[TWO_LEFT_ONE_DOWN].piece === null ||
-        squares[TWO_LEFT_ONE_DOWN].piece.white !== piece.white
+        board[TWO_LEFT_ONE_DOWN].piece === null ||
+        board[TWO_LEFT_ONE_DOWN].piece.white !== piece.white
       ) {
         candidateMoves.push(CURRENT_PIECE_SQUARE + DLM + TWO_LEFT_ONE_DOWN);
       }
     }
 
     if (
-      squares[CURRENT_PIECE_SQUARE].row >= 2 &&
-      squares[CURRENT_PIECE_SQUARE].col <= 6
+      board[CURRENT_PIECE_SQUARE].row >= 2 &&
+      board[CURRENT_PIECE_SQUARE].col <= 6
     ) {
       if (
-        squares[TWO_DOWN_ONE_RIGHT].piece === null ||
-        squares[TWO_DOWN_ONE_RIGHT].piece.white !== piece.white
+        board[TWO_DOWN_ONE_RIGHT].piece === null ||
+        board[TWO_DOWN_ONE_RIGHT].piece.white !== piece.white
       ) {
         candidateMoves.push(CURRENT_PIECE_SQUARE + DLM + TWO_DOWN_ONE_RIGHT);
       }
     }
 
     if (
-      squares[CURRENT_PIECE_SQUARE].row >= 2 &&
-      squares[CURRENT_PIECE_SQUARE].col >= 1
+      board[CURRENT_PIECE_SQUARE].row >= 2 &&
+      board[CURRENT_PIECE_SQUARE].col >= 1
     ) {
       if (
-        squares[TWO_DOWN_ONE_LEFT].piece === null ||
-        squares[TWO_DOWN_ONE_LEFT].piece.white !== piece.white
+        board[TWO_DOWN_ONE_LEFT].piece === null ||
+        board[TWO_DOWN_ONE_LEFT].piece.white !== piece.white
       ) {
         candidateMoves.push(CURRENT_PIECE_SQUARE + DLM + TWO_DOWN_ONE_LEFT);
       }
@@ -618,37 +618,37 @@ class Moves extends React.Component {
     return allowed;
   }
 
-  getCandidateBishopMoves(piece, squares) {
+  getCandidateBishopMoves(piece, board) {
     let candidateMoves = [];
     candidateMoves = this.getCandidateDiagonalMovesUpRight(
       piece,
-      squares,
+      board,
       candidateMoves
     );
     candidateMoves = this.getCandidateDiagonalMovesUpLeft(
       piece,
-      squares,
+      board,
       candidateMoves
     );
     candidateMoves = this.getCandidateDiagonalMovesDownLeft(
       piece,
-      squares,
+      board,
       candidateMoves
     );
     candidateMoves = this.getCandidateDiagonalMovesDownRight(
       piece,
-      squares,
+      board,
       candidateMoves
     );
     return candidateMoves;
   }
 
-  getCandidateDiagonalMovesUpRight(piece, squares, candidateMoves) {
+  getCandidateDiagonalMovesUpRight(piece, board, candidateMoves) {
     const DLM = CONSTANTS.defaultDelim;
-    let pos = piece.currentSquare;
+    const currentPieceSquare = piece.currentSquare;
 
-    let squaresAvailableRight = CONSTANTS.maxCol - squares[pos].col;
-    let squaresAvailableUp = CONSTANTS.maxRow - squares[pos].row;
+    const squaresAvailableRight = CONSTANTS.maxCol - board[currentPieceSquare].col;
+    const squaresAvailableUp = CONSTANTS.maxRow - board[currentPieceSquare].row;
 
     let numberOfSquaresAvailable;
 
@@ -659,12 +659,12 @@ class Moves extends React.Component {
     }
 
     for (let i = 1; i <= numberOfSquaresAvailable; i++) {
-      let dst = pos + i * CONSTANTS.upRight;
+      let dst = currentPieceSquare + i * CONSTANTS.upRight;
 
-      if (squares[dst].piece === null) {
-        candidateMoves.push(pos + DLM + dst);
-      } else if (squares[dst].piece.white !== piece.white) {
-        candidateMoves.push(pos + DLM + dst); // eat opponent's piece
+      if (board[dst].piece === null) {
+        candidateMoves.push(currentPieceSquare + DLM + dst);
+      } else if (board[dst].piece.white !== piece.white) {
+        candidateMoves.push(currentPieceSquare + DLM + dst); // eat opponent's piece
         break;
       } else {
         break; // own piece

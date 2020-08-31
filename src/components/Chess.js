@@ -5,6 +5,7 @@ import PrevMove from "./PrevMove";
 
 import CONSTANTS from "../config/constants";
 import Moves from "./Moves";
+import { doublePawnPointsHandling } from "./Heuristics";
 import _ from "lodash";
 
 /**
@@ -548,7 +549,7 @@ class Chess extends Moves {
 
   // get move points for this board position
   // TODO: this function should be modified to have the heuristics to get the best possible (white) move
-  getNumberOfAllowedMovesFromThisBoardPosition(board, white, boardIdx) {
+  getAllowedMovesFromThisBoardPosition(board, white, boardIdx) {
     let candidateMoves = [];
     let allowedMoves = [];
     if (white) {
@@ -559,7 +560,7 @@ class Chess extends Moves {
       allowedMoves = this.getAllowedMovesBlack(board, candidateMoves, boardIdx);
     }
 
-    return allowedMoves.length;
+    return allowedMoves;
   }
 
   /**
@@ -883,13 +884,13 @@ class Chess extends Moves {
         white
       ); //TODO, check that all kind of special moves are dealt as well (e.g. castling and its restrictiones)
 
-      numberOfPossibleNextMoves[
-        i
-      ] = this.getNumberOfAllowedMovesFromThisBoardPosition(
+      const allowedMovesForBoard = this.getAllowedMovesFromThisBoardPosition(
         candidateBoards[i],
         white,
         i
       );
+
+      numberOfPossibleNextMoves[i] = allowedMovesForBoard.length;
 
       console.log(
         "White previous move:" +
@@ -982,10 +983,7 @@ class Chess extends Moves {
     let maxIdx = 0;
 
     for (let i = 0; i < candidateBoards.length; ++i) {
-      if (numberOfPossibleNextMoves[i] > max) {
-        max = numberOfPossibleNextMoves[i]; // select the move from the allowed moves which got the highest points
-        maxIdx = i;
-      } else if (candidateBoards[i][64] === CONSTANTS.CHECK) {
+      if (candidateBoards[i][64] === CONSTANTS.CHECK) {
         if (
           this.getNumberOfAllowedOpponentMoves(
             isWhiteTurn,
@@ -995,6 +993,13 @@ class Chess extends Moves {
         ) {
           return i; // this will be maxIdx, becaue it's an immediate mate!
         }
+      }
+      if (numberOfPossibleNextMoves[i] >= max) {
+        numberOfPossibleNextMoves[i] += doublePawnPointsHandling(
+          allowedMoves[i]
+        );
+        max = numberOfPossibleNextMoves[i]; // select the move from the allowed moves which got the highest points
+        maxIdx = i;
       }
     }
     console.log("INITIALLY SELECTED max = " + max + " idx = " + maxIdx);
