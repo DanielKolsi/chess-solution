@@ -994,7 +994,7 @@ class Chess extends Moves {
           return i; // this will be maxIdx, becaue it's an immediate mate!
         }
       }
-      if (numberOfPossibleNextMoves[i] >= max) {
+      if (numberOfPossibleNextMoves[i] >= max) { 
         numberOfPossibleNextMoves[i] += doublePawnPointsHandling(
           allowedMoves[i]
         );
