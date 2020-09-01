@@ -1,5 +1,6 @@
 export default {
   pieces: [
+    //currentSquare, type, id, n (number-id), white (true/false), value
     [15, "KingB", "bk", 4, false, -6],
     [30, "QueenW", "wq", 59, true, 9],
     [13, "PawnWF", "wpf", 53, true, 1],

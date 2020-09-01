@@ -1,5 +1,5 @@
 import React from "react";
-import CONSTANTS from "../config/constants";
+//import CONSTANTS from "../config/constants";
 
 class Moves extends React.Component {
   /*
@@ -10,7 +10,7 @@ class Moves extends React.Component {
   }
 */
 
-  getCandidateWhiteKingMoves(piece, squares) {
+/*  getCandidateWhiteKingMoves(piece, squares) {
     const DLM = CONSTANTS.defaultDelim;
     let candidateMoves = [];
     let pos = piece.currentSquare; // ensure this is dealt as an integer!
@@ -279,7 +279,10 @@ class Moves extends React.Component {
       const RIGHT_PIECE = board[CURRENT_PIECE_SQUARE + CONSTANTS.right].piece;
       const LEFT_PIECE = board[CURRENT_PIECE_SQUARE + CONSTANTS.left].piece;
 
-      if (RIGHT_PIECE !== null && RIGHT_PIECE.value === CONSTANTS.blackPawn) {
+      if (
+        RIGHT_PIECE !== null &&
+        RIGHT_PIECE.value === CONSTANTS.BLACK_PAWN_CODE
+      ) {
         const DST = CURRENT_PIECE_SQUARE + CONSTANTS.right;
         const SRC = DST + CONSTANTS.down2;
         const PREVIOUS_BLACK_PAWN_MOVE = SRC + DELIMITER + DST;
@@ -288,12 +291,12 @@ class Moves extends React.Component {
           // en passant
           const DOWN_RIGHT = CURRENT_PIECE_SQUARE + CONSTANTS.downRight;
           candidateMoves.push(
-            CURRENT_PIECE_SQUARE + CONSTANTS.enPassant + DOWN_RIGHT
+            CURRENT_PIECE_SQUARE + CONSTANTS.EN_PASSANT + DOWN_RIGHT
           );
         }
       } else if (
         LEFT_PIECE !== null &&
-        LEFT_PIECE.value === CONSTANTS.blackPawn
+        LEFT_PIECE.value === CONSTANTS.BLACK_PAWN_CODE
       ) {
         const dst = CURRENT_PIECE_SQUARE + CONSTANTS.left;
         const src = dst + CONSTANTS.down2;
@@ -302,7 +305,7 @@ class Moves extends React.Component {
         if (prevMove === tmp) {
           const downLeft = CURRENT_PIECE_SQUARE + CONSTANTS.downLeft;
           candidateMoves.push(
-            CURRENT_PIECE_SQUARE + CONSTANTS.enPassant + downLeft
+            CURRENT_PIECE_SQUARE + CONSTANTS.EN_PASSANT + downLeft
           ); // en passe black pawn; P for en passe
         }
       }
@@ -312,16 +315,16 @@ class Moves extends React.Component {
 
   addWhitePromotion(candidateMoves, currentSquare, promotionDirection) {
     candidateMoves.push(
-      currentSquare + CONSTANTS.promotionToQueen + promotionDirection
+      currentSquare + CONSTANTS.PROMOTION_TO_QUEEN + promotionDirection
     );
     candidateMoves.push(
-      currentSquare + CONSTANTS.promotionToRook + promotionDirection
+      currentSquare + CONSTANTS.PROMOTION_TO_ROOK + promotionDirection
     ); // underpromotion to rook
     candidateMoves.push(
-      currentSquare + CONSTANTS.promotionToBishop + promotionDirection
+      currentSquare + CONSTANTS.PROMOTION_TO_BISHOP + promotionDirection
     ); // underpromotion to bishop
     candidateMoves.push(
-      currentSquare + CONSTANTS.promotionToKnight + promotionDirection
+      currentSquare + CONSTANTS.PROMOTION_TO_KNIGHT + promotionDirection
     ); // underpromotion to knight
   }
 
@@ -374,7 +377,7 @@ class Moves extends React.Component {
       const rightPiece = board[currentPieceSquare + CONSTANTS.right].piece;
       const leftPiece = board[currentPieceSquare + CONSTANTS.left].piece;
 
-      if (rightPiece !== null && rightPiece.value === CONSTANTS.whitePawn) {
+      if (rightPiece !== null && rightPiece.value === CONSTANTS.WHITE_PA) {
         const dst = currentPieceSquare + CONSTANTS.right;
         const src = dst + CONSTANTS.up2;
         const previousWhitePawnMove = src + DELIMITER + dst;
@@ -382,13 +385,13 @@ class Moves extends React.Component {
         if (this.state.prevMove === previousWhitePawnMove) {
           const upRight = currentPieceSquare + CONSTANTS.upRight;
           candidateMoves.push(
-            currentPieceSquare + CONSTANTS.enPassant + upRight
+            currentPieceSquare + CONSTANTS.EN_PASSANT + upRight
           );
           console.error("en passant check allowed...");
         }
       } else if (
         leftPiece !== null &&
-        leftPiece.value === CONSTANTS.whitePawn
+        leftPiece.value === CONSTANTS.WHITE_PAWN_CODE
       ) {
         const dst = currentPieceSquare + CONSTANTS.left;
         const src = dst + CONSTANTS.up2;
@@ -397,7 +400,7 @@ class Moves extends React.Component {
         if (prevMove === tmp) {
           const upLeft = currentPieceSquare + CONSTANTS.upLeft;
           candidateMoves.push(
-            currentPieceSquare + CONSTANTS.enPassant + upLeft
+            currentPieceSquare + CONSTANTS.EN_PASSANT + upLeft
           ); // en passe black pawn; P for en passe
         }
       }
@@ -408,7 +411,7 @@ class Moves extends React.Component {
   getCandidateKnightMoves(piece, board) {
     const CURRENT_PIECE_SQUARE = piece.currentSquare;
     const DLM = CONSTANTS.defaultDelim;
-    const CHECK = CONSTANTS.check;
+    const CHECK = CONSTANTS.CHECK;
 
     const TWO_RIGHT_ONE_UP = CURRENT_PIECE_SQUARE + CONSTANTS.twoRightOneUp;
     const TWO_RIGHT_ONE_DOWN = CURRENT_PIECE_SQUARE + CONSTANTS.twoRightOneDown;
@@ -555,8 +558,6 @@ class Moves extends React.Component {
     const TWO_DOWN_ONE_RIGHT = CURRENT_PIECE_SQUARE + CONSTANTS.twoDownOneRight;
     const TWO_DOWN_ONE_LEFT = CURRENT_PIECE_SQUARE + CONSTANTS.twoDownOneLeft;
 
-    const allowed = true;
-
     if (TWO_RIGHT_ONE_UP === kingPosition) {
       return false; // move cannot be accepted (king would be eaten)
     }
@@ -585,37 +586,31 @@ class Moves extends React.Component {
       return false; // move cannot be accepted (king would be eaten)
     }
 
-    
     if (TWO_DOWN_ONE_LEFT === kingPosition) {
       return false; // move cannot be accepted (king would be eaten)
     }
-    return allowed;
+    return true;
   }
 
   isAllowedByOpponentBlackPawn(piece, kingPosition) {
-    const allowed = true;
-
     const pos = piece.currentSquare; // ensure this is a number
 
-    let upLeft = pos + CONSTANTS.upLeft;
-    let upRight = pos + CONSTANTS.upRight;
+    const upLeft = pos + CONSTANTS.upLeft;
+    const upRight = pos + CONSTANTS.upRight;
     if (upLeft === kingPosition) return false;
     if (upRight === kingPosition) return false;
 
-    return allowed;
+    return true;
   }
 
   isAllowedByOpponentWhitePawn(piece, kingPosition) {
-    const allowed = true;
+    const DOWN_LEFT = piece.currentSquare + CONSTANTS.downLeft;
+    const DOWN_RIGHT = piece.currentSquare + CONSTANTS.downRight;
 
-    let pos = piece.currentSquare;
+    if (DOWN_LEFT === kingPosition) return false;
+    if (DOWN_RIGHT === kingPosition) return false;
 
-    let downLeft = pos + CONSTANTS.downLeft;
-    let downRight = pos + CONSTANTS.downRight;
-    if (downLeft === kingPosition) return false;
-    if (downRight === kingPosition) return false;
-
-    return allowed;
+    return true;
   }
 
   getCandidateBishopMoves(piece, board) {
@@ -647,7 +642,8 @@ class Moves extends React.Component {
     const DLM = CONSTANTS.defaultDelim;
     const currentPieceSquare = piece.currentSquare;
 
-    const squaresAvailableRight = CONSTANTS.maxCol - board[currentPieceSquare].col;
+    const squaresAvailableRight =
+      CONSTANTS.maxCol - board[currentPieceSquare].col;
     const squaresAvailableUp = CONSTANTS.maxRow - board[currentPieceSquare].row;
 
     let numberOfSquaresAvailable;
@@ -1229,6 +1225,6 @@ class Moves extends React.Component {
     }
     const n = Math.floor(Math.random() * allowedMovesBlack.length);
     return allowedMovesBlack[n];
-  }
+  }*/
 }
 export default Moves;

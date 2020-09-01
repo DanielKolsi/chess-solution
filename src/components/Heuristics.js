@@ -20,8 +20,11 @@ export function doublePawnPointsHandling(allowedMove) {
  * @param {*} allowedMove 
  * @param {*} candidateBoard 
  */
-export function getMoveExtraPoints(allowedMove, candidateBoard) {
+export function getMoveExtraPoints(allowedMove, candidateBoard, previousBoard) {
     let extraPoints = 0;
     
+    if (candidateBoard[64] === CONSTANTS.CHECK) {
+      extraPoints = 2; 
+    }
     return extraPoints;
   }

@@ -4,7 +4,10 @@ import NextTurn from "./NextTurn";
 import PrevMove from "./PrevMove";
 
 import CONSTANTS from "../config/constants";
-import Moves from "./Moves";
+//import Moves from "./Moves";
+import * as MoveFunctions from "./MoveFunctions";
+//import { getCandidateWhiteKingMoves } from "./MovesFunctions";
+
 import { doublePawnPointsHandling } from "./Heuristics";
 import _ from "lodash";
 
@@ -12,7 +15,7 @@ import _ from "lodash";
  * TODO: add heuristics: isPieceDefended, isPieceThreatening, isPieceCapturingValuable...isPieceDeliveringCheck..., pawnMovesTwo
  * promotion, castling...enPassant..
  */
-class Chess extends Moves {
+class Chess extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -73,7 +76,7 @@ class Chess extends Moves {
 
     switch (piece.value) {
       case 1:
-        candidateMoves = this.getCandidateWhitePawnMoves(
+        candidateMoves = MoveFunctions.getCandidateWhitePawnMoves(
           piece,
           board,
           this.state.previousMove
@@ -81,20 +84,20 @@ class Chess extends Moves {
         break;
 
       case 3:
-        candidateMoves = this.getCandidateKnightMoves(piece, board);
+        candidateMoves = MoveFunctions.getCandidateKnightMoves(piece, board);
         break;
       case 4:
-        candidateMoves = this.getCandidateBishopMoves(piece, board);
+        candidateMoves = MoveFunctions.getCandidateBishopMoves(piece, board);
         break;
       case 5:
-        candidateMoves = this.getCandidateRookMoves(piece, board);
+        candidateMoves = MoveFunctions.getCandidateRookMoves(piece, board);
         break;
       case 6:
-        candidateMoves = this.getCandidateWhiteKingMoves(piece, board);
+        candidateMoves = MoveFunctions.getCandidateWhiteKingMoves(piece, board);
         break;
 
       case 9:
-        candidateMoves = this.getCandidateQueenMoves(piece, board);
+        candidateMoves = MoveFunctions.getCandidateQueenMoves(piece, board);
         break;
       default:
     }
@@ -106,26 +109,26 @@ class Chess extends Moves {
 
     switch (piece.value) {
       case -1:
-        candidateMoves = this.getCandidateBlackPawnMoves(
+        candidateMoves = MoveFunctions.getCandidateBlackPawnMoves(
           piece,
           board,
           this.state.previousMove
         );
         break;
       case -3:
-        candidateMoves = this.getCandidateKnightMoves(piece, board);
+        candidateMoves = MoveFunctions.getCandidateKnightMoves(piece, board);
         break;
       case -4:
-        candidateMoves = this.getCandidateBishopMoves(piece, board);
+        candidateMoves = MoveFunctions.getCandidateBishopMoves(piece, board);
         break;
       case -5:
-        candidateMoves = this.getCandidateRookMoves(piece, board);
+        candidateMoves = MoveFunctions.getCandidateRookMoves(piece, board);
         break;
       case -6:
-        candidateMoves = this.getCandidateBlacKingMoves(piece, board);
+        candidateMoves = MoveFunctions.getCandidateBlacKingMoves(piece, board);
         break;
       case -9:
-        candidateMoves = this.getCandidateQueenMoves(piece, board);
+        candidateMoves = MoveFunctions.getCandidateQueenMoves(piece, board);
         break;
       default:
     }
@@ -147,35 +150,35 @@ class Chess extends Moves {
     let moves = this.getMovesString(allowedMove); // src = moves[0], dst = moves[1]
 
     // handle promotions and underpromotions
-    if (delim === CONSTANTS.promotionToQueen) {
+    if (delim === CONSTANTS.PROMOTION_TO_QUEEN) {
       let promotedQueenNumber = white
         ? this.state.promotedWhiteQueenNumber
         : this.state.promotedBlackQueenNumber;
 
       board = this.doPromote(board, moves, promotedQueenNumber);
-    } else if (delim === CONSTANTS.promotionToRook) {
+    } else if (delim === CONSTANTS.PROMOTION_TO_ROOK) {
       let promotedRookNumber = white
         ? this.state.promotedWhiteRookNumber
         : this.state.promotedBlackRookNumber;
 
       board = this.doPromote(board, moves, promotedRookNumber);
-    } else if (delim === CONSTANTS.promotionToBishop) {
+    } else if (delim === CONSTANTS.PROMOTION_TO_BISHOP) {
       let promotedBishopNumber = white
         ? this.state.promotedWhiteBishopNumber
         : this.state.promotedBlackBishopNumber;
 
       board = this.doPromote(board, moves, promotedBishopNumber);
-    } else if (delim === CONSTANTS.promotionToKnight) {
+    } else if (delim === CONSTANTS.PROMOTION_TO_KNIGHT) {
       let promotedKnightNumber = white
         ? this.state.promotedWhiteKnightNumber
         : this.state.promotedBlackKnightNumber;
 
       board = this.doPromote(board, moves, promotedKnightNumber);
-    } else if (delim === CONSTANTS.castlingQueenSide) {
+    } else if (delim === CONSTANTS.CASTLING_QUEEN_SIDE) {
       board = this.castleQueenSideAllowedBoard(white, board); // castle queen side was the allowed move, create the corresponding board
-    } else if (delim === CONSTANTS.castlingKingSide) {
+    } else if (delim === CONSTANTS.CASTLING_KING_SIDE) {
       board = this.castleKingSideAllowedBoard(white, board);
-    } else if (delim === CONSTANTS.enPassant) {
+    } else if (delim === CONSTANTS.EN_PASSANT) {
       board = this.doEnPassantComplete(board, moves);
     } else {
       // normal move, includes eats
@@ -342,6 +345,7 @@ class Chess extends Moves {
 
     this.setState({ pieces });
     //this.makeNumberOfMoves(3); // check game over condition!
+    return pieces;
   }
 
   makeNumberOfMoves(n) {
@@ -419,7 +423,7 @@ class Chess extends Moves {
             board[56].piece.value === 5
           ) {
             candidateMoves.push(
-              CONSTANTS.whiteKingId + CONSTANTS.castlingQueenSide + 58
+              CONSTANTS.whiteKingId + CONSTANTS.CASTLING_QUEEN_SIDE + 58
             ); //add white castling (white king move!) left as a candidate move
             castlingLeftAdded = true;
           }
@@ -431,7 +435,7 @@ class Chess extends Moves {
             board[63].piece !== null
           ) {
             candidateMoves.push(
-              CONSTANTS.whiteKingId + CONSTANTS.castlingKingSide + 62
+              CONSTANTS.whiteKingId + CONSTANTS.CASTLING_KING_SIDE + 62
             ); //add white castling right (king move!) as a candidate move
             castlingRightAdded = true;
           }
@@ -497,7 +501,7 @@ class Chess extends Moves {
             board[3].piece === null
           ) {
             candidateMoves.push(
-              CONSTANTS.blackKingId + CONSTANTS.castlingQueenSide + 2
+              CONSTANTS.blackKingId + CONSTANTS.CASTLING_QUEEN_SIDE + 2
             ); //add black castling (king move!) left as a candidate move
             castlingLeftAdded = true;
           }
@@ -509,7 +513,7 @@ class Chess extends Moves {
         ) {
           if (board[5].piece === null && board[6].piece === null) {
             candidateMoves.push(
-              CONSTANTS.blackKingId + CONSTANTS.castlingKingSide + 6
+              CONSTANTS.blackKingId + CONSTANTS.CASTLING_KING_SIDE + 6
             ); //add black castling right (king move!) as a candidate move
             castlingRightAdded = true;
           }
@@ -580,17 +584,17 @@ class Chess extends Moves {
       let moves = this.getMovesString(candidateMovesWhite[i]);
       const delim = this.getDelim(candidateMovesWhite[i]);
 
-      if (delim === CONSTANTS.check) {
-        moves = candidateMovesWhite[i].split(CONSTANTS.check);
-        board[64] = CONSTANTS.CHECK;
+      if (delim === CONSTANTS.CHECK) { // candidate move IS check (against black)
+        moves = candidateMovesWhite[i].split(CONSTANTS.CHECK);
+        board[64] = CONSTANTS.CHECK; // let's FLAG that this board has check!
         candidateBoards[boardIdx] = board;
 
-        this.setState({ candidateBoards });
+        this.setState({ candidateBoards }); // we need to update the candidate boards, as there's now check in this board
         console.error(
           "CHECK revised as an possible allowed move, candit move = " +
             whiteCandidateMove
         );
-      } else if (delim === CONSTANTS.castlingQueenSide) {
+      } else if (delim === CONSTANTS.CASTLING_QUEEN_SIDE) {
         console.log("Checking allowance of white queen side castling...");
         let blackCandidateMoves = this.getCandidateMovesBlack(board);
 
@@ -620,7 +624,7 @@ class Chess extends Moves {
           // console.log("castling check: left castling allowed, str =" + str);
         }
         continue; // no further allowance checks required!
-      } else if (delim === CONSTANTS.castlingKingSide) {
+      } else if (delim === CONSTANTS.CASTLING_KING_SIDE) {
         let blackCandidateMoves = this.getCandidateMovesBlack(board);
         let allowKingSideCastling = true;
         const re = /.60|.61|.62/g; // numbers of the not-allowed squares
@@ -668,7 +672,7 @@ class Chess extends Moves {
 
       let moves = this.getMovesString(str);
 
-      if (str.includes(CONSTANTS.castlingQueenSide)) {
+      if (str.includes(CONSTANTS.CASTLING_QUEEN_SIDE)) {
         let whiteCandidateMoves = this.getCandidateMovesWhite(board);
         let allowLeftCastling = true;
         const re = /1|2|3|4/g; // numbers of the not-allowed squares
@@ -689,7 +693,7 @@ class Chess extends Moves {
           allowedMoves.push(str);
         }
         continue;
-      } else if (str.includes(CONSTANTS.castlingKingSide)) {
+      } else if (str.includes(CONSTANTS.CASTLING_KING_SIDE)) {
         let whiteCandidateMoves = this.getCandidateMovesWhite(board);
         let allowRightCastling = true;
         const re = /4|5|6/g; // numbers of the not-allowed squares
@@ -744,13 +748,13 @@ class Chess extends Moves {
 
       switch (value) {
         case CONSTANTS.BLACK_PAWN_CODE:
-          allowed = this.isAllowedByOpponentBlackPawn(piece, whiteKingPosition);
+          allowed = MoveFunctions.isAllowedByOpponentBlackPawn(piece, whiteKingPosition);
           break;
         case CONSTANTS.BLACK_KNIGHT_CODE:
-          allowed = this.isAllowedByOpponentKnight(piece, whiteKingPosition);
+          allowed = MoveFunctions.isAllowedByOpponentKnight(piece, whiteKingPosition);
           break;
         case CONSTANTS.BLACK_BISHOP_CODE:
-          allowed = this.isAllowedByOpponentBishop(
+          allowed = MoveFunctions.isAllowedByOpponentBishop(
             piece,
             board,
             whiteKingPosition,
@@ -758,7 +762,7 @@ class Chess extends Moves {
           );
           break;
         case CONSTANTS.BLACK_ROOK_CODE:
-          allowed = this.isAllowedByOpponentRook(
+          allowed = MoveFunctions.isAllowedByOpponentRook(
             piece,
             board,
             whiteKingPosition,
@@ -766,10 +770,10 @@ class Chess extends Moves {
           );
           break;
         case CONSTANTS.BLACK_KING_CODE:
-          allowed = this.isAllowedByOpponentKing(piece, whiteKingPosition);
+          allowed = MoveFunctions.isAllowedByOpponentKing(piece, whiteKingPosition);
           break;
         case CONSTANTS.BLACK_QUEEN_CODE:
-          allowed = this.isAllowedByOpponentQueen(
+          allowed = MoveFunctions.isAllowedByOpponentQueen(
             piece,
             board,
             whiteKingPosition,
@@ -798,13 +802,13 @@ class Chess extends Moves {
 
       switch (piece.value) {
         case 1:
-          allowed = this.isAllowedByOpponentWhitePawn(piece, blackKingPosition);
+          allowed = MoveFunctions.isAllowedByOpponentWhitePawn(piece, blackKingPosition);
           break;
         case 3:
-          allowed = this.isAllowedByOpponentKnight(piece, blackKingPosition);
+          allowed = MoveFunctions.isAllowedByOpponentKnight(piece, blackKingPosition);
           break;
         case 4:
-          allowed = this.isAllowedByOpponentBishop(
+          allowed = MoveFunctions.isAllowedByOpponentBishop(
             piece,
             board,
             blackKingPosition,
@@ -812,7 +816,7 @@ class Chess extends Moves {
           );
           break;
         case 5:
-          allowed = this.isAllowedByOpponentRook(
+          allowed = MoveFunctions.isAllowedByOpponentRook(
             piece,
             board,
             blackKingPosition,
@@ -820,10 +824,10 @@ class Chess extends Moves {
           );
           break;
         case 6:
-          allowed = this.isAllowedByOpponentKing(piece, blackKingPosition);
+          allowed = MoveFunctions.isAllowedByOpponentKing(piece, blackKingPosition);
           break;
         case 9:
-          allowed = this.isAllowedByOpponentQueen(
+          allowed = MoveFunctions.isAllowedByOpponentQueen(
             piece,
             board,
             blackKingPosition,
@@ -912,7 +916,7 @@ class Chess extends Moves {
     let selectedMove;
     if (!white) {
       // for black, instead of using the "optimal" move select a random move!
-      selectedMove = this.getBestBlackMove(squares, allowedMoves); // numberOfPossibleNextMoves[Math.floor(Math.random() * numberOfPossibleNextMoves.length)];
+      selectedMove = MoveFunctions.getBestBlackMove(squares, allowedMoves); // numberOfPossibleNextMoves[Math.floor(Math.random() * numberOfPossibleNextMoves.length)];
       maxIdx = allowedMoves.indexOf(selectedMove); // this will actually be a random move index
       console.log(
         "selected move for black = " +

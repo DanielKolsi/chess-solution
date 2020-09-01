@@ -1,12 +1,12 @@
 const CONSTANTS = {
-  CHECK: "X", // indicating a check against a king
-  WHITE_PAWN_CODE: 1,
+  
+  
   WHITE_KNIGHT_CODE: 3,
   WHITE_BISHOP_CODE: 4,
   WHITE_ROOK_CODE: 5,
   WHITE_KING_CODE: 6,
   WHITE_QUEEN_CODE: 9,
-  BLACK_PAWN_CODE: -1,
+  
   BLACK_KNIGHT_CODE: -3,
   BLACK_BISHOP_CODE: -4,
   BLACK_ROOK_CODE: -5,
@@ -15,8 +15,8 @@ const CONSTANTS = {
   defaultDelim: "⇒",
   WHITE_KING: "KingW",
   BLACK_KING: "KingB",
-  whitePawn: 1,
-  blackPawn: -1,
+  WHITE_PAWN_CODE: 1,
+  BLACK_PAWN_CODE: -1,
   minWhite: 48, // white piece minimum value
   maxWhite: 63, // 0..63
   maxBlack: 15, // black piece max value
@@ -38,10 +38,12 @@ const CONSTANTS = {
   downLeft: -9,
   upRight: 9,
   upLeft: 7,
-  enPasseDownLeft: -9,
-  enPasseDownRight: -7,
-  enPasseUpLeft: 7,
-  enPasseUpRight: 9,
+  // en passant codes
+  EN_PASSANT_DOWN_LEFT: -9,
+  EN_PASSANT_DOWN_RIGHT: -7,
+  EN_PASSANT_UP_LEFT: 7,
+  EN_PASSANT_UP_RIGHT: 9,
+
   twoRightOneUp: 10,
   twoRightOneDown: -6,
   twoUpOneRight: 17,
@@ -64,16 +66,20 @@ const CONSTANTS = {
 
   whitePawnInThisRowCanCaptureWithEnPassant: 3, // rows start from 0
   blackPawnInThisRowCanCaptureWithEnPassant: 4,
-  enPassant: "P",
-  check: "+",
-  castlingKingSide: ">", // King side
-  castlingQueenSide: "<", // Queen side
-  promotionToQueen: "Q",
-  promotionToRook: "R",
-  promotionToBishop: "B",
-  promotionToKnight: "N",
-  blackRookCastlingRightSrc: 7,
-  blackRookCastlingRightDst: 5,
+
+  // special moves
+  EN_PASSANT: "P",
+  CHECK: "+",
+  CASTLING_KING_SIDE: ">", // King side
+  CASTLING_QUEEN_SIDE: "<", // Queen side
+  PROMOTION_TO_QUEEN: "Q",
+  PROMOTION_TO_ROOK: "R",
+  PROMOTION_TO_BISHOP: "B",
+  PROMOTION_TO_KNIGHT: "N",
+
+  // castling constants
+  //blackRookCastlingRightSrc: 7,
+  //blackRookCastlingRightDst: 5,
   // add other castling square position constants, black & white
   DOBLE_PAWN_STRING:'48⇒3249⇒3350⇒3451⇒3552⇒3653⇒3754⇒3855⇒39',
 };
