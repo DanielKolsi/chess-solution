@@ -1,4 +1,10 @@
 import CONSTANTS from "../config/constants";
+/**
+ * TODO: add heuristics: isPieceDefended, isPieceThreatening, isPieceCapturingValuable...isPieceDeliveringCheck..., pawnMovesTwo
+ * promotion, castling...enPassant.., isPieceUnderAttackByLessValuablePiece
+ * 
+ * TODO:  getAllowedMovesWithPointReductionArray()
+ */
 
 /**
  * 
@@ -7,7 +13,7 @@ import CONSTANTS from "../config/constants";
 export function doublePawnPointsHandling(allowedMove) {
   let extraPoints = 0;
   if (CONSTANTS.DOBLE_PAWN_STRING.includes(allowedMove)) {
-    console.log("add extra point here");
+    //console.log("add extra point here");
     extraPoints = 1;
   }
   return extraPoints;
@@ -28,3 +34,28 @@ export function getMoveExtraPoints(allowedMove, candidateBoard, previousBoard) {
     }
     return extraPoints;
   }
+
+  /**
+   * If after a (candidate) move, a higher valued piece is possible to be captured immediately with a lower valued piece, 
+   * reduce points. E.g. if a queen captures a rook, but can be then captures by some other piece (of lower  value?), 
+   * reduce points. The purpose is of avoiding these kinds of blunder being selected as the best move (turn).
+   * The example move is allowed, but normally not suggested. A sacrificing move is an exception.
+   * 
+   * The get the possible reduction, we always need to check the opponent's possible next turn, e.g. 
+   * whether the opponet can capture white's queen after white's turn.
+   * 
+   * While checking for candidate moves and rejecting illegal moves, it's also possible to reduce points 
+   * if a aforementioned situation happens. (More optimized than checking again within allowed moves?)
+   * 
+   * @param {*} allowedMove 
+   * @param {*} candidateBoard 
+   * @param {*} previousBoard 
+   */
+  export function getMoveReducedPointsDueToLostPiece(allowedMove, candidateBoard, previousBoard) {
+    let extraPoints = -10; // this should depend on the valor of the lost piece (e.g.  -9 + 4)
+    
+    
+    return extraPoints;
+  }
+
+  

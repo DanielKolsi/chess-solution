@@ -3,18 +3,12 @@ import React from "react";
 class NextTurn extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-    //  prevMove: 0,
-      value: 0,
-      white: true,
-      //prev: 0,
-    };
+
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   getTurnColor() {
-    
-    if (this.state.white) {
+    if (this.props.next % 2 !== 0) {
       return String.fromCharCode(9898) + " ";
     } else {
       return String.fromCharCode(9899) + " ";
@@ -23,9 +17,9 @@ class NextTurn extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
+    document.getElementById("previous").disabled = false;
 
-    this.props.nextTurn(this.state.value);
-    this.setState({ white: !this.state.white, prev: this.state.value - 1 });
+    this.props.nextTurn(); // called passed function (from Chess) nextTurn()
   }
 
   render() {
@@ -36,8 +30,9 @@ class NextTurn extends React.Component {
             {" "}
             Do Next Turn for {this.getTurnColor()}
             ======================================================================
-            ...turn number will be: = {this.state.value++}
+            ...turn number will be: = {this.props.next}
           </button>
+          <br></br>
         </form>
       </div>
     );

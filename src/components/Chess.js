@@ -1,12 +1,11 @@
 import React from "react";
 import Square from "./Square";
 import NextTurn from "./NextTurn";
-import PrevMove from "./PrevMove";
 
+import PrevTurn from "./PrevTurn";
 import CONSTANTS from "../config/constants";
-//import Moves from "./Moves";
+
 import * as MoveFunctions from "./MoveFunctions";
-//import { getCandidateWhiteKingMoves } from "./MovesFunctions";
 
 import { doublePawnPointsHandling } from "./Heuristics";
 import _ from "lodash";
@@ -19,6 +18,8 @@ class Chess extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      DEBUG: false,
+      white: CONSTANTS.WHITE_STARTS, // white starts by default
       currentBoardSquares: [], // current board squares; all next turn possibilities will create a separate (candidate) board
       candidateBoards: [], // each board has different squares, there are as many boards as there are allowed move possibilities per a turn
       pieces: {},
@@ -36,9 +37,8 @@ class Chess extends React.Component {
       promotedWhiteKnightNumber: 90,
       promotedBlacKnightNumber: -30,
 
-      white: true,
       previousBoards: [], // array (stack with push/pop) of previous boards
-      nextTurn: 1,
+      nextTurn: 1, // 'pointer' to the next turn number (initially will be 1)
 
       previousMove: null, // TODO: possible needed for checking allowance for en passat
 
@@ -54,7 +54,7 @@ class Chess extends React.Component {
 
     this.moveMap = this.moveMap.bind(this);
     this.nextTurn = this.nextTurn.bind(this);
-    this.prevMove = this.prevMove.bind(this);
+    this.prevTurn = this.prevTurn.bind(this);
   }
 
   componentWillMount() {
@@ -63,6 +63,7 @@ class Chess extends React.Component {
 
   componentDidMount() {
     this.initPieces();
+    document.getElementById("previous").disabled = true;
   }
 
   moveMap(sr, sc, dr, dc) {
@@ -345,24 +346,17 @@ class Chess extends React.Component {
 
     this.setState({ pieces });
     //this.makeNumberOfMoves(3); // check game over condition!
+
     return pieces;
   }
 
-  makeNumberOfMoves(n) {
+  /*makeNumberOfMoves(n) {
     if (!this.gameOver) {
       for (let i = 0; i < n; i++) {
         this.nextTurn(i + 1);
       }
     }
-  }
-
-  prevMove() {
-    console.log("prevmove..");
-    this.setState({
-      currentBoardSquares: this.state.previousBoards.pop(),
-      white: !this.state.white,
-    });
-  }
+  }*/
 
   getCandidateMoves(white, board) {
     let candidateMoves = [];
@@ -371,17 +365,21 @@ class Chess extends React.Component {
     } else {
       candidateMoves = this.getCandidateMovesBlack(board);
     }
-    console.log("candit moves = " + candidateMoves);
+    //console.log("candit moves = " + candidateMoves);
     return candidateMoves;
   }
+
   getAllowedMoves(white, board, candidateMoves) {
     if (candidateMoves === null || candidateMoves.length === 0) return null;
 
     let allowedMoves = [];
     if (white) {
+      
       allowedMoves = this.getAllowedMovesWhite(board, candidateMoves);
+      console.log("allowedmovesWhite="+allowedMoves);
     } else {
       allowedMoves = this.getAllowedMovesBlack(board, candidateMoves);
+      console.log("allowedmovesBlack="+allowedMoves);
     }
     return allowedMoves;
   }
@@ -552,8 +550,9 @@ class Chess extends React.Component {
   }
 
   // get move points for this board position
-  // TODO: this function should be modified to have the heuristics to get the best possible (white) move
-  getAllowedMovesFromThisBoardPosition(board, white, boardIdx) {
+  // TODO: this function should be modified to have the heuristics to get the  possible (white) move
+  getAllowedMovesForBoard(board, white, boardIdx) {
+    
     let candidateMoves = [];
     let allowedMoves = [];
     if (white) {
@@ -577,14 +576,17 @@ class Chess extends React.Component {
   getAllowedMovesWhite(board, candidateMovesWhite, boardIdx) {
     const { candidateBoards, pieces } = this.state;
     let allowedMoves = []; // contains only the candidate moves that were eventually verified to be allowed
-    let whiteKingPosition = pieces[60].currentSquare;
-
+   
     for (let i = 0; i < candidateMovesWhite.length; i++) {
+      let whiteKingPosition = pieces[60].currentSquare;
+
       const whiteCandidateMove = candidateMovesWhite[i];
       let moves = this.getMovesString(candidateMovesWhite[i]);
+      
       const delim = this.getDelim(candidateMovesWhite[i]);
 
-      if (delim === CONSTANTS.CHECK) { // candidate move IS check (against black)
+      if (delim === CONSTANTS.CHECK) {
+        // candidate move IS check (against black)
         moves = candidateMovesWhite[i].split(CONSTANTS.CHECK);
         board[64] = CONSTANTS.CHECK; // let's FLAG that this board has check!
         candidateBoards[boardIdx] = board;
@@ -646,15 +648,19 @@ class Chess extends React.Component {
         continue;
       }
 
-      if (moves[0] === whiteKingPosition) {
+     
+      if (moves[0] == whiteKingPosition) {
         // white king move candidate!
         whiteKingPosition = moves[1];
-      }
+       // console.log("MATCH: checking with kingPos = " + whiteKingPosition);
+      } 
 
       if (
-        this.isWhiteMoveAllowed(board, whiteKingPosition, whiteCandidateMove)
+        this.isWhiteMoveAllowed(board, whiteKingPosition, whiteCandidateMove, false)
       ) {
         allowedMoves.push(whiteCandidateMove);
+      } else {
+        this.isWhiteMoveAllowed(board, whiteKingPosition, whiteCandidateMove, true);
       }
     } // ..for
 
@@ -667,12 +673,14 @@ class Chess extends React.Component {
     const DLM = CONSTANTS.defaultDelim;
     const blackKingPosition = this.state.pieces[4].currentSquare;
 
+    if (this.state.DEBUG) {console.log("n candidate black moves = " + candidateMovesBlack.length);}
+
     for (let i = 0; i < candidateMovesBlack.length; i++) {
-      const str = candidateMovesBlack[i];
+      const blackCandidateMove = candidateMovesBlack[i];
 
-      let moves = this.getMovesString(str);
+      let moves = this.getMovesString(blackCandidateMove);
 
-      if (str.includes(CONSTANTS.CASTLING_QUEEN_SIDE)) {
+      if (blackCandidateMove.includes(CONSTANTS.CASTLING_QUEEN_SIDE)) {
         let whiteCandidateMoves = this.getCandidateMovesWhite(board);
         let allowLeftCastling = true;
         const re = /1|2|3|4/g; // numbers of the not-allowed squares
@@ -690,10 +698,10 @@ class Chess extends React.Component {
           }
         }
         if (allowLeftCastling) {
-          allowedMoves.push(str);
+          allowedMoves.push(blackCandidateMove);
         }
         continue;
-      } else if (str.includes(CONSTANTS.CASTLING_KING_SIDE)) {
+      } else if (blackCandidateMove.includes(CONSTANTS.CASTLING_KING_SIDE)) {
         let whiteCandidateMoves = this.getCandidateMovesWhite(board);
         let allowRightCastling = true;
         const re = /4|5|6/g; // numbers of the not-allowed squares
@@ -711,7 +719,7 @@ class Chess extends React.Component {
           }
         }
         if (allowRightCastling) {
-          allowedMoves.push(str);
+          allowedMoves.push(blackCandidateMove);
         }
         continue;
       }
@@ -720,13 +728,15 @@ class Chess extends React.Component {
       const dst = parseInt(moves[1], 10);
       let kingPosition = blackKingPosition;
 
-      if (src === kingPosition) {
+      if (src == kingPosition) {
         // black king move candidate!
         kingPosition = dst;
       }
 
-      if (this.isBlackMoveAllowed(board, kingPosition, str)) {
-        allowedMoves.push(str);
+      if (this.isBlackMoveAllowed(board, kingPosition, blackCandidateMove, false)) {
+        allowedMoves.push(blackCandidateMove);
+      } else {
+        this.isBlackMoveAllowed(board, kingPosition, blackCandidateMove, true);
       }
     }
     return allowedMoves;
@@ -734,24 +744,39 @@ class Chess extends React.Component {
 
   // to check whether a white move is allowed, you need to check opponent's next possible moves
   // if any black move collides with the white king, the white candidate move is rejected immediately
-  isWhiteMoveAllowed(board, whiteKingPosition, whiteCandidateMove) {
+  isWhiteMoveAllowed(board, whiteKingPosition, whiteCandidateMove, debug) {
     let allowed = true;
 
     for (let i = 0; i <= 63; i++) {
       let piece = board[i].piece;
+
 
       if (piece === null || piece === undefined) {
         continue; // piece has been e.g. eaten
       }
 
       const value = piece.value;
-
+      
+      
       switch (value) {
         case CONSTANTS.BLACK_PAWN_CODE:
-          allowed = MoveFunctions.isAllowedByOpponentBlackPawn(piece, whiteKingPosition);
+          allowed = MoveFunctions.isAllowedByOpponentBlackPawn(
+            piece,
+            whiteKingPosition
+          );
+          if (debug && !allowed) {
+            console.log("Not allowed: isAllowedByOpponentBlackPawn" + whiteCandidateMove);
+          }
           break;
         case CONSTANTS.BLACK_KNIGHT_CODE:
-          allowed = MoveFunctions.isAllowedByOpponentKnight(piece, whiteKingPosition);
+          allowed = MoveFunctions.isAllowedByOpponentKnight(
+            piece,
+            whiteKingPosition
+          );
+          if (debug && !allowed) {
+            console.log("Not allowed: isAllowedByOpponentBlackKnight" + whiteCandidateMove);
+          }
+          
           break;
         case CONSTANTS.BLACK_BISHOP_CODE:
           allowed = MoveFunctions.isAllowedByOpponentBishop(
@@ -760,6 +785,10 @@ class Chess extends React.Component {
             whiteKingPosition,
             whiteCandidateMove
           );
+          //console.log("allowed by black bishop = " + allowed + " move = " + whiteCandidateMove + " WKP =" + whiteKingPosition);
+          if (debug && !allowed) {
+            console.log("Not allowed: isAllowedByOpponentBlackBishop" + whiteCandidateMove);
+          }
           break;
         case CONSTANTS.BLACK_ROOK_CODE:
           allowed = MoveFunctions.isAllowedByOpponentRook(
@@ -768,9 +797,18 @@ class Chess extends React.Component {
             whiteKingPosition,
             whiteCandidateMove
           );
+          if (debug && !allowed) {
+            console.log("Not allowed: isAllowedByOpponentBlackRook" + whiteCandidateMove);
+          }
           break;
         case CONSTANTS.BLACK_KING_CODE:
-          allowed = MoveFunctions.isAllowedByOpponentKing(piece, whiteKingPosition);
+          allowed = MoveFunctions.isAllowedByOpponentKing(
+            piece,
+            whiteKingPosition
+          );
+          if (debug && !allowed) {
+            console.log("Not allowed: isAllowedByOpponentBlackKing" + whiteCandidateMove);
+          }
           break;
         case CONSTANTS.BLACK_QUEEN_CODE:
           allowed = MoveFunctions.isAllowedByOpponentQueen(
@@ -779,6 +817,9 @@ class Chess extends React.Component {
             whiteKingPosition,
             whiteCandidateMove
           );
+          if (debug && !allowed) {
+            console.log("Not allowed: " + whiteCandidateMove +  "*isAllowedByOpponentBlackQueen*" + whiteCandidateMove);
+          }
           break;
         default:
           break;
@@ -790,11 +831,12 @@ class Chess extends React.Component {
 
   // to check whether a black move is allowed, you need to check opponent's next possible moves
   // if any black move collides with the white king, the white candidate move is rejected immediately
-  isBlackMoveAllowed(board, blackKingPosition, blackCandidateMove) {
+  isBlackMoveAllowed(board, blackKingPosition, blackCandidateMove, debug) {
     let allowed = true;
 
     for (let i = 0; i <= 63; i++) {
       let piece = board[i].piece;
+
 
       if (piece === null || piece === undefined) {
         continue; // piece has been e.g. eaten
@@ -802,10 +844,22 @@ class Chess extends React.Component {
 
       switch (piece.value) {
         case 1:
-          allowed = MoveFunctions.isAllowedByOpponentWhitePawn(piece, blackKingPosition);
+          allowed = MoveFunctions.isAllowedByOpponentWhitePawn(
+            piece,
+            blackKingPosition
+          );
+          if (debug && !allowed) {
+            console.log("Not allowed: isAllowedByOpponentWhitePawn" + blackCandidateMove);
+          }
           break;
         case 3:
-          allowed = MoveFunctions.isAllowedByOpponentKnight(piece, blackKingPosition);
+          allowed = MoveFunctions.isAllowedByOpponentKnight(
+            piece,
+            blackKingPosition
+          );
+          if (debug && !allowed) {
+            console.log("Not allowed: isAllowedByOpponentWhiteKnight" + blackCandidateMove);
+          }
           break;
         case 4:
           allowed = MoveFunctions.isAllowedByOpponentBishop(
@@ -814,6 +868,9 @@ class Chess extends React.Component {
             blackKingPosition,
             blackCandidateMove
           );
+          if (debug && !allowed) {
+            console.log("Not allowed: isAllowedByOpponentWhiteBishop" + blackCandidateMove);
+          }
           break;
         case 5:
           allowed = MoveFunctions.isAllowedByOpponentRook(
@@ -822,9 +879,18 @@ class Chess extends React.Component {
             blackKingPosition,
             blackCandidateMove
           );
+          if (debug && !allowed) {
+            console.log("Not allowed: isAllowedByOpponentWhiteRook" + blackCandidateMove);
+          }
           break;
         case 6:
-          allowed = MoveFunctions.isAllowedByOpponentKing(piece, blackKingPosition);
+          allowed = MoveFunctions.isAllowedByOpponentKing(
+            piece,
+            blackKingPosition
+          );
+          if (debug && !allowed) {
+            console.log("Not allowed: isAllowedByOpponentWhiteKing" + blackCandidateMove);
+          }
           break;
         case 9:
           allowed = MoveFunctions.isAllowedByOpponentQueen(
@@ -833,6 +899,9 @@ class Chess extends React.Component {
             blackKingPosition,
             blackCandidateMove
           );
+          if (debug && !allowed) {
+            console.log("Not allowed: " + blackCandidateMove + " ** isAllowedByOpponentWhiteQueen");
+          }
           break;
         default:
           break;
@@ -842,9 +911,24 @@ class Chess extends React.Component {
     return allowed;
   }
 
-  nextTurn(nextTurn) {
-    this.setState({ nextTurn: nextTurn });
+  prevTurn() {
+    this.setState(
+      {
+        currentBoardSquares: this.state.previousBoards.pop(),
+        white: !this.state.white,
+        nextTurn: this.state.nextTurn - 1,
+      },
+      function () {
+        if (this.state.DEBUG) {
+          console.log(
+            "state update complete, prevTurn : " + this.state.prevTurn
+          );
+        }
+      }
+    );
+  }
 
+  nextTurn() {
     let {
       currentBoardSquares: squares,
       white,
@@ -854,14 +938,12 @@ class Chess extends React.Component {
     const previousBoard = _.cloneDeep(squares);
     this.state.previousBoards.push(previousBoard); // stack of previous boards, Lodash deep clone is required!
 
-    const candidateMoves = this.getCandidateMoves(white, squares);
+    const candidateMoves = this.getCandidateMoves(white, squares);    
+    let allowedMoves = this.getAllowedMoves(white, squares, candidateMoves);
 
-    //console.log("candidate white moves =" + candidateMovesWhite);
-    const allowedMoves = this.getAllowedMoves(white, squares, candidateMoves);
-
-    if (allowedMoves === null || allowedMoves.length === 0) {
+    if (allowedMoves === null || allowedMoves.length == 0) {
       if (white) {
-        console.log("Game over, black wins. ");
+        console.log("Game over, black wins. candidateMoves = " + candidateMoves + " allowedMoves l = " + allowedMoves.length);
       } else {
         console.log("Game over, white wins. ");
       }
@@ -869,9 +951,11 @@ class Chess extends React.Component {
       return;
     }
 
-    console.log(
-      " WHITE = " + white + " allowed moves:" + allowedMoves.join("|")
-    );
+    if (this.state.DEBUG) {
+      console.log(
+        " WHITE = " + white + " allowed moves:" + allowedMoves.join("|")
+      );
+    }
     let numberOfPossibleNextMoves = [];
     let maxIdx = 0;
     let max = 0;
@@ -888,7 +972,7 @@ class Chess extends React.Component {
         white
       ); //TODO, check that all kind of special moves are dealt as well (e.g. castling and its restrictiones)
 
-      const allowedMovesForBoard = this.getAllowedMovesFromThisBoardPosition(
+      const allowedMovesForBoard = this.getAllowedMovesForBoard(
         candidateBoards[i],
         white,
         i
@@ -896,14 +980,16 @@ class Chess extends React.Component {
 
       numberOfPossibleNextMoves[i] = allowedMovesForBoard.length;
 
-      console.log(
-        "White previous move:" +
-          allowedMoves[i] +
-          " | Points = " +
-          numberOfPossibleNextMoves[i] +
-          " | board number = " +
-          i
-      );
+      if (this.state.DEBUG) {
+        console.log(
+          "White previous move:" +
+            allowedMoves[i] +
+            " | Points = " +
+            numberOfPossibleNextMoves[i] +
+            " | board number = " +
+            i
+        );
+      }
     } // ..for
 
     maxIdx = this.getMaxMovesIndexWhileAvoidingStalemate(
@@ -918,36 +1004,41 @@ class Chess extends React.Component {
       // for black, instead of using the "optimal" move select a random move!
       selectedMove = MoveFunctions.getBestBlackMove(squares, allowedMoves); // numberOfPossibleNextMoves[Math.floor(Math.random() * numberOfPossibleNextMoves.length)];
       maxIdx = allowedMoves.indexOf(selectedMove); // this will actually be a random move index
-      console.log(
-        "selected move for black = " +
-          selectedMove +
-          " possible moves length = " +
-          numberOfPossibleNextMoves.length +
-          " maxIdx = " +
-          maxIdx
-      );
+      if (this.state.DEBUG) {
+        console.log(
+          "selected move for black = " +
+            selectedMove +
+            " possible moves length = " +
+            numberOfPossibleNextMoves.length +
+            " maxIdx = " +
+            maxIdx
+        );
+      }
     } else {
       selectedMove = allowedMoves[maxIdx];
       max = numberOfPossibleNextMoves[maxIdx];
     }
 
-    console.log("boards = " + candidateBoards.length);
-
-    console.log(
-      "max = " +
-        max +
-        " max_idx = " +
-        maxIdx +
-        " real max value = " +
-        allowedMoves[maxIdx]
-    );
+    if (this.state.DEBUG) {
+      console.log("boards = " + candidateBoards.length);
+      console.log(
+        "max = " +
+          max +
+          " max_idx = " +
+          maxIdx +
+          " real max value = " +
+          allowedMoves[maxIdx]
+      );
+    }
 
     const moves = this.getMovesString(selectedMove); // TODO: how about castling and en passe?
 
-    console.log("moveStr = " + moves);
+    if (this.state.DEBUG) {
+      console.log("moveStr = " + moves);
+    }
     const pieceNumberId = candidateBoards[maxIdx][moves[1]].piece.n;
 
-    if (pieceNumberId === 60 || pieceNumberId === 4) {
+    if (pieceNumberId == 60 || pieceNumberId == 4) {
       // king moved
       pieces[pieceNumberId].currentSquare = parseInt(moves[1], 10);
     } else if (white && pieceNumberId > 63 && pieceNumberId < 70) {
@@ -970,12 +1061,18 @@ class Chess extends React.Component {
         candidateBoards,
         currentBoardSquares: candidateBoards[maxIdx],
         white: !white,
+
+        nextTurn: this.state.nextTurn + 1,
       },
       function () {
-        //console.log("setState completed", this.state);
+        if (this.state.DEBUG) {
+          console.log(
+            "state update complete, nextTurn : " + this.state.nextTurn
+          );
+        }
       }
     );
-  }
+  } // nextTurn
 
   getMaxMovesIndexWhileAvoidingStalemate(
     isWhiteTurn,
@@ -993,12 +1090,12 @@ class Chess extends React.Component {
             isWhiteTurn,
             i,
             candidateBoards
-          ) === 0
+          ) == 0
         ) {
-          return i; // this will be maxIdx, becaue it's an immediate mate!
+          return i; // this will be maxIdx, because it's an immediate mate!
         }
       }
-      if (numberOfPossibleNextMoves[i] >= max) { 
+      if (numberOfPossibleNextMoves[i] >= max) {
         numberOfPossibleNextMoves[i] += doublePawnPointsHandling(
           allowedMoves[i]
         );
@@ -1006,17 +1103,18 @@ class Chess extends React.Component {
         maxIdx = i;
       }
     }
-    console.log("INITIALLY SELECTED max = " + max + " idx = " + maxIdx);
+    if (this.state.DEBUG) {
+      console.log("INITIALLY SELECTED max = " + max + " idx = " + maxIdx);
+    }
 
     if (
       this.getNumberOfAllowedOpponentMoves(
         isWhiteTurn,
         maxIdx,
         candidateBoards
-      ) === 0
+      ) == 0
     ) {
-      // opponent can't move -> stalemate!
-
+      // TODO (review this): opponent can't move -> stalemate!
       console.log(
         "STALEMATE PREVENTION, SKIP THIS MOVE: " +
           allowedMoves[maxIdx] +
@@ -1035,16 +1133,16 @@ class Chess extends React.Component {
         numberOfPossibleNextMoves
       ); // recursion is OK here
     } else {
-      console.log(
+      /*console.log(
         "MAX accepted, max = " +
           max +
           " idx = " +
           maxIdx +
           " move = " +
           allowedMoves[maxIdx]
-      );
+      );*/
     }
-    console.log(
+    /*console.log(
       "returning: max = " +
         max +
         " max_idx=" +
@@ -1053,22 +1151,26 @@ class Chess extends React.Component {
         numberOfPossibleNextMoves +
         " allowedMoves[maxIdx] = " +
         allowedMoves[maxIdx]
-    );
+    );*/
     return maxIdx;
   }
 
   getNumberOfAllowedOpponentMoves(white, index, candidateBoards) {
     let allowedOpponentMoves = [];
     let candidateOpponentMoves = [];
+
     if (white) {
       candidateOpponentMoves = this.getCandidateMovesBlack(
         candidateBoards[index]
       );
-      console.log("candit opponent moves = " + candidateOpponentMoves.length);
+      //console.log("candit opponent moves = " + candidateOpponentMoves.length);
+      // TODO: add heuristics to ADD or REDUCE points based on good/bad moves!
+      // e.g. if opponent can capture queen with a rook -> reduce points
       allowedOpponentMoves = this.getAllowedMovesBlack(
         candidateBoards[index],
         candidateOpponentMoves
       );
+
     } else {
       candidateOpponentMoves = this.getCandidateMovesWhite(
         candidateBoards[index]
@@ -1129,12 +1231,13 @@ class Chess extends React.Component {
     return (
       <div className="wrapper">
         <h3>Chess Solution</h3>
-        <div className="nextmove">
-          <NextTurn nextTurn={this.nextTurn} />
+        <div className="nextturn">
+          <NextTurn nextTurn={this.nextTurn} next={this.state.nextTurn} />
         </div>
-        <div className="prevmove">
-          <PrevMove prevMove={this.prevMove} />
+        <div className="prevturn">
+          <PrevTurn prevTurn={this.prevTurn} next={this.state.nextTurn} />
         </div>
+
         <div>
           {" "}
           ================================================================================================{" "}

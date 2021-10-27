@@ -1,9 +1,10 @@
-import config from './config/normal'; // normal chess board setup
+//import config from './config/normal'; // normal chess board setup
 //import config from './config/whiteCastling'; // castling
 //import config from './config/whiteCanCaptureWithEnPassant'; 
 //import config from "./config/staleMate";
+//import config from "./config/bugWhiteBishopCapturesKing";
 
-
+import config from "./config/bugWhiteKingMovesToCheckByBlackBishop";
 
 import React from "react";
 import ReactDOM from "react-dom";

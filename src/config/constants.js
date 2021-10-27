@@ -1,5 +1,5 @@
 const CONSTANTS = {
-  
+  WHITE_STARTS: true,
   
   WHITE_KNIGHT_CODE: 3,
   WHITE_BISHOP_CODE: 4,

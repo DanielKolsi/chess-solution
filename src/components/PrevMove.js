@@ -4,13 +4,14 @@ class PrevMove extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      prev: 0,
-      next: 1,
+      prev: this.props.prev,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit(e) {
+    e.preventDefault();
+    console.log("PREVMOVE:.= " + this.state.prev);
     if (this.state.prev > 0) {
       document.getElementById("previous").disabled = false;
       console.log("PREVMOVE:..");
@@ -26,11 +27,11 @@ class PrevMove extends React.Component {
 
   render() {
     return (
-      <div className="command-form2">
+      <div className="command-form">
         <form onSubmit={this.handleSubmit}>
           <br></br>
           <button id="previous" type="submit">
-            Go back to previous turn{" "}
+            222Go back to previous turn{" "}
           </button>
         </form>
       </div>
