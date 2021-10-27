@@ -1,8 +1,5 @@
-last verify
-this works
-test mod
-test clone
-test clone second
+100% OK
+
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
