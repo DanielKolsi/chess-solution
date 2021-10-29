@@ -650,20 +650,18 @@ class Chess extends React.Component {
         continue;
       }
 
-     
+      let whiteKingMoveCandidate = false;
       if (moves[0] == whiteKingPosition) {
         // white king move candidate!
         whiteKingPosition = moves[1];
+        whiteKingMoveCandidate = true;
        // console.log("MATCH: checking with kingPos = " + whiteKingPosition);
       } 
       //console.log("is white move allowed call");
-      if (
-        
-        this.isWhiteMoveAllowed(board, whiteKingPosition, whiteCandidateMove, false)
+      if (     
+        this.isWhiteMoveAllowed(board, whiteKingPosition, whiteCandidateMove, whiteKingMoveCandidate)
       ) {
         allowedMoves.push(whiteCandidateMove);
-      } else {
-        this.isWhiteMoveAllowed(board, whiteKingPosition, whiteCandidateMove, true);
       }
     } // ..for
 
@@ -736,10 +734,10 @@ class Chess extends React.Component {
         kingPosition = dst;
       }
 
-      if (this.isBlackMoveAllowed(board, kingPosition, blackCandidateMove, false)) {
+      if (this.isBlackMoveAllowed(board, kingPosition, blackCandidateMove)) {
         allowedMoves.push(blackCandidateMove);
       } else {
-        this.isBlackMoveAllowed(board, kingPosition, blackCandidateMove, true);
+        this.isBlackMoveAllowed(board, kingPosition, blackCandidateMove);
       }
     }
     return allowedMoves;
@@ -747,22 +745,22 @@ class Chess extends React.Component {
 
   // to check whether a white move is allowed, you need to check opponent's next possible moves
   // if any black move collides with the white king, the white candidate move is rejected immediately
-  isWhiteMoveAllowed(board, whiteKingPosition, whiteCandidateMove, debug) {
+  isWhiteMoveAllowed(board, whiteKingPosition, whiteCandidateMove) {
     let allowed = true;
 
     for (let i = 0; i <= 63; i++) {
       let piece = board[i].piece;
-
-
-      if (piece === null || piece === undefined) {
-        continue; // piece has been e.g. eaten
-      }
-
-      const value = piece.value;
       
+     
+      if (piece === null || piece === undefined) {
+        continue; // piece has been e.g. eaten or is a pawn
+      }
+      
+      const value = piece.value;
+      let debug = false;
       
       switch (value) {
-        case CONSTANTS.BLACK_PAWN_CODE:
+        case CONSTANTS.BLACK_PAWN_CODE: 
           allowed = MoveFunctions.isAllowedByOpponentBlackPawn(
             piece,
             whiteKingPosition
@@ -834,7 +832,7 @@ class Chess extends React.Component {
 
   // to check whether a black move is allowed, you need to check opponent's next possible moves
   // if any black move collides with the white king, the white candidate move is rejected immediately
-  isBlackMoveAllowed(board, blackKingPosition, blackCandidateMove, debug) {
+  isBlackMoveAllowed(board, blackKingPosition, blackCandidateMove) {
     let allowed = true;
 
     for (let i = 0; i <= 63; i++) {
@@ -845,6 +843,7 @@ class Chess extends React.Component {
         continue; // piece has been e.g. eaten
       }
 
+      let debug = false;
       switch (piece.value) {
         case 1:
           allowed = MoveFunctions.isAllowedByOpponentWhitePawn(
@@ -1005,7 +1004,7 @@ class Chess extends React.Component {
     let selectedMove;
     if (!white) {
       // for black, instead of using the "optimal" move select a random move!
-      selectedMove = MoveFunctions.getBestMove(squares, allowedMoves); // numberOfPossibleNextMoves[Math.floor(Math.random() * numberOfPossibleNextMoves.length)];
+      selectedMove = MoveFunctions.getBestMove(squares, allowedMoves, false); // numberOfPossibleNextMoves[Math.floor(Math.random() * numberOfPossibleNextMoves.length)];
       maxIdx = allowedMoves.indexOf(selectedMove); // this will actually be a random move index
       if (this.state.DEBUG) {
         console.log(
@@ -1018,8 +1017,11 @@ class Chess extends React.Component {
         );
       }
     } else {
-      selectedMove = allowedMoves[maxIdx];
-      max = numberOfPossibleNextMoves[maxIdx];
+      selectedMove = MoveFunctions.getBestMove(squares, allowedMoves, true);
+      if (selectedMove === null) {
+        selectedMove = allowedMoves[maxIdx];
+        max = numberOfPossibleNextMoves[maxIdx];
+      }     
     }
 
     if (this.state.DEBUG) {

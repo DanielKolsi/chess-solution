@@ -2,7 +2,7 @@ import CONSTANTS from "../config/constants";
 
 
 // best move strategy for black
-export function getBestMove(squares, allowedMoves) {
+export function getBestMove(squares, allowedMoves, white) {
   const DLM = CONSTANTS.defaultDelim;
 
   let moveValue = 0; // value is calculated by substraction own piece value from the captured piece value
@@ -19,17 +19,23 @@ export function getBestMove(squares, allowedMoves) {
       if (squares[dst].piece.value > squares[src].piece.value) {
         let value = Math.abs(squares[dst].piece.value) - Math.abs(squares[src].piece.value);
         console.log("VALUE="+value);
-        if (value > moveValue) {
+        if (value >= moveValue) {
           moveValue = value;
           console.log("move value = " + value + " best move idx = " + i + " src value = " + squares[src].piece.value);
           bestMoveIndex = i;
         }
+
       }
     }
   }
   if (bestMoveIndex > 0) {
     console.log("best move for black... = " + allowedMoves[bestMoveIndex]);
     return allowedMoves[bestMoveIndex];
+  }
+  if (white) {
+    if (moveValue > 0) {
+      return bestMoveIndex;
+    } else return null;
   }
   const n = Math.floor(Math.random() * allowedMoves.length);
   return allowedMoves[n];
@@ -55,38 +61,29 @@ export function getCandidateKingMoves(piece, squares, canCaptureWhite) {
   const UP_LEFT = currentPieceSquareNumber + CONSTANTS.upLeft;
   const UP_RIGHT = currentPieceSquareNumber + CONSTANTS.upRight;
 
-     // needs to stay on the board limits
-  if (squares[currentPieceSquareNumber].row < CONSTANTS.maxRow) {
-    if (squares[UP].piece == null || squares[UP].piece.white === canCaptureWhite) {
-      candidateMoves.push(currentPieceSquareNumber + DEFAULT_DELIM + UP);
-    }
+
+    // needs to stay on the board limits
+  
+  if (squares[currentPieceSquareNumber].row < CONSTANTS.maxRow &&  (squares[UP].piece == null || squares[UP].piece.white === canCaptureWhite)) {                
+    candidateMoves.push(currentPieceSquareNumber + DEFAULT_DELIM + UP);
+  }
+  if (squares[currentPieceSquareNumber].row > CONSTANTS.minRow && (squares[DOWN].piece == null || squares[DOWN].piece.white === canCaptureWhite)) {    
+      candidateMoves.push(currentPieceSquareNumber + DEFAULT_DELIM + DOWN);    
   }
 
-  if (squares[currentPieceSquareNumber].row > CONSTANTS.minRow) {
-    if (squares[DOWN].piece == null || squares[DOWN].piece.white === canCaptureWhite) {
-      candidateMoves.push(currentPieceSquareNumber + DEFAULT_DELIM + DOWN);
-    }
+  if (squares[currentPieceSquareNumber].col > CONSTANTS.minCol && (squares[LEFT].piece == null || squares[LEFT].piece.white === canCaptureWhite)) {  
+      candidateMoves.push(currentPieceSquareNumber + DEFAULT_DELIM + LEFT);    
   }
 
-  if (squares[currentPieceSquareNumber].col > CONSTANTS.minCol) {
-    if (squares[LEFT].piece == null || squares[LEFT].piece.white === canCaptureWhite) {
-      candidateMoves.push(currentPieceSquareNumber + DEFAULT_DELIM + LEFT);
-    }
-  }
-
-  if (squares[currentPieceSquareNumber].col < CONSTANTS.maxCol) {
-    if (squares[RIGHT].piece == null || squares[RIGHT].piece.white === canCaptureWhite) {
+  if (squares[currentPieceSquareNumber].col < CONSTANTS.maxCol && (squares[RIGHT].piece == null || squares[RIGHT].piece.white === canCaptureWhite)) {    
       candidateMoves.push(currentPieceSquareNumber + DEFAULT_DELIM + RIGHT);
-    }
   }
 
   if (
-    squares[currentPieceSquareNumber].row < CONSTANTS.maxRow &&
-    squares[currentPieceSquareNumber].col < CONSTANTS.maxCol
+    squares[currentPieceSquareNumber].row < CONSTANTS.maxRow && squares[currentPieceSquareNumber].col < CONSTANTS.maxCol
   ) {
     if (
-      squares[UP_RIGHT].piece == null ||
-      squares[UP_RIGHT].piece.white === canCaptureWhite
+      squares[UP_RIGHT].piece == null || squares[UP_RIGHT].piece.white === canCaptureWhite
     ) {
       candidateMoves.push(currentPieceSquareNumber + DEFAULT_DELIM + UP_RIGHT);
     }
@@ -130,109 +127,6 @@ export function getCandidateKingMoves(piece, squares, canCaptureWhite) {
   }
   return candidateMoves;
 }
-
-/**
- *
- * @param {*} piece
- * @param {*} squares
- */
-/*
-export function getCandidateBlacKingMoves(piece, squares) {
-  const DLM = CONSTANTS.defaultDelim;
-  const currentPieceSquareNumber = piece.currentSquare;
-  let candidateMoves = [];
-
-  let up = currentPieceSquareNumber + CONSTANTS.up;
-  let down = currentPieceSquareNumber + CONSTANTS.down;
-  let left = currentPieceSquareNumber + CONSTANTS.left;
-  let right = currentPieceSquareNumber + CONSTANTS.right;
-  let downLeft = currentPieceSquareNumber + CONSTANTS.downLeft;
-  let downRight = currentPieceSquareNumber + CONSTANTS.downRight;
-  let upLeft = currentPieceSquareNumber + CONSTANTS.upLeft;
-  let upRight = currentPieceSquareNumber + CONSTANTS.upRight;
-
-  if (squares[currentPieceSquareNumber].row < CONSTANTS.maxRow) {
-    // needs to stay on the board limits
-    if (squares[up].piece === null || squares[up].piece.white === true) {
-      candidateMoves.push(currentPieceSquareNumber + DLM + up);
-    }
-  }
-
-  if (squares[currentPieceSquareNumber].row > CONSTANTS.minRow) {
-    // needs to stay on the board limits
-    if (squares[down].piece === null || squares[down].piece.white === true) {
-      candidateMoves.push(currentPieceSquareNumber + DLM + down);
-    }
-  }
-
-  if (squares[currentPieceSquareNumber].col > CONSTANTS.minCol) {
-    // needs to stay on the board limits
-    if (squares[left].piece === null || squares[left].piece.white === true) {
-      candidateMoves.push(currentPieceSquareNumber + DLM + left);
-    }
-  }
-
-  if (squares[currentPieceSquareNumber].col < CONSTANTS.maxCol) {
-    // needs to stay on the board limits
-    if (squares[right].piece === null || squares[right].piece.white === true) {
-      candidateMoves.push(currentPieceSquareNumber + DLM + right);
-    }
-  }
-
-  if (
-    squares[currentPieceSquareNumber].row < CONSTANTS.maxRow &&
-    squares[currentPieceSquareNumber].col < CONSTANTS.maxCol
-  ) {
-    // needs to stay on the board limits
-    if (
-      squares[upRight].piece === null ||
-      squares[upRight].piece.white === true
-    ) {
-      candidateMoves.push(currentPieceSquareNumber + DLM + upRight);
-    }
-  }
-
-  if (
-    squares[currentPieceSquareNumber].row > CONSTANTS.minRow &&
-    squares[currentPieceSquareNumber].col < CONSTANTS.maxCol
-  ) {
-    // needs to stay on the board limits
-    if (
-      squares[downRight].piece === null ||
-      squares[downRight].piece.white === true
-    ) {
-      candidateMoves.push(currentPieceSquareNumber + DLM + downRight);
-    }
-  }
-
-  if (
-    squares[currentPieceSquareNumber].row < CONSTANTS.maxRow &&
-    squares[currentPieceSquareNumber].col > CONSTANTS.minCol
-  ) {
-    // needs to stay on the board limits
-    if (
-      squares[upLeft].piece === null ||
-      squares[upLeft].piece.white === true
-    ) {
-      candidateMoves.push(currentPieceSquareNumber + DLM + upLeft);
-    }
-  }
-
-  if (
-    squares[currentPieceSquareNumber].row > CONSTANTS.minRow &&
-    squares[currentPieceSquareNumber].col > CONSTANTS.minCol
-  ) {
-    // needs to stay on the board limits
-    if (
-      squares[downLeft].piece === null ||
-      squares[downLeft].piece.white === true
-    ) {
-      candidateMoves.push(currentPieceSquareNumber + DLM + downLeft);
-    }
-  }
-
-  return candidateMoves;
-}*/
 
 export function getCandidateWhitePawnMoves(piece, board, prevMove) {
   const CURRENT_PIECE_SQUARE = piece.currentSquare;
@@ -629,9 +523,7 @@ export function isAllowedByOpponentWhitePawn(piece, kingPosition) {
   const DOWN_LEFT = piece.currentSquare + CONSTANTS.downLeft;
   const DOWN_RIGHT = piece.currentSquare + CONSTANTS.downRight;
 
-  if (DOWN_LEFT == kingPosition) return false;
-  if (DOWN_RIGHT == kingPosition) return false;
-
+  if (DOWN_LEFT == kingPosition || DOWN_RIGHT == kingPosition) return false;
   return true;
 }
 
@@ -933,8 +825,6 @@ export function isAllowedByOpponentBishop(
     canditDst = parseInt(move[1], 10);
   }
 
-  
-  
   allowed = isDiagonalMovesUpRightAllowed(
     piece,
     squares,
