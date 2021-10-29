@@ -373,6 +373,7 @@ class Chess extends React.Component {
     if (candidateMoves === null || candidateMoves.length === 0) return null;
 
     let allowedMoves = [];
+
     if (white) {
       
       allowedMoves = this.getAllowedMovesWhite(board, candidateMoves);
@@ -577,6 +578,7 @@ class Chess extends React.Component {
     const { candidateBoards, pieces } = this.state;
     let allowedMoves = []; // contains only the candidate moves that were eventually verified to be allowed
    
+    console.log("get allowed moves white...boardIdx = " + boardIdx);
     for (let i = 0; i < candidateMovesWhite.length; i++) {
       let whiteKingPosition = pieces[60].currentSquare;
 
@@ -654,8 +656,9 @@ class Chess extends React.Component {
         whiteKingPosition = moves[1];
        // console.log("MATCH: checking with kingPos = " + whiteKingPosition);
       } 
-
+      //console.log("is white move allowed call");
       if (
+        
         this.isWhiteMoveAllowed(board, whiteKingPosition, whiteCandidateMove, false)
       ) {
         allowedMoves.push(whiteCandidateMove);
@@ -787,7 +790,7 @@ class Chess extends React.Component {
           );
           //console.log("allowed by black bishop = " + allowed + " move = " + whiteCandidateMove + " WKP =" + whiteKingPosition);
           if (debug && !allowed) {
-            console.log("Not allowed: isAllowedByOpponentBlackBishop" + whiteCandidateMove);
+           // console.log("Not allowed: isAllowedByOpponentBlackBishop" + whiteCandidateMove);
           }
           break;
         case CONSTANTS.BLACK_ROOK_CODE:
@@ -1002,7 +1005,7 @@ class Chess extends React.Component {
     let selectedMove;
     if (!white) {
       // for black, instead of using the "optimal" move select a random move!
-      selectedMove = MoveFunctions.getBestBlackMove(squares, allowedMoves); // numberOfPossibleNextMoves[Math.floor(Math.random() * numberOfPossibleNextMoves.length)];
+      selectedMove = MoveFunctions.getBestMove(squares, allowedMoves); // numberOfPossibleNextMoves[Math.floor(Math.random() * numberOfPossibleNextMoves.length)];
       maxIdx = allowedMoves.indexOf(selectedMove); // this will actually be a random move index
       if (this.state.DEBUG) {
         console.log(
@@ -1031,16 +1034,16 @@ class Chess extends React.Component {
       );
     }
 
-    const moves = this.getMovesString(selectedMove); // TODO: how about castling and en passe?
+    const movesStringFromSelectedMove = this.getMovesString(selectedMove); // TODO: how about castling and en passe?
 
     if (this.state.DEBUG) {
-      console.log("moveStr = " + moves);
+      console.log("moveStr = " + movesStringFromSelectedMove);
     }
-    const pieceNumberId = candidateBoards[maxIdx][moves[1]].piece.n;
+    const pieceNumberId = candidateBoards[maxIdx][movesStringFromSelectedMove[1]].piece.n;
 
     if (pieceNumberId == 60 || pieceNumberId == 4) {
       // king moved
-      pieces[pieceNumberId].currentSquare = parseInt(moves[1], 10);
+      pieces[pieceNumberId].currentSquare = parseInt(movesStringFromSelectedMove[1], 10);
     } else if (white && pieceNumberId > 63 && pieceNumberId < 70) {
       // white promoted queen = [63, 69]
       console.error("UPDATE next promoted WHITE queen number!!");
@@ -1053,7 +1056,7 @@ class Chess extends React.Component {
       });
     } // TODO: add underpromotion piece number counters! (white & black)
 
-    this.handleCastlingAllowedCondition(squares[moves[0]]); // we need to check if the selected move caused restrictions that block future castling
+    this.handleCastlingAllowedCondition(squares[movesStringFromSelectedMove[0]]); // we need to check if the selected move caused restrictions that block future castling
 
     this.setState(
       {
@@ -1085,20 +1088,27 @@ class Chess extends React.Component {
 
     for (let i = 0; i < candidateBoards.length; ++i) {
       if (candidateBoards[i][64] === CONSTANTS.CHECK) {
-        if (
-          this.getNumberOfAllowedOpponentMoves(
-            isWhiteTurn,
-            i,
-            candidateBoards
-          ) == 0
+        let numberOfAllowedOpponentMoves =  this.getNumberOfAllowedOpponentMoves(
+          isWhiteTurn,
+          i,
+          candidateBoards
+        ) 
+        if (numberOfAllowedOpponentMoves == 0
+          
         ) {
           return i; // this will be maxIdx, because it's an immediate mate!
+          
+        } else if (numberOfAllowedOpponentMoves < 2) {
+          // TODO: at this point the opponent has only one possibly move which could mean an impending mate; this strategy should be refined
+          return i;
         }
+        // TODO: handle double consequtive moves mates, i.e. if the next move after this one is able to deliver a mate, select this move
+        // the opponent may have multiple moves to avoid the mate
       }
       if (numberOfPossibleNextMoves[i] >= max) {
         numberOfPossibleNextMoves[i] += doublePawnPointsHandling(
           allowedMoves[i]
-        );
+        ); // Heuristics#1
         max = numberOfPossibleNextMoves[i]; // select the move from the allowed moves which got the highest points
         maxIdx = i;
       }

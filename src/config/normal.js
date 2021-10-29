@@ -1,3 +1,4 @@
+//board[0..63].piece.currentSquare|type|id|n|white|value;
 export default {
   pieces: [
     // black pieces 0-15

@@ -1,44 +1,38 @@
 import CONSTANTS from "../config/constants";
 
-// functions for best moves
-// best move strategy for white
-export function getBestWhiteMove(squares, allowedMovesWhite) {
-  const DLM = CONSTANTS.defaultDelim;
-
-  for (let i = 0; i < allowedMovesWhite.length; i++) {
-    const move = allowedMovesWhite[i].split(DLM);
-    const src = parseInt(move[0], 10); // 10 = base 10
-    const dst = parseInt(move[1], 10);
-    if (squares[dst] !== undefined && squares[dst].piece !== null) {
-      // compare piece values, if valueable, possibly worth eating..?!, piece.value
-      if (squares[src].piece.value < squares[dst].piece.value) {
-        return allowedMovesWhite[i];
-      }
-    }
-  }
-  // just a random move initially, replace with point functions & heuristics
-  const n = Math.floor(Math.random() * allowedMovesWhite.length);
-
-  return allowedMovesWhite[n];
-}
 
 // best move strategy for black
-export function getBestBlackMove(squares, allowedMovesBlack) {
+export function getBestMove(squares, allowedMoves) {
   const DLM = CONSTANTS.defaultDelim;
 
-  for (let i = 0; i < allowedMovesBlack.length; i++) {
-    const move = allowedMovesBlack[i].split(DLM);
+  let moveValue = 0; // value is calculated by substraction own piece value from the captured piece value
+  let bestMoveIndex = -1;
 
+  
+  for (let i = 0; i < allowedMoves.length; i++) {
+    const move = allowedMoves[i].split(DLM);
+    const src = move[0];
     const dst = move[1];
+    console.log("best move : allowed move  = " + move + " l = " + allowedMoves.length);
     if (squares[dst] !== undefined && squares[dst].piece !== null) {
       // compare piece values, if valueable, possibly worth eating..?!, piece.value
-      if (squares[dst].piece.value > 1) {
-        return allowedMovesBlack[i];
+      if (squares[dst].piece.value > squares[src].piece.value) {
+        let value = Math.abs(squares[dst].piece.value) - Math.abs(squares[src].piece.value);
+        console.log("VALUE="+value);
+        if (value > moveValue) {
+          moveValue = value;
+          console.log("move value = " + value + " best move idx = " + i + " src value = " + squares[src].piece.value);
+          bestMoveIndex = i;
+        }
       }
     }
   }
-  const n = Math.floor(Math.random() * allowedMovesBlack.length);
-  return allowedMovesBlack[n];
+  if (bestMoveIndex > 0) {
+    console.log("best move for black... = " + allowedMoves[bestMoveIndex]);
+    return allowedMoves[bestMoveIndex];
+  }
+  const n = Math.floor(Math.random() * allowedMoves.length);
+  return allowedMoves[n];
 }
 
 /**
