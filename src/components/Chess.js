@@ -94,7 +94,7 @@ class Chess extends React.Component {
         candidateMoves = MoveFunctions.getCandidateRookMoves(piece, board);
         break;
       case 6:
-        candidateMoves = MoveFunctions.getCandidateWhiteKingMoves(piece, board);
+        candidateMoves = MoveFunctions.getCandidateKingMoves(piece, board, false);
         break;
 
       case 9:
@@ -126,7 +126,7 @@ class Chess extends React.Component {
         candidateMoves = MoveFunctions.getCandidateRookMoves(piece, board);
         break;
       case -6:
-        candidateMoves = MoveFunctions.getCandidateBlacKingMoves(piece, board);
+        candidateMoves = MoveFunctions.getCandidateKingMoves(piece, board, true);
         break;
       case -9:
         candidateMoves = MoveFunctions.getCandidateQueenMoves(piece, board);
