@@ -651,6 +651,7 @@ class Chess extends React.Component {
       }
 
       let whiteKingMoveCandidate = false;
+      // eslint-disable-next-line 
       if (moves[0] == whiteKingPosition) {
         // white king move candidate!
         whiteKingPosition = moves[1];
@@ -729,6 +730,7 @@ class Chess extends React.Component {
       const dst = parseInt(moves[1], 10);
       let kingPosition = blackKingPosition;
 
+      // eslint-disable-next-line 
       if (src == kingPosition) {
         // black king move candidate!
         kingPosition = dst;
@@ -942,7 +944,7 @@ class Chess extends React.Component {
 
     const candidateMoves = this.getCandidateMoves(white, squares);    
     let allowedMoves = this.getAllowedMoves(white, squares, candidateMoves);
-
+    // eslint-disable-next-line 
     if (allowedMoves === null || allowedMoves.length == 0) {
       if (white) {
         console.log("Game over, black wins. candidateMoves = " + candidateMoves + " allowedMoves l = " + allowedMoves.length);
@@ -1043,16 +1045,17 @@ class Chess extends React.Component {
     }
     const pieceNumberId = candidateBoards[maxIdx][movesStringFromSelectedMove[1]].piece.n;
 
-    if (pieceNumberId == 60 || pieceNumberId == 4) {
+    // eslint-disable-next-line 
+    if (pieceNumberId == CONSTANTS.whiteKingId || pieceNumberId == CONSTANTS.blackKingId) {
       // king moved
       pieces[pieceNumberId].currentSquare = parseInt(movesStringFromSelectedMove[1], 10);
-    } else if (white && pieceNumberId > 63 && pieceNumberId < 70) {
+    } else if (white && pieceNumberId > CONSTANTS.whiteRightRookId && pieceNumberId < 70) {
       // white promoted queen = [63, 69]
       console.error("UPDATE next promoted WHITE queen number!!");
       this.setState({
         promotedWhiteQueenNumber: ++this.state.promotedWhiteQueenNumber,
       });
-    } else if (!white && pieceNumberId < 0 && pieceNumberId > -8) {
+    } else if (!white && pieceNumberId < 0 && pieceNumberId <= CONSTANTS.BLACK_QUEEN_CODE) {
       this.setState({
         promotedBlackQueenNumber: --this.state.promotedBlackQueenNumber,
       });
@@ -1095,6 +1098,7 @@ class Chess extends React.Component {
           i,
           candidateBoards
         ) 
+        // eslint-disable-next-line 
         if (numberOfAllowedOpponentMoves == 0
           
         ) {
@@ -1124,7 +1128,8 @@ class Chess extends React.Component {
         isWhiteTurn,
         maxIdx,
         candidateBoards
-      ) == 0
+      // eslint-disable-next-line 
+        ) == 0
     ) {
       // TODO (review this): opponent can't move -> stalemate!
       console.log(

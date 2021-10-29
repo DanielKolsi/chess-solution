@@ -474,35 +474,21 @@ export function isAllowedByOpponentKnight(piece, kingPosition) {
   const TWO_DOWN_ONE_RIGHT = CURRENT_PIECE_SQUARE + CONSTANTS.twoDownOneRight;
   const TWO_DOWN_ONE_LEFT = CURRENT_PIECE_SQUARE + CONSTANTS.twoDownOneLeft;
 
-  if (TWO_RIGHT_ONE_UP == kingPosition) {
+  // eslint-disable-next-line
+  if (TWO_RIGHT_ONE_UP == kingPosition || TWO_RIGHT_ONE_DOWN == kingPosition) {
+    return false; // move cannot be accepted (king would be eaten)
+  }
+  // eslint-disable-next-line
+  if (TWO_UP_ONE_RIGHT == kingPosition || TWO_UP_ONE_LEFT == kingPosition) {
+    return false; // move cannot be accepted (king would be eaten)
+  }
+  // eslint-disable-next-line
+  if (TWO_LEFT_ONE_UP == kingPosition || TWO_LEFT_ONE_DOWN == kingPosition) {
     return false; // move cannot be accepted (king would be eaten)
   }
 
-  if (TWO_RIGHT_ONE_DOWN == kingPosition) {
-    return false; // move cannot be accepted (king would be eaten)
-  }
-
-  if (TWO_UP_ONE_RIGHT == kingPosition) {
-    return false; // move cannot be accepted (king would be eaten)
-  }
-
-  if (TWO_UP_ONE_LEFT == kingPosition) {
-    return false; // move cannot be accepted (king would be eaten)
-  }
-
-  if (TWO_LEFT_ONE_UP == kingPosition) {
-    return false; // move cannot be accepted (king would be eaten)
-  }
-
-  if (TWO_LEFT_ONE_DOWN == kingPosition) {
-    return false; // move cannot be accepted (king would be eaten)
-  }
-
-  if (TWO_DOWN_ONE_RIGHT == kingPosition) {
-    return false; // move cannot be accepted (king would be eaten)
-  }
-
-  if (TWO_DOWN_ONE_LEFT == kingPosition) {
+  // eslint-disable-next-line
+  if (TWO_DOWN_ONE_RIGHT == kingPosition || TWO_DOWN_ONE_LEFT == kingPosition) {
     return false; // move cannot be accepted (king would be eaten)
   }
   return true;
@@ -513,16 +499,15 @@ export function isAllowedByOpponentBlackPawn(piece, kingPosition) {
 
   const upLeft = pos + CONSTANTS.upLeft;
   const upRight = pos + CONSTANTS.upRight;
-  if (upLeft == kingPosition) return false;
-  if (upRight == kingPosition) return false;
-
+  // eslint-disable-next-line
+  if (upLeft == kingPosition || (upRight == kingPosition)) return false;
   return true;
 }
 
 export function isAllowedByOpponentWhitePawn(piece, kingPosition) {
   const DOWN_LEFT = piece.currentSquare + CONSTANTS.downLeft;
   const DOWN_RIGHT = piece.currentSquare + CONSTANTS.downRight;
-
+  // eslint-disable-next-line
   if (DOWN_LEFT == kingPosition || DOWN_RIGHT == kingPosition) return false;
   return true;
 }
@@ -795,6 +780,7 @@ export function isAllowedByOpponentKing(piece, kingPosition) {
   let upLeft = pos + CONSTANTS.upLeft;
   let upRight = pos + CONSTANTS.upRight;
 
+  /* eslint-disable */
   if (up == kingPosition) return false; // reject move #1
   if (down == kingPosition) return false; // reject move #2
   if (left == kingPosition) return false; // reject move #3
@@ -803,7 +789,7 @@ export function isAllowedByOpponentKing(piece, kingPosition) {
   if (upRight == kingPosition) return false; // reject move #6
   if (upLeft == kingPosition) return false; // reject move #7
   if (downLeft == kingPosition) return false; // reject move #8
-
+  /* eslint-enable */
   return allowed;
 }
 
@@ -888,6 +874,7 @@ export function isAllowedByOpponentRook(
 
   // move UP
   for (let i = UP; i <= CONSTANTS.maxWhite; i += CONSTANTS.up) {
+    /* eslint-disable */
     if (i == kingPosition) {
       return false; // this move wasn't allowed by the rook
     }
@@ -897,6 +884,7 @@ export function isAllowedByOpponentRook(
       break;
     } else if (canditSrc == i) {
       continue;
+      /* eslint-enable */
     } else if (squarePiece !== null) {
       break; // move accepted; collides with own or eats opponent's piece; both are OK
     }
@@ -904,6 +892,7 @@ export function isAllowedByOpponentRook(
 
   // move DOWN
   for (let i = DOWN; i >= 0; i += CONSTANTS.down) {
+    /* eslint-disable */
     if (i == kingPosition) {
       return false;
     }
@@ -912,6 +901,7 @@ export function isAllowedByOpponentRook(
     if (i == canditDst) {
       break;
     } else if (canditSrc == i) {
+      /* eslint-enable */
       continue;
     } else if (squarePiece !== null) {
       break; // move accepted; collides with own or eats opponent's piece; both are OK
@@ -922,14 +912,16 @@ export function isAllowedByOpponentRook(
   let movesRight = CONSTANTS.maxCol - squares[pos].col;
 
   for (let i = RIGHT; i <= movesRight + pos; i++) {
+    /* eslint-disable */
     if (i == kingPosition) {
       return false;
     }
     let squarePiece = squares[i].piece;
-
+    
     if (i == canditDst) {
       break;
     } else if (canditSrc == i) {
+      /* eslint-enable */
       continue;
     } else if (squarePiece !== null) {
       break; // move accepted; collides with own or eats opponent's piece; both are OK
@@ -940,6 +932,7 @@ export function isAllowedByOpponentRook(
   let movesLeft = squares[pos].col;
 
   for (let i = LEFT; i >= pos - movesLeft; i--) {
+    /* eslint-disable */    
     if (i == kingPosition) {
       return false;
     }
@@ -948,6 +941,7 @@ export function isAllowedByOpponentRook(
     if (i == canditDst) {
       break;
     } else if (canditSrc == i) {
+    /* eslint-enable */  
       continue;
     } else if (squarePiece !== null) {
       break; // move accepted; collides with own or eats opponent's piece; both are OK
@@ -981,12 +975,14 @@ export function isDiagonalMovesUpRightAllowed(
 
   for (let i = 1; i <= numberOfSquaresAvailable; i++) {
     let dst = currentPieceSquare + i * CONSTANTS.upRight;
-    
+    /* eslint-disable */
     if (kingPosition == dst) {
       return false; // move cannot be accepted (king would be eaten)
     } else if (dst == canditDst) {
       break;
+    // eslint-disable-next-line 
     } else if (dst == canditSrc) {
+      /* eslint-enable */
       continue; // this piece doesn't block anymore
     } else if (squares[dst].piece !== null) {
       //canditSrc can't be here!
@@ -1018,6 +1014,7 @@ export function isDiagonalMovesUpLeftAllowed(
   }
 
   for (let i = 1; i <= numberOfSquaresAvailable; i++) {
+    /* eslint-disable */
     let dst = pos + i * CONSTANTS.upLeft;
 
     if (dst == kingPosition) {
@@ -1028,6 +1025,7 @@ export function isDiagonalMovesUpLeftAllowed(
       continue;
     } else if (dst == canditDst) {
       break;
+      /* eslint-enable */
     } else if (squares[dst].piece !== null) {
       break;
     }
@@ -1058,7 +1056,7 @@ export function isDiagonalMovesDownRightAllowed(
 
   for (let i = 1; i <= numberOfSquaresAvailable; i++) {
     let dst = pos + i * CONSTANTS.downRight;
-
+  /* eslint-disable */
     if (dst == kingPosition) {
       return false; //move cannot be accepted (king would be eaten)
     }
@@ -1066,6 +1064,7 @@ export function isDiagonalMovesDownRightAllowed(
     if (dst == canditSrc) {
       continue;
     } else if (dst == canditDst) {
+      /* eslint-enable */
       break;
     } else if (squares[dst].piece !== null) {
       break;
@@ -1097,13 +1096,14 @@ export function isDiagonalMovesDownLeftAllowed(
 
   for (let i = 1; i <= numberOfSquaresAvailable; i++) {
     let dst = pos + i * CONSTANTS.downLeft;
-
+  /* eslint-disable */
     if (dst == kingPosition) {
       return false;
     }
     if (dst == canditSrc) {
       continue;
     } else if (dst == canditDst) {
+      /* eslint-enable */
       break;
     } else if (squares[dst].piece !== null) {
       break;
