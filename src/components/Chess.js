@@ -388,8 +388,8 @@ class Chess extends React.Component {
   // Principle: pieces are always taken from squares (board)
   getCandidateMovesWhite(board) {
     let candidateMovesWhite = [];
-    let castlingLeftAdded = false;
-    let castlingRightAdded = false;
+    let castlingLeftAddedAsCandidateMove = false;
+    let castlingRightAddedAsCandidateMove = false;
 
     for (let i = 0; i <= CONSTANTS.maxWhite; i++) {
       let piece = board[i].piece;
@@ -411,7 +411,7 @@ class Chess extends React.Component {
         this.state.whiteKingMoved === false // it's OK to have only one variable in state for 'whiteKingMoved', as it corresponds the real history i.e. squares (the chosen previous move)
       ) {
         if (
-          !castlingLeftAdded &&
+          !castlingLeftAddedAsCandidateMove &&
           !this.state.whiteLeftRookMoved &&
           board[56].piece !== null
         ) {
@@ -424,10 +424,10 @@ class Chess extends React.Component {
             candidateMoves.push(
               CONSTANTS.whiteKingId + CONSTANTS.CASTLING_QUEEN_SIDE + 58
             ); //add white castling (white king move!) left as a candidate move
-            castlingLeftAdded = true;
+            castlingLeftAddedAsCandidateMove = true;
           }
         }
-        if (!castlingRightAdded && !this.state.whiteRightRookMoved) {
+        if (!castlingRightAddedAsCandidateMove && !this.state.whiteRightRookMoved) {
           if (
             board[61].piece === null &&
             board[62].piece === null &&
@@ -436,7 +436,7 @@ class Chess extends React.Component {
             candidateMoves.push(
               CONSTANTS.whiteKingId + CONSTANTS.CASTLING_KING_SIDE + 62
             ); //add white castling right (king move!) as a candidate move
-            castlingRightAdded = true;
+            castlingRightAddedAsCandidateMove = true;
           }
         }
       }
@@ -1003,8 +1003,15 @@ class Chess extends React.Component {
       numberOfPossibleNextMoves
     );
 
-    let selectedMove;
-    if (!white) {
+    let selectedMove; // this will be the final selected move for white / black determined by the heuristics / strategy
+
+    if (white) {
+      selectedMove = MoveFunctions.getBestMove(squares, allowedMoves, true);
+      if (selectedMove === null) {
+        selectedMove = allowedMoves[maxIdx];
+        max = numberOfPossibleNextMoves[maxIdx];
+      }
+    } else {
       // for black, instead of using the "optimal" move select a random move!
       selectedMove = MoveFunctions.getBestMove(squares, allowedMoves, false); // numberOfPossibleNextMoves[Math.floor(Math.random() * numberOfPossibleNextMoves.length)];
       maxIdx = allowedMoves.indexOf(selectedMove); // this will actually be a random move index
@@ -1018,12 +1025,6 @@ class Chess extends React.Component {
             maxIdx
         );
       }
-    } else {
-      selectedMove = MoveFunctions.getBestMove(squares, allowedMoves, true);
-      if (selectedMove === null) {
-        selectedMove = allowedMoves[maxIdx];
-        max = numberOfPossibleNextMoves[maxIdx];
-      }     
     }
 
     if (this.state.DEBUG) {
@@ -1200,6 +1201,7 @@ class Chess extends React.Component {
     return allowedOpponentMoves.length;
   }
 
+  // castling won't be allowed if the king has moved already!
   handleCastlingAllowedCondition(srcSquare) {
     switch (srcSquare) {
       case CONSTANTS.whiteKingId:
