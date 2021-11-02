@@ -353,8 +353,8 @@ export function getCandidateKnightMoves(piece, board) {
     ) {
       if (
         board[TWO_RIGHT_ONE_UP].piece !== null &&
-        ((piece.white && board[TWO_RIGHT_ONE_UP].piece.value === -6) ||
-          (!piece.white && board[TWO_RIGHT_ONE_UP].piece.value === 6))
+        ((piece.white && board[TWO_RIGHT_ONE_UP].piece.value === CONSTANTS.BLACK_KING_CODE) ||
+          (!piece.white && board[TWO_RIGHT_ONE_UP].piece.value === CONSTANTS.WHITE_KING_CODE))
       ) {
         candidateMoves.push(CURRENT_PIECE_SQUARE + CHECK + TWO_RIGHT_ONE_UP);
         console.error("CHECK DETECTED!!");
