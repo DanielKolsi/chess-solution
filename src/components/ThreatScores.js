@@ -3,7 +3,7 @@ import CONSTANTS from "../config/constants";
 // 1. White candidate move 2. check all black next allowed moves to check the threats 3. sum threat scores piece (move) by piece
 
 export function getBlackPawnThreatScore(piece, board) {
-  const pos = piece.pos;
+  const pos = piece.currentPieceSquare;
   const upLeft = pos + CONSTANTS.upLeft;
   const upRight = pos + CONSTANTS.upRight;
   let threatScore = 0;
@@ -18,6 +18,89 @@ export function getBlackPawnThreatScore(piece, board) {
   }
 
   return threatScore;
+}
+
+export function getQueenThreatScore(piece, board, squares) {
+    
+    let threatScore = 0;
+    threatScore = getBishopThreatScore(piece, board, squares);
+    threatScore += getRookThreatScore(piece, board, squares);
+    return threatScore;
+}
+
+export function getKnightThreatScore(piece, board, squares) {
+}
+
+// initially only for threats against white
+export function getRookThreatScore(piece, board, squares) {
+
+    let threatScore = 0;
+    const pos = piece.currentPieceSquare;
+    let UP = pos + CONSTANTS.up;
+    let DOWN = pos + CONSTANTS.down;
+    let LEFT = pos + CONSTANTS.left;
+    let RIGHT = pos + CONSTANTS.right;
+
+ // move UP
+ for (let i = UP; i <= CONSTANTS.maxWhite; i += CONSTANTS.up) {
+
+    let dst = pos + i * CONSTANTS.up;
+    if (board[dst].piece === null) continue;
+    
+    if (board[dst].piece.white === true) {
+      // get the threat score
+      let value = board[dst].piece.value;
+      threatScore += value;
+      break; // end this row scanning
+    }
+
+ }
+
+
+ // move DOWN
+ for (let i = DOWN; i >= 0; i += CONSTANTS.down) {
+    let dst = pos + i * CONSTANTS.down;
+    if (board[dst].piece === null) continue;
+    
+    if (board[dst].piece.white === true) {
+      // get the threat score
+      let value = board[dst].piece.value;
+      threatScore += value;
+      break; // end this row scanning
+    }
+  }
+
+  // move RIGHT
+  let movesRight = CONSTANTS.maxCol - squares[pos].col;
+
+  for (let i = RIGHT; i <= movesRight + pos; i++) {
+    let dst = pos + i * CONSTANTS.right;
+    if (board[dst].piece === null) continue;
+    
+    if (board[dst].piece.white === true) {
+      // get the threat score
+      let value = board[dst].piece.value;
+      threatScore += value;
+      break; // end this row scanning
+    }
+  }
+
+  // move LEFT
+  let movesLeft = squares[pos].col;
+
+  for (let i = LEFT; i >= pos - movesLeft; i--) {
+    let dst = pos + i * CONSTANTS.left;
+    if (board[dst].piece === null) continue;
+    
+    if (board[dst].piece.white === true) {
+      // get the threat score
+      let value = board[dst].piece.value;
+      threatScore += value;
+      break; // end this row scanning
+    }
+  }
+
+    return threatScore;
 }
 
 export function getBishopThreatScore(piece, board, squares) {
