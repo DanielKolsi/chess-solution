@@ -1,4 +1,6 @@
 import CONSTANTS from "../config/constants";
+import * as ThreatScores from "./ThreatScores";
+
 /**
  * TODO: add heuristics: isPieceDefended, isPieceThreatening, isPieceCapturingValuable...isPieceDeliveringCheck..., pawnMovesTwo
  * promotion, castling...enPassant.., isPieceUnderAttackByLessValuablePiece
@@ -63,7 +65,7 @@ export function getMoveExtraPoints(allowedMove, candidateBoard, previousBoard) {
   // this could be used as an universal function to calculate also possible CHECK threats (moves not allowed)
   export function getWhiteThreatScore(board, whiteCandidateMove) {
     
-
+let threatScore = 0;
     for (let i = 0; i <= 63; i++) {
       let piece = board[i].piece;
       
@@ -73,16 +75,12 @@ export function getMoveExtraPoints(allowedMove, candidateBoard, previousBoard) {
       }
       
       const value = piece.value;
-      const pos = piece.pos;
-      let threatScore = 0;
+      
+      
       
       switch (value) {
         case CONSTANTS.BLACK_PAWN_CODE: 
-          //MoveFunctions.getThreatScoreByBlackPawn(           );
-          const upLeft = pos + CONSTANTS.upLeft;
-          const upRight = pos + CONSTANTS.upRight;
-          // if (board[upLeft] == white_queen) threatScore +=9;
-          // getPieceThreatScore // how much threat score this piece can increment?
+         //threatScore+=getBlackPawnThreatScore(piece);
           break;
         case CONSTANTS.BLACK_KNIGHT_CODE:
         //  
@@ -104,5 +102,5 @@ export function getMoveExtraPoints(allowedMove, candidateBoard, previousBoard) {
       }
       
     }
-    return 0; // threat score: the higher the worse
+    return threatScore; // threat score: the higher the worse
   }
