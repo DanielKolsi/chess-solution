@@ -9,6 +9,7 @@ import * as MoveFunctions from "./MoveFunctions";
 
 import { doublePawnPointsHandling } from "./Heuristics";
 import _ from "lodash";
+import { getTotalThreatScoreAgainstWhite } from "./ThreatScores";
 
 /**
  * TODO: add heuristics: isPieceDefended, isPieceThreatening, isPieceCapturingValuable...isPieceDeliveringCheck..., pawnMovesTwo
@@ -750,10 +751,9 @@ class Chess extends React.Component {
   isWhiteMoveAllowed(board, whiteKingPosition, whiteCandidateMove) {
     let allowed = true;
 
-    for (let i = 0; i <= 63; i++) {
+    for (let i = 0; i <= CONSTANTS.whiteRightRookId; i++) {
       let piece = board[i].piece;
-      
-     
+           
       if (piece === null || piece === undefined) {
         continue; // piece has been e.g. eaten or is a pawn
       }
@@ -982,6 +982,12 @@ class Chess extends React.Component {
         i
       );
 
+      if (white) { // TODO: at this point calculate threat scores only for white 
+        const threatScoreForBoard = getTotalThreatScoreAgainstWhite(candidateBoards[i]); 
+        console.log("thread score for white allowed (candidate) board index " + i + " = " + threatScoreForBoard);
+      }
+      
+
       numberOfPossibleNextMoves[i] = allowedMovesForBoard.length;
 
       if (this.state.DEBUG) {
@@ -1006,6 +1012,7 @@ class Chess extends React.Component {
     let selectedMove; // this will be the final selected move for white / black determined by the heuristics / strategy
 
     if (white) {
+      
       selectedMove = MoveFunctions.getBestMove(squares, allowedMoves, true);
       if (selectedMove === null) {
         selectedMove = allowedMoves[maxIdx];

@@ -63,44 +63,11 @@ export function getMoveExtraPoints(allowedMove, candidateBoard, previousBoard) {
   // minimize threat score
   // go through the every opponent black piece in the board and calculate the threat score IF the candidate white move was played
   // this could be used as an universal function to calculate also possible CHECK threats (moves not allowed)
-  export function getWhiteThreatScore(board, whiteCandidateMove) {
-    
-let threatScore = 0;
-    for (let i = 0; i <= 63; i++) {
-      let piece = board[i].piece;
-      
-     
-      if (piece === null || piece === undefined) {
-        continue; // piece has been e.g. eaten or is a pawn
-      }
-      
-      const value = piece.value;
-      
-      
-      
-      switch (value) {
-        case CONSTANTS.BLACK_PAWN_CODE: 
-         //threatScore+=getBlackPawnThreatScore(piece);
-          break;
-        case CONSTANTS.BLACK_KNIGHT_CODE:
-        //  
-        break;
-        case CONSTANTS.BLACK_BISHOP_CODE:
-          //
-          break;
-        case CONSTANTS.BLACK_ROOK_CODE:
-          //
-          break;
-        case CONSTANTS.BLACK_KING_CODE:
-          //
-          break;
-        case CONSTANTS.BLACK_QUEEN_CODE:
-          //
-          break;
-        default:
-          break;
-      }
-      
+  
+  export function getMinimizedThreatScore(board, white) {
+    let threatScore = 0;
+    if (white) {
+      threatScore = ThreatScores.getTotalThreatScoreAgainstWhite(board);
     }
-    return threatScore; // threat score: the higher the worse
+     return threatScore;
   }
