@@ -6,8 +6,8 @@
 
 //import config from "./config/bugWhiteKingMovesToCheckByBlackBishop"; // fixed 27.10.21
 //import config from "./config/generalBugFixing";
-import config from "./config/549"; 
-
+//import config from "./config/549"; 
+import config from "./config/threatScoresDebug"; 
 import React from "react";
 import ReactDOM from "react-dom";
 

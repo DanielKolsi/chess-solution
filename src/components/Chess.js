@@ -990,10 +990,8 @@ class Chess extends React.Component {
           threatScore = threatScoreForBoard;
           minThreatScoreBoardIndex = i;
         }
-        console.log("threat score for white allowed (candidate) board index " + i + " = " + threatScoreForBoard);
+        console.log("threat score for white allowed (candidate) board index " + i + " move= " + allowedMoves[i] + " = " + threatScoreForBoard);
       }
-      
-
       numberOfPossibleNextMoves[i] = allowedMovesForBoard.length;
 
       if (this.state.DEBUG) {
