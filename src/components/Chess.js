@@ -579,7 +579,7 @@ class Chess extends React.Component {
     const { candidateBoards, pieces } = this.state;
     let allowedMoves = []; // contains only the candidate moves that were eventually verified to be allowed
    
-    console.log("get allowed moves white...boardIdx = " + boardIdx);
+    
     for (let i = 0; i < candidateMovesWhite.length; i++) {
       let whiteKingPosition = pieces[60].currentSquare;
 
@@ -963,6 +963,8 @@ class Chess extends React.Component {
     let numberOfPossibleNextMoves = [];
     let maxIdx = 0;
     let max = 0;
+    let threatScore = 1000;
+    let minThreatScoreBoardIndex = -1;
 
     for (let i = 0; i < allowedMoves.length; ++i) {
       // board will be stored to boards array (state)
@@ -984,7 +986,11 @@ class Chess extends React.Component {
 
       if (white) { // TODO: at this point calculate threat scores only for white 
         const threatScoreForBoard = getTotalThreatScoreAgainstWhite(candidateBoards[i]); 
-        console.log("thread score for white allowed (candidate) board index " + i + " = " + threatScoreForBoard);
+        if (threatScoreForBoard < threatScore) {
+          threatScore = threatScoreForBoard;
+          minThreatScoreBoardIndex = i;
+        }
+        console.log("threat score for white allowed (candidate) board index " + i + " = " + threatScoreForBoard);
       }
       
 
@@ -1015,8 +1021,11 @@ class Chess extends React.Component {
       
       selectedMove = MoveFunctions.getBestMove(squares, allowedMoves, true);
       if (selectedMove === null) {
+        maxIdx = minThreatScoreBoardIndex;
         selectedMove = allowedMoves[maxIdx];
-        max = numberOfPossibleNextMoves[maxIdx];
+        //max = numberOfPossibleNextMoves[maxIdx];
+        console.log("maxIdx=" + maxIdx + " minThreatScoreBoardIdx="+minThreatScoreBoardIndex);
+        selectedMove = allowedMoves[minThreatScoreBoardIndex]; // TODO: select the proper heuristics
       }
     } else {
       // for black, instead of using the "optimal" move select a random move!

@@ -22,10 +22,11 @@ export function getBlackPawnThreatScore(piece, board) {
   return threatScore;
 }
 
-export function getBlackQueenThreatScore(piece, board, squares) {
+export function getBlackQueenThreatScore(piece, board) {
+ 
   let threatScore = 0;
-  threatScore = getBlackBishopThreatScore(piece, board, squares);
-  threatScore += getBlackRookThreatScore(piece, board, squares);
+  threatScore = getBlackBishopThreatScore(piece, board);
+  threatScore += getBlackRookThreatScore(piece, board);
   return threatScore;
 }
 
@@ -47,28 +48,28 @@ export function getBlackKingThreatScore(piece, board) {
   const UP_LEFT = currentPieceSquareNumber + CONSTANTS.upLeft;
   const UP_RIGHT = currentPieceSquareNumber + CONSTANTS.upRight;
 
-  if (board[UP].white === true) {
+  if (board[UP] !== undefined && board[UP].piece !== null && board[UP].piece.white === true) {
     threatScore += board[UP].piece.value;
   }
-  if (board[DOWN].white === true) {
+  if (board[DOWN] !== undefined && board[DOWN].piece !== null && board[DOWN].piece.white === true) {
     threatScore += board[DOWN].piece.value;
   }
-  if (board[LEFT].white === true) {
+  if (board[LEFT] !== undefined && board[LEFT].piece !== null && board[LEFT].piece.white === true) {
     threatScore += board[LEFT].piece.value;
   }
-  if (board[RIGHT].white === true) {
+  if (board[RIGHT] !== undefined && board[RIGHT].piece !== null && board[RIGHT].piece.white === true) {
     threatScore += board[RIGHT].piece.value;
   }
-  if (board[DOWN_LEFT].white === true) {
+  if (board[DOWN_LEFT] !== undefined && board[DOWN_LEFT].piece !== null && board[DOWN_LEFT].piece.white === true) {
     threatScore += board[DOWN_LEFT].piece.value;
   }
-  if (board[DOWN_RIGHT].white === true) {
+  if (board[DOWN_RIGHT] !== undefined && board[DOWN_RIGHT].piece !== null && board[DOWN_RIGHT].piece.white === true) {
     threatScore += board[DOWN_RIGHT].piece.value;
   }
-  if (board[UP_LEFT].white === true) {
+  if (board[UP_LEFT] !== undefined && board[UP_LEFT].piece !== null && board[UP_LEFT].piece.white === true) {
     threatScore += board[UP_LEFT].piece.value;
   }
-  if (board[UP_RIGHT].white === true) {
+  if (board[UP_RIGHT] !== undefined && board[UP_RIGHT].piece !== null && board[UP_RIGHT].piece.white === true) {
     threatScore += board[UP_RIGHT].piece.value;
   }
   return threatScore;
@@ -79,51 +80,52 @@ export function getBlackKnightThreatScore(piece, board) {
   let threatScore = 0;
 
   const TWO_RIGHT_ONE_UP = CURRENT_PIECE_SQUARE + CONSTANTS.twoRightOneUp;
-
-  if (board[TWO_RIGHT_ONE_UP].white === true) {
+    
+  if (board[TWO_RIGHT_ONE_UP] !== undefined && board[TWO_RIGHT_ONE_UP].piece !== null && board[TWO_RIGHT_ONE_UP].piece.white === true) {
     // threat against white
     threatScore += board[TWO_RIGHT_ONE_UP].piece.value;
   }
 
   const TWO_RIGHT_ONE_DOWN = CURRENT_PIECE_SQUARE + CONSTANTS.twoRightOneDown;
-  if (board[TWO_RIGHT_ONE_DOWN].white === true) {
+
+  if (board[TWO_RIGHT_ONE_DOWN] !== undefined && board[TWO_RIGHT_ONE_DOWN].piece !== null && board[TWO_RIGHT_ONE_DOWN].white === true) {
     // threat against white
     threatScore += board[TWO_RIGHT_ONE_DOWN].piece.value;
   }
   const TWO_UP_ONE_RIGHT = CURRENT_PIECE_SQUARE + CONSTANTS.twoUpOneRight;
-  if (board[TWO_UP_ONE_RIGHT].white === true) {
+  if (board[TWO_UP_ONE_RIGHT] !== undefined && board[TWO_UP_ONE_RIGHT].piece !== null && board[TWO_UP_ONE_RIGHT].piece.white === true) {
     // threat against white
     threatScore += board[TWO_UP_ONE_RIGHT].piece.value;
   }
 
   const TWO_UP_ONE_LEFT = CURRENT_PIECE_SQUARE + CONSTANTS.twoUpOneLeft;
 
-  if (board[TWO_UP_ONE_LEFT].white === true) {
+  if (board[TWO_UP_ONE_LEFT] !== undefined && board[TWO_UP_ONE_LEFT].piece !== null && board[TWO_UP_ONE_LEFT].piece.white === true) {
     // threat against white
     threatScore += board[TWO_UP_ONE_LEFT].piece.value;
   }
 
   const TWO_LEFT_ONE_UP = CURRENT_PIECE_SQUARE + CONSTANTS.twoLeftOneUp;
-  if (board[TWO_LEFT_ONE_UP].white === true) {
+  if (board[TWO_LEFT_ONE_UP] !== undefined && board[TWO_LEFT_ONE_UP].piece !== null && board[TWO_LEFT_ONE_UP].piece.white === true) {
     // threat against white
     threatScore += board[TWO_LEFT_ONE_UP].piece.value;
   }
 
   const TWO_LEFT_ONE_DOWN = CURRENT_PIECE_SQUARE + CONSTANTS.twoLeftOneDown;
-  if (board[TWO_LEFT_ONE_DOWN].white === true) {
+  if (board[TWO_LEFT_ONE_DOWN] !== undefined && board[TWO_LEFT_ONE_DOWN].piece !== null && board[TWO_LEFT_ONE_DOWN].piece.white === true) {
     // threat against white
     threatScore += board[TWO_LEFT_ONE_DOWN].piece.value;
   }
 
   const TWO_DOWN_ONE_RIGHT = CURRENT_PIECE_SQUARE + CONSTANTS.twoDownOneRight;
-  if (board[TWO_DOWN_ONE_RIGHT].white === true) {
+  if (board[TWO_DOWN_ONE_RIGHT] !== undefined && board[TWO_DOWN_ONE_RIGHT].piece !== null && board[TWO_DOWN_ONE_RIGHT].piece.white === true) {
     // threat against white
     threatScore += board[TWO_DOWN_ONE_RIGHT].piece.value;
   }
 
   const TWO_DOWN_ONE_LEFT = CURRENT_PIECE_SQUARE + CONSTANTS.twoDownOneLeft;
 
-  if (board[TWO_DOWN_ONE_LEFT].white === true) {
+  if (board[TWO_DOWN_ONE_LEFT] !== undefined && board[TWO_DOWN_ONE_LEFT].piece !== null && board[TWO_DOWN_ONE_LEFT].piece.white === true) {
     // threat against white
     threatScore += board[TWO_DOWN_ONE_LEFT].piece.value;
   }
@@ -132,9 +134,10 @@ export function getBlackKnightThreatScore(piece, board) {
 }
 
 // initially only for threats against white
-export function getBlackRookThreatScore(piece, board, squares) {
+export function getBlackRookThreatScore(piece, board) {
   let threatScore = 0;
-  const pos = piece.currentPieceSquare;
+  let pos = piece.currentSquare;
+  
   let UP = pos + CONSTANTS.up;
   let DOWN = pos + CONSTANTS.down;
   let LEFT = pos + CONSTANTS.left;
@@ -143,7 +146,7 @@ export function getBlackRookThreatScore(piece, board, squares) {
   // move UP
   for (let i = UP; i <= CONSTANTS.maxWhite; i += CONSTANTS.up) {
     let dst = pos + i * CONSTANTS.up;
-    if (board[dst].piece === null) continue;
+    if (board[dst] === undefined || board[dst].piece === null) continue;
 
     if (board[dst].piece.white === true) {
       // get the threat score
@@ -156,7 +159,7 @@ export function getBlackRookThreatScore(piece, board, squares) {
   // move DOWN
   for (let i = DOWN; i >= 0; i += CONSTANTS.down) {
     let dst = pos + i * CONSTANTS.down;
-    if (board[dst].piece === null) continue;
+    if (board[dst] === undefined || board[dst].piece === null) continue;
 
     if (board[dst].piece.white === true) {
       // get the threat score
@@ -167,11 +170,12 @@ export function getBlackRookThreatScore(piece, board, squares) {
   }
 
   // move RIGHT
-  let movesRight = CONSTANTS.maxCol - squares[pos].col;
+  
+  let movesRight = CONSTANTS.maxCol - board[pos].col;
 
   for (let i = RIGHT; i <= movesRight + pos; i++) {
     let dst = pos + i * CONSTANTS.right;
-    if (board[dst].piece === null) continue;
+    if (board[dst] === undefined || board[dst].piece === null) continue;
 
     if (board[dst].piece.white === true) {
       // get the threat score
@@ -182,11 +186,11 @@ export function getBlackRookThreatScore(piece, board, squares) {
   }
 
   // move LEFT
-  let movesLeft = squares[pos].col;
+  let movesLeft = board[pos].col;
 
   for (let i = LEFT; i >= pos - movesLeft; i--) {
     let dst = pos + i * CONSTANTS.left;
-    if (board[dst].piece === null) continue;
+    if (board[dst] === undefined || board[dst].piece === null) continue;
 
     if (board[dst].piece.white === true) {
       // get the threat score
@@ -199,13 +203,14 @@ export function getBlackRookThreatScore(piece, board, squares) {
   return threatScore;
 }
 
-export function getBlackBishopThreatScore(piece, board, squares) {
+export function getBlackBishopThreatScore(piece, board) {
   const currentPieceSquare = piece.currentSquare;
 
   const squaresAvailableRight =
     CONSTANTS.maxCol - board[currentPieceSquare].col;
   const squaresAvailableUp = CONSTANTS.maxRow - board[currentPieceSquare].row;
-  const squaresAvailableLeft = squares[currentPieceSquare].col;
+  
+  const squaresAvailableLeft = board[currentPieceSquare].col;
 
   let numberOfSquaresAvailable;
   let threatScore = 0;
@@ -236,7 +241,7 @@ export function getBlackBishopThreatScore(piece, board, squares) {
     numberOfSquaresAvailable
   ); // upLeft
 
-  let squaresAvailableDown = squares[currentPieceSquare].row;
+  let squaresAvailableDown = board[currentPieceSquare].row;
 
   if (squaresAvailableRight <= squaresAvailableDown) {
     numberOfSquaresAvailable = squaresAvailableRight;
@@ -311,24 +316,25 @@ export function getTotalThreatScoreAgainstWhite(board) {
       continue; // piece has been e.g. eaten or is a pawn
     }
     const value = piece.value;
+    //console.log("piece value = " + value);
     switch (value) {
       case CONSTANTS.BLACK_PAWN_CODE:
-        threatScore += getBlackPawnThreatScore(piece);
+        threatScore += getBlackPawnThreatScore(piece,board);
         break;
       case CONSTANTS.BLACK_KNIGHT_CODE:
-        threatScore += getBlackKnightThreatScore(piece);
+        threatScore += getBlackKnightThreatScore(piece, board);
         break;
       case CONSTANTS.BLACK_BISHOP_CODE:
-        threatScore += getBlackBishopThreatScore(piece);
+        threatScore += getBlackBishopThreatScore(piece, board);
         break;
       case CONSTANTS.BLACK_ROOK_CODE:
-        threatScore += getBlackRookThreatScore(piece);
+        threatScore += getBlackRookThreatScore(piece, board);
         break;
       case CONSTANTS.BLACK_KING_CODE:
-        threatScore += getBlackKingThreatScore(piece);
+        threatScore += getBlackKingThreatScore(piece, board);
         break;
       case CONSTANTS.BLACK_QUEEN_CODE:
-        threatScore += getBlackQueenThreatScore(piece);
+        threatScore += getBlackQueenThreatScore(piece, board);
         break;
       default:
         break;

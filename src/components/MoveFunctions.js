@@ -13,7 +13,7 @@ export function getBestMove(squares, allowedMoves, white) {
     const move = allowedMoves[i].split(DLM);
     const src = move[0];
     const dst = move[1];
-    console.log("best move : allowed move  = " + move + " l = " + allowedMoves.length);
+    //console.log("best move : allowed move  = " + move + " l = " + allowedMoves.length);
     if (squares[dst] !== undefined && squares[dst].piece !== null) {
       // compare piece values, if valueable, possibly worth eating..?!, piece.value
       if (squares[dst].piece.value > squares[src].piece.value) {
