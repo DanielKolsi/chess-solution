@@ -8,6 +8,7 @@ export function getBlackPawnThreatScore(piece, board) {
   const pos = piece.currentPieceSquare;
   const upLeft = pos + CONSTANTS.upLeft;
   const upRight = pos + CONSTANTS.upRight;
+  
   let threatScore = 0;
   let leftValue = board[upLeft].piece.value;
   let rightValue = board[upRight].piece.value;
@@ -439,6 +440,42 @@ export function getTotalThreatScoreAgainstWhite(board) {
         break;
     }
   }
-
+  return threatScore;
+}
+  export function getTotalThreatScoreAgainstBlack(board) {
+    let threatScore = 0;
+  
+    for (let i = 0; i <= CONSTANTS.whiteRightRookId; i++) {
+      let piece = board[i].piece;
+  
+      if (piece === null || piece === undefined || piece.value > 0) {
+        continue; // piece has been e.g. eaten or is a pawn
+      }
+      const value = piece.value;
+      //console.log("piece value = " + value);
+      // TODO: add parametrized threatscore functions
+      switch (value) {
+        case CONSTANTS.WHITE_PAWN_CODE:
+          //threatScore += getWhitePawnThreatScore(piece, board);
+          break;
+        case CONSTANTS.WHITE_KNIGHT_CODE:
+          //threatScore += getWhiteKnightThreatScore(piece, board);
+          break;
+        case CONSTANTS.WHITE_BISHOP_CODE:
+          //threatScore += getWhiteBishopThreatScore(piece, board);
+          break;
+        case CONSTANTS.WHITE_ROOK_CODE:
+          //threatScore += getWhiteRookThreatScore(piece, board);
+          break;
+        case CONSTANTS.WHITE_KING_CODE:
+         // threatScore += getWhiteKingThreatScore(piece, board);
+          break;
+        case CONSTANTS.WHITE_QUEEN_CODE:
+          //threatScore += getWhiteQueenThreatScore(piece, board);
+          break;
+        default:
+          break;
+      }
+    }
   return threatScore;
 }
