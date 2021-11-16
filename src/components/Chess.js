@@ -10,6 +10,7 @@ import * as MoveFunctions from "./MoveFunctions";
 import { doublePawnPointsHandling } from "./Heuristics";
 import _ from "lodash";
 import { getTotalThreatScoreAgainstWhite } from "./ThreatScores";
+import { getTotalThreatScoreAgainstBlack } from "./ThreatScores";
 
 /**
  * TODO: add heuristics: isPieceDefended, isPieceThreatening, isPieceCapturingValuable...isPieceDeliveringCheck..., pawnMovesTwo
@@ -983,14 +984,18 @@ class Chess extends React.Component {
         white,
         i
       );
-
+    
+      let threatScoreForBoard;
       if (white) { // TODO: at this point calculate threat scores only for white 
-        const threatScoreForBoard = getTotalThreatScoreAgainstWhite(candidateBoards[i]); 
+         threatScoreForBoard = getTotalThreatScoreAgainstWhite(candidateBoards[i]);
+        
         if (threatScoreForBoard < threatScore) {
           threatScore = threatScoreForBoard;
           minThreatScoreBoardIndex = i;
         }
         console.log("threat score for white allowed (candidate) board index " + i + " move= " + allowedMoves[i] + " = " + threatScoreForBoard);
+      } else {
+         threatScoreForBoard = getTotalThreatScoreAgainstBlack(candidateBoards[i]); 
       }
       numberOfPossibleNextMoves[i] = allowedMovesForBoard.length;
 

@@ -68,6 +68,8 @@ export function getMoveExtraPoints(allowedMove, candidateBoard, previousBoard) {
     let threatScore = 0;
     if (white) {
       threatScore = ThreatScores.getTotalThreatScoreAgainstWhite(board);
+    } else {
+      threatScore = ThreatScores.getTotalThreatScoreAgainstBlack(board);
     }
      return threatScore;
   }
