@@ -3,7 +3,37 @@ import CONSTANTS from "../config/constants";
 // 1. White candidate move 2. check all black next allowed moves to check the threats against white assuming this candidate move is played
 // 3. sum threat scores (from those black allowed moves) against white piece (move) by piece
 // 4. The lower the threat score is, the better for white 5. select the lowest black threat score against white
+/**
+ * TODO: add threat from en passant
+ * @param {*} piece 
+ * @param {*} board 
+ */
+export function getWhitePawnThreatScore(piece, board) {
+  const pos = piece.currentPieceSquare;
+  let threatScore = 0;
 
+  const downLeft = pos + CONSTANTS.downLeft;
+  const downRight = pos + CONSTANTS.downRight;
+  
+  let leftValue = board[downLeft].piece.value;
+  let rightValue = board[downRight].piece.value;
+
+  // TODO: handle out-of-board boundaries cases
+  if (!board[downLeft].piece.white) {
+    threatScore += leftValue;
+  }
+  if (!board[downRight].piece.white) {
+    threatScore += rightValue;
+  }
+  return threatScore;
+}
+
+/**
+ * 
+ * @param {*} piece 
+ * @param {*} board 
+ * @returns 
+ */
 export function getBlackPawnThreatScore(piece, board) {
   const pos = piece.currentPieceSquare;
   const upLeft = pos + CONSTANTS.upLeft;
@@ -13,6 +43,7 @@ export function getBlackPawnThreatScore(piece, board) {
   let leftValue = board[upLeft].piece.value;
   let rightValue = board[upRight].piece.value;
 
+  // TODO: handle out-of-board boundaries cases
   if (board[upLeft].piece.white === true) {
     threatScore += leftValue;
   }
@@ -22,6 +53,7 @@ export function getBlackPawnThreatScore(piece, board) {
 
   return threatScore;
 }
+
 
 /**
  * 
@@ -42,7 +74,7 @@ export function getQueenThreatScoreAgainstMe(piece, board, white) {
  * @param {*} piece
  * @param {*} board candidate board corresponding the game after white's candidate move
  */
-export function getBlackKingThreatScore(piece, board) {
+export function getKingThreatScoreAgainstMe(piece, board, white) {
   let threatScore = 0;
 
   const currentPieceSquareNumber = piece.currentSquare; // ensure this is dealt as an integer!
@@ -57,59 +89,89 @@ export function getBlackKingThreatScore(piece, board) {
 
   if (
     board[UP] !== undefined &&
-    board[UP].piece !== null &&
-    board[UP].piece.white === true
+    board[UP].piece !== null     
   ) {
-    threatScore += board[UP].piece.value;
+    if (white && board[UP].piece.white) {
+      threatScore += board[UP].piece.value;
+    } else if (!white && !board[UP].piece.white) {
+      threatScore += Math.abs(board[UP].piece.value);
+    }
   }
   if (
     board[DOWN] !== undefined &&
-    board[DOWN].piece !== null &&
-    board[DOWN].piece.white === true
+    board[DOWN].piece !== null     
   ) {
-    threatScore += board[DOWN].piece.value;
+    if (white && board[DOWN].piece.white) {
+      threatScore += board[DOWN].piece.value;
+    } else if (!white && !board[DOWN].piece.white) {
+      threatScore += Math.abs(board[DOWN].piece.value);
+    }
+    
   }
   if (
     board[LEFT] !== undefined &&
-    board[LEFT].piece !== null &&
-    board[LEFT].piece.white === true
+    board[LEFT].piece !== null    
   ) {
-    threatScore += board[LEFT].piece.value;
+    if (white && board[LEFT].piece.white) {
+      threatScore += board[LEFT].piece.value;
+    } else if (!white && !board[LEFT].piece.white) {
+      threatScore += Math.abs(board[LEFT].piece.value);
+    }    
   }
   if (
     board[RIGHT] !== undefined &&
-    board[RIGHT].piece !== null &&
-    board[RIGHT].piece.white === true
+    board[RIGHT].piece !== null     
   ) {
-    threatScore += board[RIGHT].piece.value;
+    if (white && board[RIGHT].piece.white) {
+      threatScore += board[RIGHT].piece.value;
+    } else if (!white && !board[RIGHT].piece.white) {
+      threatScore += Math.abs(board[RIGHT].piece.value);
+    }
+    
   }
   if (
     board[DOWN_LEFT] !== undefined &&
-    board[DOWN_LEFT].piece !== null &&
-    board[DOWN_LEFT].piece.white === true
+    board[DOWN_LEFT].piece !== null     
   ) {
-    threatScore += board[DOWN_LEFT].piece.value;
+    if (white && board[DOWN_LEFT].piece.white) {
+      threatScore += board[DOWN_LEFT].piece.value;
+    } else if (!white && !board[DOWN_LEFT].piece.value) {
+      threatScore += Math.abs(board[DOWN_LEFT].piece.value);
+
+    }
+    
   }
   if (
     board[DOWN_RIGHT] !== undefined &&
-    board[DOWN_RIGHT].piece !== null &&
-    board[DOWN_RIGHT].piece.white === true
+    board[DOWN_RIGHT].piece !== null     
   ) {
-    threatScore += board[DOWN_RIGHT].piece.value;
+    if (white && board[DOWN_RIGHT].piece.white) {
+      threatScore += board[DOWN_RIGHT].piece.value;
+    } else if (!white && !board[DOWN_RIGHT].piece.white) {
+      threatScore += Math.abs(board[DOWN_RIGHT].piece.value);
+    }
+    
   }
   if (
     board[UP_LEFT] !== undefined &&
-    board[UP_LEFT].piece !== null &&
-    board[UP_LEFT].piece.white === true
+    board[UP_LEFT].piece !== null     
   ) {
-    threatScore += board[UP_LEFT].piece.value;
+    if (white && board[UP_LEFT].piece.white) {
+      threatScore += board[UP_LEFT].piece.value;
+    } else if (!white && !board[UP_LEFT].piece.white) {
+      threatScore += Math.abs(board[UP_LEFT].piece.value);
+    }
+    
   }
   if (
     board[UP_RIGHT] !== undefined &&
-    board[UP_RIGHT].piece !== null &&
-    board[UP_RIGHT].piece.white === true
+    board[UP_RIGHT].piece !== null     
   ) {
-    threatScore += board[UP_RIGHT].piece.value;
+    if (white && board[UP_RIGHT].piece.white) {
+      threatScore += board[UP_RIGHT].piece.value;
+    } else if  (!white && !board[UP_RIGHT].piece.white) {
+      threatScore += Math.abs(board[UP_RIGHT].piece.value);
+    }    
   }
   return threatScore;
 }
@@ -538,7 +600,7 @@ export function getTotalThreatScoreAgainstWhite(board) {
         threatScore += getRookThreatScoreAgainstMe(piece, board, true);
         break;
       case CONSTANTS.BLACK_KING_CODE:
-        threatScore += getBlackKingThreatScore(piece, board);
+        threatScore += getKingThreatScoreAgainstMe(piece, board, true);
         break;
       case CONSTANTS.BLACK_QUEEN_CODE:
         threatScore += getQueenThreatScoreAgainstMe(piece, board, true);
@@ -563,22 +625,22 @@ export function getTotalThreatScoreAgainstBlack(board) {
     // TODO: add parametrized threatscore functions
     switch (value) {
       case CONSTANTS.WHITE_PAWN_CODE:
-        //threatScore += getWhitePawnThreatScore(piece, board);
+        threatScore += getWhitePawnThreatScore(piece, board);
         break;
       case CONSTANTS.WHITE_KNIGHT_CODE:
-        //threatScore += getWhiteKnightThreatScore(piece, board);
+        threatScore += getKnightThreatScoreAgainstMe(piece, board, false);
         break;
       case CONSTANTS.WHITE_BISHOP_CODE:
-        //threatScore += getWhiteBishopThreatScore(piece, board);
+        threatScore += getBishopThreatScoreAgainstMe(piece, board, false);
         break;
       case CONSTANTS.WHITE_ROOK_CODE:
-        //threatScore += getWhiteRookThreatScore(piece, board);
+        threatScore += getRookThreatScoreAgainstMe(piece, board, false);
         break;
       case CONSTANTS.WHITE_KING_CODE:
-        // threatScore += getWhiteKingThreatScore(piece, board);
+        threatScore += getKingThreatScoreAgainstMe(piece, board, false);
         break;
       case CONSTANTS.WHITE_QUEEN_CODE:
-        //threatScore += getWhiteQueenThreatScore(piece, board);
+        threatScore += getQueenThreatScoreAgainstMe(piece, board, false);
         break;
       default:
         break;
