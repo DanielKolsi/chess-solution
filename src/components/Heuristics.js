@@ -2,10 +2,16 @@ import CONSTANTS from "../config/constants";
 import * as ThreatScores from "./ThreatScores";
 
 /**
- * TODO: add heuristics: isPieceDefended, isPieceThreatening, isPieceCapturingValuable...isPieceDeliveringCheck..., pawnMovesTwo
+ * 
+ * TODO: 
+ * 
+ * Recursive threat scores for both. Same heuristics for both. Allowed moves vs. threat scores vs. check/(good)defense.
+ * 
+ * add heuristics: isPieceDefended, isPieceThreatening, isPieceCapturingValuable...isPieceDeliveringCheck..., pawnMovesTwo
  * promotion, castling...enPassant.., isPieceUnderAttackByLessValuablePiece
  * 
- * TODO:  getAllowedMovesWithPointReductionArray()
+ * 
+ * 
  */
 
 /**

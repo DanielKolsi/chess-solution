@@ -8,22 +8,19 @@ import CONSTANTS from "../config/constants";
  * @param {*} piece 
  * @param {*} board 
  */
-export function getWhitePawnThreatScore(piece, board) {
-  const pos = piece.currentPieceSquare;
+export function getWhitePawnThreatScoreAgainstMe(piece, board) {
+  const pos = piece.currentSquare;
   let threatScore = 0;
 
   const downLeft = pos + CONSTANTS.downLeft;
   const downRight = pos + CONSTANTS.downRight;
   
-  let leftValue = board[downLeft].piece.value;
-  let rightValue = board[downRight].piece.value;
-
-  // TODO: handle out-of-board boundaries cases
-  if (!board[downLeft].piece.white) {
-    threatScore += leftValue;
+  
+  if (board[pos].col > 0 && board[downLeft].piece !== null && !board[downLeft].piece.white && board[downLeft] !== undefined) {    
+    threatScore += board[downLeft].piece.value;
   }
-  if (!board[downRight].piece.white) {
-    threatScore += rightValue;
+  if (board[pos].col < 7 && board[downRight].piece !== null && board[downLeft] !== undefined && !board[downRight].piece.white) {
+    threatScore += board[downRight].piece.value;
   }
   return threatScore;
 }
@@ -34,7 +31,7 @@ export function getWhitePawnThreatScore(piece, board) {
  * @param {*} board 
  * @returns 
  */
-export function getBlackPawnThreatScore(piece, board) {
+export function getBlackPawnThreatScoreAgainstMe(piece, board) {
   const pos = piece.currentPieceSquare;
   const upLeft = pos + CONSTANTS.upLeft;
   const upRight = pos + CONSTANTS.upRight;
@@ -43,11 +40,11 @@ export function getBlackPawnThreatScore(piece, board) {
   let leftValue = board[upLeft].piece.value;
   let rightValue = board[upRight].piece.value;
 
-  // TODO: handle out-of-board boundaries cases
-  if (board[upLeft].piece.white === true) {
+ // TODO: add same restrictions as with getWhitePawnThreatScoreAgainstMe(
+  if (board[pos].col > 0 && board[upLeft].piece.white === true) {
     threatScore += leftValue;
   }
-  if (board[upRight].piece.white === true) {
+  if (board[pos].col < 7 && board[upRight].piece.white === true) {
     threatScore += rightValue;
   }
 
@@ -582,13 +579,13 @@ export function getTotalThreatScoreAgainstWhite(board) {
     let piece = board[i].piece;
 
     if (piece === null || piece === undefined || piece.value > 0) {
-      continue; // piece has been e.g. eaten or is a pawn
+      continue; 
     }
     const value = piece.value;
     //console.log("piece value = " + value);
     switch (value) {
       case CONSTANTS.BLACK_PAWN_CODE:
-        threatScore += getBlackPawnThreatScore(piece, board);
+        threatScore += getBlackPawnThreatScoreAgainstMe(piece, board);
         break;
       case CONSTANTS.BLACK_KNIGHT_CODE:
         threatScore += getKnightThreatScoreAgainstMe(piece, board, true);
@@ -617,15 +614,15 @@ export function getTotalThreatScoreAgainstBlack(board) {
   for (let i = 0; i <= CONSTANTS.whiteRightRookId; i++) {
     let piece = board[i].piece;
 
-    if (piece === null || piece === undefined || piece.value > 0) {
-      continue; // piece has been e.g. eaten or is a pawn
+    if (piece === null || piece === undefined || piece.value < 0) {
+      continue; // piece has been e.g. eaten 
     }
     const value = piece.value;
     //console.log("piece value = " + value);
     // TODO: add parametrized threatscore functions
     switch (value) {
       case CONSTANTS.WHITE_PAWN_CODE:
-        threatScore += getWhitePawnThreatScore(piece, board);
+        threatScore += getWhitePawnThreatScoreAgainstMe(piece, board);
         break;
       case CONSTANTS.WHITE_KNIGHT_CODE:
         threatScore += getKnightThreatScoreAgainstMe(piece, board, false);

@@ -986,16 +986,15 @@ class Chess extends React.Component {
       );
     
       let threatScoreForBoard;
-      if (white) { // TODO: at this point calculate threat scores only for white 
-         threatScoreForBoard = getTotalThreatScoreAgainstWhite(candidateBoards[i]);
-        
-        if (threatScoreForBoard < threatScore) {
-          threatScore = threatScoreForBoard;
-          minThreatScoreBoardIndex = i;
-        }
+      if (white) { 
+         threatScoreForBoard = getTotalThreatScoreAgainstWhite(candidateBoards[i]);                
         console.log("threat score for white allowed (candidate) board index " + i + " move= " + allowedMoves[i] + " = " + threatScoreForBoard);
       } else {
          threatScoreForBoard = getTotalThreatScoreAgainstBlack(candidateBoards[i]); 
+      }
+      if (threatScoreForBoard < threatScore) {
+        threatScore = threatScoreForBoard;
+        minThreatScoreBoardIndex = i;
       }
       numberOfPossibleNextMoves[i] = allowedMovesForBoard.length;
 
@@ -1025,14 +1024,15 @@ class Chess extends React.Component {
       selectedMove = MoveFunctions.getBestMove(squares, allowedMoves, true);
       if (selectedMove === null) {
         maxIdx = minThreatScoreBoardIndex;
-        selectedMove = allowedMoves[maxIdx];
+        //selectedMove = allowedMoves[maxIdx];
         //max = numberOfPossibleNextMoves[maxIdx];
         console.log("maxIdx=" + maxIdx + " minThreatScoreBoardIdx="+minThreatScoreBoardIndex);
         selectedMove = allowedMoves[minThreatScoreBoardIndex]; // TODO: select the proper heuristics
       }
     } else {
-      // for black, instead of using the "optimal" move select a random move!
-      selectedMove = MoveFunctions.getBestMove(squares, allowedMoves, false); // numberOfPossibleNextMoves[Math.floor(Math.random() * numberOfPossibleNextMoves.length)];
+      selectedMove = allowedMoves[minThreatScoreBoardIndex]; // strategy for black is just to select the lowest threat score against black
+      
+      //selectedMove = MoveFunctions.getBestMove(squares, allowedMoves, false); // numberOfPossibleNextMoves[Math.floor(Math.random() * numberOfPossibleNextMoves.length)];
       maxIdx = allowedMoves.indexOf(selectedMove); // this will actually be a random move index
       if (this.state.DEBUG) {
         console.log(
@@ -1089,7 +1089,6 @@ class Chess extends React.Component {
         candidateBoards,
         currentBoardSquares: candidateBoards[maxIdx],
         white: !white,
-
         nextTurn: this.state.nextTurn + 1,
       },
       function () {

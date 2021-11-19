@@ -1,7 +1,13 @@
 import CONSTANTS from "../config/constants";
 
 
-// best move strategy for black
+/**
+ * 
+ * @param {*} squares 
+ * @param {*} allowedMoves 
+ * @param {*} white 
+ * @returns 
+ */
 export function getBestMove(squares, allowedMoves, white) {
   const DLM = CONSTANTS.defaultDelim;
 
@@ -36,9 +42,10 @@ export function getBestMove(squares, allowedMoves, white) {
     if (moveValue > 0) {
       return bestMoveIndex;
     } else return null;
-  }
-  const n = Math.floor(Math.random() * allowedMoves.length);
-  return allowedMoves[n];
+  } else {
+    const n = Math.floor(Math.random() * allowedMoves.length);
+    return allowedMoves[n];
+  }  
 }
 
 /**
