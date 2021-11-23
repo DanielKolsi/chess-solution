@@ -13,7 +13,6 @@ export function getBestMove(squares, allowedMoves, white) {
 
   let moveValue = 0; // value is calculated by substraction own piece value from the captured piece value
   let bestMoveIndex = -1;
-
   
   for (let i = 0; i < allowedMoves.length; i++) {
     const move = allowedMoves[i].split(DLM);
@@ -333,6 +332,12 @@ export function getCandidateBlackPawnMoves(piece, board, prevMove) {
   return candidateMoves;
 }
 
+/**
+ * 
+ * @param {*} piece 
+ * @param {*} board 
+ * @returns 
+ */
 export function getCandidateKnightMoves(piece, board) {
   const CURRENT_PIECE_SQUARE = piece.currentSquare;
   const DLM = CONSTANTS.defaultDelim;
@@ -595,6 +600,7 @@ export function getCandidateDiagonalMovesUpLeft(
     numberOfSquaresAvailable = squaresAvailableUp;
   }
 
+  // TODO: add check +
   for (let i = 1; i <= numberOfSquaresAvailable; i++) {
     let dst = pos + i * CONSTANTS.upLeft;
 
@@ -1127,3 +1133,4 @@ export function getCandidateQueenMoves(piece, squares) {
   candidateMovesQueen = candidateMovesBishop.concat(candidateMovesRook);
   return candidateMovesQueen;
 }
+
