@@ -475,6 +475,7 @@ export function getCandidateKnightMoves(piece, board) {
   return candidateMoves;
 }
 
+// TODO: add boundaries (e.g. -15 = 0 -> falsely kingPosition!)
 export function isAllowedByOpponentKnight(piece, kingPosition) {
   const CURRENT_PIECE_SQUARE = piece.currentSquare;
   const TWO_RIGHT_ONE_UP = CURRENT_PIECE_SQUARE + CONSTANTS.twoRightOneUp;

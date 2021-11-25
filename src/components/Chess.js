@@ -6,6 +6,8 @@ import PrevTurn from "./PrevTurn";
 import CONSTANTS from "../config/constants";
 
 import * as MoveFunctions from "./MoveFunctions";
+import * as CheckFunctions from "./CheckFunctions";
+import * as HelpFunctions from "./HelpFunctions";
 
 import { doublePawnPointsHandling } from "./Heuristics";
 import _ from "lodash";
@@ -146,19 +148,10 @@ class Chess extends React.Component {
     return candidateMoves;
   }
 
-  getDelim(move) {
-    const CHR = move.charAt(2);
-    return isNaN(CHR) ? CHR : move.charAt(1);
-  }
-
-  getMovesString(move) {
-    const DELIMITER = this.getDelim(move);
-    return move.split(DELIMITER);
-  }
 
   getCandidateBoardCorrespondingAllowedMove(allowedMove, board, white) {
-    const delim = this.getDelim(allowedMove);
-    let moves = this.getMovesString(allowedMove); // src = moves[0], dst = moves[1]
+    const delim = HelpFunctions.getDelim(allowedMove);
+    let moves = HelpFunctions.getMovesString(allowedMove); // src = moves[0], dst = moves[1]
 
     // handle promotions and underpromotions
     if (delim === CONSTANTS.PROMOTION_TO_QUEEN) {
@@ -386,6 +379,11 @@ class Chess extends React.Component {
 
     if (white) {
       allowedMoves = this.getAllowedMovesWhite(board, candidateMoves);
+      allowedMoves = this.getTransformToPlusDelimForCheckMoves(
+        board,
+        allowedMoves,
+        white
+      );
       console.log("allowedmovesWhite=" + allowedMoves);
     } else {
       allowedMoves = this.getAllowedMovesBlack(board, candidateMoves);
@@ -396,32 +394,152 @@ class Chess extends React.Component {
 
   /**
    *
+   * @param {*} board
    * @param {*} allowedMoves
    * @param {*} white
-   * @returns
    */
-  getDelimForCheckMoves(candidateBoards, allowedMoves, white) {
-    
+  getTransformToPlusDelimForCheckMoves(board, allowedMoves, white) {
+
     for (let i = 0; i < allowedMoves.length; i++) {
-      let board = candidateBoards[i];
-      const move = this.getMovesString(allowedMoves[i]);    
-      
-      const src = move[0];
-      const dst = move[1];
+      const moves = HelpFunctions.getMovesString(allowedMoves[i]);
+      const src = parseInt(moves[0], 10);
       
       if (white) {
-        //let piece = board[dst].piece;
-        //console.log("piece="+piece);
-        // TODO: set currentpiecesquare as DST position
-        // candidate moves need to be piece specific (e.g. knight) and based on DST position number (board[positionNumber])
-        /*let candidateMoves = this.getCandidateMovesForWhitePiece(piece, board);
-        for (let i = 0; i < candidateMoves.length; i++) {
-        
-        }*/
+
+        let piece = board[src].piece;
+
+        switch (piece.value) {
+          case CONSTANTS.WHITE_PAWN_CODE:       
+            break;
+    
+          case CONSTANTS.WHITE_KNIGHT_CODE:
+            CheckFunctions.getCheckWithWhiteKnightMoves(board, allowedMoves[i]);
+            
+            break;
+          case CONSTANTS.WHITE_BISHOP_CODE:
+            
+            break;
+          case CONSTANTS.WHITE_ROOK_CODE:
+            
+            break;
+          
+    
+          case CONSTANTS.WHITE_QUEEN_CODE:
+            
+            break;
+          default:
+        }
       }
-      
-      console.log("src=" + src + " dst = " +dst);
+
+
+
+/*
+        if (board[dst].row <= 6 && board[dst].col <= 5) {
+          // check that the move stays on the board 2R-1U
+          if (
+            board[TWO_RIGHT_ONE_UP_DST].piece !== null &&
+            board[TWO_RIGHT_ONE_UP_DST].piece.value ===
+              CONSTANTS.BLACK_KING_CODE
+          ) {
+            allowedMoves[i] = src + CONSTANTS.CHECK + dst;
+          }
+        }
+
+        // white's checks against black king 
+        if (board[dst].row >= 2 && board[dst].col <= 6) {
+          if (
+            board[TWO_DOWN_ONE_RIGHT_DST].piece !== null &&
+            board[TWO_DOWN_ONE_RIGHT_DST].piece.value ===
+              CONSTANTS.BLACK_KING_CODE
+          ) {            
+            allowedMoves[i] = src + CONSTANTS.CHECK + dst;
+          }
+        }
+
+        // 2 right, 1 down
+        if (board[dst].row >= 1 && board[dst].col <= 5) {
+          if (
+            board[TWO_RIGHT_ONE_DOWN_DST].piece !== null &&
+            board[TWO_RIGHT_ONE_DOWN_DST].piece.value ===
+              CONSTANTS.BLACK_KING_CODE
+          ) {
+            allowedMoves[i] = src + CONSTANTS.CHECK + dst;
+          }
+        }
+
+        if (
+          // 2 up, 1 right
+          board[dst].row <= 5 &&
+          board[dst].col <= 6
+        ) {
+          if (
+            board[TWO_UP_ONE_RIGHT_DST].piece !== null &&
+            board[TWO_UP_ONE_RIGHT_DST].piece.value ===
+              CONSTANTS.BLACK_KING_CODE
+          ) {
+            allowedMoves[i] = src + CONSTANTS.CHECK + dst;
+          }
+        }
+
+        if (
+          // 2 up, 1 left
+          board[dst].row <= 5 &&
+          board[dst].col >= 1
+        ) {
+          if (
+            board[TWO_UP_ONE_LEFT_DST].piece !== null &&
+            board[TWO_UP_ONE_LEFT_DST].piece.value === CONSTANTS.BLACK_KING_CODE
+          ) {
+            allowedMoves[i] = src + CONSTANTS.CHECK + dst;
+          }
+        }
+
+        if (
+          // 2L-1U
+          board[dst].row <= 6 &&
+          board[dst].col >= 2
+        ) {
+          if (
+            board[TWO_LEFT_ONE_UP_DST].piece !== null &&
+            board[TWO_LEFT_ONE_UP_DST].piece.value === CONSTANTS.BLACK_KING_CODE
+          ) {
+            allowedMoves[i] = src + CONSTANTS.CHECK + dst;
+          }
+        }
+
+        if (
+          // 2L-1D
+          board[dst].row >= 1 &&
+          board[dst].col >= 2
+        ) {
+          if (
+            board[TWO_LEFT_ONE_DOWN_DST].piece !== null &&
+            board[TWO_LEFT_ONE_DOWN_DST].piece.value ===
+              CONSTANTS.BLACK_KING_CODE
+          ) {
+            allowedMoves[i] = src + CONSTANTS.CHECK + dst;
+          }
+        }
+        if (
+          // 2D-1L
+          board[dst].row >= 2 &&
+          board[dst].col >= 1
+        ) {
+          if (
+            board[TWO_DOWN_ONE_LEFT_DST].piece !== null &&
+            board[TWO_DOWN_ONE_LEFT_DST].piece.value ===
+              CONSTANTS.BLACK_KING_CODE
+          ) {
+            allowedMoves[i] = src + CONSTANTS.CHECK + dst;
+          }
+        }
+      } else {
+        // black's checks against white king
+      }
+      */
     }
+    
+    return allowedMoves;
   }
 
   // Principle: pieces are always taken from squares (board)
@@ -622,9 +740,9 @@ class Chess extends React.Component {
       let whiteKingPosition = pieces[60].currentSquare;
 
       const whiteCandidateMove = candidateMovesWhite[i];
-      let moves = this.getMovesString(candidateMovesWhite[i]);
+      let moves = HelpFunctions.getMovesString(candidateMovesWhite[i]);
 
-      const delim = this.getDelim(candidateMovesWhite[i]);
+      const delim = HelpFunctions.getDelim(candidateMovesWhite[i]);
 
       if (delim === CONSTANTS.CHECK) {
         // candidate move IS check (against black)
@@ -727,7 +845,7 @@ class Chess extends React.Component {
         "candidate move black = " + i + " move = " + candidateMovesBlack[i]
       );
 
-      let moves = this.getMovesString(blackCandidateMove);
+      let moves = HelpFunctions.getMovesString(blackCandidateMove);
 
       if (blackCandidateMove.includes(CONSTANTS.CASTLING_QUEEN_SIDE)) {
         let whiteCandidateMoves = this.getCandidateMovesWhite(board);
@@ -1016,9 +1134,6 @@ class Chess extends React.Component {
 
     const candidateMoves = this.getCandidateMoves(white, squares);
     let allowedMoves = this.getAllowedMoves(white, squares, candidateMoves);
-    this.getDelimForCheckMoves(candidateBoards, allowedMoves, true);
-
-
 
     // eslint-disable-next-line
     if (allowedMoves === null || allowedMoves.length == 0) {
@@ -1155,7 +1270,7 @@ class Chess extends React.Component {
       );
     }
 
-    const movesStringFromSelectedMove = this.getMovesString(selectedMove); // TODO: how about castling and en passe?
+    const movesStringFromSelectedMove = HelpFunctions.getMovesString(selectedMove); // TODO: how about castling and en passe?
 
     if (this.state.DEBUG) {
       console.log("moveStr = " + movesStringFromSelectedMove);
