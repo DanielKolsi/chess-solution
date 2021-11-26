@@ -147,10 +147,13 @@ class Chess extends React.Component {
     }
     return candidateMoves;
   }
-
+  getDelim(move) {
+    const CHR = move.charAt(2);
+    return isNaN(CHR) ? CHR : move.charAt(1);
+  }
 
   getCandidateBoardCorrespondingAllowedMove(allowedMove, board, white) {
-    const delim = HelpFunctions.getDelim(allowedMove);
+    const delim = this.getDelim(allowedMove);
     let moves = HelpFunctions.getMovesString(allowedMove); // src = moves[0], dst = moves[1]
 
     // handle promotions and underpromotions
@@ -413,7 +416,9 @@ class Chess extends React.Component {
             break;
     
           case CONSTANTS.WHITE_KNIGHT_CODE:
-            CheckFunctions.getCheckWithWhiteKnightMoves(board, allowedMoves[i]);
+            
+            allowedMoves[i] = CheckFunctions.getCheckWithWhiteKnightMoves(board, allowedMoves[i]);
+            console.log("allowedmove = " + allowedMoves[i]);
             
             break;
           case CONSTANTS.WHITE_BISHOP_CODE:
@@ -431,112 +436,6 @@ class Chess extends React.Component {
         }
       }
 
-
-
-/*
-        if (board[dst].row <= 6 && board[dst].col <= 5) {
-          // check that the move stays on the board 2R-1U
-          if (
-            board[TWO_RIGHT_ONE_UP_DST].piece !== null &&
-            board[TWO_RIGHT_ONE_UP_DST].piece.value ===
-              CONSTANTS.BLACK_KING_CODE
-          ) {
-            allowedMoves[i] = src + CONSTANTS.CHECK + dst;
-          }
-        }
-
-        // white's checks against black king 
-        if (board[dst].row >= 2 && board[dst].col <= 6) {
-          if (
-            board[TWO_DOWN_ONE_RIGHT_DST].piece !== null &&
-            board[TWO_DOWN_ONE_RIGHT_DST].piece.value ===
-              CONSTANTS.BLACK_KING_CODE
-          ) {            
-            allowedMoves[i] = src + CONSTANTS.CHECK + dst;
-          }
-        }
-
-        // 2 right, 1 down
-        if (board[dst].row >= 1 && board[dst].col <= 5) {
-          if (
-            board[TWO_RIGHT_ONE_DOWN_DST].piece !== null &&
-            board[TWO_RIGHT_ONE_DOWN_DST].piece.value ===
-              CONSTANTS.BLACK_KING_CODE
-          ) {
-            allowedMoves[i] = src + CONSTANTS.CHECK + dst;
-          }
-        }
-
-        if (
-          // 2 up, 1 right
-          board[dst].row <= 5 &&
-          board[dst].col <= 6
-        ) {
-          if (
-            board[TWO_UP_ONE_RIGHT_DST].piece !== null &&
-            board[TWO_UP_ONE_RIGHT_DST].piece.value ===
-              CONSTANTS.BLACK_KING_CODE
-          ) {
-            allowedMoves[i] = src + CONSTANTS.CHECK + dst;
-          }
-        }
-
-        if (
-          // 2 up, 1 left
-          board[dst].row <= 5 &&
-          board[dst].col >= 1
-        ) {
-          if (
-            board[TWO_UP_ONE_LEFT_DST].piece !== null &&
-            board[TWO_UP_ONE_LEFT_DST].piece.value === CONSTANTS.BLACK_KING_CODE
-          ) {
-            allowedMoves[i] = src + CONSTANTS.CHECK + dst;
-          }
-        }
-
-        if (
-          // 2L-1U
-          board[dst].row <= 6 &&
-          board[dst].col >= 2
-        ) {
-          if (
-            board[TWO_LEFT_ONE_UP_DST].piece !== null &&
-            board[TWO_LEFT_ONE_UP_DST].piece.value === CONSTANTS.BLACK_KING_CODE
-          ) {
-            allowedMoves[i] = src + CONSTANTS.CHECK + dst;
-          }
-        }
-
-        if (
-          // 2L-1D
-          board[dst].row >= 1 &&
-          board[dst].col >= 2
-        ) {
-          if (
-            board[TWO_LEFT_ONE_DOWN_DST].piece !== null &&
-            board[TWO_LEFT_ONE_DOWN_DST].piece.value ===
-              CONSTANTS.BLACK_KING_CODE
-          ) {
-            allowedMoves[i] = src + CONSTANTS.CHECK + dst;
-          }
-        }
-        if (
-          // 2D-1L
-          board[dst].row >= 2 &&
-          board[dst].col >= 1
-        ) {
-          if (
-            board[TWO_DOWN_ONE_LEFT_DST].piece !== null &&
-            board[TWO_DOWN_ONE_LEFT_DST].piece.value ===
-              CONSTANTS.BLACK_KING_CODE
-          ) {
-            allowedMoves[i] = src + CONSTANTS.CHECK + dst;
-          }
-        }
-      } else {
-        // black's checks against white king
-      }
-      */
     }
     
     return allowedMoves;

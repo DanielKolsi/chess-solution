@@ -1,26 +1,13 @@
 import CONSTANTS from "../config/constants";
 import * as HelpFunctions from "./HelpFunctions";
 
+/*
 export function getTransformToPlusDelimForCheckMoves(board, allowedMoves, white) {
 
   for (let i = 0; i < allowedMoves.length; i++) {
     const moves = HelpFunctions.getMovesString(allowedMoves[i]);
     const src = parseInt(moves[0], 10);
-    //const dst = parseInt(moves[1], 10);
 
-    /*const TWO_RIGHT_ONE_UP_DST = dst + CONSTANTS.twoRightOneUp;
-    const TWO_DOWN_ONE_RIGHT_DST = dst + CONSTANTS.twoDownOneRight;
-    const TWO_RIGHT_ONE_DOWN_DST = dst + CONSTANTS.twoRightOneDown;
-
-    const TWO_UP_ONE_RIGHT_DST = dst + CONSTANTS.twoUpOneRight;
-
-    const TWO_UP_ONE_LEFT_DST = dst + CONSTANTS.twoUpOneLeft;
-    const TWO_LEFT_ONE_UP_DST = dst + CONSTANTS.twoLeftOneUp;
-    const TWO_LEFT_ONE_DOWN_DST = dst + CONSTANTS.twoLeftOneDown;
-
-    const TWO_DOWN_ONE_LEFT_DST = dst + CONSTANTS.twoDownOneLeft;
-
-    */
     if (white) {
 
       let piece = board[src].piece;
@@ -32,7 +19,7 @@ export function getTransformToPlusDelimForCheckMoves(board, allowedMoves, white)
   
         case CONSTANTS.WHITE_KNIGHT_CODE:
           console.log("white knight...");
-          getCheckWithWhiteKnightMoves(board, allowedMoves[i]);
+          allowedMoves[i] = getCheckWithWhiteKnightMoves(board, allowedMoves[i]);
           break;
         case CONSTANTS.WHITE_BISHOP_CODE:
           
@@ -53,9 +40,14 @@ export function getTransformToPlusDelimForCheckMoves(board, allowedMoves, white)
   }
   
   return allowedMoves;
-}
+}*/
 
-
+/**
+ * 
+ * @param {*} board 
+ * @param {*} allowedMove 
+ * @returns 
+ */
 export function getCheckWithWhiteKnightMoves(board, allowedMove) {
 
   const moves = HelpFunctions.getMovesString(allowedMove);
@@ -182,7 +174,7 @@ export function getCheckWithWhiteKnightMoves(board, allowedMove) {
       return allowedMove;
     }
   }
-
+  return allowedMove;
 }
 
 
