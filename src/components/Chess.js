@@ -406,18 +406,17 @@ class Chess extends React.Component {
     for (let i = 0; i < allowedMoves.length; i++) {
       const moves = HelpFunctions.getMovesString(allowedMoves[i]);
       const src = parseInt(moves[0], 10);
-      
+      let piece = board[src].piece;
+
       if (white) {
-
-        let piece = board[src].piece;
-
+        
         switch (piece.value) {
           case CONSTANTS.WHITE_PAWN_CODE:       
             break;
     
           case CONSTANTS.WHITE_KNIGHT_CODE:
             
-            allowedMoves[i] = CheckFunctions.getCheckWithWhiteKnightMoves(board, allowedMoves[i]);
+            allowedMoves[i] = CheckFunctions.getCheckPlusSymbolForKnightMove(board, allowedMoves[i], true);
             console.log("allowedmove = " + allowedMoves[i]);
             
             break;
@@ -430,6 +429,28 @@ class Chess extends React.Component {
           
     
           case CONSTANTS.WHITE_QUEEN_CODE:
+            
+            break;
+          default:
+        }
+      } else {
+        switch (piece.value) {
+          case CONSTANTS.BLACK_PAWN_CODE:       
+            break;
+    
+          case CONSTANTS.BLACK_KNIGHT_CODE:
+            
+            allowedMoves[i] = CheckFunctions.getCheckPlusSymbolForKnightMove(board, allowedMoves[i], false);
+            console.log("allowedmove = " + allowedMoves[i]);
+            
+            break;
+          case CONSTANTS.BLACK_BISHOP_CODE:
+            
+            break;
+          case CONSTANTS.BLACK_ROOK_CODE:
+            
+            break;              
+          case CONSTANTS.BLACK_QUEEN_CODE:
             
             break;
           default:
