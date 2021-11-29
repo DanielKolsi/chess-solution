@@ -8,11 +8,37 @@ import * as ThreatScores from "./ThreatScores";
  * Recursive threat scores for both. Same heuristics for both. Allowed moves vs. threat scores vs. check/(good)defense.
  * 
  * add heuristics: isPieceDefended, isPieceThreatening, isPieceCapturingValuable...isPieceDeliveringCheck..., pawnMovesTwo
- * promotion, castling...enPassant.., isPieceUnderAttackByLessValuablePiece
- * 
- * 
- * 
+ * promotion, castling...enPassant.., isPieceUnderAttackByLessValuablePiece 
  */
+ //-> select the highest point functioned candidate board
+ 
+export function getPointsForASelectedCandidateBoard(selectedCandidateBoard) {
+  let points; // integer
+
+  return points;
+}
+
+ /**
+  * Get first round points per candidateboard
+  * @param {*} candidateBoards 
+  */
+ export function getPointsForAllCandidateBoards(candidateBoards) {
+  let pointsPerBoard; // array or list
+
+  return pointsPerBoard;
+ } 
+
+/**
+ * board -> candidate moves -> allowedMoves == candidate boards
+ * @param {*} selectedCandidateBoard 
+ */ 
+export function getNextCandidateBoardsFromASelectedCandidateBoard(selectedCandidateBoard) {
+  let candidateBoards; 
+
+  return candidateBoards; 
+ }
+
+ 
 
 /**
  * 
