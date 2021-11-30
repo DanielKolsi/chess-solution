@@ -584,14 +584,14 @@ export function getCandidateDiagonalMovesUpRight(piece, board, candidateMoves) {
 
 export function getCandidateDiagonalMovesUpLeft(
   piece,
-  squares,
+  board,
   candidateMoves
 ) {
   const DLM = CONSTANTS.defaultDelim;
   let pos = piece.currentSquare;
 
-  const squaresAvailableLeft = squares[pos].col;
-  const squaresAvailableUp = CONSTANTS.maxRow - squares[pos].row;
+  const squaresAvailableLeft = board[pos].col;
+  const squaresAvailableUp = CONSTANTS.maxRow - board[pos].row;
 
   let numberOfSquaresAvailable;
 
@@ -605,9 +605,9 @@ export function getCandidateDiagonalMovesUpLeft(
   for (let i = 1; i <= numberOfSquaresAvailable; i++) {
     let dst = pos + i * CONSTANTS.upLeft;
 
-    if (squares[dst].piece === null) {
+    if (board[dst].piece === null) {
       candidateMoves.push(pos + DLM + dst);
-    } else if (squares[dst].piece.white !== piece.white) {
+    } else if (board[dst].piece.white !== piece.white) {
       candidateMoves.push(pos + DLM + dst); // eat opponent's piece
       break;
     } else {
@@ -618,6 +618,86 @@ export function getCandidateDiagonalMovesUpLeft(
   return candidateMoves;
 }
 
+
+// TODO all bishop moves like in CheckFunctions
+export function getAllCandidateBishopMoves(piece,
+  board,
+  candidateMoves) {
+    
+    const DLM = CONSTANTS.defaultDelim;
+    let pos = piece.currentPieceSquare;
+
+    let squaresAvailableRight = CONSTANTS.maxCol - board[pos].col;
+    let squaresAvailableUp = CONSTANTS.maxRow - board[pos].row;
+    let squaresAvailableLeft = board[pos].col;
+    squaresAvailableUp = CONSTANTS.maxRow - board[pos].row;
+  
+    const directions = [
+      CONSTANTS.upRight,
+      CONSTANTS.upLeft,
+      CONSTANTS.downRight,
+      CONSTANTS.downLeft,
+    ];
+    let squaresAvailableDown = board[pos].row;
+  
+    const numberOfSquaresAvailableUpRight =
+      squaresAvailableRight < squaresAvailableUp
+        ? squaresAvailableRight
+        : squaresAvailableUp;
+    const numberOfSquaresAvailableUpLeft =
+      squaresAvailableLeft < squaresAvailableUp
+        ? squaresAvailableLeft
+        : squaresAvailableUp;
+    const numberOfSquaresAvailableDownRight =
+      squaresAvailableRight < squaresAvailableDown
+        ? squaresAvailableRight
+        : squaresAvailableDown;
+    const numberOfSquaresAvailableDownLeft =
+      squaresAvailableLeft < squaresAvailableDown
+        ? squaresAvailableLeft
+        : squaresAvailableDown;
+  
+    const numberOfSquaresAvailable = [
+      numberOfSquaresAvailableUpRight,
+      numberOfSquaresAvailableUpLeft,
+      numberOfSquaresAvailableDownRight,
+      numberOfSquaresAvailableDownLeft,
+    ];
+
+/*
+    if (squares[dst].piece === null) {
+      candidateMoves.push(pos + DLM + dst);
+    } else if (squares[dst].piece.white !== piece.white) {
+      candidateMoves.push(pos + DLM + dst); // eat opponent's piece
+      break;
+    } else {
+      break; // own piece
+    }
+*/
+
+  for (let n = 0; n < directions.length; n++) {
+    for (let i = 1; i <= numberOfSquaresAvailable[n]; i++) {
+      let dstDir = pos + i * directions[n];
+
+      if (board[dstDir].piece === null) {
+        candidateMoves.push(pos + DLM + dstDir);
+      } else if (board[dstDir].piece.white !== piece.white) {
+        candidateMoves.push(pos + DLM + dstDir); // eat opponent's piece
+        break;
+      } else {
+        break; // own piece
+      }
+    }
+  }
+
+}
+/**
+ * 
+ * @param {*} piece 
+ * @param {*} squares 
+ * @param {*} candidateMoves 
+ * @returns 
+ */
 export function getCandidateDiagonalMovesDownRight(
   piece,
   squares,
@@ -688,16 +768,42 @@ export function getCandidateDiagonalMovesDownLeft(
   return candidateMoves;
 }
 
-export function getCandidateRookMoves(piece, squares) {
+
+
+export function getCandidateRookMoves(piece, board) {
   const DLM = CONSTANTS.defaultDelim;
-  let pos = piece.currentSquare;
+  let dst = piece.currentSquare;
 
   let candidateMoves = [];
-  let UP = pos + CONSTANTS.up;
+  /*let UP = pos + CONSTANTS.up;
   let DOWN = pos + CONSTANTS.down;
   let LEFT = pos + CONSTANTS.left;
   let RIGHT = pos + CONSTANTS.right;
+*/
 
+  const UP_MOVES = CONSTANTS.maxRow - board[dst].row;
+  const DOWN_MOVES = board[dst].row;
+  const RIGHT_MOVES = CONSTANTS.maxCol - board[dst].col;
+  const LEFT_MOVES = board[dst].col;
+  const MOVES = [UP_MOVES, DOWN_MOVES, RIGHT_MOVES, LEFT_MOVES];
+
+  const MOVESTEP = [CONSTANTS.up, CONSTANTS.down, CONSTANTS.right, CONSTANTS.left];  
+
+  for (let n = 0; n < MOVES.length; ++n) { // length == 4  
+    for (let i = 0; i < MOVES[n]; ++i) { // UP, DOWN, RIGHT, LEFT
+      let targetSquare = dst + ((i + 1) * MOVESTEP[n]); 
+      if (board[targetSquare].piece === null) {
+        candidateMoves.push(dst + DLM + targetSquare);
+      } else if (piece.white !== board[targetSquare].piece.white) {
+        candidateMoves.push(dst + DLM + targetSquare); // capture
+        break
+      } else {
+        break;// own piece blocks
+      }
+    }
+  }
+
+/*
   // move UP
   for (let i = UP; i <= CONSTANTS.maxWhite; i += CONSTANTS.up) {
     if (squares[i].piece === null) {
@@ -749,6 +855,7 @@ export function getCandidateRookMoves(piece, squares) {
       break; // no more move possibilities after eating
     } else break; // own piece
   }
+  */
   return candidateMoves;
 }
 

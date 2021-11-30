@@ -7,7 +7,7 @@ import * as HelpFunctions from "./HelpFunctions";
  */
 export function getCheckMoves(allowedMoves) {
   let checkMoves = [];
-  
+
   for (let i = 0; i < allowedMoves.length; i++) {
     let delim = HelpFunctions.getDelim(allowedMoves[i]);
     if (delim === CONSTANTS.CHECK) {
@@ -269,7 +269,6 @@ export function getCheckPlusSymbolForBishopMove(board, allowedMove, white) {
       }
     }
   }
-
   return allowedMove;
 }
 
@@ -287,59 +286,27 @@ export function getCheckPlusSymbolForRookMove(board, allowedMove, white) {
 
   let KING_CODE = white ? CONSTANTS.BLACK_KING_CODE : CONSTANTS.WHITE_KING_CODE;
 
-  let UP = dst + CONSTANTS.up;
-  let DOWN = dst + CONSTANTS.down;
-  let LEFT = dst + CONSTANTS.left;
-  let RIGHT = dst + CONSTANTS.right;
+  const UP_MOVES = CONSTANTS.maxRow - board[dst].row;
+  const DOWN_MOVES = board[dst].row;
+  const RIGHT_MOVES = CONSTANTS.maxCol - board[dst].col;
+  const LEFT_MOVES = board[dst].col;
+  const MOVES = [UP_MOVES, DOWN_MOVES, RIGHT_MOVES, LEFT_MOVES];
 
-  //const directionConstaints = [UP, DOWN, LEFT, RIGHT];
-  //const moveConstaints = [CONSTANTS.up, CONSTANTS.down, CONSTANTS.left, CONSTANTS.right];
+  const MOVESTEP = [CONSTANTS.up, CONSTANTS.down, CONSTANTS.right, CONSTANTS.left];  
 
-  // move UP
-  for (let i = UP; i <= CONSTANTS.maxWhite; i += CONSTANTS.up) {
-    if (board[i].piece === null) {
-      continue;
-    } else if (board[i].piece.value === KING_CODE) {
-      allowedMove = src + CONSTANTS.CHECK + dst;
-      return allowedMove; // do the '+' conversion
-    } else {
-      break;
+  for (let n = 0; n < MOVES.length; ++n) { // length == 4  
+    for (let i = 0; i < MOVES[n]; ++i) { // UP, DOWN, RIGHT, LEFT
+      let targetSquare = dst + ((i + 1) * MOVESTEP[n]); 
+      if (board[targetSquare].piece === null) {
+        continue;
+      } else if (board[targetSquare].piece.value === KING_CODE) {        
+        allowedMove = src + CONSTANTS.CHECK + dst;
+        return allowedMove; // do the '+' conversion
+      } else {
+        break;
+      }
     }
-  }
-
-  // move DOWN
-  for (let i = DOWN; i >= 0; i += CONSTANTS.down) {
-    if (board[i].piece === null) {
-      continue;
-    } else if (board[i].piece.value === KING_CODE) {
-      allowedMove = src + CONSTANTS.CHECK + dst;
-      return allowedMove;
-    } else break;
-  }
-
-  // move RIGHT
-  let movesRight = CONSTANTS.maxCol - board[dst].col;
-
-  for (let i = RIGHT; i <= movesRight + dst; i++) {
-    if (board[i].piece === null) {
-      continue;
-    } else if (board[i].piece.value === KING_CODE) {
-      allowedMove = src + CONSTANTS.CHECK + dst;
-      return allowedMove;
-    } else break;
-  }
-
-  // move LEFT
-  let movesLeft = board[dst].col;
-
-  for (let i = LEFT; i >= dst - movesLeft; i--) {
-    if (board[i].piece === null) {
-      continue;
-    } else if (board[i].piece.value === KING_CODE) {
-      allowedMove = src + CONSTANTS.CHECK + dst;
-      return allowedMove;
-    } else break;
-  }
+  }  
   return allowedMove;
 }
 
