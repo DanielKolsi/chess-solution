@@ -11,10 +11,42 @@ import * as ThreatScores from "./ThreatScores";
  * promotion, castling...enPassant.., isPieceUnderAttackByLessValuablePiece 
  */
  //-> select the highest point functioned candidate board
- 
-export function getPointsForASelectedCandidateBoard(selectedCandidateBoard) {
+
+/**
+ * Get the candidate board which represents the best move (max points)
+ * @param {*} candidateBoards 
+ * @param {*} white 
+ * @returns 
+ */
+ export function getMaxPointCandidateBoard(candidateBoards, white) {
+
+  let points = getPointsForAllCandidateBoards(candidateBoards);
+  let maxPoint = Math.max(points);
+
+  let bestBoard = candidateBoards(points.indexOf(maxPoint));
+  return bestBoard;
+ }
+
+/**
+ * Use the "score function" to calculate how valuable this particular (candidate) board is for white / black.
+ * 
+ * Heuristics: nextPossibleMoves - nextPossibleOpponentMoves + checksAgainstOpponent - checksAgainstMe + threats + protectedThreats + totalPieceValue
+ * 1. this score -> board0
+ * 2. opponent score (next turn) [candidate moves, allowed moves, best move...] -> selected board1
+ * 3. own next move (next next turn) score -> board2
+ * 4. total score: board0Score + board1Score + board2Score , ..., + boardNScore
+ * 
+ * @param {*} selectedCandidateBoard 
+ * @returns 
+ */
+ export function getPointsForASelectedCandidateBoard(selectedCandidateBoard) {
   let points; // integer
 
+  let board0Points = 0; // nextPossibleMoves - opponentNextPossibleMoves + check...
+  let board1Points = 0;
+  let board2Points = 0;
+
+  points = board0Points + board1Points + board2Points;
   return points;
 }
 
@@ -23,8 +55,11 @@ export function getPointsForASelectedCandidateBoard(selectedCandidateBoard) {
   * @param {*} candidateBoards 
   */
  export function getPointsForAllCandidateBoards(candidateBoards) {
-  let pointsPerBoard; // array or list
+  let pointsPerBoard = []; // array or list
 
+  for (let i = 0; i < candidateBoards.length; i++) {
+    pointsPerBoard[i] = getPointsForASelectedCandidateBoard(candidateBoards[i]);
+  }
   return pointsPerBoard;
  } 
 
