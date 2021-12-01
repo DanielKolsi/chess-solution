@@ -76,43 +76,60 @@ class Chess extends React.Component {
     this.doMove(src, dst);
   }
 
-  getCandidateMovesForWhitePiece(piece, board) {
+  /**
+   *
+   * @param {*} piece
+   * @param {*} board
+   * @returns
+   */
+  getCandidateMovesForPiece(piece, board) {
     let candidateMoves = [];
 
-    switch (piece.value) {
-      case 1:
-        candidateMoves = MoveFunctions.getCandidateWhitePawnMoves(
-          piece,
-          board,
-          this.state.previousMove
-        );
-        break;
-
-      case 3:
-        candidateMoves = MoveFunctions.getCandidateKnightMoves(piece, board);
-        break;
-      case 4:
-        candidateMoves = MoveFunctions.getCandidateBishopMoves(piece, board);
-        break;
-      case 5:
-        candidateMoves = MoveFunctions.getCandidateRookMoves(piece, board);
-        break;
-      case 6:
-        candidateMoves = MoveFunctions.getCandidateKingMoves(
-          piece,
-          board,
-          false
-        );
-        break;
-
-      case 9:
-        candidateMoves = MoveFunctions.getCandidateQueenMoves(piece, board);
-        break;
-      default:
+    if (piece.value === CONSTANTS.BLACK_PAWN_CODE) {
+      candidateMoves = MoveFunctions.getCandidateBlackPawnMoves(
+        piece,
+        board,
+        this.state.previousMove
+      );
+    } else if (piece.value === CONSTANTS.BLACK_KING_CODE) {
+      candidateMoves = MoveFunctions.getCandidateKingMoves(piece, board, true);
+    } else {
+      switch (Math.abs(piece.value)) {
+        case 1:
+          candidateMoves = MoveFunctions.getCandidateWhitePawnMoves(
+            piece,
+            board,
+            this.state.previousMove
+          );
+          break;
+        case 3:
+          candidateMoves = MoveFunctions.getCandidateKnightMoves(piece, board);
+          break;
+        case 4:
+          candidateMoves = MoveFunctions.getAllCandidateBishopMoves(
+            piece,
+            board
+          );
+          break;
+        case 5:
+          candidateMoves = MoveFunctions.getCandidateRookMoves(piece, board);
+          break;
+        case 6:
+          candidateMoves = MoveFunctions.getCandidateKingMoves(
+            piece,
+            board,
+            false
+          );
+          break;
+        case 9:
+          candidateMoves = MoveFunctions.getCandidateQueenMoves(piece, board);
+          break;
+        default:
+      }
     }
     return candidateMoves;
   }
-
+/*
   getCandidateMovesForBlackPiece(piece, board) {
     let candidateMoves = [];
 
@@ -128,7 +145,7 @@ class Chess extends React.Component {
         candidateMoves = MoveFunctions.getCandidateKnightMoves(piece, board);
         break;
       case -4:
-        candidateMoves = MoveFunctions.getCandidateBishopMoves(piece, board);
+        candidateMoves = MoveFunctions.getAllCandidateBishopMoves(piece, board);
         break;
       case -5:
         candidateMoves = MoveFunctions.getCandidateRookMoves(piece, board);
@@ -147,13 +164,10 @@ class Chess extends React.Component {
     }
     return candidateMoves;
   }
-  getDelim(move) {
-    const CHR = move.charAt(2);
-    return isNaN(CHR) ? CHR : move.charAt(1);
-  }
-
+  */
+ 
   getCandidateBoardCorrespondingAllowedMove(allowedMove, board, white) {
-    const delim = this.getDelim(allowedMove);
+    const delim = HelpFunctions.getDelim(allowedMove);
     let moves = HelpFunctions.getMovesString(allowedMove); // src = moves[0], dst = moves[1]
 
     // handle promotions and underpromotions
@@ -364,6 +378,12 @@ class Chess extends React.Component {
     }
   }*/
 
+  /**
+   * 
+   * @param {*} white 
+   * @param {*} board 
+   * @returns 
+   */
   getCandidateMoves(white, board) {
     let candidateMoves = [];
     if (white) {
@@ -381,9 +401,9 @@ class Chess extends React.Component {
     let allowedMoves = [];
 
     if (white) {
-      allowedMoves = this.getAllowedMovesWhite(board, candidateMoves);            
+      allowedMoves = this.getAllowedMovesWhite(board, candidateMoves);
     } else {
-      allowedMoves = this.getAllowedMovesBlack(board, candidateMoves);      
+      allowedMoves = this.getAllowedMovesBlack(board, candidateMoves);
     }
     allowedMoves = this.getTransformToPlusDelimForCheckMoves(
       board,
@@ -401,32 +421,53 @@ class Chess extends React.Component {
    * @param {*} white
    */
   getTransformToPlusDelimForCheckMoves(board, allowedMoves, white) {
-
     for (let i = 0; i < allowedMoves.length; i++) {
       const moves = HelpFunctions.getMovesString(allowedMoves[i]);
       const src = parseInt(moves[0], 10);
       let piece = board[src].piece;
-                    
-        switch (Math.abs(piece.value)) { // handles both white & black piece values
-          case CONSTANTS.WHITE_PAWN_CODE:    
-            allowedMoves[i] = CheckFunctions.getCheckPlusSymbolForPawnMove(board, allowedMoves[i], white);   
-            break;    
-          case CONSTANTS.WHITE_KNIGHT_CODE:            
-            allowedMoves[i] = CheckFunctions.getCheckPlusSymbolForKnightMove(board, allowedMoves[i], white);                        
-            break;
-          case CONSTANTS.WHITE_BISHOP_CODE:            
-            allowedMoves[i] = CheckFunctions.getCheckPlusSymbolForBishopMove(board, allowedMoves[i], white);                        
-            break;
-          case CONSTANTS.WHITE_ROOK_CODE:
-            allowedMoves[i] = CheckFunctions.getCheckPlusSymbolForRookMove(board, allowedMoves[i], white);                                    
-            break;              
-          case CONSTANTS.WHITE_QUEEN_CODE:            
-            allowedMoves[i] = CheckFunctions.getCheckPlusSymbolForQueenMove(board, allowedMoves[i], white);                        
-            break;
-          default:
-           // console.log("DEFAULT: " + white);
-        }
-    }        
+
+      switch (
+        Math.abs(piece.value) // handles both white & black piece values
+      ) {
+        case CONSTANTS.WHITE_PAWN_CODE:
+          allowedMoves[i] = CheckFunctions.getCheckPlusSymbolForPawnMove(
+            board,
+            allowedMoves[i],
+            white
+            );
+          break;
+        case CONSTANTS.WHITE_KNIGHT_CODE:
+          allowedMoves[i] = CheckFunctions.getCheckPlusSymbolForKnightMove(
+            board,
+            allowedMoves[i],
+            white
+          );
+          break;
+        case CONSTANTS.WHITE_BISHOP_CODE:
+          allowedMoves[i] = CheckFunctions.getCheckPlusSymbolForBishopMove(
+            board,
+            allowedMoves[i],
+            white
+          );
+          break;
+        case CONSTANTS.WHITE_ROOK_CODE:
+          allowedMoves[i] = CheckFunctions.getCheckPlusSymbolForRookMove(
+            board,
+            allowedMoves[i],
+            white
+          );
+          break;
+        case CONSTANTS.WHITE_QUEEN_CODE:
+          allowedMoves[i] = CheckFunctions.getCheckPlusSymbolForQueenMove(
+            board,
+            allowedMoves[i],
+            white
+          );
+          break;
+        default:
+        // console.log("DEFAULT: " + white);
+      }
+    }
     return allowedMoves;
   }
 
@@ -444,7 +485,7 @@ class Chess extends React.Component {
       }
       if (piece.white === false) continue; // it was a black piece...
 
-      let candidateMoves = this.getCandidateMovesForWhitePiece(piece, board);
+      let candidateMoves = this.getCandidateMovesForPiece(piece, board);
 
       if (candidateMoves === undefined) {
         console.log("No available moves for this piece.");
@@ -527,7 +568,7 @@ class Chess extends React.Component {
       }
       if (piece.white === true) continue; // it was white!
 
-      const candidateMoves = this.getCandidateMovesForBlackPiece(piece, board);
+      const candidateMoves = this.getCandidateMovesForPiece(piece, board);
 
       if (candidateMoves === undefined) {
         continue; // no available moves for this piece
@@ -1126,22 +1167,21 @@ class Chess extends React.Component {
         selectedMove = allowedMoves[minThreatScoreBoardIndex]; // TODO: select the proper heuristics
       }
     } else {
-      
       let checkMoves = CheckFunctions.getCheckMoves(allowedMoves);
       if (checkMoves.length > 0) {
         selectedMove = checkMoves[0]; // just take the first check move
       } else {
         selectedMove = allowedMoves[minThreatScoreBoardIndex]; // strategy for black is just to select the lowest threat score against black
-      }      
-      console.log("sel check move = " + selectedMove);      
-      maxIdx = allowedMoves.indexOf(selectedMove); 
-      
+      }
+      console.log("sel check move = " + selectedMove);
+      maxIdx = allowedMoves.indexOf(selectedMove);
+
       if (this.state.DEBUG) {
         console.log(
           "selected move for black = " +
             selectedMove +
             " possible moves length = " +
-            numberOfPossibleNextMoves.length                
+            numberOfPossibleNextMoves.length
         );
       }
     }
@@ -1158,7 +1198,8 @@ class Chess extends React.Component {
       );
     }
 
-    const movesStringFromSelectedMove = HelpFunctions.getMovesString(selectedMove); // TODO: how about castling and en passe?
+    const movesStringFromSelectedMove =
+      HelpFunctions.getMovesString(selectedMove); // TODO: how about castling and en passe?
 
     if (this.state.DEBUG) {
       console.log("moveStr = " + movesStringFromSelectedMove);
@@ -1219,6 +1260,14 @@ class Chess extends React.Component {
     );
   } // nextTurn
 
+  /**
+   * 
+   * @param {*} isWhiteTurn 
+   * @param {*} candidateBoards 
+   * @param {*} allowedMoves 
+   * @param {*} numberOfPossibleNextMoves 
+   * @returns 
+   */
   getMaxMovesIndexWhileAvoidingStalemate(
     isWhiteTurn,
     candidateBoards,
