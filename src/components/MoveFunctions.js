@@ -852,43 +852,18 @@ export function isAllowedByOpponentBishop(
         break;
       }
     }
-  }
-  /////
-  /*allowed = isDiagonalMovesUpRightAllowed(
-    piece,
-    squares,
-    kingPosition,
-    canditSrc,
-    canditDst
-  );
-
-  if (!allowed) return false;
-  allowed = isDiagonalMovesUpLeftAllowed(
-    piece,
-    squares,
-    kingPosition,
-    canditSrc,
-    canditDst
-  );
-  if (!allowed) return false;
-  allowed = isDiagonalMovesDownLeftAllowed(
-    piece,
-    squares,
-    kingPosition,
-    canditSrc,
-    canditDst
-  );
-  if (!allowed) return false;
-  allowed = isDiagonalMovesDownRightAllowed(
-    piece,
-    squares,
-    kingPosition,
-    canditSrc,
-    canditDst
-  );*/
+  }  
   return allowed;
 }
 
+/**
+ * 
+ * @param {*} piece 
+ * @param {*} board 
+ * @param {*} kingPosition 
+ * @param {*} opponentCandidateMove 
+ * @returns 
+ */
 export function isAllowedByOpponentRook(
   piece,
   board,
@@ -899,12 +874,7 @@ export function isAllowedByOpponentRook(
   let allowed = true;
 
   let pos = piece.currentSquare;
-
-  /*  let UP = pos + CONSTANTS.up;
-  let DOWN = pos + CONSTANTS.down;
-  let LEFT = pos + CONSTANTS.left;
-  let RIGHT = pos + CONSTANTS.right;
-*/
+  
   let canditSrc = 0;
   let canditDst = 0;
   if (opponentCandidateMove !== undefined) {
@@ -912,9 +882,6 @@ export function isAllowedByOpponentRook(
     canditSrc = parseInt(move[0], 10);
     canditDst = parseInt(move[1], 10);
   }
-
-  //  let KING_CODE = white ? CONSTANTS.BLACK_KING_CODE : CONSTANTS.WHITE_KING_CODE;
-
   const UP_MOVES = CONSTANTS.maxRow - board[pos].row;
   const DOWN_MOVES = board[pos].row;
   const RIGHT_MOVES = CONSTANTS.maxCol - board[pos].col;
@@ -948,249 +915,10 @@ export function isAllowedByOpponentRook(
         break; // move accepted; collides with own or eats opponent's piece; both are OK
       }
     }
-  }
-
-  ////////
-  // move UP
-  /* for (let i = UP; i <= CONSTANTS.maxWhite; i += CONSTANTS.up) {
-   
-    if (i == kingPosition) {
-      return false; // this move wasn't allowed by the rook
-    }
-    let squarePiece = squares[i].piece;
-
-    if (i == canditDst) {
-      break;
-    } else if (canditSrc == i) {
-      continue;
-   
-    } else if (squarePiece !== null) {
-      break; // move accepted; collides with own or eats opponent's piece; both are OK
-    }
-  }
-
-  // move DOWN
-  for (let i = DOWN; i >= 0; i += CONSTANTS.down) {
-    
-    if (i == kingPosition) {
-      return false;
-    }
-    let squarePiece = squares[i].piece;
-
-    if (i == canditDst) {
-      break;
-    } else if (canditSrc == i) {
-      
-      continue;
-    } else if (squarePiece !== null) {
-      break; // move accepted; collides with own or eats opponent's piece; both are OK
-    }
-  }
-
-  // move RIGHT
-  let movesRight = CONSTANTS.maxCol - squares[pos].col;
-
-  for (let i = RIGHT; i <= movesRight + pos; i++) {
-    
-    if (i == kingPosition) {
-      return false;
-    }
-    let squarePiece = squares[i].piece;
-    
-    if (i == canditDst) {
-      break;
-    } else if (canditSrc == i) {
-      
-      continue;
-    } else if (squarePiece !== null) {
-      break; // move accepted; collides with own or eats opponent's piece; both are OK
-    }
-  }
-
-  // move LEFT
-  let movesLeft = squares[pos].col;
-
-  for (let i = LEFT; i >= pos - movesLeft; i--) {
-    
-    if (i == kingPosition) {
-      return false;
-    }
-    let squarePiece = squares[i].piece;
-
-    if (i == canditDst) {
-      break;
-    } else if (canditSrc == i) {
-    
-      continue;
-    } else if (squarePiece !== null) {
-      break; // move accepted; collides with own or eats opponent's piece; both are OK
-    }
-  }*/
+  }  
   return allowed;
 }
 
-/*
-export function isDiagonalMovesUpRightAllowed(
-  piece,
-  squares,
-  kingPosition,
-  canditSrc,
-  canditDst
-) {
-  let currentPieceSquare = piece.currentSquare;
-  let allowed = true;
-
-  let squaresAvailableRight =
-    CONSTANTS.maxCol - squares[currentPieceSquare].col;
-  let squaresAvailableUp = CONSTANTS.maxRow - squares[currentPieceSquare].row;
-
-  let numberOfSquaresAvailable;
-
-  if (squaresAvailableRight <= squaresAvailableUp) {
-    numberOfSquaresAvailable = squaresAvailableRight;
-  } else {
-    numberOfSquaresAvailable = squaresAvailableUp;
-  }
-
-  for (let i = 1; i <= numberOfSquaresAvailable; i++) {
-    let dst = currentPieceSquare + i * CONSTANTS.upRight;
-    
-    if (kingPosition == dst) {
-      return false; // move cannot be accepted (king would be eaten)
-    } else if (dst == canditDst) {
-      break;
-      // eslint-disable-next-line
-    } else if (dst == canditSrc) {
-      
-      continue; // this piece doesn't block anymore
-    } else if (squares[dst].piece !== null) {
-      //canditSrc can't be here!
-      // own or opponent's piece
-      break;
-    }
-  }
-  return allowed;
-}
-
-export function isDiagonalMovesUpLeftAllowed(
-  piece,
-  squares,
-  kingPosition,
-  canditSrc,
-  canditDst
-) {
-  let pos = piece.currentSquare;
-  let allowed = true;
-
-  const squaresAvailableLeft = squares[pos].col;
-  const squaresAvailableUp = CONSTANTS.maxRow - squares[pos].row;
-  let numberOfSquaresAvailable;
-
-  if (squaresAvailableLeft <= squaresAvailableUp) {
-    numberOfSquaresAvailable = squaresAvailableLeft;
-  } else {
-    numberOfSquaresAvailable = squaresAvailableUp;
-  }
-
-  for (let i = 1; i <= numberOfSquaresAvailable; i++) {
-    
-    let dst = pos + i * CONSTANTS.upLeft;
-
-    if (dst == kingPosition) {
-      return false; //move cannot be accepted (king would be eaten)
-    }
-
-    if (dst == canditSrc) {
-      continue;
-    } else if (dst == canditDst) {
-      break;
-      
-    } else if (squares[dst].piece !== null) {
-      break;
-    }
-  }
-  return allowed;
-}
-
-export function isDiagonalMovesDownRightAllowed(
-  piece,
-  squares,
-  kingPosition,
-  canditSrc,
-  canditDst
-) {
-  let pos = piece.currentSquare;
-  let allowed = true;
-
-  let squaresAvailableRight = CONSTANTS.maxCol - squares[pos].col;
-  let squaresAvailableDown = squares[pos].row;
-
-  let numberOfSquaresAvailable;
-
-  if (squaresAvailableRight <= squaresAvailableDown) {
-    numberOfSquaresAvailable = squaresAvailableRight;
-  } else {
-    numberOfSquaresAvailable = squaresAvailableDown;
-  }
-
-  for (let i = 1; i <= numberOfSquaresAvailable; i++) {
-    let dst = pos + i * CONSTANTS.downRight;
-    
-    if (dst == kingPosition) {
-      return false; //move cannot be accepted (king would be eaten)
-    }
-
-    if (dst == canditSrc) {
-      continue;
-    } else if (dst == canditDst) {
-      
-      break;
-    } else if (squares[dst].piece !== null) {
-      break;
-    }
-  }
-  return allowed;
-}
-
-export function isDiagonalMovesDownLeftAllowed(
-  piece,
-  squares,
-  kingPosition,
-  canditSrc,
-  canditDst
-) {
-  let pos = piece.currentSquare;
-  let allowed = true;
-
-  let squaresAvailableLeft = squares[pos].col;
-  let squaresAvailableDown = squares[pos].row;
-
-  let numberOfSquaresAvailable;
-
-  if (squaresAvailableLeft <= squaresAvailableDown) {
-    numberOfSquaresAvailable = squaresAvailableLeft;
-  } else {
-    numberOfSquaresAvailable = squaresAvailableDown;
-  }
-
-  for (let i = 1; i <= numberOfSquaresAvailable; i++) {
-    let dst = pos + i * CONSTANTS.downLeft;
-    
-    if (dst == kingPosition) {
-      return false;
-    }
-    if (dst == canditSrc) {
-      continue;
-    } else if (dst == canditDst) {
-      
-      break;
-    } else if (squares[dst].piece !== null) {
-      break;
-    }
-  }
-  return allowed;
-}
-*/
 /**
  *
  * @param {*} piece

@@ -52,7 +52,7 @@ import KnightW3 from './white/officers/Knight3'; // for underpromotion
 
 import QueenB2 from './black/officers/Queen2';
 import QueenB3 from './black/officers/Queen3';
-import KnightB3 from './black/officers/Knight3'; // for underpromotion
+//import KnightB3 from './black/officers/Knight3'; // for underpromotion
 
 //import PropTypes from 'prop-types'; // ES6
 
@@ -63,7 +63,7 @@ const pieces = {
   KingB, QueenB, BishopBC, BishopBF, KnightBB, KnightBG,
   RookBA, RookBH, PawnBA, PawnBB, PawnBC, PawnBD, PawnBE,
   PawnBF, PawnBG, PawnBH,
-  QueenW2, QueenW3, QueenW4, QueenW5, RookW3, BishopW3, KnightW3, QueenB2, QueenB3, KnightB3
+  QueenW2, QueenW3, QueenW4, QueenW5, RookW3, BishopW3, KnightW3, QueenB2, QueenB3,/* KnightB3*/
 };
 
 class Square extends React.Component {

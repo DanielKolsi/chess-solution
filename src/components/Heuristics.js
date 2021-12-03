@@ -3,7 +3,6 @@ import * as ThreatScores from "./ThreatScores";
 
 /**
  * 
- * TODO: 
  * 
  * Recursive threat scores for both. Same heuristics for both. Allowed moves vs. threat scores vs. check/(good)defense.
  * 

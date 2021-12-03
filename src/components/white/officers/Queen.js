@@ -1,14 +1,7 @@
 import React from 'react';
-import Moves from '../../Moves';
 
-class Queen extends Moves {
-  constructor(props) {
-    super(props);
-    this.state = {}
-  }
-
-
-
+class Queen extends React.Component {
+  
   getCandidateMoves(piece, squares) {
     //console.log('White Queen');
     if (piece.value !== 9) return undefined;

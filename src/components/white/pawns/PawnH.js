@@ -1,12 +1,8 @@
 import React from 'react';
-import Moves from '../../Moves';
 
-class PawnH extends Moves {
-  constructor(props) {
-    super(props);
-    this.state = {      
-    }
-  }
+
+class PawnH extends React.Component {
+  
 
   getCandidateMoves(piece, squares, prevMove) {
     //console.log('White Pawn H');

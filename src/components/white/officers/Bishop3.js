@@ -1,12 +1,7 @@
 import React from 'react';
-import Moves from '../../Moves';
 
-class Bishop3 extends Moves {
-  constructor(props) {
-    super(props);
-    this.state = {
-    }
-  }
+class Bishop3 extends React.Component {
+  
 
   getCandidateMoves(piece, squares) {
     

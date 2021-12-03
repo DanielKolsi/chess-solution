@@ -1,13 +1,7 @@
 import React from 'react';
-import Moves from '../../Moves';
 
-class RookA extends Moves {
-  constructor(props) {
-    super(props);
-    this.state = {
 
-    }
-  }
+class RookA extends React.Component {
   
     getCandidateMoves(piece, squares) {
       return this.getCandidateRookMoves(piece, squares);

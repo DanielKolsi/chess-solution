@@ -1,12 +1,8 @@
 import React from 'react';
-import Moves from '../../Moves';
 
-class KnightB extends Moves {
-  constructor(props) {
-    super(props);
-    this.state = {
-    }
-  }
+
+class KnightB extends React.Component {
+  
 
   getCandidateMoves(piece, squares) {
     
