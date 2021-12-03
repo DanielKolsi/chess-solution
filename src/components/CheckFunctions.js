@@ -269,6 +269,7 @@ export function getCheckPlusSymbolForBishopMove(board, allowedMove, white) {
       }
     }
   }
+
   return allowedMove;
 }
 

@@ -5,8 +5,8 @@ import CONSTANTS from "../config/constants";
 // 4. The lower the threat score is, the better for white 5. select the lowest black threat score against white
 /**
  * TODO: add threat from en passant
- * @param {*} piece 
- * @param {*} board 
+ * @param {*} piece
+ * @param {*} board
  */
 export function getWhitePawnThreatScoreAgainstMe(piece, board) {
   const pos = piece.currentSquare;
@@ -14,22 +14,29 @@ export function getWhitePawnThreatScoreAgainstMe(piece, board) {
 
   const downLeft = pos + CONSTANTS.downLeft;
   const downRight = pos + CONSTANTS.downRight;
-  
-  
-  if (board[pos].col > 0 && board[downLeft].piece !== null && !board[downLeft].piece.white && board[downLeft] !== undefined) {    
+
+  if (
+    board[pos].col > 0 &&
+    board[downLeft].piece !== null &&
+    !board[downLeft].piece.white 
+  ) {
     threatScore += board[downLeft].piece.value;
   }
-  if (board[pos].col < 7 && board[downRight].piece !== null && board[downLeft] !== undefined && !board[downRight].piece.white) {
+  if (
+    board[pos].col < 7 &&
+    board[downRight].piece !== null&&
+    !board[downRight].piece.white
+  ) {
     threatScore += board[downRight].piece.value;
   }
   return threatScore;
 }
 
 /**
- * 
- * @param {*} piece 
- * @param {*} board 
- * @returns 
+ *
+ * @param {*} piece
+ * @param {*} board
+ * @returns
  */
 export function getBlackPawnThreatScoreAgainstMe(piece, board) {
   const pos = piece.currentPieceSquare;
@@ -40,7 +47,7 @@ export function getBlackPawnThreatScoreAgainstMe(piece, board) {
   let leftValue = board[upLeft].piece.value;
   let rightValue = board[upRight].piece.value;
 
- // TODO: add same restrictions as with getWhitePawnThreatScoreAgainstMe(
+  // TODO: add same restrictions as with getWhitePawnThreatScoreAgainstMe(
   if (board[pos].col > 0 && board[upLeft].piece.white === true) {
     threatScore += leftValue;
   }
@@ -51,13 +58,12 @@ export function getBlackPawnThreatScoreAgainstMe(piece, board) {
   return threatScore;
 }
 
-
 /**
- * 
- * @param {*} piece 
- * @param {*} board 
- * @param {*} white 
- * @returns 
+ *
+ * @param {*} piece
+ * @param {*} board
+ * @param {*} white
+ * @returns
  */
 export function getQueenThreatScoreAgainstMe(piece, board, white) {
   let threatScore = 0;
@@ -84,91 +90,61 @@ export function getKingThreatScoreAgainstMe(piece, board, white) {
   const UP_LEFT = currentPieceSquareNumber + CONSTANTS.upLeft;
   const UP_RIGHT = currentPieceSquareNumber + CONSTANTS.upRight;
 
-  if (
-    board[UP] !== undefined &&
-    board[UP].piece !== null     
-  ) {
+  if (board[UP] !== undefined && board[UP].piece !== null) {
     if (white && board[UP].piece.white) {
       threatScore += board[UP].piece.value;
     } else if (!white && !board[UP].piece.white) {
       threatScore += Math.abs(board[UP].piece.value);
     }
   }
-  if (
-    board[DOWN] !== undefined &&
-    board[DOWN].piece !== null     
-  ) {
+  if (board[DOWN] !== undefined && board[DOWN].piece !== null) { // can be undefined!
     if (white && board[DOWN].piece.white) {
       threatScore += board[DOWN].piece.value;
     } else if (!white && !board[DOWN].piece.white) {
       threatScore += Math.abs(board[DOWN].piece.value);
     }
-    
   }
-  if (
-    board[LEFT] !== undefined &&
-    board[LEFT].piece !== null    
-  ) {
+  if (board[LEFT] !== undefined && board[LEFT].piece !== null) {
     if (white && board[LEFT].piece.white) {
       threatScore += board[LEFT].piece.value;
     } else if (!white && !board[LEFT].piece.white) {
       threatScore += Math.abs(board[LEFT].piece.value);
-    }    
+    }
   }
-  if (
-    board[RIGHT] !== undefined &&
-    board[RIGHT].piece !== null     
-  ) {
+  if (board[RIGHT] !== undefined && board[RIGHT].piece !== null) {
     if (white && board[RIGHT].piece.white) {
       threatScore += board[RIGHT].piece.value;
     } else if (!white && !board[RIGHT].piece.white) {
       threatScore += Math.abs(board[RIGHT].piece.value);
     }
-    
   }
-  if (
-    board[DOWN_LEFT] !== undefined &&
-    board[DOWN_LEFT].piece !== null     
-  ) {
+  if (board[DOWN_LEFT] !== undefined && board[DOWN_LEFT].piece !== null) {
     if (white && board[DOWN_LEFT].piece.white) {
       threatScore += board[DOWN_LEFT].piece.value;
     } else if (!white && !board[DOWN_LEFT].piece.value) {
       threatScore += Math.abs(board[DOWN_LEFT].piece.value);
-
     }
-    
   }
-  if (
-    board[DOWN_RIGHT] !== undefined &&
-    board[DOWN_RIGHT].piece !== null     
-  ) {
+  if (board[DOWN_RIGHT] !== undefined && board[DOWN_RIGHT].piece !== null) {
     if (white && board[DOWN_RIGHT].piece.white) {
       threatScore += board[DOWN_RIGHT].piece.value;
     } else if (!white && !board[DOWN_RIGHT].piece.white) {
       threatScore += Math.abs(board[DOWN_RIGHT].piece.value);
     }
-    
   }
-  if (
-    board[UP_LEFT] !== undefined &&
-    board[UP_LEFT].piece !== null     
-  ) {
+  if (board[UP_LEFT] !== undefined && board[UP_LEFT].piece !== null) {
     if (white && board[UP_LEFT].piece.white) {
       threatScore += board[UP_LEFT].piece.value;
     } else if (!white && !board[UP_LEFT].piece.white) {
       threatScore += Math.abs(board[UP_LEFT].piece.value);
     }
-    
   }
-  if (
-    board[UP_RIGHT] !== undefined &&
-    board[UP_RIGHT].piece !== null     
-  ) {
+  if (board[UP_RIGHT] !== undefined && board[UP_RIGHT].piece !== null) {
     if (white && board[UP_RIGHT].piece.white) {
       threatScore += board[UP_RIGHT].piece.value;
-    } else if  (!white && !board[UP_RIGHT].piece.white) {
+    } else if (!white && !board[UP_RIGHT].piece.white) {
       threatScore += Math.abs(board[UP_RIGHT].piece.value);
-    }    
+    }
   }
   return threatScore;
 }
@@ -346,12 +322,49 @@ export function getKnightThreatScoreAgainstMe(piece, board, white) {
 export function getRookThreatScoreAgainstMe(piece, board, white) {
   let threatScore = 0;
   let pos = piece.currentSquare;
-
+/*
   let UP = pos + CONSTANTS.up;
   let DOWN = pos + CONSTANTS.down;
   let LEFT = pos + CONSTANTS.left;
   let RIGHT = pos + CONSTANTS.right;
+*/
 
+  const UP_MOVES = CONSTANTS.maxRow - board[pos].row;
+  const DOWN_MOVES = board[pos].row;
+  const RIGHT_MOVES = CONSTANTS.maxCol - board[pos].col;
+  const LEFT_MOVES = board[pos].col;
+  const MOVES = [UP_MOVES, DOWN_MOVES, RIGHT_MOVES, LEFT_MOVES];
+
+  const MOVESTEP = [
+    CONSTANTS.up,
+    CONSTANTS.down,
+    CONSTANTS.right,
+    CONSTANTS.left,
+  ];
+
+  for (let n = 0; n < MOVES.length; ++n) {
+    // length == 4
+    for (let i = 0; i < MOVES[n]; ++i) {
+      // UP, DOWN, RIGHT, LEFT
+      let targetSquare = pos + (i + 1) * MOVESTEP[n];
+      if (board[targetSquare].piece === null) {
+        continue;
+      }
+      if (!white && board[targetSquare].piece.white === false) {
+        // get the threat score
+        let value = board[targetSquare].piece.value;
+        threatScore += value;
+        break; // end this row scanning
+      } else if (piece.white !== board[targetSquare].piece.white) {
+        let value = Math.abs(board[targetSquare].piece.value);
+        threatScore += value;
+        break;
+      }
+    }
+  }
+
+  //
+/*
   // move UP
   for (let i = UP; i <= CONSTANTS.maxWhite; i += CONSTANTS.up) {
     if (board[i] === undefined || board[i].piece === null) continue;
@@ -420,7 +433,7 @@ export function getRookThreatScoreAgainstMe(piece, board, white) {
       break;
     }
   }
-
+*/
   return threatScore;
 }
 
@@ -432,7 +445,68 @@ export function getRookThreatScoreAgainstMe(piece, board, white) {
  * @returns
  */
 export function getBishopThreatScoreAgainstMe(piece, board, white) {
-  const currentPieceSquare = piece.currentSquare;
+
+  let pos = piece.currentSquare;  
+  let squaresAvailableRight = CONSTANTS.maxCol - board[pos].col;
+  let squaresAvailableUp = CONSTANTS.maxRow - board[pos].row;
+  let squaresAvailableLeft = board[pos].col;
+  squaresAvailableUp = CONSTANTS.maxRow - board[pos].row;
+
+  const directions = [
+    CONSTANTS.upRight,
+    CONSTANTS.upLeft,
+    CONSTANTS.downRight,
+    CONSTANTS.downLeft,
+  ];
+  let squaresAvailableDown = board[pos].row;
+
+  const numberOfSquaresAvailableUpRight =
+    squaresAvailableRight < squaresAvailableUp
+      ? squaresAvailableRight
+      : squaresAvailableUp;
+  const numberOfSquaresAvailableUpLeft =
+    squaresAvailableLeft < squaresAvailableUp
+      ? squaresAvailableLeft
+      : squaresAvailableUp;
+  const numberOfSquaresAvailableDownRight =
+    squaresAvailableRight < squaresAvailableDown
+      ? squaresAvailableRight
+      : squaresAvailableDown;
+  const numberOfSquaresAvailableDownLeft =
+    squaresAvailableLeft < squaresAvailableDown
+      ? squaresAvailableLeft
+      : squaresAvailableDown;
+
+  const numberOfSquaresAvailable = [
+    numberOfSquaresAvailableUpRight,
+    numberOfSquaresAvailableUpLeft,
+    numberOfSquaresAvailableDownRight,
+    numberOfSquaresAvailableDownLeft,
+  ];
+
+  let threatScore = 0;
+
+for (let n = 0; n < directions.length; n++) {
+  for (let i = 1; i <= numberOfSquaresAvailable[n]; i++) {
+    let dstDir = pos + i * directions[n];
+
+    if (board[dstDir].piece === null) {
+      continue;
+    } else if (board[dstDir].piece.white !== piece.white) {
+      // get the threat score
+      let value = board[dstDir].piece.value;
+      threatScore += value;
+      break;
+    } else {
+      break; // own piece
+    }
+  }
+}
+///////
+
+
+
+  /*const currentPieceSquare = piece.currentSquare;
 
   const squaresAvailableRight =
     CONSTANTS.maxCol - board[currentPieceSquare].col;
@@ -497,39 +571,12 @@ export function getBishopThreatScoreAgainstMe(piece, board, white) {
     CONSTANTS.downLeft,
     numberOfSquaresAvailable
   ); // downLeft
+
+  */
   return threatScore;
 }
 
-export function getDiagonalThreatScoreAgainst(
-  board,
-  piece,
-  diagonal,
-  numberOfSquaresAvailable,
-  white
-) {
-  const currentPieceSquare = piece.currentSquare;
-  let threatScore = 0;
 
-  for (let i = 1; i <= numberOfSquaresAvailable; i++) {
-    // upleft
-    let dst = currentPieceSquare + i * diagonal;
-
-    if (board[dst].piece === null) continue;
-
-    if (white && board[dst].piece.white === true) {
-      // get the threat score
-      let value = board[dst].piece.value;
-      threatScore += value;
-      break; // end this diagonal scanning
-    } else if (!white && board[dst].piece.white === false) {
-      let value = board[dst].piece.value;
-      threatScore += Math.abs(value); // avoid negative threat score against black
-      break; // end this diagonal scanning
-    }
-  }
-
-  return threatScore;
-}
 
 /**
  *
@@ -538,7 +585,7 @@ export function getDiagonalThreatScoreAgainst(
  * @param {*} diagonal upright, downright, upleft, downleft
  * @param {*} numberOfSquaresAvailable
  */
-export function getDiagonalThreatScoreAgainstWhite(
+/*export function getDiagonalThreatScoreAgainstWhite(
   board,
   piece,
   diagonal,
@@ -562,7 +609,7 @@ export function getDiagonalThreatScoreAgainstWhite(
     }
   }
   return threatScore;
-}
+}*/
 
 // returns the threat score that this piece causes threat to the opponent
 // e.g. if a black pawn threats both white pawn and white knight, the threat score will be 1 + 3 = 4
@@ -578,8 +625,8 @@ export function getTotalThreatScoreAgainstWhite(board) {
   for (let i = 0; i <= CONSTANTS.whiteRightRookId; i++) {
     let piece = board[i].piece;
 
-    if (piece === null || piece === undefined || piece.value > 0) {
-      continue; 
+    if (piece === null || piece.value > 0) {
+      continue;
     }
     const value = piece.value;
     //console.log("piece value = " + value);
@@ -615,7 +662,7 @@ export function getTotalThreatScoreAgainstBlack(board) {
     let piece = board[i].piece;
 
     if (piece === null || piece === undefined || piece.value < 0) {
-      continue; // piece has been e.g. eaten 
+      continue; // piece has been e.g. eaten
     }
     const value = piece.value;
     //console.log("piece value = " + value);

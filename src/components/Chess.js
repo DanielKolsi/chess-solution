@@ -480,7 +480,7 @@ class Chess extends React.Component {
     for (let i = 0; i <= CONSTANTS.maxWhite; i++) {
       let piece = board[i].piece;
 
-      if (piece === null || piece === undefined) {
+      if (piece === null) {
         continue; // piece has been e.g. eaten
       }
       if (piece.white === false) continue; // it was a black piece...
@@ -563,7 +563,7 @@ class Chess extends React.Component {
     for (let i = 0; i <= 63; i++) {
       let piece = board[i].piece;
 
-      if (piece === null || piece === undefined) {
+      if (piece === null) {
         continue; // piece has been e.g. eaten
       }
       if (piece.white === true) continue; // it was white!
@@ -623,20 +623,7 @@ class Chess extends React.Component {
     return candidateCastlingMovesForBlack;
   }
 
-  /*getMovePointsWhiteTrivial(allowedMoveWhite) {
-    const move = allowedMoveWhite.split(CONSTANTS.defaultDelim);
-    const src = move[0];
-    const dst = move[1];
 
-    let points = src - dst;
-
-    if (points < 0) {
-      points = Math.abs(dst - src) - 20;
-    }
-    if (points === undefined) {
-      points = 100; // castling
-    }
-  }*/
 
   // get move points for this board position
   // TODO: this function should be modified to have the heuristics to get the  possible (white) move
@@ -760,6 +747,13 @@ class Chess extends React.Component {
     return allowedMoves;
   }
 
+  /**
+   * 
+   * @param {*} board 
+   * @param {*} candidateMovesBlack 
+   * @param {*} boardIdx 
+   * @returns 
+   */
   getAllowedMovesBlack(board, candidateMovesBlack, boardIdx) {
     let allowedMoves = []; // contains only the candidate moves that were eventually verified to be allowed
 
@@ -837,22 +831,28 @@ class Chess extends React.Component {
     return allowedMoves;
   }
 
-  // to check whether a white move is allowed, you need to check opponent's next possible moves
-  // if any black move collides with the white king, the white candidate move is rejected immediately
+  
+  /** to check whether a white move is allowed, you need to check opponent's next possible moves
+   *if any black move collides with the white king, the white candidate move is rejected immediately 
+   * @param {*} board 
+   * @param {*} whiteKingPosition 
+   * @param {*} whiteCandidateMove 
+   * @returns 
+   */
   isWhiteMoveAllowed(board, whiteKingPosition, whiteCandidateMove) {
     let allowed = true;
 
     for (let i = 0; i <= CONSTANTS.whiteRightRookId; i++) {
       let piece = board[i].piece;
 
-      if (piece === null || piece === undefined) {
+      if (piece === null) {
         continue; // piece has been e.g. eaten or is a pawn
       }
 
       const value = piece.value;
       let debug = false;
 
-      switch (value) {
+      switch (value) { // only consider black pieces here!
         case CONSTANTS.BLACK_PAWN_CODE:
           allowed = MoveFunctions.isAllowedByOpponentBlackPawn(
             piece,
@@ -938,19 +938,29 @@ class Chess extends React.Component {
 
   // to check whether a black move is allowed, you need to check opponent's next possible moves
   // if any black move collides with the white king, the white candidate move is rejected immediately
+  /**
+   * 
+   * @param {*} board 
+   * @param {*} blackKingPosition 
+   * @param {*} blackCandidateMove 
+   * @returns 
+   */
   isBlackMoveAllowed(board, blackKingPosition, blackCandidateMove) {
     let allowed = true;
 
     for (let i = 0; i <= 63; i++) {
       let piece = board[i].piece;
 
-      if (piece === null || piece === undefined) {
+      if (piece === undefined) {
+        console.error("PIECE WAS UNDEFINED");
+      }
+      if (piece === null) {
         continue; // piece has been e.g. eaten
       }
 
       let debug = false;
-      switch (piece.value) {
-        case 1:
+      switch (piece.value) { // we must ensure we're considering ONLY white pieces here!
+        case CONSTANTS.WHITE_PAWN_CODE:
           allowed = MoveFunctions.isAllowedByOpponentWhitePawn(
             piece,
             blackKingPosition
@@ -961,7 +971,7 @@ class Chess extends React.Component {
             );
           }
           break;
-        case 3:
+        case CONSTANTS.WHITE_KNIGHT_CODE:
           allowed = MoveFunctions.isAllowedByOpponentKnight(
             piece,
             blackKingPosition
