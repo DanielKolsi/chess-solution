@@ -5,6 +5,7 @@
  * @returns 
  */
 export function getDelim(move) {
+  
   const CHR = move.charAt(2);
   return isNaN(CHR) ? CHR : move.charAt(1);
 }
