@@ -2,9 +2,14 @@ import React from 'react';
 
 class Rook3 extends React.Component {
   
-  
-  getCandidateMoves(piece, squares) {    
-    return this.getCandidateRookMoves(piece, squares);
+  /**
+   * 
+   * @param {*} piece 
+   * @param {*} board 
+   * @returns 
+   */
+  getCandidateMoves(piece, board) {    
+    return this.getCandidateRookMoves(piece, board);
   }
 
     render() {

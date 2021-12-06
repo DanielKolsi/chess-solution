@@ -1,26 +1,26 @@
-import React from 'react';
-
+import React from "react";
 
 class Queen extends React.Component {
-  
-
-  getCandidateMoves(piece, squares) {
-    console.log('Black Queen');
-    if (piece.value !== -9) {
-      return undefined;
-    }
-    return this.getCandidateQueenMoves(piece, squares);
+  /**
+   *
+   * @param {*} piece
+   * @param {*} board
+   * @returns
+   */
+  getCandidateMoves(piece, board) {
+    //console.log("Black Queen");
+    return this.getCandidateQueenMoves(piece, board);
   }
 
-    render() {
-      const divStyle = {
-        fontSize: 85,
-      };
-      return (
-        <div style={divStyle} className="piece">
-          {String.fromCharCode(9819)}
-        </div>
-      );
-    }
+  render() {
+    const divStyle = {
+      fontSize: 85,
+    };
+    return (
+      <div style={divStyle} className="piece">
+        {String.fromCharCode(9819)}
+      </div>
+    );
+  }
 }
 export default Queen;

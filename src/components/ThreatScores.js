@@ -7,7 +7,7 @@ import CONSTANTS from "../config/constants";
  * @param {*} piece
  * @param {*} board
  */
-export function getWhitePawnThreatScoreAgainstMe(piece, board) {
+export function getOpponentWhitePawnThreatScoreAgainstMe(piece, board) {
   const pos = piece.currentSquare;
   let threatScore = 0;
 
@@ -37,7 +37,7 @@ export function getWhitePawnThreatScoreAgainstMe(piece, board) {
  * @param {*} board
  * @returns
  */
-export function getBlackPawnThreatScoreAgainstMe(piece, board) {
+export function getOpponentBlackPawnThreatScoreAgainstMe(piece, board) {
   const pos = piece.currentPieceSquare;
   const upLeft = pos + CONSTANTS.upLeft;
   const upRight = pos + CONSTANTS.upRight;
@@ -70,10 +70,22 @@ export function getBlackPawnThreatScoreAgainstMe(piece, board) {
  * @param {*} white
  * @returns
  */
-export function getQueenThreatScoreAgainstMe(threateningPiece, board, white) {
+export function getOpponentQueenThreatScoreAgainstMe(
+  threateningPiece,
+  board,
+  white
+) {
   let threatScore = 0;
-  threatScore = getBishopThreatScoreAgainstMe(threateningPiece, board, white);
-  threatScore += getRookThreatScoreAgainstMe(threateningPiece, board, white);
+  threatScore = getOpponentBishopThreatScoreAgainstMe(
+    threateningPiece,
+    board,
+    white
+  );
+  threatScore += getOpponentRookThreatScoreAgainstMe(
+    threateningPiece,
+    board,
+    white
+  );
 
   return threatScore;
 }
@@ -83,7 +95,7 @@ export function getQueenThreatScoreAgainstMe(threateningPiece, board, white) {
  * @param {*} threateningPiece
  * @param {*} board candidate board corresponding the game after white's candidate move
  */
-export function getKingThreatScoreAgainstMe(threateningPiece, board) {
+export function getOpponentKingThreatScoreAgainstMe(threateningPiece, board) {
   let threatScore = 0;
 
   const currentPieceSquareNumber = threateningPiece.currentSquare; // ensure this is dealt as an integer!
@@ -96,51 +108,72 @@ export function getKingThreatScoreAgainstMe(threateningPiece, board) {
   const UP_LEFT = currentPieceSquareNumber + CONSTANTS.upLeft;
   const UP_RIGHT = currentPieceSquareNumber + CONSTANTS.upRight;
 
-  if (board[UP] !== undefined && board[UP].piece !== null) {
-    if (threateningPiece.white !== board[UP].piece.white) {      
+  if (board[currentPieceSquareNumber].row < 7 && board[UP].piece !== null) {
+    if (threateningPiece.white !== board[UP].piece.white) {
       threatScore += board[UP].piece.value;
     }
-  }  
-  if (board[DOWN] !== undefined && board[DOWN].piece !== null) {
-    // can be undefined!
+  }
+  if (board[currentPieceSquareNumber].row > 0 && board[DOWN].piece !== null) {
     if (threateningPiece.white !== board[DOWN].piece.white) {
       threatScore += board[DOWN].piece.value;
-    } 
+    }
   }
-  if (board[LEFT] !== undefined && board[LEFT].piece !== null) {
+  if (board[currentPieceSquareNumber].col > 0 && board[LEFT].piece !== null) {
     if (threateningPiece.white !== board[LEFT].piece.white) {
       threatScore += board[LEFT].piece.value;
-    } 
+    }
   }
-  if (board[RIGHT] !== undefined && board[RIGHT].piece !== null) {
+  if (board[currentPieceSquareNumber].col < 7 && board[RIGHT].piece !== null) {
     if (threateningPiece.white !== !board[RIGHT].piece.white) {
       threatScore += board[RIGHT].piece.value;
-    } 
+    }
   }
-  if (board[DOWN_LEFT] !== undefined && board[DOWN_LEFT].piece !== null) {
+  if (
+    board[currentPieceSquareNumber].row > 0 &&
+    board[currentPieceSquareNumber].col > 0 &&
+    board[DOWN_LEFT].piece !== null
+  ) {
     if (threateningPiece.white !== board[DOWN_LEFT].piece.white) {
       threatScore += board[DOWN_LEFT].piece.value;
     }
   }
-  if (board[DOWN_RIGHT] !== undefined && board[DOWN_RIGHT].piece !== null) {
+  if (
+    board[currentPieceSquareNumber].row > 0 &&
+    board[currentPieceSquareNumber].col < 7 &&
+    board[DOWN_RIGHT].piece !== null
+  ) {
     if (threateningPiece.white !== board[DOWN_RIGHT].piece.white) {
       threatScore += board[DOWN_RIGHT].piece.value;
-    } 
+    }
   }
-  if (board[UP_LEFT] !== undefined && board[UP_LEFT].piece !== null) {
+  if (
+    board[currentPieceSquareNumber].row < 7 &&
+    board[currentPieceSquareNumber].col > 0 &&
+    board[UP_LEFT].piece !== null
+  ) {
     if (threateningPiece.white !== board[UP_LEFT].piece.white) {
       threatScore += board[UP_LEFT].piece.value;
-    } 
+    }
   }
-  if (board[UP_RIGHT] !== undefined && board[UP_RIGHT].piece !== null) {
+  if (
+    board[currentPieceSquareNumber].row < 7 &&
+    board[currentPieceSquareNumber].col < 7 &&
+    board[UP_RIGHT].piece !== null
+  ) {
     if (threateningPiece.white !== board[UP_RIGHT].piece.white) {
       threatScore += board[UP_RIGHT].piece.value;
-    } 
+    }
   }
   return threatScore;
 }
 
-export function getKnightThreatScoreAgainstMe(threateningPiece, board) {
+/**
+ *
+ * @param {*} threateningPiece
+ * @param {*} board
+ * @returns
+ */
+export function getOpponentKnightThreatScoreAgainstMe(threateningPiece, board) {
   const CURRENT_PIECE_SQUARE = threateningPiece.currentSquare;
   let threatScore = 0;
 
@@ -149,13 +182,10 @@ export function getKnightThreatScoreAgainstMe(threateningPiece, board) {
     board[CURRENT_PIECE_SQUARE].col <= 5
   ) {
     const TWO_RIGHT_ONE_UP = CURRENT_PIECE_SQUARE + CONSTANTS.twoRightOneUp;
-    if (
-      board[TWO_RIGHT_ONE_UP] !== undefined &&
-      board[TWO_RIGHT_ONE_UP].piece !== null
-    ) {
+    if (board[TWO_RIGHT_ONE_UP].piece !== null) {
       if (threateningPiece.white && !board[TWO_RIGHT_ONE_UP].piece.white) {
-        threatScore += board[TWO_RIGHT_ONE_UP].piece.value; 
-      } 
+        threatScore += board[TWO_RIGHT_ONE_UP].piece.value;
+      }
     }
   }
 
@@ -164,13 +194,10 @@ export function getKnightThreatScoreAgainstMe(threateningPiece, board) {
     board[CURRENT_PIECE_SQUARE].col <= 5
   ) {
     const TWO_RIGHT_ONE_DOWN = CURRENT_PIECE_SQUARE + CONSTANTS.twoRightOneDown;
-    if (
-      board[TWO_RIGHT_ONE_DOWN] !== undefined &&
-      board[TWO_RIGHT_ONE_DOWN].piece !== null
-    ) {
-      if (threateningPiece.white && !board[TWO_RIGHT_ONE_DOWN].white) {        
+    if (board[TWO_RIGHT_ONE_DOWN].piece !== null) {
+      if (threateningPiece.white && !board[TWO_RIGHT_ONE_DOWN].white) {
         threatScore += board[TWO_RIGHT_ONE_DOWN].piece.value;
-      } 
+      }
     }
   }
 
@@ -179,13 +206,10 @@ export function getKnightThreatScoreAgainstMe(threateningPiece, board) {
     board[CURRENT_PIECE_SQUARE].col <= 6
   ) {
     const TWO_UP_ONE_RIGHT = CURRENT_PIECE_SQUARE + CONSTANTS.twoUpOneRight;
-    if (
-      board[TWO_UP_ONE_RIGHT] !== undefined &&
-      board[TWO_UP_ONE_RIGHT].piece !== null
-    ) {
+    if (board[TWO_UP_ONE_RIGHT].piece !== null) {
       if (threateningPiece.white && !board[TWO_UP_ONE_RIGHT].piece.white) {
         threatScore += board[TWO_UP_ONE_RIGHT].piece.value;
-      } 
+      }
     }
   }
 
@@ -195,10 +219,7 @@ export function getKnightThreatScoreAgainstMe(threateningPiece, board) {
   ) {
     const TWO_UP_ONE_LEFT = CURRENT_PIECE_SQUARE + CONSTANTS.twoUpOneLeft;
 
-    if (
-      board[TWO_UP_ONE_LEFT] !== undefined &&
-      board[TWO_UP_ONE_LEFT].piece !== null
-    ) {
+    if (board[TWO_UP_ONE_LEFT].piece !== null) {
       if (threateningPiece.white !== !board[TWO_UP_ONE_LEFT].piece.white) {
         threatScore += board[TWO_UP_ONE_LEFT].piece.value;
       }
@@ -210,13 +231,10 @@ export function getKnightThreatScoreAgainstMe(threateningPiece, board) {
     board[CURRENT_PIECE_SQUARE].col >= 2
   ) {
     const TWO_LEFT_ONE_UP = CURRENT_PIECE_SQUARE + CONSTANTS.twoLeftOneUp;
-    if (
-      board[TWO_LEFT_ONE_UP] !== undefined &&
-      board[TWO_LEFT_ONE_UP].piece !== null
-    ) {
+    if (board[TWO_LEFT_ONE_UP].piece !== null) {
       if (threateningPiece.white && !board[TWO_LEFT_ONE_UP].piece.white) {
         threatScore += board[TWO_LEFT_ONE_UP].piece.value;
-      } 
+      }
     }
   }
 
@@ -225,13 +243,10 @@ export function getKnightThreatScoreAgainstMe(threateningPiece, board) {
     board[CURRENT_PIECE_SQUARE].col >= 2
   ) {
     const TWO_LEFT_ONE_DOWN = CURRENT_PIECE_SQUARE + CONSTANTS.twoLeftOneDown;
-    if (
-      board[TWO_LEFT_ONE_DOWN] !== undefined &&
-      board[TWO_LEFT_ONE_DOWN].piece !== null
-    ) {
-      if (threateningPiece.white && !board[TWO_LEFT_ONE_DOWN].piece.white) {        
+    if (board[TWO_LEFT_ONE_DOWN].piece !== null) {
+      if (threateningPiece.white && !board[TWO_LEFT_ONE_DOWN].piece.white) {
         threatScore += board[TWO_LEFT_ONE_DOWN].piece.value;
-      } 
+      }
     }
   }
   if (
@@ -239,13 +254,10 @@ export function getKnightThreatScoreAgainstMe(threateningPiece, board) {
     board[CURRENT_PIECE_SQUARE].col <= 6
   ) {
     const TWO_DOWN_ONE_RIGHT = CURRENT_PIECE_SQUARE + CONSTANTS.twoDownOneRight;
-    if (
-      board[TWO_DOWN_ONE_RIGHT] !== undefined &&
-      board[TWO_DOWN_ONE_RIGHT].piece !== null
-    ) {
-      if (threateningPiece.white && !board[TWO_DOWN_ONE_RIGHT].piece.white) {        
+    if (board[TWO_DOWN_ONE_RIGHT].piece !== null) {
+      if (threateningPiece.white && !board[TWO_DOWN_ONE_RIGHT].piece.white) {
         threatScore += board[TWO_DOWN_ONE_RIGHT].piece.value;
-      } 
+      }
     }
   }
 
@@ -255,14 +267,10 @@ export function getKnightThreatScoreAgainstMe(threateningPiece, board) {
   ) {
     const TWO_DOWN_ONE_LEFT = CURRENT_PIECE_SQUARE + CONSTANTS.twoDownOneLeft;
 
-    if (
-      board[TWO_DOWN_ONE_LEFT] !== undefined &&
-      board[TWO_DOWN_ONE_LEFT].piece !== null &&
-      board[TWO_DOWN_ONE_LEFT].piece.white === true
-    ) {
-      if (threateningPiece.white && !board[TWO_DOWN_ONE_LEFT].piece.white) {        
+    if (board[TWO_DOWN_ONE_LEFT].piece !== null) {
+      if (threateningPiece.white && !board[TWO_DOWN_ONE_LEFT].piece.white) {
         threatScore += board[TWO_DOWN_ONE_LEFT].piece.value;
-      } 
+      }
     }
   }
   return threatScore;
@@ -275,7 +283,7 @@ export function getKnightThreatScoreAgainstMe(threateningPiece, board) {
  * @param {*} white my color under threat
  * @returns
  */
-export function getRookThreatScoreAgainstMe(piece, board) {
+export function getOpponentRookThreatScoreAgainstMe(piece, board) {
   let threatScore = 0;
   let pos = piece.currentSquare;
 
@@ -311,8 +319,7 @@ export function getRookThreatScoreAgainstMe(piece, board) {
         break;
       }
     }
-  }
-  console.log("rook threat score = " + threatScore);
+  }  
   return threatScore;
 }
 
@@ -323,7 +330,7 @@ export function getRookThreatScoreAgainstMe(piece, board) {
  * @param {*} white my color
  * @returns
  */
-export function getBishopThreatScoreAgainstMe(threateningPiece, board) {
+export function getOpponentBishopThreatScoreAgainstMe(threateningPiece, board) {
   let pos = threateningPiece.currentSquare;
   let squaresAvailableRight = CONSTANTS.maxCol - board[pos].col;
   let squaresAvailableUp = CONSTANTS.maxRow - board[pos].row;
@@ -405,26 +412,26 @@ export function getTotalThreatScoreAgainstWhite(board) {
     //console.log("piece value = " + value);
     switch (value) {
       case CONSTANTS.BLACK_PAWN_CODE:
-        threatScore += getBlackPawnThreatScoreAgainstMe(piece, board);
+        threatScore += getOpponentBlackPawnThreatScoreAgainstMe(piece, board);
         break;
       case CONSTANTS.BLACK_KNIGHT_CODE:
-        threatScore += getKnightThreatScoreAgainstMe(piece, board, true);
+        threatScore += getOpponentKnightThreatScoreAgainstMe(piece, board);
         console.log("threat score = " + threatScore);
         break;
       case CONSTANTS.BLACK_BISHOP_CODE:
-        threatScore += getBishopThreatScoreAgainstMe(piece, board, true);
+        threatScore += getOpponentBishopThreatScoreAgainstMe(piece, board);
         console.log("threat score bishop = " + threatScore);
         break;
       case CONSTANTS.BLACK_ROOK_CODE:
-        threatScore += getRookThreatScoreAgainstMe(piece, board, true);
+        threatScore += getOpponentRookThreatScoreAgainstMe(piece, board);
         console.log("threat score rook= " + threatScore);
         break;
       case CONSTANTS.BLACK_KING_CODE:
-        threatScore += getKingThreatScoreAgainstMe(piece, board);
+        threatScore += getOpponentKingThreatScoreAgainstMe(piece, board);
         console.log("threat score = " + threatScore);
         break;
       case CONSTANTS.BLACK_QUEEN_CODE:
-        threatScore += getQueenThreatScoreAgainstMe(piece, board, true);
+        threatScore += getOpponentQueenThreatScoreAgainstMe(piece, board);
         console.log("threat score = " + threatScore);
         break;
       default:
@@ -433,40 +440,48 @@ export function getTotalThreatScoreAgainstWhite(board) {
   }
   return threatScore;
 }
+
 /**
- *
- * @param {*} board
- * @returns
+ * 
+ * @param {*} board candidate board
+ * @param {*} white my color
+ * @returns 
  */
-export function getTotalThreatScoreAgainstBlack(board) {
+export function getTotalOpponentThreatScoreAgainstMe(board, white) {
   let threatScore = 0;
 
   for (let i = 0; i <= CONSTANTS.whiteRightRookId; i++) {
     let piece = board[i].piece;
-
-    if (piece === null || piece.value < 0) {
+    
+    if (piece === null) {
       continue; // piece has been e.g. eaten
     }
     const value = piece.value;
+    if (white && value > 0) continue; // white piece cannot cause threat to white
+    if (!white && value < 0) continue; // black piece cannot cause threat to black
 
-    switch (value) {
-      case CONSTANTS.WHITE_PAWN_CODE:
-        threatScore += getWhitePawnThreatScoreAgainstMe(piece, board);
-        break;
+    
+    if (value === CONSTANTS.BLACK_PAWN_CODE) {
+      threatScore += getOpponentBlackPawnThreatScoreAgainstMe(piece, board); // positive score
+    } else if (value === CONSTANTS.WHITE_PAWN_CODE) {
+      threatScore += getOpponentWhitePawnThreatScoreAgainstMe(piece, board); // negative score
+    }
+
+    switch (Math.abs(value)) {
       case CONSTANTS.WHITE_KNIGHT_CODE:
-        threatScore += getKnightThreatScoreAgainstMe(piece, board, false);
+        threatScore += getOpponentKnightThreatScoreAgainstMe(piece, board);
         break;
       case CONSTANTS.WHITE_BISHOP_CODE:
-        threatScore += getBishopThreatScoreAgainstMe(piece, board, false);
+        threatScore += getOpponentBishopThreatScoreAgainstMe(piece, board);
         break;
       case CONSTANTS.WHITE_ROOK_CODE:
-        threatScore += getRookThreatScoreAgainstMe(piece, board, false);
+        threatScore += getOpponentRookThreatScoreAgainstMe(piece, board);
         break;
       case CONSTANTS.WHITE_KING_CODE:
-        threatScore += getKingThreatScoreAgainstMe(piece, board);
+        threatScore += getOpponentKingThreatScoreAgainstMe(piece, board);
         break;
       case CONSTANTS.WHITE_QUEEN_CODE:
-        threatScore += getQueenThreatScoreAgainstMe(piece, board, false);
+        threatScore += getOpponentQueenThreatScoreAgainstMe(piece, board);
         break;
       default:
         break;

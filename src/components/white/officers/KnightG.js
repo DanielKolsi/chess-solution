@@ -2,9 +2,15 @@ import React from 'react';
 
 class KnightG extends React.Component {
   
-  getCandidateMoves(piece, squares) {
+  /**
+   * 
+   * @param {*} piece 
+   * @param {*} board 
+   * @returns 
+   */
+  getCandidateMoves(piece, board) {
     //console.log('White Knight G');
-    return this.getCandidateKnightMoves(piece, squares);
+    return this.getCandidateKnightMoves(piece, board);
   }
 
     render() {

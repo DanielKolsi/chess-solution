@@ -1,11 +1,9 @@
-import React from 'react';
+import React from "react";
 
 class King extends React.Component {
-  
-
   render() {
     const divStyle = {
-      color: '#aaaaaa',
+      color: "#aaaaaa",
       fontSize: 85,
     };
     return (

@@ -1,4 +1,5 @@
 import CONSTANTS from "../config/constants";
+import * as HelpFunctions from "./HelpFunctions";
 
 /**
  *
@@ -7,23 +8,23 @@ import CONSTANTS from "../config/constants";
  * @param {*} white
  * @returns
  */
-export function getBestMove(board, allowedMoves, white) {
-  const DLM = CONSTANTS.defaultDelim;
-
+export function getBestMove(board, allowedMoves) {
   let moveValue = 0; // value is calculated by substraction own piece value from the captured piece value
   let bestMoveIndex = -1;
 
   for (let i = 0; i < allowedMoves.length; i++) {
-    const move = allowedMoves[i].split(DLM);
+    const delim = HelpFunctions.getDelim(allowedMoves[i]);
+
+    const move = allowedMoves[i].split(delim);
     const src = move[0];
     const dst = move[1];
+
     //console.log("best move : allowed move  = " + move + " l = " + allowedMoves.length);
-    if (board[dst] !== undefined && board[dst].piece !== null) {
+    if (board[dst].piece !== null) {
       // compare piece values, if valueable, possibly worth eating..?!, piece.value
       if (board[dst].piece.value > board[src].piece.value) {
         let value =
-          Math.abs(board[dst].piece.value) -
-          Math.abs(board[src].piece.value);
+          Math.abs(board[dst].piece.value) - Math.abs(board[src].piece.value);
         console.log("VALUE=" + value);
         if (value >= moveValue) {
           moveValue = value;
@@ -44,14 +45,10 @@ export function getBestMove(board, allowedMoves, white) {
     console.log("best move for black... = " + allowedMoves[bestMoveIndex]);
     return allowedMoves[bestMoveIndex];
   }
-  if (white) {
-    if (moveValue > 0) {
-      return bestMoveIndex;
-    } else return null;
-  } else {
-    const n = Math.floor(Math.random() * allowedMoves.length);
-    return allowedMoves[n];
-  }
+
+  if (moveValue > 0) {
+    return bestMoveIndex;
+  } else return null;
 }
 
 /**
@@ -84,24 +81,21 @@ export function getCandidateKingMoves(piece, board, canCaptureWhite) {
   }
   if (
     board[currentPieceSquareNumber].row > CONSTANTS.minRow &&
-    (board[DOWN].piece == null ||
-      board[DOWN].piece.white === canCaptureWhite)
+    (board[DOWN].piece == null || board[DOWN].piece.white === canCaptureWhite)
   ) {
     candidateMoves.push(currentPieceSquareNumber + DEFAULT_DELIM + DOWN);
   }
 
   if (
     board[currentPieceSquareNumber].col > CONSTANTS.minCol &&
-    (board[LEFT].piece == null ||
-      board[LEFT].piece.white === canCaptureWhite)
+    (board[LEFT].piece == null || board[LEFT].piece.white === canCaptureWhite)
   ) {
     candidateMoves.push(currentPieceSquareNumber + DEFAULT_DELIM + LEFT);
   }
 
   if (
     board[currentPieceSquareNumber].col < CONSTANTS.maxCol &&
-    (board[RIGHT].piece == null ||
-      board[RIGHT].piece.white === canCaptureWhite)
+    (board[RIGHT].piece == null || board[RIGHT].piece.white === canCaptureWhite)
   ) {
     candidateMoves.push(currentPieceSquareNumber + DEFAULT_DELIM + RIGHT);
   }
@@ -767,12 +761,12 @@ export function isAllowedByOpponentKing(piece, kingPosition) {
 }
 
 /**
- * 
- * @param {*} piece 
- * @param {*} board 
- * @param {*} kingPosition 
- * @param {*} opponentCandidateMove 
- * @returns 
+ *
+ * @param {*} piece
+ * @param {*} board
+ * @param {*} kingPosition
+ * @param {*} opponentCandidateMove
+ * @returns
  */
 export function isAllowedByOpponentBishop(
   piece,
@@ -822,16 +816,12 @@ export function isAllowedByOpponentBishop(
   ];
 
   const DLM = CONSTANTS.defaultDelim;
-  let canditSrc = 0;
-  let canditDst = 0;
 
   let allowed = true;
 
-  if (opponentCandidateMove !== undefined) {
-    const move = opponentCandidateMove.split(DLM); // [1] === dst move
-    canditSrc = parseInt(move[0], 10); // ensure that it's an integer!
-    canditDst = parseInt(move[1], 10);
-  }
+  const move = opponentCandidateMove.split(DLM); // [1] === dst move
+  const canditSrc = parseInt(move[0], 10); // ensure that it's an integer!
+  const canditDst = parseInt(move[1], 10);
 
   for (let n = 0; n < directions.length; n++) {
     for (let i = 1; i <= numberOfSquaresAvailable[n]; i++) {
@@ -852,17 +842,17 @@ export function isAllowedByOpponentBishop(
         break;
       }
     }
-  }  
+  }
   return allowed;
 }
 
 /**
- * 
- * @param {*} piece 
- * @param {*} board 
- * @param {*} kingPosition 
- * @param {*} opponentCandidateMove 
- * @returns 
+ *
+ * @param {*} piece
+ * @param {*} board
+ * @param {*} kingPosition
+ * @param {*} opponentCandidateMove
+ * @returns
  */
 export function isAllowedByOpponentRook(
   piece,
@@ -874,14 +864,11 @@ export function isAllowedByOpponentRook(
   let allowed = true;
 
   let pos = piece.currentSquare;
-  
-  let canditSrc = 0;
-  let canditDst = 0;
-  if (opponentCandidateMove !== undefined) {
-    const move = opponentCandidateMove.split(DLM); // [1] === dst move
-    canditSrc = parseInt(move[0], 10);
-    canditDst = parseInt(move[1], 10);
-  }
+
+  const move = opponentCandidateMove.split(DLM); // [1] === dst move
+  const canditSrc = parseInt(move[0], 10);
+  const canditDst = parseInt(move[1], 10);
+
   const UP_MOVES = CONSTANTS.maxRow - board[pos].row;
   const DOWN_MOVES = board[pos].row;
   const RIGHT_MOVES = CONSTANTS.maxCol - board[pos].col;
@@ -915,7 +902,7 @@ export function isAllowedByOpponentRook(
         break; // move accepted; collides with own or eats opponent's piece; both are OK
       }
     }
-  }  
+  }
   return allowed;
 }
 

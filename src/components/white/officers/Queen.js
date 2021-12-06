@@ -2,10 +2,15 @@ import React from 'react';
 
 class Queen extends React.Component {
   
-  getCandidateMoves(piece, squares) {
-    //console.log('White Queen');
-    if (piece.value !== 9) return undefined;
-    return this.getCandidateQueenMoves(piece, squares);
+  /**
+   * 
+   * @param {*} piece 
+   * @param {*} board 
+   * @returns 
+   */
+  getCandidateMoves(piece, board) {
+    //console.log('White Queen');    
+    return this.getCandidateQueenMoves(piece, board);
   }
 
   render() {

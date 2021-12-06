@@ -1,18 +1,20 @@
-import React from 'react';
+import React from "react";
 
-
-class Queen4 extends React.Component{
-  
-
-  getCandidateMoves(piece, squares) {
+class Queen4 extends React.Component {
+  /**
+   *
+   * @param {*} piece
+   * @param {*} board
+   * @returns
+   */
+  getCandidateMoves(piece, board) {
     //console.log('White Queen4');
-    if (piece.value !== 9) return undefined;
-    return this.getCandidateQueenMoves(piece, squares);
+    return this.getCandidateQueenMoves(piece, board);
   }
 
   render() {
     const divStyle = {
-      color: '#aaaaaa',
+      color: "#aaaaaa",
       fontSize: 85,
     };
     return (

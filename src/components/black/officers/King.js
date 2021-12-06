@@ -1,7 +1,6 @@
-import React from 'react';
+import React from "react";
 
 class King extends React.Component {
-  
   render() {
     const divStyle = {
       fontSize: 85,

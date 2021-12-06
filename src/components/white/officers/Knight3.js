@@ -4,10 +4,15 @@ import React from 'react';
 class Knight3  {
   
 
-  getCandidateMoves(piece, squares) {
-    //console.log('White Knight B');
-    if (piece.value !== 3) return undefined;
-    return this.getCandidateKnightMoves(piece, squares);
+  /**
+   * 
+   * @param {*} piece 
+   * @param {*} board 
+   * @returns 
+   */
+  getCandidateMoves(piece, board) {
+    //console.log('White Knight B');    
+    return this.getCandidateKnightMoves(piece, board);
   }
     render() {
       const divStyle = {

@@ -4,9 +4,9 @@ import React from 'react';
 class PawnE extends React.Component{
   
 
-  getCandidateMoves(piece, squares, prevMove) {
+  getCandidateMoves(piece, board, prevMove) {
     //console.log('Black Pawn E');
-    return this.getCandidateBlackPawnMoves(piece, squares, prevMove);
+    return this.getCandidateBlackPawnMoves(piece, board, prevMove);
   }
 
     render() {

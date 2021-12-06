@@ -1,5 +1,4 @@
 import React from "react";
-import Moves from '../../Moves';
 
    class Knight3 extends Moves {
     constructor(props) {

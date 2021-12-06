@@ -3,9 +3,15 @@ import React from 'react';
 class RookH extends React.Component {
   
 
-  getCandidateMoves(piece, squares) {
+  /**
+   * 
+   * @param {*} piece 
+   * @param {*} board 
+   * @returns 
+   */
+  getCandidateMoves(piece, board) {
     //console.log('Black Rook H');
-    return this.getCandidateRookMoves(piece, squares);
+    return this.getCandidateRookMoves(piece, board);
   }
 
     render() {

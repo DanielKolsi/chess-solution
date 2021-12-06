@@ -1,17 +1,19 @@
-import React from 'react';
+import React from "react";
 
-class Queen3 extends React.Component{
-
-
-  getCandidateMoves(piece, squares) {
-    
-    if (piece.value !== 9) return undefined;
-    return this.getCandidateQueenMoves(piece, squares);
+class Queen3 extends React.Component {
+  /**
+   *
+   * @param {*} piece
+   * @param {*} board
+   * @returns
+   */
+  getCandidateMoves(piece, board) {
+    return this.getCandidateQueenMoves(piece, board);
   }
 
   render() {
     const divStyle = {
-      color: '#aaaaaa',
+      color: "#aaaaaa",
       fontSize: 85,
     };
     return (

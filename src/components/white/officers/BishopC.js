@@ -1,10 +1,15 @@
 import React from "react";
 
 class BishopC extends React.Component {
-
-  getCandidateMoves(piece, squares) {
+  /**
+   * 
+   * @param {*} piece 
+   * @param {*} board 
+   * @returns 
+   */
+  getCandidateMoves(piece, board) {
     //console.log('White Bishop C');
-    return this.getCandidateBishopMoves(piece, squares);
+    return this.getCandidateBishopMoves(piece, board);
   }
 
   render() {
