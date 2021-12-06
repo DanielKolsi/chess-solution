@@ -852,6 +852,7 @@ class Chess extends React.Component {
         case CONSTANTS.BLACK_KNIGHT_CODE:
           allowed = MoveFunctions.isAllowedByOpponentKnight(
             piece,
+            board,
             whiteKingPosition
           );
           if (debug && !allowed) {
@@ -958,6 +959,7 @@ class Chess extends React.Component {
         case CONSTANTS.WHITE_KNIGHT_CODE:
           allowed = MoveFunctions.isAllowedByOpponentKnight(
             piece,
+            board,
             blackKingPosition
           );
           if (debug && !allowed) {
@@ -1026,6 +1028,30 @@ class Chess extends React.Component {
     return allowed;
   }
 
+  /**
+   *
+   * @param {*} candidateMoves
+   * @param {*} allowedMoves
+   * @param {*} white
+   * @returns
+   */
+  gameOver(candidateMoves, allowedMoves, white) {
+    // eslint-disable-next-line
+    if (allowedMoves === null || allowedMoves.length == 0) {
+      if (white) {
+        console.log(
+          "Game over, black wins. candidateMoves = " +
+            candidateMoves +
+            " allowedMoves l = " +
+            allowedMoves.length
+        );
+      } else {
+        console.log("Game over, white wins. ");
+      }
+      document.getElementById("next").disabled = true;
+      return true; // game over
+    }
+  }
   prevTurn() {
     this.setState(
       {
@@ -1043,98 +1069,49 @@ class Chess extends React.Component {
     );
   }
 
+  /**
+   *
+   * @returns
+   */
   nextTurn() {
     let {
-      currentBoardSquares: squares,
+      currentBoardSquares: board,
       white,
       candidateBoards,
       pieces,
     } = this.state;
-    const previousBoard = _.cloneDeep(squares);
+    const previousBoard = _.cloneDeep(board);
     this.state.previousBoards.push(previousBoard); // stack of previous boards, Lodash deep clone is required!
 
-    const candidateMoves = this.getCandidateMoves(white, squares);
-    let allowedMoves = this.getAllowedMoves(white, squares, candidateMoves);
+    const candidateMoves = this.getCandidateMoves(white, board);
+    const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
 
-    // eslint-disable-next-line
-    if (allowedMoves === null || allowedMoves.length == 0) {
-      if (white) {
-        console.log(
-          "Game over, black wins. candidateMoves = " +
-            candidateMoves +
-            " allowedMoves l = " +
-            allowedMoves.length
-        );
-      } else {
-        console.log("Game over, white wins. ");
-      }
-      document.getElementById("next").disabled = true;
-      return;
-    }
+    if (this.gameOver(candidateMoves, allowedMoves, white)) {
+      return; // return as game over
+    } // handle game over condition and ritual
 
     if (this.state.DEBUG) {
       console.log(
         " WHITE = " + white + " allowed moves:" + allowedMoves.join("|")
       );
     }
-    let numberOfPossibleNextMoves = [];
-    let maxIdx = 0;
-    let max = 0;
-    let threatScore = 1000;
-    let minThreatScoreBoardIndex = -1;
 
-    // board will be stored to boards array (state)
-    //Lodash deep clone is required, as the array contains objects (i.e. pieces)
-    //https://medium.com/javascript-in-plain-english/how-to-deep-copy-objects-and-arrays-in-javascript-7c911359b089
+    candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
+    let numberOfPossibleNextMoves = this.getNumberOfPossibleNextMovesForBoard(
+      candidateBoards,
+      white
+    );
 
-    for (let i = 0; i < allowedMoves.length; ++i) {
-      // each allowed move corresponds one candidateBoard, that is, their indexes are synchronized
-      candidateBoards[i] = this.getCandidateBoardCorrespondingAllowedMove(
-        allowedMoves[i],
-        _.cloneDeep(squares),
-        white
-      ); // check that all kind of special moves are dealt as well (e.g. castling and its restrictiones)
+    let threatScoreForCandidateboards = this.getThreatScoreForCandidateBoards(
+      candidateBoards,
+      white
+    );
+    const optimalThreatScoreBoardIndex = this.getOptimalThreatScoreBoardIndex(
+      threatScoreForCandidateboards,
+      white
+    );
 
-      const allowedMovesForBoard = this.getAllowedMovesForBoard(
-        candidateBoards[i],
-        white,
-        i
-      );
-
-      let threatScoreForBoard = getTotalOpponentThreatScoreAgainstMe(
-        candidateBoards[i],
-        white
-      );
-      console.log(
-        "threat score for allowed (candidate) board index " +
-          i +
-          " move= " +
-          allowedMoves[i] +
-          " = " +
-          threatScoreForBoard +
-          " white = " +
-          white
-      );
-
-      if (threatScoreForBoard < threatScore) {
-        threatScore = threatScoreForBoard;
-        minThreatScoreBoardIndex = i;
-      }
-      numberOfPossibleNextMoves[i] = allowedMovesForBoard.length;
-
-      if (this.state.DEBUG) {
-        console.log(
-          "White previous move:" +
-            allowedMoves[i] +
-            " | Points = " +
-            numberOfPossibleNextMoves[i] +
-            " | board number = " +
-            i
-        );
-      }
-    } // ..for
-
-    maxIdx = this.getMaxMovesIndexWhileAvoidingStalemate(
+    let maxIdx = this.getMaxMovesIndexWhileAvoidingStalemate(
       white,
       candidateBoards,
       allowedMoves,
@@ -1142,57 +1119,40 @@ class Chess extends React.Component {
     );
 
     // this will be the final selected move for white / black determined by the heuristics / strategy
-    let selectedMove = MoveFunctions.getBestMove(squares, allowedMoves);
+    let selectedMove = MoveFunctions.getBestMove(board, allowedMoves);
 
     if (selectedMove === null) {
-      maxIdx = minThreatScoreBoardIndex;
+      maxIdx = optimalThreatScoreBoardIndex;
       //selectedMove = allowedMoves[maxIdx];
       //max = numberOfPossibleNextMoves[maxIdx];
       console.log(
         "maxIdx=" +
           maxIdx +
           " minThreatScoreBoardIdx=" +
-          minThreatScoreBoardIndex
+          optimalThreatScoreBoardIndex
       );
-      selectedMove = allowedMoves[minThreatScoreBoardIndex]; // select the proper heuristics
+      selectedMove = allowedMoves[optimalThreatScoreBoardIndex]; // select the proper heuristics
     }
 
-    let checkMoves = CheckFunctions.getCheckMoves(allowedMoves);
+    const checkMoves = CheckFunctions.getCheckMoves(allowedMoves);
     if (checkMoves.length > 0) {
       selectedMove = checkMoves[0]; // just take the first check move
     } else {
-      selectedMove = allowedMoves[minThreatScoreBoardIndex]; // strategy is just to select the lowest threat score against black
+      selectedMove = allowedMoves[optimalThreatScoreBoardIndex]; // strategy is just to select the lowest threat score against black
     }
-    console.log("sel check move = " + selectedMove);
+    console.log(
+      "sel check move = " +
+        selectedMove +
+        " || minThreatScoreBoardIndex = " +
+        optimalThreatScoreBoardIndex +
+        " allowed moves length = " +
+        allowedMoves.length
+    );
     maxIdx = allowedMoves.indexOf(selectedMove);
 
-    if (this.state.DEBUG) {
-      console.log(
-        "selected move black = " +
-          selectedMove +
-          " possible moves length = " +
-          numberOfPossibleNextMoves.length
-      );
-    }
-
-    if (this.state.DEBUG) {
-      console.log("boards = " + candidateBoards.length);
-      console.log(
-        "max = " +
-          max +
-          " max_idx = " +
-          maxIdx +
-          " real max value = " +
-          allowedMoves[maxIdx]
-      );
-    }
-
     const movesStringFromSelectedMove =
-      HelpFunctions.getMovesString(selectedMove); // TODO: how about castling and en passe?
+      HelpFunctions.getMovesString(selectedMove);
 
-    if (this.state.DEBUG) {
-      console.log("moveStr = " + movesStringFromSelectedMove);
-    }
     const pieceNumberId =
       candidateBoards[maxIdx][movesStringFromSelectedMove[1]].piece.n;
 
@@ -1227,9 +1187,7 @@ class Chess extends React.Component {
       });
     } // TODO: add underpromotion piece number counters! (white & black)
 
-    this.handleCastlingAllowedCondition(
-      squares[movesStringFromSelectedMove[0]]
-    ); // we need to check if the selected move caused restrictions that block future castling
+    this.handleCastlingAllowedCondition(board[movesStringFromSelectedMove[0]]); // we need to check if the selected move caused restrictions that block future castling
 
     this.setState(
       {
@@ -1248,6 +1206,109 @@ class Chess extends React.Component {
       }
     );
   } // nextTurn
+
+  /**
+   * For white the optimal is the lowest score, for black the highest!
+   * @param {*} threatScoreForCandidateBoards
+   * @param {*} white
+   * @returns
+   */
+  getOptimalThreatScoreBoardIndex(threatScoreForCandidateBoards, white) {
+    let threatScore = threatScoreForCandidateBoards[0];
+    let optimalThreatScoreIdx = 0;
+
+    console.log(
+      " number of candit boards = " + threatScoreForCandidateBoards.length
+    );
+    for (let i = 0; i < threatScoreForCandidateBoards.length; ++i) {
+      if (white && threatScoreForCandidateBoards[i] < threatScore) {
+        threatScore = threatScoreForCandidateBoards[i];
+        optimalThreatScoreIdx = i;
+      } else if (!white && threatScoreForCandidateBoards[i] > threatScore) {
+        // black
+        threatScore = threatScoreForCandidateBoards[i];
+        optimalThreatScoreIdx = i;
+      }
+    }
+    return optimalThreatScoreIdx;
+  }
+
+  /**
+   *
+   * @param {*} allowedMoves
+   * @param {*} white
+   * @returns
+   */
+  getCandidateBoards(allowedMoves, board, white) {
+    let candidateBoards = [];
+
+    for (let i = 0; i < allowedMoves.length; ++i) {
+      // each allowed move corresponds one candidateBoard, that is, their indexes are synchronized
+      candidateBoards[i] = this.getCandidateBoardCorrespondingAllowedMove(
+        allowedMoves[i],
+        _.cloneDeep(board),
+        white
+      ); // check that all kind of special moves are dealt as well (e.g. castling and its restrictiones)
+    }
+    return candidateBoards;
+  }
+
+  /**
+   *
+   * @param {*} candidateBoards
+   * @param {*} white
+   * @returns
+   */
+  getThreatScoreForCandidateBoards(candidateBoards, white) {
+    let threatScoreForCandidateBoards = [];
+
+    for (let i = 0; i < candidateBoards.length; ++i) {
+      threatScoreForCandidateBoards[i] = getTotalOpponentThreatScoreAgainstMe(
+        candidateBoards[i],
+        white
+      );
+      if (white && threatScoreForCandidateBoards[i] < 0) {
+        console.log("ERROR: NEGATIVE THREAT SCORE FOR WHITE.");
+      } else if (!white && threatScoreForCandidateBoards[i] > 0) {
+        console.log("ERROR: POSITIVE THREAT SCORE FOR BLACK.");
+      }
+      console.log(
+        "Threat score for candidate board. Index = " +
+          i +
+          " || Score = " +
+          threatScoreForCandidateBoards[i] +
+          " || White = " +
+          white
+      );
+    }
+
+    return threatScoreForCandidateBoards;
+  }
+
+  /**
+   *
+   * @param {*} candidateBoards
+   * @param {*} white
+   * @returns
+   */
+  getNumberOfPossibleNextMovesForBoard(candidateBoards, white) {
+    let numberOfPossibleNextMoves = [];
+    // board will be stored to boards array (state)
+    //Lodash deep clone is required, as the array contains objects (i.e. pieces)
+    //https://medium.com/javascript-in-plain-english/how-to-deep-copy-objects-and-arrays-in-javascript-7c911359b089
+
+    for (let i = 0; i < candidateBoards.length; ++i) {
+      // each allowed move corresponds one candidateBoard, that is, their indexes are synchronized
+
+      const allowedMovesForBoard = this.getAllowedMovesForBoard(
+        candidateBoards[i],
+        white,
+        i
+      );
+      numberOfPossibleNextMoves[i] = allowedMovesForBoard.length;
+    } // ..for
+    return numberOfPossibleNextMoves;
+  }
 
   /**
    *

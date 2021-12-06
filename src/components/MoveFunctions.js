@@ -515,14 +515,13 @@ export function getCandidateKnightMoves(piece, board) {
   return candidateMoves;
 }
 
-// TODO: add boundaries (e.g. -15 = 0 -> falsely kingPosition!)
 /**
  *
  * @param {*} piece
  * @param {*} kingPosition
  * @returns
  */
-export function isAllowedByOpponentKnight(piece, kingPosition) {
+export function isAllowedByOpponentKnight(piece, board, kingPosition) {
   const CURRENT_PIECE_SQUARE = piece.currentSquare;
   const TWO_RIGHT_ONE_UP = CURRENT_PIECE_SQUARE + CONSTANTS.twoRightOneUp;
   const TWO_RIGHT_ONE_DOWN = CURRENT_PIECE_SQUARE + CONSTANTS.twoRightOneDown;
@@ -533,23 +532,44 @@ export function isAllowedByOpponentKnight(piece, kingPosition) {
   const TWO_DOWN_ONE_RIGHT = CURRENT_PIECE_SQUARE + CONSTANTS.twoDownOneRight;
   const TWO_DOWN_ONE_LEFT = CURRENT_PIECE_SQUARE + CONSTANTS.twoDownOneLeft;
 
-  // eslint-disable-next-line
-  if (TWO_RIGHT_ONE_UP == kingPosition || TWO_RIGHT_ONE_DOWN == kingPosition) {
-    return false; // move cannot be accepted (king would be eaten)
+  let pos = piece.currentSquare; // piece current position
+
+  /* eslint-disable */
+
+  if (board[pos].col < 6 && board[pos].row < 7) {
+    if (TWO_RIGHT_ONE_UP == kingPosition) return false;
   }
-  // eslint-disable-next-line
-  if (TWO_UP_ONE_RIGHT == kingPosition || TWO_UP_ONE_LEFT == kingPosition) {
-    return false; // move cannot be accepted (king would be eaten)
-  }
-  // eslint-disable-next-line
-  if (TWO_LEFT_ONE_UP == kingPosition || TWO_LEFT_ONE_DOWN == kingPosition) {
-    return false; // move cannot be accepted (king would be eaten)
+  if (board[pos].col < 6 && board[pos].row > 0) {
+    if (TWO_RIGHT_ONE_DOWN == kingPosition) return false; // move cannot be accepted (king would be eaten)
   }
 
-  // eslint-disable-next-line
-  if (TWO_DOWN_ONE_RIGHT == kingPosition || TWO_DOWN_ONE_LEFT == kingPosition) {
-    return false; // move cannot be accepted (king would be eaten)
+  if (board[pos].col < 7 && board[pos].row < 6) {
+    if (TWO_UP_ONE_RIGHT == kingPosition) return false; // move cannot be accepted (king would be eaten)
   }
+
+  if (board[pos].col < 7 && board[pos].row < 6) {
+    if (TWO_UP_ONE_LEFT == kingPosition) return false; // move cannot be accepted (king would be eaten)
+  }
+
+  if (board[pos].col > 1 && board[pos].row < 7) {
+    if (TWO_LEFT_ONE_UP == kingPosition) return false; // move cannot be accepted (king would be eaten)
+  }
+
+  if (board[pos].col < 6 && board[pos].row > 0) {
+    if (TWO_LEFT_ONE_DOWN == kingPosition) return false; // move cannot be accepted (king would be eaten)
+  }
+
+  if (board[pos].col < 7 && board[pos].row > 1) {
+    if (TWO_DOWN_ONE_RIGHT == kingPosition) return false; // move cannot be accepted (king would be eaten)
+  }
+
+  if (board[pos].col > 0 && board[pos].row > 1) {
+    if (TWO_DOWN_ONE_LEFT == kingPosition) {
+      return false; // move cannot be accepted (king would be eaten)
+    }
+  }
+
+  /* eslint-enable */
   return true;
 }
 
