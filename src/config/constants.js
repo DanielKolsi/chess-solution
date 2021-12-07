@@ -1,4 +1,5 @@
 const CONSTANTS = {
+  NUMBER_OF_SQUARES: 64,
   WHITE_STARTS: true,
   
   WHITE_KNIGHT_CODE: 3,
@@ -17,6 +18,7 @@ const CONSTANTS = {
   BLACK_KING: "KingB",
   WHITE_PAWN_CODE: 1,
   BLACK_PAWN_CODE: -1,
+  
   minWhite: 48, // white piece minimum value
   maxWhite: 63, // 0..63
   maxBlack: 15, // black piece max value

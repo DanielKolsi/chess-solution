@@ -32,7 +32,7 @@ export function getCheckPlusSymbolForPawnMove(board, allowedMove, white) {
   if (white) {
     const DOWNLEFT_DST = dst + CONSTANTS.downLeft;
     const DOWNRIGHT_DST = dst + CONSTANTS.downRight;
-    if (board[dst].col > 0) {
+    if (board[dst].col > 0 && board[dst].row > 0) {
       if (
         board[DOWNLEFT_DST].piece !== null &&
         board[DOWNLEFT_DST].piece.value === KING_CODE
@@ -41,7 +41,7 @@ export function getCheckPlusSymbolForPawnMove(board, allowedMove, white) {
         return allowedMove;
       }
     }
-    if (board[dst].col < 7) {
+    if (board[dst].col < 7 && board[dst].row > 0) {
       if (
         board[DOWNRIGHT_DST].piece !== null &&
         board[DOWNRIGHT_DST].piece.value === KING_CODE
@@ -54,7 +54,7 @@ export function getCheckPlusSymbolForPawnMove(board, allowedMove, white) {
     const UPLEFT_DST = dst + CONSTANTS.upLeft;
     const UPRIGHT_DST = dst + CONSTANTS.upRight;
 
-    if (board[dst].col > 0) {
+    if (board[dst].col > 0 && board[dst].row < 7) {
       if (
         board[UPLEFT_DST].piece !== null &&
         board[UPLEFT_DST].piece.value === KING_CODE
@@ -63,7 +63,7 @@ export function getCheckPlusSymbolForPawnMove(board, allowedMove, white) {
         return allowedMove;
       }
     }
-    if (board[dst].col < 7) {
+    if (board[dst].col < 7 && board[dst].row < 7) {
       if (
         board[UPRIGHT_DST].piece !== null &&
         board[UPRIGHT_DST].piece.value === KING_CODE

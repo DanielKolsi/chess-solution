@@ -376,6 +376,13 @@ class Chess extends React.Component {
     return candidateMoves;
   }
 
+  /**
+   * 
+   * @param {*} white 
+   * @param {*} board 
+   * @param {*} candidateMoves 
+   * @returns 
+   */
   getAllowedMoves(white, board, candidateMoves) {
     if (candidateMoves === null || candidateMoves.length === 0) return null;
 
@@ -934,7 +941,7 @@ class Chess extends React.Component {
   isBlackMoveAllowed(board, blackKingPosition, blackCandidateMove) {
     let allowed = true;
 
-    for (let i = 0; i <= 63; i++) {
+    for (let i = 0; i < CONSTANTS.NUMBER_OF_SQUARES; i++) {
       const piece = board[i].piece;
 
       if (piece === null) {
@@ -968,7 +975,7 @@ class Chess extends React.Component {
             );
           }
           break;
-        case 4:
+        case CONSTANTS.WHITE_BISHOP_CODE:
           allowed = MoveFunctions.isAllowedByOpponentBishop(
             piece,
             board,
@@ -981,7 +988,7 @@ class Chess extends React.Component {
             );
           }
           break;
-        case 5:
+        case CONSTANTS.WHITE_ROOK_CODE:
           allowed = MoveFunctions.isAllowedByOpponentRook(
             piece,
             board,
@@ -994,7 +1001,7 @@ class Chess extends React.Component {
             );
           }
           break;
-        case 6:
+        case CONSTANTS.WHITE_KING_CODE:
           allowed = MoveFunctions.isAllowedByOpponentKing(
             piece,
             blackKingPosition
@@ -1005,7 +1012,7 @@ class Chess extends React.Component {
             );
           }
           break;
-        case 9:
+        case CONSTANTS.WHITE_QUEEN_CODE:
           allowed = MoveFunctions.isAllowedByOpponentQueen(
             piece,
             board,
@@ -1097,12 +1104,12 @@ class Chess extends React.Component {
     }
 
     candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
-    let numberOfPossibleNextMoves = this.getNumberOfPossibleNextMovesForBoard(
+    const numberOfPossibleNextMoves = this.getNumberOfPossibleNextMovesForBoard(
       candidateBoards,
       white
     );
 
-    let threatScoreForCandidateboards = this.getThreatScoreForCandidateBoards(
+    const threatScoreForCandidateboards = this.getThreatScoreForCandidateBoards(
       candidateBoards,
       white
     );
@@ -1111,7 +1118,8 @@ class Chess extends React.Component {
       white
     );
 
-    let maxIdx = this.getMaxMovesIndexWhileAvoidingStalemate(
+    // TODO: check the purpose of this call as maxIdx is redefined afterwards
+    const staleMateAvoidingMaxIdx = this.getMaxMovesIndexWhileAvoidingStalemate(
       white,
       candidateBoards,
       allowedMoves,
@@ -1119,43 +1127,72 @@ class Chess extends React.Component {
     );
 
     // this will be the final selected move for white / black determined by the heuristics / strategy
-    let selectedMove = MoveFunctions.getBestMove(board, allowedMoves);
-
-    if (selectedMove === null) {
-      maxIdx = optimalThreatScoreBoardIndex;
-      //selectedMove = allowedMoves[maxIdx];
-      //max = numberOfPossibleNextMoves[maxIdx];
-      console.log(
-        "maxIdx=" +
-          maxIdx +
-          " minThreatScoreBoardIdx=" +
-          optimalThreatScoreBoardIndex
-      );
-      selectedMove = allowedMoves[optimalThreatScoreBoardIndex]; // select the proper heuristics
-    }
-
-    const checkMoves = CheckFunctions.getCheckMoves(allowedMoves);
-    if (checkMoves.length > 0) {
-      selectedMove = checkMoves[0]; // just take the first check move
-    } else {
-      selectedMove = allowedMoves[optimalThreatScoreBoardIndex]; // strategy is just to select the lowest threat score against black
-    }
-    console.log(
-      "sel check move = " +
-        selectedMove +
-        " || minThreatScoreBoardIndex = " +
-        optimalThreatScoreBoardIndex +
-        " allowed moves length = " +
-        allowedMoves.length
+    const selectedMove = this.getSelectedMove(
+      board,
+      allowedMoves,
+      optimalThreatScoreBoardIndex
     );
-    maxIdx = allowedMoves.indexOf(selectedMove);
 
     const movesStringFromSelectedMove =
       HelpFunctions.getMovesString(selectedMove);
 
-    const pieceNumberId =
-      candidateBoards[maxIdx][movesStringFromSelectedMove[1]].piece.n;
+    const maxIdx = allowedMoves.indexOf(selectedMove);
+    let pieceNumberId;
 
+    if (
+      candidateBoards[staleMateAvoidingMaxIdx][movesStringFromSelectedMove[1]]
+        .piece !== null
+    ) {
+      pieceNumberId =
+        candidateBoards[staleMateAvoidingMaxIdx][movesStringFromSelectedMove[1]]
+          .piece.n;
+    } else {
+      pieceNumberId =
+        candidateBoards[maxIdx][movesStringFromSelectedMove[1]].piece.n;
+      console.error(
+        " MaxIdx = " + maxIdx + " moveIDX=" + movesStringFromSelectedMove[1]
+      );
+    }
+
+    this.handleKingMovementAndPromotion(
+      pieceNumberId,
+      pieces,
+      movesStringFromSelectedMove,
+      white
+    );
+    this.handleCastlingAllowedCondition(board[movesStringFromSelectedMove[0]]); // we need to check if the selected move caused restrictions that block future castling
+
+    this.setState(
+      {
+        pieces,
+        candidateBoards,
+        currentBoardSquares: candidateBoards[maxIdx],
+        white: !white,
+        nextTurn: this.state.nextTurn + 1,
+      },
+      function () {
+        if (this.state.DEBUG) {
+          console.log(
+            "state update complete, nextTurn : " + this.state.nextTurn
+          );
+        }
+      }
+    );
+  } // nextTurn
+
+  /**
+   *
+   * @param {*} pieceNumberId
+   * @param {*} pieces
+   * @param {*} movesStringFromSelectedMove
+   * @param {*} white
+   */
+  handleKingMovementAndPromotion(
+    pieceNumberId,
+    pieces,
+    movesStringFromSelectedMove,
+    white
+  ) {
     /* eslint-disable */
     if (
       pieceNumberId == CONSTANTS.whiteKingId ||
@@ -1186,26 +1223,46 @@ class Chess extends React.Component {
         promotedBlackQueenNumber: --this.state.promotedBlackQueenNumber,
       });
     } // TODO: add underpromotion piece number counters! (white & black)
+  }
 
-    this.handleCastlingAllowedCondition(board[movesStringFromSelectedMove[0]]); // we need to check if the selected move caused restrictions that block future castling
+  /**
+   *
+   * @param {*} board
+   * @param {*} allowedMoves
+   * @param {*} optimalThreatScoreBoardIndex min for white, max for black
+   * @returns
+   */
+  getSelectedMove(board, allowedMoves, optimalThreatScoreBoardIndex) {
+    // this will be the final selected move for white / black determined by the heuristics / strategy
+    let selectedMove = MoveFunctions.getBestMove(board, allowedMoves);
 
-    this.setState(
-      {
-        pieces,
-        candidateBoards,
-        currentBoardSquares: candidateBoards[maxIdx],
-        white: !white,
-        nextTurn: this.state.nextTurn + 1,
-      },
-      function () {
-        if (this.state.DEBUG) {
-          console.log(
-            "state update complete, nextTurn : " + this.state.nextTurn
-          );
-        }
-      }
+    if (selectedMove === null) {
+      let maxIdx = optimalThreatScoreBoardIndex;
+      //selectedMove = allowedMoves[maxIdx];
+      //max = numberOfPossibleNextMoves[maxIdx];
+      console.log(" optimalThreatScoreBoardIdx=" + maxIdx);
+      selectedMove = allowedMoves[optimalThreatScoreBoardIndex]; // strategy is just to select the lowest threat score against black
+    }
+
+    const checkMoves = CheckFunctions.getCheckMoves(allowedMoves);
+    if (checkMoves.length > 0) { // TODO, optimize the strategy
+      selectedMove = checkMoves[0]; // just take the first check move
+    }
+    let idx = selectedMove.indexOf(allowedMoves);
+    if (idx !== optimalThreatScoreBoardIndex && optimalThreatScoreBoardIndex === 0) {
+      selectedMove = allowedMoves[optimalThreatScoreBoardIndex];
+    }
+    
+    console.log(
+      "sel check move = " +
+        selectedMove +
+        " || minThreatScoreBoardIndex = " +
+        optimalThreatScoreBoardIndex +
+        " allowed moves length = " +
+        allowedMoves.length
     );
-  } // nextTurn
+    return selectedMove;
+  }
 
   /**
    * For white the optimal is the lowest score, for black the highest!
@@ -1221,14 +1278,10 @@ class Chess extends React.Component {
       " number of candit boards = " + threatScoreForCandidateBoards.length
     );
     for (let i = 0; i < threatScoreForCandidateBoards.length; ++i) {
-      if (white && threatScoreForCandidateBoards[i] < threatScore) {
+      if ((white && threatScoreForCandidateBoards[i] < threatScore) || (!white && threatScoreForCandidateBoards[i] > threatScore)) {
         threatScore = threatScoreForCandidateBoards[i];
         optimalThreatScoreIdx = i;
-      } else if (!white && threatScoreForCandidateBoards[i] > threatScore) {
-        // black
-        threatScore = threatScoreForCandidateBoards[i];
-        optimalThreatScoreIdx = i;
-      }
+      } 
     }
     return optimalThreatScoreIdx;
   }
@@ -1312,25 +1365,25 @@ class Chess extends React.Component {
 
   /**
    *
-   * @param {*} isWhiteTurn
+   * @param {*} white
    * @param {*} candidateBoards
    * @param {*} allowedMoves
    * @param {*} numberOfPossibleNextMoves
    * @returns
    */
   getMaxMovesIndexWhileAvoidingStalemate(
-    isWhiteTurn,
+    white,
     candidateBoards,
     allowedMoves,
     numberOfPossibleNextMoves
   ) {
     let max = 0;
-    let maxIdx = 0;
+    let maxIdx;
 
     for (let i = 0; i < candidateBoards.length; ++i) {
       if (candidateBoards[i][64] === CONSTANTS.CHECK) {
         let numberOfAllowedOpponentMoves = this.getNumberOfAllowedOpponentMoves(
-          isWhiteTurn,
+          white,
           i,
           candidateBoards
         );
@@ -1358,7 +1411,7 @@ class Chess extends React.Component {
 
     if (
       this.getNumberOfAllowedOpponentMoves(
-        isWhiteTurn,
+        white,
         maxIdx,
         candidateBoards
         // eslint-disable-next-line
@@ -1377,7 +1430,7 @@ class Chess extends React.Component {
       allowedMoves.splice(maxIdx, 1); // to get the counter right, we need to remove from here too
 
       maxIdx = this.getMaxMovesIndexWhileAvoidingStalemate(
-        isWhiteTurn,
+        white,
         candidateBoards,
         allowedMoves,
         numberOfPossibleNextMoves
@@ -1405,6 +1458,13 @@ class Chess extends React.Component {
     return maxIdx;
   }
 
+  /**
+   * 
+   * @param {*} white 
+   * @param {*} index 
+   * @param {*} candidateBoards 
+   * @returns 
+   */
   getNumberOfAllowedOpponentMoves(white, index, candidateBoards) {
     let allowedOpponentMoves = [];
     let candidateOpponentMoves = [];
