@@ -1,5 +1,7 @@
 import CONSTANTS from "../config/constants";
 import * as ThreatScores from "./ThreatScores";
+import * as HelpFunctions from "./HelpFunctions";
+import * as CheckFunctions from "./CheckFunctions";
 
 /**
  *
@@ -10,6 +12,191 @@ import * as ThreatScores from "./ThreatScores";
  * promotion, castling...enPassant.., isPieceUnderAttackByLessValuablePiece
  */
 //-> select the highest point functioned candidate board
+
+
+/**
+   *
+   * @param {*} white
+   * @param {*} candidateBoards
+   * @param {*} allowedMoves
+   * @param {*} numberOfPossibleNextMoves
+   * @returns
+   */
+ export function getMaxMovesIndexWhileAvoidingStalemate(
+  white,
+  candidateBoards,
+  allowedMoves,
+  numberOfPossibleNextMoves
+) {
+  let max = 0;
+  let maxIdx;
+
+  for (let i = 0; i < candidateBoards.length; ++i) {
+    if (candidateBoards[i][64] === CONSTANTS.CHECK) {
+      let numberOfAllowedOpponentMoves = this.getNumberOfAllowedOpponentMoves(
+        white,
+        i,
+        candidateBoards
+      );
+      // eslint-disable-next-line
+      if (numberOfAllowedOpponentMoves == 0) {
+        return i; // this will be maxIdx, because it's an immediate mate!
+      } else if (numberOfAllowedOpponentMoves < 2) {
+        // TODO: at this point the opponent has only one possibly move which could mean an impending mate; this strategy should be refined
+        return i;
+      }
+      // TODO: handle double consequtive moves mates, i.e. if the next move after this one is able to deliver a mate, select this move
+      // the opponent may have multiple moves to avoid the mate
+    }
+    if (numberOfPossibleNextMoves[i] >= max) {
+      numberOfPossibleNextMoves[i] += doublePawnPointsHandling(
+        allowedMoves[i]
+      ); // Heuristics#1
+      max = numberOfPossibleNextMoves[i]; // select the move from the allowed moves which got the highest points
+      maxIdx = i;
+    }
+  }
+  if (this.state.DEBUG) {
+    console.log("INITIALLY SELECTED max = " + max + " idx = " + maxIdx);
+  }
+
+  if (
+    this.getNumberOfAllowedOpponentMoves(
+      white,
+      maxIdx,
+      candidateBoards
+      // eslint-disable-next-line
+    ) == 0
+  ) {
+    // (review this): opponent can't move -> stalemate!
+    console.log(
+      "STALEMATE PREVENTION, SKIP THIS MOVE: " +
+        allowedMoves[maxIdx] +
+        " ** max rejected: " +
+        max
+    );
+
+    numberOfPossibleNextMoves.splice(maxIdx, 1); // remove allowedMoves[maxIdx] from the array to avoid stalemate
+    candidateBoards.splice(maxIdx, 1);
+    allowedMoves.splice(maxIdx, 1); // to get the counter right, we need to remove from here too
+
+    maxIdx = this.getMaxMovesIndexWhileAvoidingStalemate(
+      white,
+      candidateBoards,
+      allowedMoves,
+      numberOfPossibleNextMoves
+    ); // recursion is OK here
+  } else {
+    /*console.log(
+      "MAX accepted, max = " +
+        max +
+        " idx = " +
+        maxIdx +
+        " move = " +
+        allowedMoves[maxIdx]
+    );*/
+  }
+  /*console.log(
+    "returning: max = " +
+      max +
+      " max_idx=" +
+      maxIdx +
+      " numberOfPossibleNextMoves = " +
+      numberOfPossibleNextMoves +
+      " allowedMoves[maxIdx] = " +
+      allowedMoves[maxIdx]
+  );*/
+  return maxIdx;
+}
+
+/**
+   *
+   * @param {*} board
+   * @param {*} allowedMoves
+   * @param {*} optimalThreatScoreBoardIndex min for white, max for black
+   * @returns
+   */
+ export function getSelectedMove(board, allowedMoves, optimalThreatScoreBoardIndex) {
+  // this will be the final selected move for white / black determined by the heuristics / strategy
+  let selectedMove = getBestMove(board, allowedMoves);
+
+  if (selectedMove === null) {
+    let maxIdx = optimalThreatScoreBoardIndex;
+    //selectedMove = allowedMoves[maxIdx];
+    //max = numberOfPossibleNextMoves[maxIdx];
+    console.log(" optimalThreatScoreBoardIdx=" + maxIdx);
+    selectedMove = allowedMoves[optimalThreatScoreBoardIndex]; // strategy is just to select the lowest threat score against black
+  }
+
+  const checkMoves = CheckFunctions.getCheckMoves(allowedMoves);
+  if (checkMoves.length > 0) { // TODO, optimize the strategy, checkmoves should give POINTS to compare them with threatScore!
+    selectedMove = checkMoves[0]; // just take the first check move
+  }
+  let idx = selectedMove.indexOf(allowedMoves);
+  if (idx !== optimalThreatScoreBoardIndex && optimalThreatScoreBoardIndex === 0) {
+    selectedMove = allowedMoves[optimalThreatScoreBoardIndex];
+  }
+  
+  console.log(
+    "sel check move = " +
+      selectedMove +
+      " || minThreatScoreBoardIndex = " +
+      optimalThreatScoreBoardIndex +
+      " allowed moves length = " +
+      allowedMoves.length
+  );
+  return selectedMove;
+}
+/**
+ *
+ * @param {*} board
+ * @param {*} allowedMoves
+ * @param {*} white
+ * @returns
+ */
+ export function getBestMove(board, allowedMoves) {
+  let moveValue = 0; // value is calculated by substraction own piece value from the captured piece value
+  let bestMoveIndex = -1;
+
+  for (let i = 0; i < allowedMoves.length; i++) {
+    const delim = HelpFunctions.getDelim(allowedMoves[i]);
+
+    const move = allowedMoves[i].split(delim);
+    const src = move[0];
+    const dst = move[1];
+
+    //console.log("best move : allowed move  = " + move + " l = " + allowedMoves.length);
+    if (board[dst].piece !== null) {
+      // compare piece values, if valueable, possibly worth eating..?!, piece.value
+      if (board[dst].piece.value > board[src].piece.value) {
+        let value =
+          Math.abs(board[dst].piece.value) - Math.abs(board[src].piece.value);
+        console.log("VALUE=" + value);
+        if (value >= moveValue) {
+          moveValue = value;
+          console.log(
+            "move value = " +
+              value +
+              " best move idx = " +
+              i +
+              " src value = " +
+              board[src].piece.value
+          );
+          bestMoveIndex = i;
+        }
+      }
+    }
+  }
+  if (bestMoveIndex > 0) {
+    console.log("best move for black... = " + allowedMoves[bestMoveIndex]);
+    return allowedMoves[bestMoveIndex];
+  }
+
+  if (moveValue > 0) {
+    return bestMoveIndex;
+  } else return null;
+}
+
 
 /**
  * Get the candidate board which represents the best move (max points)

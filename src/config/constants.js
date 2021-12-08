@@ -22,6 +22,7 @@ const CONSTANTS = {
   minWhite: 48, // white piece minimum value
   maxWhite: 63, // 0..63
   maxBlack: 15, // black piece max value
+  squaresInCol: 8,
   squaresInRow: 8,
   minBlackPawn: 8,
   minRow: 0,

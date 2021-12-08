@@ -16,6 +16,65 @@ export function getCheckMoves(allowedMoves) {
   }
   return checkMoves;
 }
+
+
+/**
+   *
+   * @param {*} board
+   * @param {*} allowedMoves
+   * @param {*} white
+   */
+ export function getTransformToPlusDelimForCheckMoves(board, allowedMoves, white) {
+  for (let i = 0; i < allowedMoves.length; i++) {
+    const moves = HelpFunctions.getMovesString(allowedMoves[i]);
+    const src = parseInt(moves[0], 10);
+    let piece = board[src].piece;
+
+    switch (
+      Math.abs(piece.value) // handles both white & black piece values
+    ) {
+      case CONSTANTS.WHITE_PAWN_CODE:
+        allowedMoves[i] = getCheckPlusSymbolForPawnMove(
+          board,
+          allowedMoves[i],
+          white
+        );
+        break;
+      case CONSTANTS.WHITE_KNIGHT_CODE:
+        allowedMoves[i] = getCheckPlusSymbolForKnightMove(
+          board,
+          allowedMoves[i],
+          white
+        );
+        break;
+      case CONSTANTS.WHITE_BISHOP_CODE:
+        allowedMoves[i] = getCheckPlusSymbolForBishopMove(
+          board,
+          allowedMoves[i],
+          white
+        );
+        break;
+      case CONSTANTS.WHITE_ROOK_CODE:
+        allowedMoves[i] = getCheckPlusSymbolForRookMove(
+          board,
+          allowedMoves[i],
+          white
+        );
+        break;
+      case CONSTANTS.WHITE_QUEEN_CODE:
+        allowedMoves[i] = getCheckPlusSymbolForQueenMove(
+          board,
+          allowedMoves[i],
+          white
+        );
+        break;
+      default:
+      // console.log("DEFAULT: " + white);
+    }
+  }
+  return allowedMoves;
+}
+
 /**
  *
  * @param {*} board

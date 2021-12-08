@@ -1,5 +1,61 @@
 import CONSTANTS from "../config/constants";
 
+
+
+/**
+   * For white the optimal is the lowest score, for black the highest!
+   * @param {*} threatScoreForCandidateBoards
+   * @param {*} white
+   * @returns
+   */
+ export function getOptimalThreatScoreBoardIndex(threatScoreForCandidateBoards, white) {
+  let threatScore = threatScoreForCandidateBoards[0];
+  let optimalThreatScoreIdx = 0;
+
+  console.log(
+    " number of candit boards = " + threatScoreForCandidateBoards.length
+  );
+  for (let i = 0; i < threatScoreForCandidateBoards.length; ++i) {
+    if ((white && threatScoreForCandidateBoards[i] < threatScore) || (!white && threatScoreForCandidateBoards[i] > threatScore)) {
+      threatScore = threatScoreForCandidateBoards[i];
+      optimalThreatScoreIdx = i;
+    } 
+  }
+  return optimalThreatScoreIdx;
+}
+
+ /**
+   *
+   * @param {*} candidateBoards
+   * @param {*} white
+   * @returns
+   */
+  export function getThreatScoreForCandidateBoards(candidateBoards, white) {
+    let threatScoreForCandidateBoards = [];
+
+    for (let i = 0; i < candidateBoards.length; ++i) {
+      threatScoreForCandidateBoards[i] = getTotalOpponentThreatScoreAgainstMe(
+        candidateBoards[i],
+        white
+      );
+      if (white && threatScoreForCandidateBoards[i] < 0) {
+        console.log("ERROR: NEGATIVE THREAT SCORE FOR WHITE.");
+      } else if (!white && threatScoreForCandidateBoards[i] > 0) {
+        console.log("ERROR: POSITIVE THREAT SCORE FOR BLACK.");
+      }
+      console.log(
+        "Threat score for candidate board. Index = " +
+          i +
+          " || Score = " +
+          threatScoreForCandidateBoards[i] +
+          " || White = " +
+          white
+      );
+    }
+
+    return threatScoreForCandidateBoards;
+  }
+
 // 1. White candidate move 2. check all black next allowed moves to check the threats against white assuming this candidate move is played
 // 3. sum threat scores (from those black allowed moves) against white piece (move) by piece
 // 4. The lower the threat score is, the better for white 5. select the lowest black threat score against white

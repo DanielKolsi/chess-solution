@@ -1,55 +1,6 @@
 import CONSTANTS from "../config/constants";
-import * as HelpFunctions from "./HelpFunctions";
 
-/**
- *
- * @param {*} board
- * @param {*} allowedMoves
- * @param {*} white
- * @returns
- */
-export function getBestMove(board, allowedMoves) {
-  let moveValue = 0; // value is calculated by substraction own piece value from the captured piece value
-  let bestMoveIndex = -1;
 
-  for (let i = 0; i < allowedMoves.length; i++) {
-    const delim = HelpFunctions.getDelim(allowedMoves[i]);
-
-    const move = allowedMoves[i].split(delim);
-    const src = move[0];
-    const dst = move[1];
-
-    //console.log("best move : allowed move  = " + move + " l = " + allowedMoves.length);
-    if (board[dst].piece !== null) {
-      // compare piece values, if valueable, possibly worth eating..?!, piece.value
-      if (board[dst].piece.value > board[src].piece.value) {
-        let value =
-          Math.abs(board[dst].piece.value) - Math.abs(board[src].piece.value);
-        console.log("VALUE=" + value);
-        if (value >= moveValue) {
-          moveValue = value;
-          console.log(
-            "move value = " +
-              value +
-              " best move idx = " +
-              i +
-              " src value = " +
-              board[src].piece.value
-          );
-          bestMoveIndex = i;
-        }
-      }
-    }
-  }
-  if (bestMoveIndex > 0) {
-    console.log("best move for black... = " + allowedMoves[bestMoveIndex]);
-    return allowedMoves[bestMoveIndex];
-  }
-
-  if (moveValue > 0) {
-    return bestMoveIndex;
-  } else return null;
-}
 
 /**
  *
