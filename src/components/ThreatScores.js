@@ -1,7 +1,4 @@
 import CONSTANTS from "../config/constants";
-
-
-
 /**
    * For white the optimal is the lowest score, for black the highest!
    * @param {*} threatScoreForCandidateBoards
@@ -447,55 +444,6 @@ export function getOpponentBishopThreatScoreAgainstMe(threateningPiece, board) {
   return threatScore;
 }
 
-// returns the threat score that this piece causes threat to the opponent
-// e.g. if a black pawn threats both white pawn and white knight, the threat score will be 1 + 3 = 4
-/**
- *
- * @param {*} board candidate board
- * @param {*} white my color
- * @returns
- */
-export function getTotalThreatScoreAgainstWhite(board) {
-  let threatScore = 0;
-
-  for (let i = 0; i <= CONSTANTS.whiteRightRookId; i++) {
-    let piece = board[i].piece;
-
-    if (piece === null || piece.value > 0) {
-      continue;
-    }
-    const value = piece.value;
-    //console.log("piece value = " + value);
-    switch (value) {
-      case CONSTANTS.BLACK_PAWN_CODE:
-        threatScore += getOpponentBlackPawnThreatScoreAgainstMe(piece, board);
-        break;
-      case CONSTANTS.BLACK_KNIGHT_CODE:
-        threatScore += getOpponentKnightThreatScoreAgainstMe(piece, board);
-        console.log("threat score = " + threatScore);
-        break;
-      case CONSTANTS.BLACK_BISHOP_CODE:
-        threatScore += getOpponentBishopThreatScoreAgainstMe(piece, board);
-        console.log("threat score bishop = " + threatScore);
-        break;
-      case CONSTANTS.BLACK_ROOK_CODE:
-        threatScore += getOpponentRookThreatScoreAgainstMe(piece, board);
-        console.log("threat score rook= " + threatScore);
-        break;
-      case CONSTANTS.BLACK_KING_CODE:
-        threatScore += getOpponentKingThreatScoreAgainstMe(piece, board);
-        console.log("threat score = " + threatScore);
-        break;
-      case CONSTANTS.BLACK_QUEEN_CODE:
-        threatScore += getOpponentQueenThreatScoreAgainstMe(piece, board);
-        console.log("threat score = " + threatScore);
-        break;
-      default:
-        break;
-    }
-  }
-  return threatScore;
-}
 
 /**
  * 
