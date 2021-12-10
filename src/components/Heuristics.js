@@ -10,9 +10,27 @@ import * as CheckFunctions from "./CheckFunctions";
  *
  * add heuristics: isPieceDefended, isPieceThreatening, isPieceCapturingValuable...isPieceDeliveringCheck..., pawnMovesTwo
  * promotion, castling...enPassant.., isPieceUnderAttackByLessValuablePiece
+ * 
+ * 1. Get absolute score for a all boards (candidateBoards, white)
+ * 2. Get best board i.e. board having the highest/best score (from 1.)
+ * 3. score: threat score, max allowed moves, min opponent moves...
+ * 4. getNextBoardsForASelectedBoard (next moves, allowedMove->board) 
+ * 5. threat score for candidate boards -> ThreatScores
+ * 
  */
 //-> select the highest point functioned candidate board
 
+export function getAbsoluteScoreForAllCandidateboards(candidateBoards, white) {
+
+}
+
+export function getBestCandidateboard(candidateBoards, white) {
+  
+}
+
+export function getNextBoardForASelectedBoard(board, white) {
+  
+}
 
 /**
    *

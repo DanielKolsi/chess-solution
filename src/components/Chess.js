@@ -119,12 +119,13 @@ class Chess extends React.Component {
       );
 
     // TODO: check the purpose of this call as maxIdx is redefined afterwards
-    const staleMateAvoidingMaxIdx = this.getMaxMovesIndexWhileNotAllowingStalemate(
-      white,
-      candidateBoards,
-      allowedMoves,
-      numberOfPossibleNextMoves
-    );
+    const staleMateAvoidingMaxIdx =
+      this.getMaxMovesIndexWhileNotAllowingStalemate(
+        white,
+        candidateBoards,
+        allowedMoves,
+        numberOfPossibleNextMoves
+      );
 
     // this will be the final selected move for white / black determined by the heuristics / strategy
     const selectedMove = Heuristics.getSelectedMove(
@@ -154,7 +155,7 @@ class Chess extends React.Component {
       );
     }
 
-    this.handleKingMovementAndPromotion(
+    this.setStatesOfKingMovementAndPromotion(
       pieceNumberId,
       pieces,
       movesStringFromSelectedMove,
@@ -179,6 +180,23 @@ class Chess extends React.Component {
       }
     );
   } // nextTurn
+
+  prevTurn() {
+    this.setState(
+      {
+        currentBoardSquares: this.state.previousBoards.pop(),
+        white: !this.state.white,
+        nextTurn: this.state.nextTurn - 1,
+      },
+      function () {
+        if (this.state.DEBUG) {
+          console.log(
+            "state update complete, prevTurn : " + this.state.prevTurn
+          );
+        }
+      }
+    );
+  }
 
   // board needs to be constructed before pieces are added
   initBoard() {
@@ -242,7 +260,7 @@ class Chess extends React.Component {
    * @param {*} board
    * @returns
    */
-   getCandidateMovesWhite(board) {
+  getCandidateMovesWhite(board) {
     let candidateMovesWhite = [];
     let castlingLeftAddedAsCandidateMove = false;
     let castlingRightAddedAsCandidateMove = false;
@@ -253,13 +271,13 @@ class Chess extends React.Component {
       if (piece === null) {
         continue; // piece has been e.g. eaten
       }
-      if (piece.white === false) continue; // it was a black piece...
+      if (!piece.white) continue; // it was a black piece...
 
       let candidateMoves = this.getCandidateMovesForPiece(piece, board);
 
       if (
         board[CONSTANTS.whiteKingId].piece !== null &&
-        this.state.whiteKingMoved === false // it's OK to have only one variable in state for 'whiteKingMoved', as it corresponds the real history i.e. squares (the chosen previous move)
+        !this.state.whiteKingMoved // it's OK to have only one variable in state for 'whiteKingMoved', as it corresponds the real history i.e. squares (the chosen previous move)
       ) {
         if (
           !castlingLeftAddedAsCandidateMove &&
@@ -331,7 +349,7 @@ class Chess extends React.Component {
       if (piece === null) {
         continue; // piece has been e.g. eaten
       }
-      if (piece.white === true) continue; // it was white!
+      if (piece.white) continue; // it was white!
 
       const candidateMoves = this.getCandidateMovesForPiece(piece, board);
 
@@ -341,7 +359,7 @@ class Chess extends React.Component {
 
       if (
         board[CONSTANTS.blackKingId].piece !== null &&
-        this.state.blackKingMoved === false
+        !this.state.blackKingMoved
       ) {
         if (
           !castlingLeftAdded &&
@@ -389,14 +407,13 @@ class Chess extends React.Component {
     return candidateCastlingMovesForBlack;
   }
 
-
   /**
    *
    * @param {*} allowedMoves
    * @param {*} white
    * @returns
    */
-   getCandidateBoards(allowedMoves, board, white) {
+  getCandidateBoards(allowedMoves, board, white) {
     let candidateBoards = [];
     // board will be stored to boards array (state)
     //Lodash deep clone is required, as the array contains objects (i.e. pieces)
@@ -418,7 +435,7 @@ class Chess extends React.Component {
    * @param {*} board
    * @returns
    */
-   getCandidateMovesForBoard(white, board) {
+  getCandidateMovesForBoard(white, board) {
     let candidateMoves = [];
     if (white) {
       candidateMoves = this.getCandidateMovesWhite(board);
@@ -533,8 +550,6 @@ class Chess extends React.Component {
     return board;
   }
 
-
-
   // eof candidate moves -  move allowances start from here
 
   /**
@@ -565,8 +580,6 @@ class Chess extends React.Component {
     }
   }
 
-  
-
   /**
    *
    * @param {*} white
@@ -592,7 +605,6 @@ class Chess extends React.Component {
     console.log("allowedmoves | " + white + " || " + allowedMoves);
     return allowedMoves;
   }
-
 
   /**
    *
@@ -1051,69 +1063,6 @@ class Chess extends React.Component {
       return true; // game over
     }
   }
-  prevTurn() {
-    this.setState(
-      {
-        currentBoardSquares: this.state.previousBoards.pop(),
-        white: !this.state.white,
-        nextTurn: this.state.nextTurn - 1,
-      },
-      function () {
-        if (this.state.DEBUG) {
-          console.log(
-            "state update complete, prevTurn : " + this.state.prevTurn
-          );
-        }
-      }
-    );
-  }
-
-  /**
-   *
-   * @param {*} pieceNumberId
-   * @param {*} pieces
-   * @param {*} movesStringFromSelectedMove
-   * @param {*} white
-   */
-  handleKingMovementAndPromotion(
-    pieceNumberId,
-    pieces,
-    movesStringFromSelectedMove,
-    white
-  ) {
-    /* eslint-disable */
-    if (
-      pieceNumberId == CONSTANTS.whiteKingId ||
-      pieceNumberId == CONSTANTS.blackKingId
-    ) {
-      /* eslint-enable */
-      // king moved
-      pieces[pieceNumberId].currentSquare = parseInt(
-        movesStringFromSelectedMove[1],
-        10
-      );
-    } else if (
-      white &&
-      pieceNumberId > CONSTANTS.whiteRightRookId &&
-      pieceNumberId < 70
-    ) {
-      // white promoted queen = [63, 69]
-      console.error("UPDATE next promoted WHITE queen number!!");
-      this.setState({
-        promotedWhiteQueenNumber: ++this.state.promotedWhiteQueenNumber,
-      });
-    } else if (
-      !white &&
-      pieceNumberId < 0 &&
-      pieceNumberId <= CONSTANTS.BLACK_QUEEN_CODE
-    ) {
-      this.setState({
-        promotedBlackQueenNumber: --this.state.promotedBlackQueenNumber,
-      });
-    } // TODO: add underpromotion piece number counters! (white & black)
-  }
-
-  
 
   /**
    *
@@ -1265,6 +1214,7 @@ class Chess extends React.Component {
     return allowedOpponentMoves.length;
   }
 
+  // special moves: king, castling, promotion...
   // castling won't be allowed if the king has moved already!
   /**
    *
@@ -1294,6 +1244,53 @@ class Chess extends React.Component {
         break;
     }
   }
+
+  
+  /**
+   *
+   * @param {*} pieceNumberId
+   * @param {*} pieces
+   * @param {*} movesStringFromSelectedMove
+   * @param {*} white
+   */
+  setStatesOfKingMovementAndPromotion(
+    pieceNumberId,
+    pieces,
+    movesStringFromSelectedMove,
+    white
+  ) {
+    /* eslint-disable */
+    if (
+      pieceNumberId == CONSTANTS.whiteKingId ||
+      pieceNumberId == CONSTANTS.blackKingId
+    ) {
+      /* eslint-enable */
+      // king moved
+      pieces[pieceNumberId].currentSquare = parseInt(
+        movesStringFromSelectedMove[1],
+        10
+      );
+    } else if (
+      white &&
+      pieceNumberId > CONSTANTS.whiteRightRookId &&
+      pieceNumberId < 70
+    ) {
+      // white promoted queen = [63, 69]
+      console.error("UPDATE next promoted WHITE queen number!!");
+      this.setState({
+        promotedWhiteQueenNumber: ++this.state.promotedWhiteQueenNumber,
+      });
+    } else if (
+      !white &&
+      pieceNumberId < 0 &&
+      pieceNumberId <= CONSTANTS.BLACK_QUEEN_CODE
+    ) {
+      this.setState({
+        promotedBlackQueenNumber: --this.state.promotedBlackQueenNumber,
+      });
+    } // TODO: add underpromotion piece number counters! (white & black)
+  }
+
   render() {
     let board = this.state.currentBoardSquares.map((square, index) => {
       return (

@@ -100,7 +100,7 @@ export function getOpponentBlackPawnThreatScoreAgainstMe(piece, board) {
   if (
     board[pos].col > 0 &&
     board[upLeft].piece !== null &&
-    board[upLeft].piece.white === true
+    board[upLeft].piece.white
   ) {
     let leftValue = board[upLeft].piece.value;
     threatScore += leftValue;
@@ -108,7 +108,7 @@ export function getOpponentBlackPawnThreatScoreAgainstMe(piece, board) {
   if (
     board[pos].col < 7 &&
     board[upRight].piece !== null &&
-    board[upRight].piece.white === true
+    board[upRight].piece.white
   ) {
     let rightValue = board[upRight].piece.value;
     threatScore += rightValue;
