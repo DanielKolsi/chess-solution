@@ -1,6 +1,6 @@
 import React from "react";
 
-class PrevTurn extends React.Component {
+class PrevPly extends React.Component {
   constructor(props) {
     super(props);
 
@@ -12,10 +12,10 @@ class PrevTurn extends React.Component {
 
     if (this.props.next === 2) {
       // we cannot go behind the first move, i.e. when 'next' will be 2
-      this.props.prevTurn(); // calling passed function prevTurn
+      this.props.prevPly(); // calling passed function prevTurn
       document.getElementById("previous").disabled = true;
     } else {
-      this.props.prevTurn(); // calling passed function prevTurn
+      this.props.prevPly(); // calling passed function prevTurn
     }
   }
 
@@ -25,7 +25,7 @@ class PrevTurn extends React.Component {
         <form onSubmit={this.handleSubmit}>
           <br></br>
           <button id="previous" type="submit">
-            Go back to previous turn{" "}
+            Go back to previous ply.{" "}
           </button>
         </form>
       </div>
@@ -33,4 +33,4 @@ class PrevTurn extends React.Component {
   }
 }
 
-export default PrevTurn;
+export default PrevPly;

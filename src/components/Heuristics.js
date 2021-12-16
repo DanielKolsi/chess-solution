@@ -4,7 +4,7 @@ import * as HelpFunctions from "./HelpFunctions";
 import * as CheckFunctions from "./CheckFunctions";
 
 /**
- *
+ * No state setting.
  *
  * Recursive threat scores for both. Same heuristics for both. Allowed moves vs. threat scores vs. check/(good)defense.
  *
