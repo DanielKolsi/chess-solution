@@ -24,6 +24,7 @@ class Chess extends React.Component {
     super(props);
     this.state = {
       DEBUG: false,
+      arrayOfCandidateBoards: [],
       white: CONSTANTS.WHITE_STARTS, // white starts by default
       currentBoardSquares: [], // current board squares; all next turn possibilities will create a separate (candidate) board
       candidateBoards: [], // each board has different squares, there are as many boards as there are allowed move possibilities per a turn
@@ -104,10 +105,10 @@ class Chess extends React.Component {
       );
     }
 
-    /*let plies = 3;
-    let boards = this.getGameTreeBoards(plies, board, white);
-    console.log("number of boards = " + boards.length + " plies="+plies);
-    */
+    /*let plies = 4;
+    let boardsArray = this.getGameTreeBoardsArray(plies, board, white);
+    console.log("boards array length = " + boardsArray.length);
+*/
 
     candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
     const numberOfPossibleNextMoves = this.getNumberOfAllowedNextMovesForBoard(
@@ -431,35 +432,55 @@ class Chess extends React.Component {
    * @param {*} white
    * @returns
    */
-  getNextMoveCandidateBoardsForABoard(board, white) {
+  getNextMoveCandidateBoardsForABoard(board, white, plieNumber) {
     const candidateMoves = this.getCandidateMovesForBoard(white, board);
     const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
     const candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
     return candidateBoards;
   }
-  
+
   /**
    * Recursive function. JavaScript tree data structure.
-   * @param {*} numberOfPlies 
-   * @param {*} board 
-   * @param {*} white 
-   * @returns 
+   * @param {*} numberOfPlies
+   * @param {*} board
+   * @param {*} white
+   * @returns
    */
-  getGameTreeBoards(numberOfPlies, board, white) {
+  getGameTreeBoardsArray(numberOfPlies, board, white) {
     // return array of maps of candidateboards -> calculate score to them (score tree)
-    console.log("numberOfPlies="+numberOfPlies + " white = " + white);
+    console.log("numberOfPlies=" + numberOfPlies + " white = " + white);
+    let { arrayOfCandidateBoards } = this.state;
     if (numberOfPlies === 1) {
-      return this.getNextMoveCandidateBoardsForABoard(board, white);
-    } else {
-      let candidateBoards = this.getNextMoveCandidateBoardsForABoard(board, white);
-      
+      let candidateBoards = this.getNextMoveCandidateBoardsForABoard(
+        board,
+        white,
+        numberOfPlies
+      );
+      arrayOfCandidateBoards.push(candidateBoards);
+      return arrayOfCandidateBoards;
+    } else if (numberOfPlies > 1) {
+      let candidateBoards = this.getNextMoveCandidateBoardsForABoard(
+        board,
+        white,
+        numberOfPlies
+      );
+
       for (let n = 0; n < candidateBoards.length; n++) {
-        let boards = this.getNextMoveCandidateBoardsForABoard(candidateBoards[n], !white);
-        console.log("boards.length = " + boards.legnth +  " plies = " + numberOfPlies);
-        
-        return this.getGameTreeBoards(numberOfPlies - 1, candidateBoards[n], !white); 
-      }      
+        let boards = this.getGameTreeBoardsArray(
+          numberOfPlies - 1,
+          candidateBoards[n],
+          !white
+        );
+        console.log(
+          "pushing boards n = " +
+            n +
+            " arrayOfCandidateBoards length = " +
+            arrayOfCandidateBoards.length
+        );
+        arrayOfCandidateBoards.push(boards);
+      }
     }
+    return arrayOfCandidateBoards;
   }
 
   /**
@@ -470,6 +491,7 @@ class Chess extends React.Component {
    */
   getCandidateBoards(allowedMoves, board, white) {
     let candidateBoards = [];
+
     // board will be stored to boards array (state)
     //Lodash deep clone is required, as the array contains objects (i.e. pieces)
     //https://medium.com/javascript-in-plain-english/how-to-deep-copy-objects-and-arrays-in-javascript-7c911359b089
@@ -482,6 +504,7 @@ class Chess extends React.Component {
         white
       ); // check that all kind of special moves are dealt as well (e.g. castling and its restrictiones)
     }
+    console.log("candidateBoards L = " + candidateBoards.length);
     return candidateBoards;
   }
   /**
@@ -657,7 +680,14 @@ class Chess extends React.Component {
       allowedMoves,
       white
     );
-    console.log("allowedmoves | " + white + " || " + allowedMoves);
+    console.log(
+      "allowedmoves | " +
+        white +
+        " || " +
+        allowedMoves +
+        " length = " +
+        allowedMoves.length
+    );
     return allowedMoves;
   }
 
@@ -691,12 +721,16 @@ class Chess extends React.Component {
    * @return {[type]}                    allowedMoves
    */
   getAllowedMovesWhite(board, candidateMovesWhite, boardIdx) {
-    const { candidateBoards, pieces } = this.state;
+    const { candidateBoards } = this.state;
     let allowedMoves = []; // contains only the candidate moves that were eventually verified to be allowed
 
-    for (let i = 0; i < candidateMovesWhite.length; i++) {
-      let whiteKingPosition = pieces[60].currentSquare;
+    const whiteKingPosition = this.getKingPosition(board, true);
+    console.log("white king pos = " + whiteKingPosition);
 
+    const CASTLING_WHITE_QUEEN_SIDE_NOT_ALLOWED_SQUARES = /.60|.59|.58|.57/g; // numbers of the not-allowed squares
+    const CASTLING_WHITE_KING_SIDE_NOT_ALLOWED_SQUARES = /.60|.61|.62/g; // numbers of the not-allowed squares
+
+    for (let i = 0; i < candidateMovesWhite.length; i++) {
       const whiteCandidateMove = candidateMovesWhite[i];
       let moves = HelpFunctions.getMovesString(candidateMovesWhite[i]);
 
@@ -718,12 +752,13 @@ class Chess extends React.Component {
         let blackCandidateMoves = this.getCandidateMovesBlack(board);
 
         let allowLeftCastling = true;
-        const re = /.60|.59|.58|.57/g; // numbers of the not-allowed squares
 
         for (let i = 0; i < blackCandidateMoves.length; i++) {
           const canditMove = blackCandidateMoves[i];
           //console.log('castling check: black move match: ' + canditMove + ' re = ' + re);
-          let match = canditMove.match(re);
+          let match = canditMove.match(
+            CASTLING_WHITE_QUEEN_SIDE_NOT_ALLOWED_SQUARES
+          );
 
           if (match !== null) {
             console.log(
@@ -746,11 +781,13 @@ class Chess extends React.Component {
       } else if (delim === CONSTANTS.CASTLING_KING_SIDE) {
         let blackCandidateMoves = this.getCandidateMovesBlack(board);
         let allowKingSideCastling = true;
-        const re = /.60|.61|.62/g; // numbers of the not-allowed squares
 
         for (let i = 0; i < blackCandidateMoves.length; i++) {
           const canditMove = blackCandidateMoves[i];
-          if (canditMove.match(re) !== null) {
+          if (
+            canditMove.match(CASTLING_WHITE_KING_SIDE_NOT_ALLOWED_SQUARES) !==
+            null
+          ) {
             allowKingSideCastling = false;
             console.log(
               "castling check: right castling NOT allowed, candit =" +
@@ -765,20 +802,21 @@ class Chess extends React.Component {
         continue;
       }
 
-      let whiteKingMoveCandidate = false;
+      const src = parseInt(moves[0], 10);
+      const dst = parseInt(moves[1], 10);
+      let whiteKingMoveCandidate = whiteKingPosition;
+
       // eslint-disable-next-line
-      if (moves[0] == whiteKingPosition) {
+      if (src == whiteKingPosition) {
         // white king move candidate!
-        whiteKingPosition = moves[1];
-        whiteKingMoveCandidate = true;
+        whiteKingMoveCandidate = dst;
       }
 
       if (
         this.isWhiteMoveAllowed(
           board,
-          whiteKingPosition,
-          whiteCandidateMove,
-          whiteKingMoveCandidate
+          whiteKingMoveCandidate,
+          whiteCandidateMove
         )
       ) {
         allowedMoves.push(whiteCandidateMove);
@@ -797,9 +835,12 @@ class Chess extends React.Component {
    */
   getAllowedMovesBlack(board, candidateMovesBlack, boardIdx) {
     let allowedMoves = []; // contains only the candidate moves that were eventually verified to be allowed
-    const { candidateBoards, pieces } = this.state;
-    //const DLM = CONSTANTS.defaultDelim;
-    const blackKingPosition = pieces[4].currentSquare;
+    const { candidateBoards } = this.state;
+
+    const blackKingPosition = this.getKingPosition(board, false);
+    const CASTLING_BLACK_QUEEN_SIDE_NOT_ALLOWED_SQUARES = /1|2|3|4/g; // numbers of the not-allowed squares
+    const CASTLING_BLACK_KING_SIDE_NOT_ALLOWED_SQUARES = /4|5|6/g; // numbers of the not-allowed squares
+    console.log("black king pos = " + blackKingPosition);
 
     for (let i = 0; i < candidateMovesBlack.length; i++) {
       const blackCandidateMove = candidateMovesBlack[i];
@@ -822,7 +863,6 @@ class Chess extends React.Component {
       } else if (blackCandidateMove.includes(CONSTANTS.CASTLING_QUEEN_SIDE)) {
         const whiteCandidateMoves = this.getCandidateMovesWhite(board);
         let allowLeftCastling = true;
-        const CASTLING_BLACK_QUEEN_SIDE_NOT_ALLOWED_SQUARES = /1|2|3|4/g; // numbers of the not-allowed squares
 
         for (let i = 0; i < whiteCandidateMoves.length; i++) {
           const canditMove = whiteCandidateMoves[i].split(delim);
@@ -845,7 +885,6 @@ class Chess extends React.Component {
       } else if (blackCandidateMove.includes(CONSTANTS.CASTLING_KING_SIDE)) {
         const whiteCandidateMoves = this.getCandidateMovesWhite(board);
         let allowRightCastling = true;
-        const CASTLING_BLACK_KING_SIDE_NOT_ALLOWED_SQUARES = /4|5|6/g; // numbers of the not-allowed squares
 
         for (let i = 0; i < whiteCandidateMoves.length; i++) {
           const canditMove = whiteCandidateMoves[i].split(delim);
@@ -1264,6 +1303,23 @@ class Chess extends React.Component {
       );
     }
     return allowedOpponentMoves.length;
+  }
+
+  /**
+   * This function is needed to get the king position when state update (pieces) hasn't happened.
+   * @param {*} board
+   * @param {*} white
+   */
+  getKingPosition(board, white) {
+    for (let i = 0; i < board.length; ++i) {
+      if (board[i].piece === null) continue;
+
+      if (white && board[i].piece.value === CONSTANTS.WHITE_KING_CODE) {
+        return i;
+      } else if (!white && board[i].piece.value === CONSTANTS.BLACK_KING_CODE) {
+        return i;
+      }
+    }
   }
 
   // functions that set state
