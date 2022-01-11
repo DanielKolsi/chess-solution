@@ -105,10 +105,35 @@ class Chess extends React.Component {
       );
     }
 
-    /*let plies = 4;
+    /*let plies = 3; //4, (24,25,24,24),  97+4 = 101
     let boardsArray = this.getGameTreeBoardsArray(plies, board, white);
     console.log("boards array length = " + boardsArray.length);
 */
+    /*let arrayOfCandidateBoards = [];
+    let candidateBoards2 = this.getNextMoveCandidateBoardsForABoard(board, true, 1);
+    arrayOfCandidateBoards.push(candidateBoards2);
+
+    for (let i = 0; i < candidateBoards2.length; ++i) {
+      let candidateBoards = this.getNextMoveCandidateBoardsForABoard(
+        candidateBoards2[i], false, 1
+      );
+      arrayOfCandidateBoards.push(candidateBoards);
+      for (let j = 0; j < candidateBoards.length; ++j) {
+        let candidateBoards3 = this.getNextMoveCandidateBoardsForABoard(
+          candidateBoards[j], true, 1
+        );
+        arrayOfCandidateBoards.push(candidateBoards3);
+      }
+    }
+
+    for (let i = 0; i < arrayOfCandidateBoards.length; ++i) {
+      let array = arrayOfCandidateBoards[i];
+
+      for (let j = 0; j < array.length; ++j) {
+        board = array[j];
+        console.log("  board j = " + j);
+      }
+    }*/
 
     candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
     const numberOfPossibleNextMoves = this.getNumberOfAllowedNextMovesForBoard(
@@ -449,15 +474,21 @@ class Chess extends React.Component {
   getGameTreeBoardsArray(numberOfPlies, board, white) {
     // return array of maps of candidateboards -> calculate score to them (score tree)
     console.log("numberOfPlies=" + numberOfPlies + " white = " + white);
-    let { arrayOfCandidateBoards } = this.state;
+    
+    
+    let {
+      arrayOfCandidateBoards  
+    } = this.state;
+
     if (numberOfPlies === 1) {
       let candidateBoards = this.getNextMoveCandidateBoardsForABoard(
         board,
         white,
         numberOfPlies
       );
-      arrayOfCandidateBoards.push(candidateBoards);
-      return arrayOfCandidateBoards;
+      //console.log("PUSHING FOR 1");
+      //arrayOfCandidateBoards.push(candidateBoards);
+      return candidateBoards;
     } else if (numberOfPlies > 1) {
       let candidateBoards = this.getNextMoveCandidateBoardsForABoard(
         board,
@@ -471,12 +502,18 @@ class Chess extends React.Component {
           candidateBoards[n],
           !white
         );
-        console.log(
+        /*console.log(
           "pushing boards n = " +
             n +
-            " arrayOfCandidateBoards length = " +
+            " arrayOfCandidateBoards length BEFORE PUSH = " +
             arrayOfCandidateBoards.length
         );
+
+        
+        console.log(
+          " arrayOfCandidateBoards length AFTER PUSH = " +
+            arrayOfCandidateBoards.length
+        );*/
         arrayOfCandidateBoards.push(boards);
       }
     }
@@ -504,7 +541,7 @@ class Chess extends React.Component {
         white
       ); // check that all kind of special moves are dealt as well (e.g. castling and its restrictiones)
     }
-    console.log("candidateBoards L = " + candidateBoards.length);
+    //console.log("candidateBoards L = " + candidateBoards.length);
     return candidateBoards;
   }
   /**
@@ -725,7 +762,7 @@ class Chess extends React.Component {
     let allowedMoves = []; // contains only the candidate moves that were eventually verified to be allowed
 
     const whiteKingPosition = this.getKingPosition(board, true);
-    console.log("white king pos = " + whiteKingPosition);
+    //console.log("white king pos = " + whiteKingPosition);
 
     const CASTLING_WHITE_QUEEN_SIDE_NOT_ALLOWED_SQUARES = /.60|.59|.58|.57/g; // numbers of the not-allowed squares
     const CASTLING_WHITE_KING_SIDE_NOT_ALLOWED_SQUARES = /.60|.61|.62/g; // numbers of the not-allowed squares
@@ -840,7 +877,7 @@ class Chess extends React.Component {
     const blackKingPosition = this.getKingPosition(board, false);
     const CASTLING_BLACK_QUEEN_SIDE_NOT_ALLOWED_SQUARES = /1|2|3|4/g; // numbers of the not-allowed squares
     const CASTLING_BLACK_KING_SIDE_NOT_ALLOWED_SQUARES = /4|5|6/g; // numbers of the not-allowed squares
-    console.log("black king pos = " + blackKingPosition);
+    //console.log("black king pos = " + blackKingPosition);
 
     for (let i = 0; i < candidateMovesBlack.length; i++) {
       const blackCandidateMove = candidateMovesBlack[i];

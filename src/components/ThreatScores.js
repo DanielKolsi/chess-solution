@@ -9,9 +9,7 @@ import CONSTANTS from "../config/constants";
   let threatScore = threatScoreForCandidateBoards[0];
   let optimalThreatScoreIdx = 0;
 
-  console.log(
-    " number of candit boards = " + threatScoreForCandidateBoards.length
-  );
+  //console.log(" number of candit boards = " + threatScoreForCandidateBoards.length);
   for (let i = 0; i < threatScoreForCandidateBoards.length; ++i) {
     if ((white && threatScoreForCandidateBoards[i] < threatScore) || (!white && threatScoreForCandidateBoards[i] > threatScore)) {
       threatScore = threatScoreForCandidateBoards[i];
@@ -40,14 +38,14 @@ import CONSTANTS from "../config/constants";
       } else if (!white && threatScoreForCandidateBoards[i] > 0) {
         console.log("ERROR: POSITIVE THREAT SCORE FOR BLACK.");
       }
-      console.log(
+      /*console.log(
         "Threat score for candidate board. Index = " +
           i +
           " || Score = " +
           threatScoreForCandidateBoards[i] +
           " || White = " +
           white
-      );
+      );*/
     }
 
     return threatScoreForCandidateBoards;
