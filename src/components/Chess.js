@@ -79,6 +79,46 @@ class Chess extends React.Component {
   }*/
 
   /**
+   *
+   * @param {*} arrayOfCandidateBoards
+   * @param {*} white
+   */
+  addCandidateBoardsForTheNextPlyToArrayOfCandidateBoards(
+    arrayOfCandidateBoards,
+    board,
+    white
+  ) {
+    let stack = [];
+
+    let numberOfPlies = 3;
+    let nextMoveCandidateBoards = [];
+    while (numberOfPlies > 0) {
+      if (stack.length == 0) {
+        nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
+          board,
+          white,
+          1
+        ); // TODO: if stack !empty, take this from the stack
+        arrayOfCandidateBoards.push(nextMoveCandidateBoards);
+        stack.push(nextMoveCandidateBoards);
+      }
+
+      for (let i = 0; i < stack.pop().length; ++i) {
+        let candidateBoards = this.getNextMoveCandidateBoardsForABoard(
+          nextMoveCandidateBoards[i],
+          !white,
+          1
+        );
+        stack.push(candidateBoards);
+        // add candidateBoards to stack, then pop it from there for the next  nextMoveCandidateBoards for the next iteration
+        arrayOfCandidateBoards.push(candidateBoards);
+      }
+      numberOfPlies--;
+    }
+    return arrayOfCandidateBoards;
+  }
+
+  /**
    * Does set state.
    * @returns
    */
@@ -109,13 +149,22 @@ class Chess extends React.Component {
     let boardsArray = this.getGameTreeBoardsArray(plies, board, white);
     console.log("boards array length = " + boardsArray.length);
 */
+
+    // TODO: iterative implementation -> make this as a method to return the candidate boards
+    // for a board and put them to an array of candit boards
     /*let arrayOfCandidateBoards = [];
-    let candidateBoards2 = this.getNextMoveCandidateBoardsForABoard(board, true, 1);
+    let candidateBoards2 = this.getNextMoveCandidateBoardsForABoard(
+      board,
+      true,
+      1
+    );
     arrayOfCandidateBoards.push(candidateBoards2);
 
     for (let i = 0; i < candidateBoards2.length; ++i) {
       let candidateBoards = this.getNextMoveCandidateBoardsForABoard(
-        candidateBoards2[i], false, 1
+        candidateBoards2[i],
+        false,
+        1
       );
       arrayOfCandidateBoards.push(candidateBoards);
       for (let j = 0; j < candidateBoards.length; ++j) {
@@ -133,8 +182,8 @@ class Chess extends React.Component {
         board = array[j];
         console.log("  board j = " + j);
       }
-    }*/
-
+    }
+*/
     candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
     const numberOfPossibleNextMoves = this.getNumberOfAllowedNextMovesForBoard(
       candidateBoards,
@@ -474,11 +523,8 @@ class Chess extends React.Component {
   getGameTreeBoardsArray(numberOfPlies, board, white) {
     // return array of maps of candidateboards -> calculate score to them (score tree)
     console.log("numberOfPlies=" + numberOfPlies + " white = " + white);
-    
-    
-    let {
-      arrayOfCandidateBoards  
-    } = this.state;
+
+    let { arrayOfCandidateBoards } = this.state;
 
     if (numberOfPlies === 1) {
       let candidateBoards = this.getNextMoveCandidateBoardsForABoard(
@@ -488,6 +534,7 @@ class Chess extends React.Component {
       );
       //console.log("PUSHING FOR 1");
       //arrayOfCandidateBoards.push(candidateBoards);
+
       return candidateBoards;
     } else if (numberOfPlies > 1) {
       let candidateBoards = this.getNextMoveCandidateBoardsForABoard(
@@ -496,7 +543,7 @@ class Chess extends React.Component {
         numberOfPlies
       );
 
-      for (let n = 0; n < candidateBoards.length; n++) {
+      for (let n = 0; n < candidateBoards.length; ++n) {
         let boards = this.getGameTreeBoardsArray(
           numberOfPlies - 1,
           candidateBoards[n],
@@ -514,7 +561,11 @@ class Chess extends React.Component {
           " arrayOfCandidateBoards length AFTER PUSH = " +
             arrayOfCandidateBoards.length
         );*/
+        if (boards.length > 50) continue;
         arrayOfCandidateBoards.push(boards);
+        if (boards.length > 25) {
+          console.log("length exceeded = " + boards.length);
+        }
       }
     }
     return arrayOfCandidateBoards;
