@@ -79,19 +79,16 @@ class Chess extends React.Component {
   }*/
 
   /**
-   *
+   * Iterative method for getting all possible moves (numberOfPlies = deep)
    * @param {*} arrayOfCandidateBoards
-   * @param {*} white
+   * @param {*} white 1. white 2. black 3. white, 4. black, etc.
    */
-  addCandidateBoardsForTheNextPlyToArrayOfCandidateBoards(
-    arrayOfCandidateBoards,
-    board,
-    white
-  ) {
+  addCandidateBoardsForTheNextPlyToArrayOfCandidateBoards(board, white) {
     let stack = [];
-
     let numberOfPlies = 3;
+    let arrayOfCandidateBoards = [];
     let nextMoveCandidateBoards = [];
+
     while (numberOfPlies > 0) {
       if (stack.length == 0) {
         nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
@@ -103,17 +100,22 @@ class Chess extends React.Component {
         stack.push(nextMoveCandidateBoards);
       }
 
-      for (let i = 0; i < stack.pop().length; ++i) {
-        let candidateBoards = this.getNextMoveCandidateBoardsForABoard(
-          nextMoveCandidateBoards[i],
-          !white,
-          1
-        );
-        stack.push(candidateBoards);
-        // add candidateBoards to stack, then pop it from there for the next  nextMoveCandidateBoards for the next iteration
-        arrayOfCandidateBoards.push(candidateBoards);
+      while (stack.length > 0 && numberOfPlies > 0) {
+        nextMoveCandidateBoards = stack.pop();
+        for (let i = 0; i < nextMoveCandidateBoards.length; ++i) {
+          let candidateBoards = this.getNextMoveCandidateBoardsForABoard(
+            nextMoveCandidateBoards[i],
+            !white,
+            1
+          );
+          if (numberOfPlies > 0) {
+            stack.push(candidateBoards);
+            numberOfPlies--;
+          }
+          // add candidateBoards to stack, then pop it from there for the next  nextMoveCandidateBoards for the next iteration
+          arrayOfCandidateBoards.push(candidateBoards);
+        }
       }
-      numberOfPlies--;
     }
     return arrayOfCandidateBoards;
   }
@@ -144,7 +146,13 @@ class Chess extends React.Component {
         " WHITE = " + white + " allowed moves:" + allowedMoves.join("|")
       );
     }
-
+/*
+    let arrayOfCandidateBoards =
+      this.addCandidateBoardsForTheNextPlyToArrayOfCandidateBoards(
+        board,
+        white
+      );
+*/
     /*let plies = 3; //4, (24,25,24,24),  97+4 = 101
     let boardsArray = this.getGameTreeBoardsArray(plies, board, white);
     console.log("boards array length = " + boardsArray.length);
@@ -153,37 +161,44 @@ class Chess extends React.Component {
     // TODO: iterative implementation -> make this as a method to return the candidate boards
     // for a board and put them to an array of candit boards
     /*let arrayOfCandidateBoards = [];
-    let candidateBoards2 = this.getNextMoveCandidateBoardsForABoard(
+    let firstPlyeCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
       board,
       true,
       1
-    );
-    arrayOfCandidateBoards.push(candidateBoards2);
-
-    for (let i = 0; i < candidateBoards2.length; ++i) {
-      let candidateBoards = this.getNextMoveCandidateBoardsForABoard(
-        candidateBoards2[i],
+    ); // 4
+    
+    //arrayOfCandidateBoards.push(firstPlyeCandidateBoards);
+    for (let i = 0; i < firstPlyeCandidateBoards.length; ++i) { // 4
+      let secondPlyeCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
+        firstPlyeCandidateBoards[i],
         false,
         1
-      );
-      arrayOfCandidateBoards.push(candidateBoards);
-      for (let j = 0; j < candidateBoards.length; ++j) {
-        let candidateBoards3 = this.getNextMoveCandidateBoardsForABoard(
-          candidateBoards[j], true, 1
+      ); // 24, 25, 24, 24
+      arrayOfCandidateBoards.push("I="+i); // this are all the first level moves (in this case only 4 possibilities!) -> give score for selecting the best I
+      for (let j = 0; j < secondPlyeCandidateBoards.length; ++j) {
+        let thirdPlyeCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
+          secondPlyeCandidateBoards[j],
+          true,
+          1
         );
-        arrayOfCandidateBoards.push(candidateBoards3);
+        arrayOfCandidateBoards.push("J="+j);
+        console.log("3rd length = " + thirdPlyeCandidateBoards.length);
+        for (let k = 0; k < thirdPlyeCandidateBoards.length; ++k) { // this should take: 2 -> 24..49 
+          let fourthPlyeCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
+            thirdPlyeCandidateBoards[k],
+            false,
+            1
+          );
+          arrayOfCandidateBoards.push(fourthPlyeCandidateBoards);
+        }
+      
       }
-    }
 
-    for (let i = 0; i < arrayOfCandidateBoards.length; ++i) {
-      let array = arrayOfCandidateBoards[i];
-
-      for (let j = 0; j < array.length; ++j) {
-        board = array[j];
-        console.log("  board j = " + j);
-      }
+      //arrayOfCandidateBoards.push(secondPlyCandidateBoards);
     }
+    console.log("finished");
 */
+ 
     candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
     const numberOfPossibleNextMoves = this.getNumberOfAllowedNextMovesForBoard(
       candidateBoards,
