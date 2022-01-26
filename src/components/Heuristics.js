@@ -10,36 +10,58 @@ import * as CheckFunctions from "./CheckFunctions";
  *
  * add heuristics: isPieceDefended, isPieceThreatening, isPieceCapturingValuable...isPieceDeliveringCheck..., pawnMovesTwo
  * promotion, castling...enPassant.., isPieceUnderAttackByLessValuablePiece
- * 
+ *
  * 1. Get absolute score for a all boards (candidateBoards, white)
  * 2. Get best board i.e. board having the highest/best score (from 1.)
  * 3. score: threat score, max allowed moves, min opponent moves...
- * 4. getNextBoardsForASelectedBoard (next moves, allowedMove->board) 
+ * 4. getNextBoardsForASelectedBoard (next moves, allowedMove->board)
  * 5. threat score for candidate boards -> ThreatScores
- * 
+ *
  */
 //-> select the highest point functioned candidate board
 
-export function getAbsoluteScoreForAllCandidateboards(candidateBoards, white) {
-
+/**
+ * This superarray contains arrays and eacy array contains scores of boards. Each board thus maps to
+ * one array from superarray, and superarray contains as many arrays as there are possible moves (e.g. for white).
+ *
+ * Each array has its max scores, and the array number (which correspond the candidate board number) which has the
+ * highest score should be selected. That is, first we need to select max score from each array, and compare the
+ * individual array max scores, and then select the "max from the max scores" which will correspond the selected array i.e.
+ * the best candidate board that we're going to select as the best move.
+ *
+ * @param {*} arrayOfArrayOfCandidateBoardScores
+ */
+export function getCandidateBoardNumberCorrespondingMaxScore(
+  arrayOfArrayOfCandidateBoardScores
+) {
+  // index of Math.max(array)
+  let maxScoresForArrays = [];
+  for (let i = 0; i < arrayOfArrayOfCandidateBoardScores.length; i++) {    
+    let array = arrayOfArrayOfCandidateBoardScores[i];
+    maxScoresForArrays[i] = Math.max.apply(Math, array);
+  }
+  let maxArrayScore = Math.max.apply(Math, maxScoresForArrays);
+  return maxScoresForArrays.indexOf(maxArrayScore); // candidate board i.e. move number from the candidateBoards to be selected
 }
 
-export function getBestCandidateboard(candidateBoards, white) {
-  
-}
+export function getAbsoluteScoreForAllCandidateboards(candidateBoards, white) {}
 
-export function getNextBoardForASelectedBoard(board, white) {
-  
-}
+export function getBestCandidateboard(candidateBoards, white) {}
+
+export function getNextBoardForASelectedBoard(board, white) {}
 
 /**
-   *
-   * @param {*} board
-   * @param {*} allowedMoves
-   * @param {*} optimalThreatScoreBoardIndex min for white, max for black
-   * @returns
-   */
- export function getSelectedMove(board, allowedMoves, optimalThreatScoreBoardIndex) {
+ *
+ * @param {*} board
+ * @param {*} allowedMoves
+ * @param {*} optimalThreatScoreBoardIndex min for white, max for black
+ * @returns
+ */
+export function getSelectedMove(
+  board,
+  allowedMoves,
+  optimalThreatScoreBoardIndex
+) {
   // this will be the final selected move for white / black determined by the heuristics / strategy
   let selectedMove = getBestMove(board, allowedMoves);
 
@@ -52,14 +74,18 @@ export function getNextBoardForASelectedBoard(board, white) {
   }
 
   const checkMoves = CheckFunctions.getCheckMoves(allowedMoves);
-  if (checkMoves.length > 0) { // TODO, optimize the strategy, checkmoves should give POINTS to compare them with threatScore!
+  if (checkMoves.length > 0) {
+    // TODO, optimize the strategy, checkmoves should give POINTS to compare them with threatScore!
     selectedMove = checkMoves[0]; // just take the first check move
   }
   let idx = selectedMove.indexOf(allowedMoves);
-  if (idx !== optimalThreatScoreBoardIndex && optimalThreatScoreBoardIndex === 0) {
+  if (
+    idx !== optimalThreatScoreBoardIndex &&
+    optimalThreatScoreBoardIndex === 0
+  ) {
     selectedMove = allowedMoves[optimalThreatScoreBoardIndex];
   }
-  
+
   console.log(
     "sel check move = " +
       selectedMove +
@@ -77,7 +103,7 @@ export function getNextBoardForASelectedBoard(board, white) {
  * @param {*} white
  * @returns
  */
- export function getBestMove(board, allowedMoves) {
+export function getBestMove(board, allowedMoves) {
   let moveValue = 0; // value is calculated by substraction own piece value from the captured piece value
   let bestMoveIndex = -1;
 
@@ -119,7 +145,6 @@ export function getNextBoardForASelectedBoard(board, white) {
     return bestMoveIndex;
   } else return null;
 }
-
 
 /**
  * Get the candidate board which represents the best move (max points)
