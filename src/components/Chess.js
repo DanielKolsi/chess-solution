@@ -79,7 +79,7 @@ class Chess extends React.Component {
   }*/
 
   /**
-   * Iterative method for getting all possible moves (numberOfPlies = deep)
+   * Iterative method using STACK for getting all possible moves (numberOfPlies = deep)
    * @param {*} arrayOfCandidateBoards
    * @param {*} white 1. white 2. black 3. white, 4. black, etc.
    */
@@ -93,8 +93,7 @@ class Chess extends React.Component {
       if (stack.length == 0) {
         nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
           board,
-          white,
-          1
+          white          
         ); // TODO: if stack !empty, take this from the stack
         arrayOfCandidateBoards.push(nextMoveCandidateBoards);
         stack.push(nextMoveCandidateBoards);
@@ -105,8 +104,7 @@ class Chess extends React.Component {
         for (let i = 0; i < nextMoveCandidateBoards.length; ++i) {
           let candidateBoards = this.getNextMoveCandidateBoardsForABoard(
             nextMoveCandidateBoards[i],
-            !white,
-            1
+            !white            
           );
           if (numberOfPlies > 0) {
             stack.push(candidateBoards);
@@ -158,45 +156,7 @@ class Chess extends React.Component {
     console.log("boards array length = " + boardsArray.length);
 */
 
-    // TODO: iterative implementation -> make this as a method to return the candidate boards
-    // for a board and put them to an array of candit boards
-    let arrayOfCandidateBoards = [];
-    let firstPlyCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
-      board,
-      true,
-      1
-    ); // 4
-        
-    for (let i = 0; i < firstPlyCandidateBoards.length; ++i) { // 4
-      let secondPlyCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
-        firstPlyCandidateBoards[i],
-        false,
-        1
-      ); // 24, 25, 24, 24
-      
-      arrayOfCandidateBoards[i] = []; // firstPly number of array -> choose the i (first ply number) from the array that has the highest score (get max array scores)
-      //arrayOfCandidateBoards.push("I="+i); // this are all the first level moves (in this case only 4 possibilities!) -> give score for selecting the best I
-      for (let j = 0; j < secondPlyCandidateBoards.length; ++j) {
-         let thirdPlyCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
-          secondPlyCandidateBoards[j],
-          true,
-          1
-        );                
-        for (let k = 0; k < thirdPlyCandidateBoards.length; ++k) { // this should take: 2 -> 24..49 
-           let fourthPlyCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
-            thirdPlyCandidateBoards[k],
-            false,
-            1
-          );
-          let score = firstPlyCandidateBoards.length - secondPlyCandidateBoards.length + thirdPlyCandidateBoards.length - fourthPlyCandidateBoards.length; // evaluation function (heuristics)           
-          arrayOfCandidateBoards[i].push(parseInt(score, 10)); // length function as "mock score": W - B + W - B
-        }
-      
-      }      
-    } // for
-
-    let boardNumberForBestMove = Heuristics.getCandidateBoardNumberCorrespondingMaxScore(arrayOfCandidateBoards);
-    console.log("finished: best board number = " + boardNumberForBestMove);
+  let bestBoardNumber = this.getBoardNumberForBestMoveDeep4(board);
 
  
     candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
@@ -232,7 +192,7 @@ class Chess extends React.Component {
     const movesStringFromSelectedMove =
       HelpFunctions.getMovesString(selectedMove);
 
-    const selectedMoveIndex = allowedMoves.indexOf(selectedMove);
+    const selectedMoveIndex = bestBoardNumber; // allowedMoves.indexOf(selectedMove); // TODO: this should correspond the board number 
     let pieceNumberId;
 
     if (
@@ -516,12 +476,58 @@ class Chess extends React.Component {
   }
 
   /**
+ * TODO: generalize this and make it this use stack & iterative (deep/ply as a parameter)
+ */
+getBoardNumberForBestMoveDeep4(board) {
+  // TODO: iterative implementation -> make this as a method to return the candidate boards
+   // for a board and put them to an array of candit boards
+   let arrayOfCandidateBoards = [];
+   let firstPlyCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
+     board,
+     true
+   ); // 4
+     // stack.push(firstPlyCandidateBoards);  
+   // while (stack.length > 0 & plies > 0)
+   // candidateBoards = stack.pop();
+   //plies--
+   // let nextCandidateBoards = this.getNextMove...
+   // stack.push(nextCandidateBoards);
+   for (let i = 0; i < firstPlyCandidateBoards.length; ++i) { // 4
+     let secondPlyCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
+       firstPlyCandidateBoards[i],
+       false       
+     ); // 24, 25, 24, 24
+     
+     arrayOfCandidateBoards[i] = []; // firstPly number of array -> choose the i (first ply number) from the array that has the highest score (get max array scores)
+     //arrayOfCandidateBoards.push("I="+i); // this are all the first level moves (in this case only 4 possibilities!) -> give score for selecting the best I
+     for (let j = 0; j < secondPlyCandidateBoards.length; ++j) {
+        let thirdPlyCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
+         secondPlyCandidateBoards[j],
+         true        
+       );                
+       for (let k = 0; k < thirdPlyCandidateBoards.length; ++k) { // this should take: 2 -> 24..49 
+          let fourthPlyCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
+           thirdPlyCandidateBoards[k],
+           false        
+         );
+         let score = firstPlyCandidateBoards.length - secondPlyCandidateBoards.length + thirdPlyCandidateBoards.length - fourthPlyCandidateBoards.length; // evaluation function (heuristics)           
+         arrayOfCandidateBoards[i].push(parseInt(score, 10)); // push only leaf nodes as scores; initially length function servers as a "mock score": W - B + W - B
+       }
+     
+     }      
+   } // for
+
+   let boardNumberForBestMove = Heuristics.getCandidateBoardNumberCorrespondingMaxScore(arrayOfCandidateBoards);
+   console.log("finished: best board number = " + boardNumberForBestMove);
+   return boardNumberForBestMove;
+}
+  /**
    *
    * @param {*} board
    * @param {*} white
    * @returns
    */
-  getNextMoveCandidateBoardsForABoard(board, white, plieNumber) {
+  getNextMoveCandidateBoardsForABoard(board, white) {
     const candidateMoves = this.getCandidateMovesForBoard(white, board);
     const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
     const candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
@@ -529,7 +535,7 @@ class Chess extends React.Component {
   }
 
   /**
-   * Recursive function. JavaScript tree data structure.
+   * Recursive function only for proof-of-concept testing. JavaScript tree data structure.
    * @param {*} numberOfPlies
    * @param {*} board
    * @param {*} white

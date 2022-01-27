@@ -20,6 +20,9 @@ import * as CheckFunctions from "./CheckFunctions";
  */
 //-> select the highest point functioned candidate board
 
+
+
+
 /**
  * This superarray contains arrays and eacy array contains scores of boards. Each board thus maps to
  * one array from superarray, and superarray contains as many arrays as there are possible moves (e.g. for white).
