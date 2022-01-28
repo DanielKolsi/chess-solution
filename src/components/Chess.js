@@ -93,7 +93,7 @@ class Chess extends React.Component {
       if (stack.length == 0) {
         nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
           board,
-          white          
+          white
         ); // TODO: if stack !empty, take this from the stack
         arrayOfCandidateBoards.push(nextMoveCandidateBoards);
         stack.push(nextMoveCandidateBoards);
@@ -104,7 +104,7 @@ class Chess extends React.Component {
         for (let i = 0; i < nextMoveCandidateBoards.length; ++i) {
           let candidateBoards = this.getNextMoveCandidateBoardsForABoard(
             nextMoveCandidateBoards[i],
-            !white            
+            !white
           );
           if (numberOfPlies > 0) {
             stack.push(candidateBoards);
@@ -144,7 +144,7 @@ class Chess extends React.Component {
         " WHITE = " + white + " allowed moves:" + allowedMoves.join("|")
       );
     }
-/*
+    /*
     let arrayOfCandidateBoards =
       this.addCandidateBoardsForTheNextPlyToArrayOfCandidateBoards(
         board,
@@ -156,9 +156,8 @@ class Chess extends React.Component {
     console.log("boards array length = " + boardsArray.length);
 */
 
-  let bestBoardNumber = this.getBoardNumberForBestMoveDeep4(board);
+    let bestBoardNumber = this.getBoardNumberForBestMoveDeep4(board);
 
- 
     candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
     const numberOfPossibleNextMoves = this.getNumberOfAllowedNextMovesForBoard(
       candidateBoards,
@@ -192,7 +191,7 @@ class Chess extends React.Component {
     const movesStringFromSelectedMove =
       HelpFunctions.getMovesString(selectedMove);
 
-    const selectedMoveIndex = bestBoardNumber; // allowedMoves.indexOf(selectedMove); // TODO: this should correspond the board number 
+    const selectedMoveIndex = bestBoardNumber; // allowedMoves.indexOf(selectedMove); // TODO: this should correspond the board number
     let pieceNumberId;
 
     if (
@@ -476,51 +475,105 @@ class Chess extends React.Component {
   }
 
   /**
- * TODO: generalize this and make it this use stack & iterative (deep/ply as a parameter)
- */
-getBoardNumberForBestMoveDeep4(board) {
-  // TODO: iterative implementation -> make this as a method to return the candidate boards
-   // for a board and put them to an array of candit boards
-   let arrayOfCandidateBoards = [];
-   let firstPlyCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
-     board,
-     true
-   ); // 4
-     // stack.push(firstPlyCandidateBoards);  
-   // while (stack.length > 0 & plies > 0)
-   // candidateBoards = stack.pop();
-   //plies--
-   // let nextCandidateBoards = this.getNextMove...
-   // stack.push(nextCandidateBoards);
-   for (let i = 0; i < firstPlyCandidateBoards.length; ++i) { // 4
-     let secondPlyCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
-       firstPlyCandidateBoards[i],
-       false       
-     ); // 24, 25, 24, 24
-     
-     arrayOfCandidateBoards[i] = []; // firstPly number of array -> choose the i (first ply number) from the array that has the highest score (get max array scores)
-     //arrayOfCandidateBoards.push("I="+i); // this are all the first level moves (in this case only 4 possibilities!) -> give score for selecting the best I
-     for (let j = 0; j < secondPlyCandidateBoards.length; ++j) {
-        let thirdPlyCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
-         secondPlyCandidateBoards[j],
-         true        
-       );                
-       for (let k = 0; k < thirdPlyCandidateBoards.length; ++k) { // this should take: 2 -> 24..49 
-          let fourthPlyCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
-           thirdPlyCandidateBoards[k],
-           false        
-         );
-         let score = firstPlyCandidateBoards.length - secondPlyCandidateBoards.length + thirdPlyCandidateBoards.length - fourthPlyCandidateBoards.length; // evaluation function (heuristics)           
-         arrayOfCandidateBoards[i].push(parseInt(score, 10)); // push only leaf nodes as scores; initially length function servers as a "mock score": W - B + W - B
-       }
-     
-     }      
-   } // for
+   *
+   * @param {*} board starting board position
+   * @param {*} deepness how many plies to cover? E.g. 1. white 2. black 3. white 4. black, ...
+   */
+  getBoardNumberForBestMove(white, board, deepness) {
+    if (deepness < 1) return board;
 
-   let boardNumberForBestMove = Heuristics.getCandidateBoardNumberCorrespondingMaxScore(arrayOfCandidateBoards);
-   console.log("finished: best board number = " + boardNumberForBestMove);
-   return boardNumberForBestMove;
-}
+    let stack = [];
+    let arrayOfCandidateBoards = [];
+    let candidateBoards = this.getNextMoveCandidateBoardsForABoard(board, true);
+    let candidateBoardsLengths = [];
+    //let currentPly = 1;
+
+    stack.push(candidateBoards);
+    candidateBoardsLengths[deepness] = candidateBoards.length;
+    for (let i = 0; i < candidateBoards.length; ++i) {
+      arrayOfCandidateBoards[i] = []; // just before the stack stuff begings...
+    }
+
+    deepness--;
+    while (stack.length() > 0 && deepness > 0) {
+      candidateBoards = stack.pop();
+
+      for (let i = 0; i < candidateBoards.length; ++i) {
+        let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
+          candidateBoards[i],
+          !white
+        );
+        candidateBoardsLengths[deepness] = candidateBoards.length;
+
+        stack.push(nextMoveCandidateBoards);
+        if (deepness == 1) {
+          let score = 0;
+          for (let s = 0; s < candidateBoardsLengths.length; s++) {
+            score +=candidateBoardsLengths[s];
+          }          
+          arrayOfCandidateBoards[i].push(parseInt(score, 10)); // push only leaf nodes as scores; initially length function servers as a "mock score": W - B + W - B
+        }
+      } // for
+      deepness--;
+    } // while
+
+    let boardNumberForBestMove =
+      Heuristics.getCandidateBoardNumberCorrespondingMaxScore(
+        arrayOfCandidateBoards
+      );
+    return boardNumberForBestMove;
+  }
+
+  /**
+   * TODO: generalize this and make it this use stack & iterative (deep/ply as a parameter)
+   */
+  getBoardNumberForBestMoveDeep4(board) {
+    // TODO: iterative implementation -> make this as a method to return the candidate boards
+    // for a board and put them to an array of candit boards
+    let arrayOfCandidateBoards = [];
+    let firstPlyCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
+      board,
+      true
+    ); // 4
+
+    for (let i = 0; i < firstPlyCandidateBoards.length; ++i) {
+      // 4
+      let secondPlyCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
+        firstPlyCandidateBoards[i],
+        false
+      ); // 24, 25, 24, 24
+
+      arrayOfCandidateBoards[i] = []; // firstPly number of array -> choose the i (first ply number) from the array that has the highest score (get max array scores)
+      //arrayOfCandidateBoards.push("I="+i); // this are all the first level moves (in this case only 4 possibilities!) -> give score for selecting the best I
+      for (let j = 0; j < secondPlyCandidateBoards.length; ++j) {
+        let thirdPlyCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
+          secondPlyCandidateBoards[j],
+          true
+        );
+        for (let k = 0; k < thirdPlyCandidateBoards.length; ++k) {
+          // this should take: 2 -> 24..49
+          let fourthPlyCandidateBoards =
+            this.getNextMoveCandidateBoardsForABoard(
+              thirdPlyCandidateBoards[k],
+              false
+            );
+          let score =
+            firstPlyCandidateBoards.length -
+            secondPlyCandidateBoards.length +
+            thirdPlyCandidateBoards.length -
+            fourthPlyCandidateBoards.length; // evaluation function (heuristics)
+          arrayOfCandidateBoards[i].push(parseInt(score, 10)); // push only leaf nodes as scores; initially length function servers as a "mock score": W - B + W - B
+        }
+      }
+    } // for
+
+    let boardNumberForBestMove =
+      Heuristics.getCandidateBoardNumberCorrespondingMaxScore(
+        arrayOfCandidateBoards
+      );
+    console.log("finished: best board number = " + boardNumberForBestMove);
+    return boardNumberForBestMove;
+  }
   /**
    *
    * @param {*} board
