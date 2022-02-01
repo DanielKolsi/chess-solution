@@ -156,7 +156,8 @@ class Chess extends React.Component {
     console.log("boards array length = " + boardsArray.length);
 */
 
-    let bestBoardNumber = this.getBoardNumberForBestMoveDeep4(board);
+    let bestBoardNumberOrig = this.getBoardNumberForBestMoveDeep4(board);
+    let bestBoardNumber = this.getBoardNumberForBestMove(true, board, 2);
 
     candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
     const numberOfPossibleNextMoves = this.getNumberOfAllowedNextMovesForBoard(
@@ -489,30 +490,44 @@ class Chess extends React.Component {
     //let currentPly = 1;
 
     stack.push(candidateBoards);
-    candidateBoardsLengths[deepness] = candidateBoards.length;
+    let lengthIndex = 0;
+    candidateBoardsLengths[lengthIndex] = candidateBoards.length; // TODO fix this
+
     for (let i = 0; i < candidateBoards.length; ++i) {
       arrayOfCandidateBoards[i] = []; // just before the stack stuff begings...
     }
 
-    deepness--;
-    while (stack.length() > 0 && deepness > 0) {
+    
+    //deepness--; // TODO: should function also when deepness == 1
+    while (stack.length > 0 && deepness > 0) {
       candidateBoards = stack.pop();
+      lengthIndex++;
 
       for (let i = 0; i < candidateBoards.length; ++i) {
-        let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
-          candidateBoards[i],
-          !white
-        );
-        candidateBoardsLengths[deepness] = candidateBoards.length;
+        
+        candidateBoardsLengths[lengthIndex] = candidateBoards.length;
 
-        stack.push(nextMoveCandidateBoards);
-        if (deepness == 1) {
+        
+        if (deepness == 1) { // only for leaf nodes
           let score = 0;
           for (let s = 0; s < candidateBoardsLengths.length; s++) {
-            score +=candidateBoardsLengths[s];
-          }          
+            if (s % 2 == 0) {
+              score += parseInt(candidateBoardsLengths[s], 10);
+            } else {
+              score -= parseInt(candidateBoardsLengths[s], 10);
+            }
+            
+          }
           arrayOfCandidateBoards[i].push(parseInt(score, 10)); // push only leaf nodes as scores; initially length function servers as a "mock score": W - B + W - B
         }
+        if (deepness > 1) {
+          let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
+            candidateBoards[i],
+            !white
+          );
+          stack.push(nextMoveCandidateBoards);
+        }
+        
       } // for
       deepness--;
     } // while
