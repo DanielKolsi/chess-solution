@@ -564,8 +564,9 @@ class Chess extends React.Component {
     // process arrayOfCandidateBoardsArrays (which now only contains this subArray leaf nodes) to insert scores to the leaf nodes
     // e.g. mainSubArray.push(nextMoveCandidateBoards[x].length)
     for (let i = 0; i < arrayOfCandidateBoardsArrays.length; ++i) {
-      mainSubArray[i] = arrayOfCandidateBoardsArrays[i].length; // TODO: or mainSubArray.push(arrayOfCandidateBoardsArrays[i].length);
+      mainSubArray[i] = arrayOfCandidateBoardsArrays[i].length; // TODO: or mainSubArray.push(arrayOfCandidateBoardsArrays[i].length);      
     }
+    mainSubArray.sort((a,b)=>a-b);
     return mainSubArray; // this could contain just leaf node scores
   }
 
@@ -632,11 +633,12 @@ class Chess extends React.Component {
     }
     ////////////////////
     for (let n = 0; n < candidateBoardsLevelOne.length; ++n) {
-      arrayOfCandidateBoards[n] = this.getMainSubArray2(
+      let mainSubArray = this.getMainSubArray2(
         !white,
         candidateBoardsLevelOne[n],
         deepness
       );
+      arrayOfCandidateBoards[n] = mainSubArray; 
       console.log(
         "|| n = " +
           n +
@@ -809,8 +811,10 @@ class Chess extends React.Component {
             secondPlyCandidateBoards.length +
             thirdPlyCandidateBoards.length -*/
             fourthPlyCandidateBoards.length; // evaluation function (heuristics)
-          arrayOfCandidateBoards[i].push(parseInt(score, 10)); // push only leaf nodes as scores; initially length function servers as a "mock score": W - B + W - B
+            //arrayOfCandidateBoards[i][i] = parseInt(score, 10);
+            arrayOfCandidateBoards[i].push(parseInt(score, 10)); // push only leaf nodes as scores; initially length function servers as a "mock score": W - B + W - B
         }
+        arrayOfCandidateBoards[i].sort((a,b)=>a-b); // TODO: sort the subArray
       }
     } // for
 
