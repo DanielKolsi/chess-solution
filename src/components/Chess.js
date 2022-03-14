@@ -159,8 +159,9 @@ class Chess extends React.Component {
 
     //let array = this.getDeepXArray(board, true);
     let bestBoardNumberTrivial = this.getBoardNumberForBestMoveDeep4(board);
-    let bestBoardNumber = this.getBoardNumberForBestMove(true, board, 4);
     return; // TODO: end code excution here for algorithm debugging purpose
+    let bestBoardNumber = this.getBoardNumberForBestMove(true, board, 4);
+    
 
     candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
     const numberOfPossibleNextMoves = this.getNumberOfAllowedNextMovesForBoard(
@@ -493,7 +494,7 @@ class Chess extends React.Component {
    * @param {*} board
    * @param {*} deepness
    */
-  getMainSubArray2(white, board, deepness) {
+  getMainSubArray(white, board, deepness) {
     let stack = [];
     let mainSubArray = []; // mainSubArray represents each branch of the main white "next moves" tree
 
@@ -503,19 +504,12 @@ class Chess extends React.Component {
     );
 
     for (let i = 0; i < nextMoveCandidateBoards.length; ++i) {
-      console.log("pushing to stack...");
       stack.push(nextMoveCandidateBoards[i]);
     }
 
-    console.log(
-      "nextMoveCandidateBoards length=" +
-        nextMoveCandidateBoards.length +
-        " stack length before popping = " +
-        stack.length
-    );
     let nextPlyColor = !white;
     let arrayOfCandidateBoardsArrays = [];
-    let scoreArray = []; // store individual candidateBoardArrays lengths for the eval score function
+    //let scoreArray = []; // store individual candidateBoardArrays lengths for the eval score function
 
     while (stack.length > 0) {
       let childBoard = stack.pop();
@@ -527,12 +521,6 @@ class Chess extends React.Component {
     } // while
 
     deepness--;
-    console.log(
-      "nextMoveCandidateBoards length=" +
-        nextMoveCandidateBoards.length +
-        " stack length after popping = " +
-        stack.length
-    );
 
     while (deepness > 0) {
       for (let i = 0; i < arrayOfCandidateBoardsArrays.length; ++i) {
@@ -542,11 +530,11 @@ class Chess extends React.Component {
           stack.push(board);
         }
       }
-      console.log("FINAL stack length = " + stack.length);
+
       if (stack.length > 0 && deepness > 1) {
         arrayOfCandidateBoardsArrays = []; // clear the array
       }
-       
+
       while (stack.length > 0) {
         let childBoard = stack.pop();
         let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
@@ -564,52 +552,10 @@ class Chess extends React.Component {
     // process arrayOfCandidateBoardsArrays (which now only contains this subArray leaf nodes) to insert scores to the leaf nodes
     // e.g. mainSubArray.push(nextMoveCandidateBoards[x].length)
     for (let i = 0; i < arrayOfCandidateBoardsArrays.length; ++i) {
-      mainSubArray[i] = arrayOfCandidateBoardsArrays[i].length; // TODO: or mainSubArray.push(arrayOfCandidateBoardsArrays[i].length);      
+      mainSubArray[i] = arrayOfCandidateBoardsArrays[i].length; 
     }
-    mainSubArray.sort((a,b)=>a-b);
+    mainSubArray.sort((a, b) => b - a);
     return mainSubArray; // this could contain just leaf node scores
-  }
-
-  // get nextMoveCandidateBoards array based on boards in the stack | while (stack.length > 0) { getNextMoveCandidateBoard(stack.pop())}
-  getMainSubArray(white, board, deepness) {
-    let mainSubArray = []; // mainSubArray represents all possible (first level white) moves
-    let stack = [];
-
-    let mainBranchDeepness = deepness;
-    let nextMoveCandidateBoards;
-    /*let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
-      board,
-      white
-    );*/ // first black, e.g. 25 possible boards/moves
-
-    stack.push(board);
-    //   mainBranchDeepness--;
-
-    while (stack.length > 0) {
-      board = stack.pop();
-      nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
-        board,
-        !white
-      );
-      console.log(
-        "nnextMoveCandidateBoards length = " + nextMoveCandidateBoards.length
-      );
-      // just push to the stack the next round
-      for (let i = 0; i < nextMoveCandidateBoards.length; ++i) {
-        if (mainBranchDeepness === 0) {
-          console.log("pushing here to mainsubArray");
-
-          mainSubArray.push(nextMoveCandidateBoards);
-        } else {
-          let board = nextMoveCandidateBoards[i]; // e.g. 25 boards
-          stack.push(board); // just a board to the stack, not an array of boards
-        }
-      } // for
-      mainBranchDeepness--; // TODO: local deepness counter for each "subbranch" inside the board board[64] = deepness
-      if (mainBranchDeepness === 0) break;
-    } // while
-
-    return mainSubArray;
   }
 
   /**
@@ -618,6 +564,8 @@ class Chess extends React.Component {
    * @param {*} deepness how many plies to cover? E.g. 1. white 2. black 3. white 4. black, ...
    */
   getBoardNumberForBestMove(white, board, deepness) {
+    let DEBUG = false;
+
     if (deepness < 1) return board;
 
     let arrayOfCandidateBoards = [];
@@ -628,70 +576,37 @@ class Chess extends React.Component {
 
     deepness--;
 
+    console.log("*** LEVEL ONE DONE ****");
     for (let n = 0; n < candidateBoardsLevelOne.length; ++n) {
       arrayOfCandidateBoards[n] = [];
     }
     ////////////////////
     for (let n = 0; n < candidateBoardsLevelOne.length; ++n) {
-      let mainSubArray = this.getMainSubArray2(
+      let mainSubArray = this.getMainSubArray(
         !white,
         candidateBoardsLevelOne[n],
         deepness
       );
-      arrayOfCandidateBoards[n] = mainSubArray; 
+      arrayOfCandidateBoards[n] = mainSubArray;
+      if (DEBUG)
+        console.log(
+          "|| n = " +
+            n +
+            " || arrayOfCandidateBoards[n].length = " +
+            arrayOfCandidateBoards[n].length +
+            " board = " +
+            arrayOfCandidateBoards[n]
+        );
+    } // for
+
+    
+    if (DEBUG)
       console.log(
-        "|| n = " +
-          n +
-          " || arrayOfCandidateBoards[n].length = " +
-          arrayOfCandidateBoards[n].length +
-          " board = " +
-          arrayOfCandidateBoards[n]
-      );
-    }
-    console.log(
-      "|| Array of candit boards = " +
-        arrayOfCandidateBoards +
-        " || Length = " +
-        arrayOfCandidateBoards.length
-    ); // this should contain all leaf node scores (eval function basis)
-
-    /* for (let n = 0; n < candidateBoardsLevelOne.length; ++n) {
-      let mainBranchDeepness = deepness;
-
-      let nextMoveCandidateBoards = [];
-      let stack = [];
-      while (mainBranchDeepness >= 0 || stack.length > 0) {
-        console.log("next move candidate boards");
-        let prevMoveCandidateBoards = [];
-
-        if (stack.length > 0) {
-          prevMoveCandidateBoards = stack.pop(); // TODO, why do we need all this?!
-        } else {
-          prevMoveCandidateBoards = candidateBoardsLevelOne;
-        }
-        if (mainBranchDeepness > 0) {
-          for (let i = 0; i < prevMoveCandidateBoards.length; ++i) {
-            nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
-              prevMoveCandidateBoards[i],
-              !white
-            ); // TODO, fix this
-            stack.push(nextMoveCandidateBoards);
-          } // for
-        } else if (mainBranchDeepness <= 0) {
-          // only for leaf nodes
-          console.log("n=" + n);
-          for (let i = 0; i < prevMoveCandidateBoards.length; ++i) {
-            arrayOfCandidateBoards[n].push(
-              parseInt(prevMoveCandidateBoards.length, 10)
-            );
-          }
-          // push only leaf nodes as scores; initially length function servers as a "mock score": W - B + W - B
-        }
-        mainBranchDeepness--;
-      } // while
-
-      console.log("main branch deepness = " + mainBranchDeepness);
-    }*/
+        "|| Array of candit boards = " +
+          arrayOfCandidateBoards +
+          " || Length = " +
+          arrayOfCandidateBoards.length
+      ); // this should contain all leaf node scores (eval function basis)
 
     let boardNumberForBestMove =
       Heuristics.getCandidateBoardNumberCorrespondingMaxScore(
@@ -806,16 +721,16 @@ class Chess extends React.Component {
               thirdPlyCandidateBoards[k],
               false
             );
-          let score =            
-          /*firstPlyCandidateBoards.length -
+          let score =
+            /*firstPlyCandidateBoards.length -
             secondPlyCandidateBoards.length +
             thirdPlyCandidateBoards.length -*/
             fourthPlyCandidateBoards.length; // evaluation function (heuristics)
-            //arrayOfCandidateBoards[i][i] = parseInt(score, 10);
-            arrayOfCandidateBoards[i].push(parseInt(score, 10)); // push only leaf nodes as scores; initially length function servers as a "mock score": W - B + W - B
-        }
-        arrayOfCandidateBoards[i].sort((a,b)=>a-b); // TODO: sort the subArray
-      }
+          //arrayOfCandidateBoards[i][i] = parseInt(score, 10);
+          arrayOfCandidateBoards[i].push(parseInt(score, 10)); // push only leaf nodes as scores; initially length function servers as a "mock score": W - B + W - B
+        } // for
+        arrayOfCandidateBoards[i].sort((a, b) => b - a); // sort the subArray in descending order now containing the scores (i.e. highest score first)
+      } // for
     } // for
 
     let boardNumberForBestMove =
@@ -832,6 +747,7 @@ class Chess extends React.Component {
    * @returns
    */
   getNextMoveCandidateBoardsForABoard(board, white) {
+    console.log("***getNextMoveCandidateBoardsForABoard****");
     const candidateMoves = this.getCandidateMovesForBoard(white, board);
     const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
     const candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
