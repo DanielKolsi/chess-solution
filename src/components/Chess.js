@@ -158,10 +158,10 @@ class Chess extends React.Component {
 */
 
     //let array = this.getDeepXArray(board, true);
-    let bestBoardNumberTrivial = this.getBoardNumberForBestMoveDeep4(board);
-    return; // TODO: end code excution here for algorithm debugging purpose
+    //let bestBoardNumberTrivial = this.getBoardNumberForBestMoveDeep4(board);    
+    console.log("NOT TRIVIAL");
     let bestBoardNumber = this.getBoardNumberForBestMove(true, board, 4);
-    
+    return; // TODO: end code excution here for algorithm debugging purpose
 
     candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
     const numberOfPossibleNextMoves = this.getNumberOfAllowedNextMovesForBoard(
@@ -509,7 +509,7 @@ class Chess extends React.Component {
 
     let nextPlyColor = !white;
     let arrayOfCandidateBoardsArrays = [];
-    //let scoreArray = []; // store individual candidateBoardArrays lengths for the eval score function
+    let scoreArray = []; // store individual candidateBoardArrays lengths for the eval score function
 
     while (stack.length > 0) {
       let childBoard = stack.pop();
@@ -535,12 +535,14 @@ class Chess extends React.Component {
         arrayOfCandidateBoardsArrays = []; // clear the array
       }
 
-      while (stack.length > 0) {
+      while (stack.length > 0 && deepness > 1) {
         let childBoard = stack.pop();
+
         let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
           childBoard,
           !nextPlyColor
         );
+        scoreArray[deepness].push(nextMoveCandidateBoards.length);
         if (deepness > 1) {
           // do at least one more round...
           arrayOfCandidateBoardsArrays.push(nextMoveCandidateBoards);
@@ -599,7 +601,7 @@ class Chess extends React.Component {
         );
     } // for
 
-    
+
     if (DEBUG)
       console.log(
         "|| Array of candit boards = " +
