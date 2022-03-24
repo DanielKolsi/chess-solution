@@ -158,7 +158,7 @@ class Chess extends React.Component {
 */
 
     //let array = this.getDeepXArray(board, true);
-    //let bestBoardNumberTrivial = this.getBoardNumberForBestMoveDeep4(board);    
+    //let bestBoardNumberTrivial = this.getBoardNumberForBestMoveDeep4(board);
     console.log("NOT TRIVIAL");
     let bestBoardNumber = this.getBoardNumberForBestMove(true, board, 4);
     return; // TODO: end code excution here for algorithm debugging purpose
@@ -497,6 +497,11 @@ class Chess extends React.Component {
   getMainSubArray(white, board, deepness) {
     let stack = [];
     let mainSubArray = []; // mainSubArray represents each branch of the main white "next moves" tree
+    let scoreArray = []; // store individual candidateBoardArrays lengths for the eval score function
+
+    for (let i = 0; i < deepness + 1; ++i) {
+      scoreArray[i] = [];
+    }
 
     let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
       board,
@@ -509,7 +514,6 @@ class Chess extends React.Component {
 
     let nextPlyColor = !white;
     let arrayOfCandidateBoardsArrays = [];
-    let scoreArray = []; // store individual candidateBoardArrays lengths for the eval score function
 
     while (stack.length > 0) {
       let childBoard = stack.pop();
@@ -517,6 +521,7 @@ class Chess extends React.Component {
         childBoard,
         !white
       );
+      scoreArray[deepness].push(nextMoveCandidateBoards.length); // 2nd round, needs to be there
       arrayOfCandidateBoardsArrays.push(nextMoveCandidateBoards);
     } // while
 
@@ -525,6 +530,7 @@ class Chess extends React.Component {
     while (deepness > 0) {
       for (let i = 0; i < arrayOfCandidateBoardsArrays.length; ++i) {
         nextMoveCandidateBoards = arrayOfCandidateBoardsArrays[i];
+        scoreArray[deepness].push(nextMoveCandidateBoards.length);
         for (let j = 0; j < nextMoveCandidateBoards.length; ++j) {
           let board = nextMoveCandidateBoards[j];
           stack.push(board);
@@ -542,11 +548,10 @@ class Chess extends React.Component {
           childBoard,
           !nextPlyColor
         );
-        scoreArray[deepness].push(nextMoveCandidateBoards.length);
-        if (deepness > 1) {
-          // do at least one more round...
-          arrayOfCandidateBoardsArrays.push(nextMoveCandidateBoards);
-        }
+        
+        //scoreArray[deepness].push(nextMoveCandidateBoards.length);
+
+        arrayOfCandidateBoardsArrays.push(nextMoveCandidateBoards);
       } // while stack
       deepness--;
     } // while deepness
@@ -554,7 +559,7 @@ class Chess extends React.Component {
     // process arrayOfCandidateBoardsArrays (which now only contains this subArray leaf nodes) to insert scores to the leaf nodes
     // e.g. mainSubArray.push(nextMoveCandidateBoards[x].length)
     for (let i = 0; i < arrayOfCandidateBoardsArrays.length; ++i) {
-      mainSubArray[i] = arrayOfCandidateBoardsArrays[i].length; 
+      mainSubArray[i] = arrayOfCandidateBoardsArrays[i].length; // TODO: replace this with a proper MIN/MAX eval function heuristics
     }
     mainSubArray.sort((a, b) => b - a);
     return mainSubArray; // this could contain just leaf node scores
@@ -600,7 +605,6 @@ class Chess extends React.Component {
             arrayOfCandidateBoards[n]
         );
     } // for
-
 
     if (DEBUG)
       console.log(
