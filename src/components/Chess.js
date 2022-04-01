@@ -160,6 +160,11 @@ class Chess extends React.Component {
     //let array = this.getDeepXArray(board, true);
     //let bestBoardNumberTrivial = this.getBoardNumberForBestMoveDeep4(board);
     console.log("NOT TRIVIAL");
+    let arrayOfCandidateBoardsArrays = this.getArrayOfCandidateBoardsArrays(
+      true,
+      board,
+      2
+    );
     let bestBoardNumber = this.getBoardNumberForBestMove(true, board, 4);
     return; // TODO: end code excution here for algorithm debugging purpose
 
@@ -196,7 +201,8 @@ class Chess extends React.Component {
     const movesStringFromSelectedMove =
       HelpFunctions.getMovesString(selectedMove);
 
-    const selectedMoveIndex = bestBoardNumber; // allowedMoves.indexOf(selectedMove); // TODO: this should correspond the board number
+    const selectedMoveIndex = 0; // bestBoardNumber; // TODO, take the real best board based on eval function
+    //const selectedMoveIndex = bestBoardNumberTrivial; // allowedMoves.indexOf(selectedMove); // TODO: this should correspond the board number
     let pieceNumberId;
 
     if (
@@ -480,26 +486,16 @@ class Chess extends React.Component {
   }
 
   /**
-   * Operations:
-   *  array nextMoveCandidateBoards - getNextMoveCandidateBoards(board)
-   *  put nextMoveCandidateBoard to stack
-   * pop nextMoveCandidateBoard from stack while stack.length > 0   -> (for each board 1. )
-   * while (stack.length > ) pop -> getNextMoveCandidateBoards(board) -> array of candidateBoardsArrays
-   * write scores as leaf nodes to the subArray (score = leaf node nextMoveCandidateBoards.length vs. MinMax)
-   * prepare & return first level subArray (x/4)
-   * decrease deep counter
-   * compare deep counter to 0
-   * get track of whole score including all deepness levels using MinMax eval function
+   *
    * @param {*} white
    * @param {*} board
    * @param {*} deepness
    */
-  getMainSubArray(white, board, deepness) {
+  getArrayOfCandidateBoardsArrays(white, board, deepness) {
     let stack = [];
-    let mainSubArray = []; // mainSubArray represents each branch of the main white "next moves" tree
     let scoreArray = []; // store individual candidateBoardArrays lengths for the eval score function
 
-    for (let i = 0; i < deepness; ++i) {
+    for (let i = 0; i < deepness - 1; ++i) {
       scoreArray[i] = [];
     }
 
@@ -517,12 +513,9 @@ class Chess extends React.Component {
 
     while (stack.length > 0) {
       let childBoard = stack.pop();
-      let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
-        childBoard,
-        !white
-      );
-      scoreArray[deepness - 1].push(nextMoveCandidateBoards.length); // 2nd round, needs to be here
-      arrayOfCandidateBoardsArrays.push(nextMoveCandidateBoards);
+      let nextMoveCandidateBoardsFirsts =
+        this.getNextMoveCandidateBoardsForABoard(childBoard, !white); // TODO: add these boards to stack if deepness counter requires that
+      arrayOfCandidateBoardsArrays.push(nextMoveCandidateBoardsFirsts);
     } // while
 
     deepness--;
@@ -548,8 +541,87 @@ class Chess extends React.Component {
           childBoard,
           !nextPlyColor
         );
-        
-        scoreArray[deepness].push(nextMoveCandidateBoards.length);
+
+        arrayOfCandidateBoardsArrays.push(nextMoveCandidateBoards);
+      } // while stack
+      deepness--;
+    } // while deepness
+
+    return arrayOfCandidateBoardsArrays;
+  }
+  /**
+   * Operations:
+   *  array nextMoveCandidateBoards - getNextMoveCandidateBoards(board)
+   *  put nextMoveCandidateBoard to stack
+   * pop nextMoveCandidateBoard from stack while stack.length > 0   -> (for each board 1. )
+   * while (stack.length > ) pop -> getNextMoveCandidateBoards(board) -> array of candidateBoardsArrays
+   * write scores as leaf nodes to the subArray (score = leaf node nextMoveCandidateBoards.length vs. MinMax)
+   * prepare & return first level subArray (x/4)
+   * decrease deep counter
+   * compare deep counter to 0
+   * get track of whole score including all deepness levels using MinMax eval function
+   * @param {*} white
+   * @param {*} board
+   * @param {*} deepness
+   */
+  getMainSubArray(white, board, deepness) {
+    let stack = [];
+    let mainSubArray = []; // mainSubArray represents each branch of the main white "next moves" tree
+    let scoreArray = []; // store individual candidateBoardArrays lengths for the eval score function
+
+    for (let i = 0; i < deepness - 1; ++i) {
+      scoreArray[i] = [];
+    }
+
+    let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
+      board,
+      false
+      //white
+    );
+
+    deepness--; // TODO: should the deepness go down already here?
+    for (let i = 0; i < nextMoveCandidateBoards.length; ++i) {
+      stack.push(nextMoveCandidateBoards[i]);
+    }
+
+    let nextPlyColor = !white;
+    let arrayOfCandidateBoardsArrays = [];
+
+    while (stack.length > 0) {
+      let childBoard = stack.pop();
+      let nextMoveCandidateBoardsFirsts =
+        this.getNextMoveCandidateBoardsForABoard(
+          childBoard,
+          true
+          //!white
+        ); // TODO: add these boards to stack if deepness counter requires that
+      arrayOfCandidateBoardsArrays.push(nextMoveCandidateBoardsFirsts); // TODO: this already contains the scores implicitly!
+      // [Array(22), Array(22), Array(21), Array(4), Array(19), Array(22), Array(20),
+    } // while
+
+    deepness--;
+
+    while (deepness > 0) {
+      for (let i = 0; i < arrayOfCandidateBoardsArrays.length; ++i) {
+        nextMoveCandidateBoards = arrayOfCandidateBoardsArrays[i];
+        scoreArray[deepness - 1].push(nextMoveCandidateBoards.length);
+        for (let j = 0; j < nextMoveCandidateBoards.length; ++j) {
+          let board = nextMoveCandidateBoards[j];
+          stack.push(board);
+        }
+      }
+
+      if (stack.length > 0 && deepness > 1) {
+        arrayOfCandidateBoardsArrays = []; // clear the array
+      }
+
+      while (stack.length > 0 && deepness > 1) {
+        let childBoard = stack.pop();
+
+        /*     let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
+          childBoard, true
+          //!nextPlyColor
+        );*/
 
         arrayOfCandidateBoardsArrays.push(nextMoveCandidateBoards);
       } // while stack
@@ -558,8 +630,17 @@ class Chess extends React.Component {
 
     // process arrayOfCandidateBoardsArrays (which now only contains this subArray leaf nodes) to insert scores to the leaf nodes
     // e.g. mainSubArray.push(nextMoveCandidateBoards[x].length)
+    /*let deep = scoreArray.length;
+    let max = 0;
+    let j = 0;*/
     for (let i = 0; i < arrayOfCandidateBoardsArrays.length; ++i) {
-      mainSubArray[i] = arrayOfCandidateBoardsArrays[i].length; // TODO: replace this with a proper MIN/MAX eval function heuristics
+      mainSubArray[i] =
+        /*-scoreArray[1].length +*/ arrayOfCandidateBoardsArrays[i].length;
+      //while (max < scoreArray[deep - 1][j]) {
+      //mainSubArray[i].push(-scoreArray[deep - 1][j]); /*+ arrayOfCandidateBoardsArrays[i].length*/; // TODO: replace this with a proper MIN/MAX eval function heuristics
+      //max++;
+      //}
+      //j++;
     }
     mainSubArray.sort((a, b) => b - a);
     return mainSubArray; // this could contain just leaf node scores
@@ -722,23 +803,25 @@ class Chess extends React.Component {
         );
         for (let k = 0; k < thirdPlyCandidateBoards.length; ++k) {
           //this should take: 2 -> 24..49
-          let fourthPlyCandidateBoards =
+          /*let fourthPlyCandidateBoards =
             this.getNextMoveCandidateBoardsForABoard(
               thirdPlyCandidateBoards[k],
               false
-            );
+            );*/
           let score =
-            /*firstPlyCandidateBoards.length -
-            secondPlyCandidateBoards.length +
-            thirdPlyCandidateBoards.length -*/
-            fourthPlyCandidateBoards.length; // evaluation function (heuristics)
-          //arrayOfCandidateBoards[i][i] = parseInt(score, 10);
+            //firstPlyCandidateBoards.length -
+            /*- secondPlyCandidateBoards.length + */ thirdPlyCandidateBoards.length;
+          //+ fourthPlyCandidateBoards.length; // evaluation function (heuristics)
+          //arrayOfCandidateBoards[i][k] = parseInt(score, 10);
           arrayOfCandidateBoards[i].push(parseInt(score, 10)); // push only leaf nodes as scores; initially length function servers as a "mock score": W - B + W - B
         } // for
-        arrayOfCandidateBoards[i].sort((a, b) => b - a); // sort the subArray in descending order now containing the scores (i.e. highest score first)
+        //   arrayOfCandidateBoards[i].sort((a, b) => b - a); // sort the subArray in descending order now containing the scores (i.e. highest score first)
       } // for
     } // for
 
+    for (let i = 0; i < arrayOfCandidateBoards.length; ++i) {
+      arrayOfCandidateBoards[i].sort((a, b) => b - a); // sort the subArray in descending order now containing the scores (i.e. highest score first)
+    }
     let boardNumberForBestMove =
       Heuristics.getCandidateBoardNumberCorrespondingMaxScore(
         arrayOfCandidateBoards
