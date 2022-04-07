@@ -163,8 +163,10 @@ class Chess extends React.Component {
     let arrayOfCandidateBoardsArrays = this.getArrayOfCandidateBoardsArrays(
       true,
       board,
-      2
+      5
     );
+    const totalNumberOfCandidateBoards  = this.getTotalNumberOfCandidateBoards(arrayOfCandidateBoardsArrays);
+
     let bestBoardNumber = this.getBoardNumberForBestMove(true, board, 4);
     return; // TODO: end code excution here for algorithm debugging purpose
 
@@ -485,8 +487,19 @@ class Chess extends React.Component {
     return candidateCastlingMovesForBlack;
   }
 
+  getTotalNumberOfCandidateBoards(arrayOfCandidateBoardsArrays) {
+    let n = 0;
+
+    for (let i = 0; i < arrayOfCandidateBoardsArrays.length; ++i) {
+      let array = arrayOfCandidateBoardsArrays[i];
+      n += array.length;
+    }
+
+    return n;
+  }
+
   /**
-   *
+   *TODO: check what causes "promotion" related exception ad DEEPNESS = 5
    * @param {*} white
    * @param {*} board
    * @param {*} deepness
