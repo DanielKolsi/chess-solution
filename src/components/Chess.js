@@ -163,11 +163,13 @@ class Chess extends React.Component {
     let arrayOfCandidateBoardsArrays = this.getArrayOfCandidateBoardsArrays(
       true,
       board,
-      5
+      2
     );
+    //4, 97, 1619, 36348, 
     const totalNumberOfCandidateBoards  = this.getTotalNumberOfCandidateBoards(arrayOfCandidateBoardsArrays);
+    console.log("total number of CBs: " + totalNumberOfCandidateBoards);//TODO deep 5 = 876731 vs. 38064
 
-    let bestBoardNumber = this.getBoardNumberForBestMove(true, board, 4);
+   // let bestBoardNumber = this.getBoardNumberForBestMove(true, board, 4);
     return; // TODO: end code excution here for algorithm debugging purpose
 
     candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
@@ -1019,31 +1021,33 @@ class Chess extends React.Component {
     const delim = HelpFunctions.getDelim(allowedMove);
     let moves = HelpFunctions.getMovesString(allowedMove); // src = moves[0], dst = moves[1]
 
+    let { pieces } = this.state;
+
     // handle promotions and underpromotions
     if (delim === CONSTANTS.PROMOTION_TO_QUEEN) {
       let promotedQueenNumber = white
         ? this.state.promotedWhiteQueenNumber
         : this.state.promotedBlackQueenNumber;
 
-      board = PromotionFunctions.doPromote(board, moves, promotedQueenNumber);
+      board = PromotionFunctions.doPromote(board, pieces, moves, promotedQueenNumber);
     } else if (delim === CONSTANTS.PROMOTION_TO_ROOK) {
       let promotedRookNumber = white
         ? this.state.promotedWhiteRookNumber
         : this.state.promotedBlackRookNumber;
 
-      board = PromotionFunctions.doPromote(board, moves, promotedRookNumber);
+      board = PromotionFunctions.doPromote(board, pieces, moves, promotedRookNumber);
     } else if (delim === CONSTANTS.PROMOTION_TO_BISHOP) {
       let promotedBishopNumber = white
         ? this.state.promotedWhiteBishopNumber
         : this.state.promotedBlackBishopNumber;
 
-      board = PromotionFunctions.doPromote(board, moves, promotedBishopNumber);
+      board = PromotionFunctions.doPromote(board, pieces, moves, promotedBishopNumber);
     } else if (delim === CONSTANTS.PROMOTION_TO_KNIGHT) {
       let promotedKnightNumber = white
         ? this.state.promotedWhiteKnightNumber
         : this.state.promotedBlackKnightNumber;
 
-      board = PromotionFunctions.doPromote(board, moves, promotedKnightNumber);
+      board = PromotionFunctions.doPromote(board, pieces, moves, promotedKnightNumber);
     } else if (delim === CONSTANTS.CASTLING_QUEEN_SIDE) {
       board = this.castleQueenSideAllowedBoard(white, board); // castle queen side was the allowed move, create the corresponding board
     } else if (delim === CONSTANTS.CASTLING_KING_SIDE) {
