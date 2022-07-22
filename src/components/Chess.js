@@ -159,17 +159,31 @@ class Chess extends React.Component {
 
     //let array = this.getDeepXArray(board, true);
     //let bestBoardNumberTrivial = this.getBoardNumberForBestMoveDeep4(board);
-    console.log("NOT TRIVIAL");
+    
     let arrayOfCandidateBoardsArrays = this.getArrayOfCandidateBoardsArrays(
       true,
       board,
-      5
-    );
-    //4, 97, 1619, 36348, 876731
-    const totalNumberOfCandidateBoards  = this.getTotalNumberOfCandidateBoards(arrayOfCandidateBoardsArrays);
-    console.log("total number of CBs: " + totalNumberOfCandidateBoards);//TODO deep 5 = 876731 vs. 38064 = 36348 + 1619 + 97 
+      3
+    ); 
+   let highestBoardScore = Math.max.apply(Math, arrayOfCandidateBoardsArrays);
+  
+  let indexOfBestBoard = arrayOfCandidateBoardsArrays.indexOf(highestBoardScore); // candidate board i.e. move number from the candidateBoards to be selected
 
-   // let bestBoardNumber = this.getBoardNumberForBestMove(true, board, 4);
+    console.log("Index of board having the best HEURISTICS SCORE: " + indexOfBestBoard);
+      // TODO: this selected board index from all the "DEEP N BOARDS" need to be mapped so that its matches the range of next possible moves (e.g. king has only 4 possible moves, e.g. [1-24]->{1})
+
+
+    //4, 97, 1619, 36348, 876731
+    //const totalNumberOfCandidateBoards  = this.getTotalNumberOfCandidateBoards(arrayOfCandidateBoardsArrays);
+    //console.log("total number of CandidateBoards: " + totalNumberOfCandidateBoards);//TODO deep 5 = 876731 vs. 38064 = 36348 + 1619 + 97 
+
+    /*
+    let boardNumberForBestMove =
+    Heuristics.getCandidateBoardNumberCorrespondingMaxScore(
+      arrayOfArrayOfCandidateBoardScores
+    );
+    */
+    //let bestBoardNumber = this.getBoardNumberForBestMove(true, board, 4);
     return; // TODO: end code excution here for algorithm debugging purpose
 
     candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
@@ -206,7 +220,7 @@ class Chess extends React.Component {
       HelpFunctions.getMovesString(selectedMove);
 
     const selectedMoveIndex = 0; // bestBoardNumber; // TODO, take the real best board based on eval function
-    //const selectedMoveIndex = bestBoardNumberTrivial; // allowedMoves.indexOf(selectedMove); // TODO: this should correspond the board number
+    //const selectedMoveIndex = bestBoardNumber; // allowedMoves.indexOf(selectedMove); // TODO: this should correspond the board number
     let pieceNumberId;
 
     if (
@@ -505,7 +519,8 @@ class Chess extends React.Component {
    * @param {*} board
    * @param {*} deepness
    */
-  getArrayOfCandidateBoardsArrays(white, board, deepness) {
+  
+getArrayOfCandidateBoardsArrays(white, board, deepness) {
     let stack = [];
     let scoreArray = []; // store individual candidateBoardArrays lengths for the eval score function
 
@@ -537,7 +552,7 @@ class Chess extends React.Component {
     while (deepness > 0) {
       for (let i = 0; i < arrayOfCandidateBoardsArrays.length; ++i) {
         nextMoveCandidateBoards = arrayOfCandidateBoardsArrays[i];
-        scoreArray[deepness - 1].push(nextMoveCandidateBoards.length);
+        //scoreArray[deepness - 1].push(nextMoveCandidateBoards.length);
         for (let j = 0; j < nextMoveCandidateBoards.length; ++j) {
           let board = nextMoveCandidateBoards[j];
           stack.push(board);
@@ -556,7 +571,7 @@ class Chess extends React.Component {
           !nextPlyColor
         );
 
-        arrayOfCandidateBoardsArrays.push(nextMoveCandidateBoards);
+        arrayOfCandidateBoardsArrays.push(nextMoveCandidateBoards.length);// SCORE!
       } // while stack
       deepness--;
     } // while deepness
