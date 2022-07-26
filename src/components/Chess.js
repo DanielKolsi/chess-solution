@@ -159,23 +159,25 @@ class Chess extends React.Component {
 
     //let array = this.getDeepXArray(board, true);
     //let bestBoardNumberTrivial = this.getBoardNumberForBestMoveDeep4(board);
-    
-    let arrayOfCandidateBoardsArrays = this.getArrayOfCandidateBoardsArrays(
-      true,
-      board,
-      3
-    ); 
-   let highestBoardScore = Math.max.apply(Math, arrayOfCandidateBoardsArrays);
-  
-  let indexOfBestBoard = arrayOfCandidateBoardsArrays.indexOf(highestBoardScore); // candidate board i.e. move number from the candidateBoards to be selected
 
-    console.log("Index of board having the best HEURISTICS SCORE: " + indexOfBestBoard);
-      // TODO: this selected board index from all the "DEEP N BOARDS" need to be mapped so that its matches the range of next possible moves (e.g. king has only 4 possible moves, e.g. [1-24]->{1})
+    let scoreArrayAndarrayOfCandidateBoardsArrays =
+      this.getArrayOfCandidateBoardsArrays(true, board, 3);
 
+    let highestBoardScore = Math.max.apply(
+      Math,
+      scoreArrayAndarrayOfCandidateBoardsArrays[1]
+    );
+    let indexOfBestBoard =
+      scoreArrayAndarrayOfCandidateBoardsArrays[1].indexOf(highestBoardScore); // candidate board i.e. move number from the candidateBoards to be selected
+
+    console.log(
+      "Index of board having the best HEURISTICS SCORE: " + indexOfBestBoard
+    );
+    // TODO: this selected board index from all the "DEEP N BOARDS" need to be mapped so that its matches the range of next possible moves (e.g. king has only 4 possible moves, e.g. [1-24]->{1})
 
     //4, 97, 1619, 36348, 876731
     //const totalNumberOfCandidateBoards  = this.getTotalNumberOfCandidateBoards(arrayOfCandidateBoardsArrays);
-    //console.log("total number of CandidateBoards: " + totalNumberOfCandidateBoards);//TODO deep 5 = 876731 vs. 38064 = 36348 + 1619 + 97 
+    //console.log("total number of CandidateBoards: " + totalNumberOfCandidateBoards);//TODO deep 5 = 876731 vs. 38064 = 36348 + 1619 + 97
 
     /*
     let boardNumberForBestMove =
@@ -519,8 +521,8 @@ class Chess extends React.Component {
    * @param {*} board
    * @param {*} deepness
    */
-  
-getArrayOfCandidateBoardsArrays(white, board, deepness) {
+
+  getArrayOfCandidateBoardsArrays(white, board, deepness) {
     let stack = [];
     let scoreArray = []; // store individual candidateBoardArrays lengths for the eval score function
 
@@ -552,7 +554,7 @@ getArrayOfCandidateBoardsArrays(white, board, deepness) {
     while (deepness > 0) {
       for (let i = 0; i < arrayOfCandidateBoardsArrays.length; ++i) {
         nextMoveCandidateBoards = arrayOfCandidateBoardsArrays[i];
-        //scoreArray[deepness - 1].push(nextMoveCandidateBoards.length);
+        scoreArray[deepness - 1].push(nextMoveCandidateBoards.length);
         for (let j = 0; j < nextMoveCandidateBoards.length; ++j) {
           let board = nextMoveCandidateBoards[j];
           stack.push(board);
@@ -571,12 +573,15 @@ getArrayOfCandidateBoardsArrays(white, board, deepness) {
           !nextPlyColor
         );
 
-        arrayOfCandidateBoardsArrays.push(nextMoveCandidateBoards.length);// SCORE!
+        arrayOfCandidateBoardsArrays.push(nextMoveCandidateBoards.length); // SCORE!
       } // while stack
       deepness--;
     } // while deepness
 
-    return arrayOfCandidateBoardsArrays;
+    const scoreAndArrayOfCandidateBoardsArrays = [2];
+    scoreAndArrayOfCandidateBoardsArrays[0] = scoreArray; // add scoreArray as we need it later
+    scoreAndArrayOfCandidateBoardsArrays[1] = arrayOfCandidateBoardsArrays;
+    return scoreAndArrayOfCandidateBoardsArrays;
   }
   /**
    * Operations:
@@ -1043,25 +1048,45 @@ getArrayOfCandidateBoardsArrays(white, board, deepness) {
         ? this.state.promotedWhiteQueenNumber
         : this.state.promotedBlackQueenNumber;
 
-      board = PromotionFunctions.doPromote(board, pieces, moves, promotedQueenNumber);
+      board = PromotionFunctions.doPromote(
+        board,
+        pieces,
+        moves,
+        promotedQueenNumber
+      );
     } else if (delim === CONSTANTS.PROMOTION_TO_ROOK) {
       let promotedRookNumber = white
         ? this.state.promotedWhiteRookNumber
         : this.state.promotedBlackRookNumber;
 
-      board = PromotionFunctions.doPromote(board, pieces, moves, promotedRookNumber);
+      board = PromotionFunctions.doPromote(
+        board,
+        pieces,
+        moves,
+        promotedRookNumber
+      );
     } else if (delim === CONSTANTS.PROMOTION_TO_BISHOP) {
       let promotedBishopNumber = white
         ? this.state.promotedWhiteBishopNumber
         : this.state.promotedBlackBishopNumber;
 
-      board = PromotionFunctions.doPromote(board, pieces, moves, promotedBishopNumber);
+      board = PromotionFunctions.doPromote(
+        board,
+        pieces,
+        moves,
+        promotedBishopNumber
+      );
     } else if (delim === CONSTANTS.PROMOTION_TO_KNIGHT) {
       let promotedKnightNumber = white
         ? this.state.promotedWhiteKnightNumber
         : this.state.promotedBlackKnightNumber;
 
-      board = PromotionFunctions.doPromote(board, pieces, moves, promotedKnightNumber);
+      board = PromotionFunctions.doPromote(
+        board,
+        pieces,
+        moves,
+        promotedKnightNumber
+      );
     } else if (delim === CONSTANTS.CASTLING_QUEEN_SIDE) {
       board = this.castleQueenSideAllowedBoard(white, board); // castle queen side was the allowed move, create the corresponding board
     } else if (delim === CONSTANTS.CASTLING_KING_SIDE) {

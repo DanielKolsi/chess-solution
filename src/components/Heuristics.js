@@ -53,6 +53,29 @@ export function getBestCandidateboard(candidateBoards, white) {}
 
 export function getNextBoardForASelectedBoard(board, white) {}
 
+/*
+ This function maps absoluteMoveIndex to the nextMoveIndex using the information from scoreArray
+*/
+export function getBestNextMoveBoardNumber(scoreArray, absoluteMoveIndex) {
+  
+  let nextMoveIndex = 0;
+   
+  let previousScores = scoreArray[scoreArray.length -1];
+  
+
+  let incrementedScore = previousScores[0];
+  while (absoluteMoveIndex <= incrementedScore) {
+    
+    incrementedScore = incrementedScore + scoreArray[nextMoveIndex];
+    if (absoluteMoveIndex <= incrementedScore) {
+      nextMoveIndex++;
+    } else break;
+    
+  }
+ 
+  return nextMoveIndex;
+}
+
 /**
  *
  * @param {*} board
