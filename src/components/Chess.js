@@ -186,7 +186,9 @@ class Chess extends React.Component {
     );
     */
     //let bestBoardNumber = this.getBoardNumberForBestMove(true, board, 4);
-    return; // TODO: end code excution here for algorithm debugging purpose
+   
+    let bestNextBoardIndexNumber = Heuristics.getBestNextMoveBoardNumber(scoreArrayAndarrayOfCandidateBoardsArrays[0], indexOfBestBoard);
+   // return; // TODO: end code excution here for algorithm debugging purpose
 
     candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
     const numberOfPossibleNextMoves = this.getNumberOfAllowedNextMovesForBoard(
@@ -221,7 +223,7 @@ class Chess extends React.Component {
     const movesStringFromSelectedMove =
       HelpFunctions.getMovesString(selectedMove);
 
-    const selectedMoveIndex = 0; // bestBoardNumber; // TODO, take the real best board based on eval function
+    const selectedMoveIndex = bestNextBoardIndexNumber; // bestBoardNumber; // TODO, take the real best board based on eval function
     //const selectedMoveIndex = bestBoardNumber; // allowedMoves.indexOf(selectedMove); // TODO: this should correspond the board number
     let pieceNumberId;
 
@@ -579,7 +581,7 @@ class Chess extends React.Component {
     } // while deepness
 
     const scoreAndArrayOfCandidateBoardsArrays = [2];
-    scoreAndArrayOfCandidateBoardsArrays[0] = scoreArray; // add scoreArray as we need it later
+    scoreAndArrayOfCandidateBoardsArrays[0] = scoreArray[scoreArray.length - 1]; // add scoreArray as we need it later
     scoreAndArrayOfCandidateBoardsArrays[1] = arrayOfCandidateBoardsArrays;
     return scoreAndArrayOfCandidateBoardsArrays;
   }
