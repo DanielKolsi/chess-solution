@@ -119,6 +119,21 @@ class Chess extends React.Component {
     return arrayOfCandidateBoards;
   }
 
+
+  getNextMoveBoardIndexForAbsoluteBoardNumber(absoluteBoardNumber, scoreArrays) {
+   let nextMoveBoardIndexNumber = 0
+
+   const rootScoreArray = scoreArrays[scoreArrays.length - 1]; // this array contains all the possible scores for the next moves, order is the same as the allowedBoards order
+
+   let next = 0
+   let nextScoreArray = scoreArrays[scoreArrays.length - 1 - next];
+   for (let i = 0; i < rootScoreArray.length; ++i) {
+   //rootScoreArray[i]
+   }
+
+   return nextMoveBoardIndexNumber;
+  }
+
   /**
    * Does set state.
    * @returns
@@ -161,7 +176,8 @@ class Chess extends React.Component {
     //let bestBoardNumberTrivial = this.getBoardNumberForBestMoveDeep4(board);
 
     let scoreArrayAndarrayOfCandidateBoardsArrays =
-      this.getArrayOfCandidateBoardsArrays(true, board, 3);
+      this.getArrayOfCandidateBoardsArrays(white, board, 3);
+
 
     let highestBoardScore = Math.max.apply(
       Math,
@@ -191,50 +207,57 @@ class Chess extends React.Component {
    // return; // TODO: end code excution here for algorithm debugging purpose
 
     candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
-    const numberOfPossibleNextMoves = this.getNumberOfAllowedNextMovesForBoard(
+    console.log("WHITE = " + white + " Number of  Candidate boards: " + candidateBoards.length);
+    
+    /*const numberOfPossibleNextMoves = this.getNumberOfAllowedNextMovesForBoard(
       candidateBoards,
       white
-    );
+    );*/
 
-    const threatScoreForCandidateboards =
+    /*const threatScoreForCandidateboards =
       ThreatScores.getThreatScoreForCandidateBoards(candidateBoards, white);
     const optimalThreatScoreBoardIndex =
       ThreatScores.getOptimalThreatScoreBoardIndex(
         threatScoreForCandidateboards,
         white
       );
-
+*/
     // TODO: check the purpose of this call as maxIdx is redefined afterwards
-    const staleMateAvoidingMaxIdx =
+    /*const staleMateAvoidingMaxIdx =
       this.getMaxMovesIndexWhileNotAllowingStalemate(
         white,
         candidateBoards,
         allowedMoves,
         numberOfPossibleNextMoves
       );
-
+*/
     // this will be the final selected move for white / black determined by the heuristics / strategy
-    const selectedMove = Heuristics.getSelectedMove(
+    const selectedMove = allowedMoves[bestNextBoardIndexNumber]; 
+   /* const selectedMove = Heuristics.getSelectedMove(
       board,
       allowedMoves,
-      optimalThreatScoreBoardIndex
+      bestNextBoardIndexNumber
     );
-
+*/
     const movesStringFromSelectedMove =
       HelpFunctions.getMovesString(selectedMove);
 
-    const selectedMoveIndex = bestNextBoardIndexNumber; // bestBoardNumber; // TODO, take the real best board based on eval function
-    //const selectedMoveIndex = bestBoardNumber; // allowedMoves.indexOf(selectedMove); // TODO: this should correspond the board number
-    let pieceNumberId;
 
-    if (
+      
+    const selectedMoveIndex = bestNextBoardIndexNumber; // bestBoardNumber; // TODO, take the real best board based on eval function
+    
+
+    console.log("Sel move index: " + selectedMove + " Move string: " + movesStringFromSelectedMove);
+//    let pieceNumberId;
+
+   /* if (
       candidateBoards[staleMateAvoidingMaxIdx][movesStringFromSelectedMove[1]]
         .piece !== null
     ) {
       pieceNumberId =
         candidateBoards[staleMateAvoidingMaxIdx][movesStringFromSelectedMove[1]]
           .piece.n;
-    } else {
+    } else { 
       pieceNumberId =
         candidateBoards[selectedMoveIndex][movesStringFromSelectedMove[1]].piece
           .n;
@@ -244,7 +267,7 @@ class Chess extends React.Component {
           " moveIDX=" +
           movesStringFromSelectedMove[1]
       );
-    }
+    //}
 
     this.setStatesOfKingMovementAndPromotion(
       pieceNumberId,
@@ -252,8 +275,12 @@ class Chess extends React.Component {
       movesStringFromSelectedMove,
       white
     );
-    this.setStatesOfCastlingMoves(board[movesStringFromSelectedMove[0]]); // we need to check if the selected move caused restrictions that block future castling
+  */
 
+ //   this.setStatesOfCastlingMoves(board[movesStringFromSelectedMove[0]]); // we need to check if the selected move caused restrictions that block future castling
+
+    //candidateBoards[selectedMoveIndex]
+ 
     this.setState(
       {
         pieces,
@@ -521,15 +548,15 @@ class Chess extends React.Component {
   /**
    * @param {*} white
    * @param {*} board
-   * @param {*} deepness
+   * @param {*} less
    */
 
   getArrayOfCandidateBoardsArrays(white, board, deepness) {
     let stack = [];
-    let scoreArray = []; // store individual candidateBoardArrays lengths for the eval score function
+    let scoreArrays = []; // store individual candidateBoardArrays lengths for the eval score function
 
     for (let i = 0; i < deepness - 1; ++i) {
-      scoreArray[i] = [];
+      scoreArrays[i] = [];
     }
 
     let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
@@ -556,7 +583,7 @@ class Chess extends React.Component {
     while (deepness > 0) {
       for (let i = 0; i < arrayOfCandidateBoardsArrays.length; ++i) {
         nextMoveCandidateBoards = arrayOfCandidateBoardsArrays[i];
-        scoreArray[deepness - 1].push(nextMoveCandidateBoards.length);
+        scoreArrays[deepness - 1].push(nextMoveCandidateBoards.length);
         for (let j = 0; j < nextMoveCandidateBoards.length; ++j) {
           let board = nextMoveCandidateBoards[j];
           stack.push(board);
@@ -575,13 +602,13 @@ class Chess extends React.Component {
           !nextPlyColor
         );
 
-        arrayOfCandidateBoardsArrays.push(nextMoveCandidateBoards.length); // SCORE!
+        arrayOfCandidateBoardsArrays.push(nextMoveCandidateBoards); // SCORE!
       } // while stack
       deepness--;
     } // while deepness
 
     const scoreAndArrayOfCandidateBoardsArrays = [2];
-    scoreAndArrayOfCandidateBoardsArrays[0] = scoreArray[scoreArray.length - 1]; // add scoreArray as we need it later
+    scoreAndArrayOfCandidateBoardsArrays[0] = scoreArrays[0]; // add scoreArray as we need it later
     scoreAndArrayOfCandidateBoardsArrays[1] = arrayOfCandidateBoardsArrays;
     return scoreAndArrayOfCandidateBoardsArrays;
   }
@@ -687,7 +714,8 @@ class Chess extends React.Component {
    * @param {*} board starting board position
    * @param {*} deepness how many plies to cover? E.g. 1. white 2. black 3. white 4. black, ...
    */
-  getBoardNumberForBestMove(white, board, deepness) {
+  
+  /*getBoardNumberForBestMove(white, board, deepness) {
     let DEBUG = false;
 
     if (deepness < 1) return board;
@@ -737,80 +765,8 @@ class Chess extends React.Component {
       );
     return boardNumberForBestMove;
   }
+  */
 
-  /**
-   *
-   * @param {*} board
-   * @param {*} white
-   * @returns
-   */
-  getDeepXArray(board, white) {
-    let deep = 2;
-    let stack = [];
-    let arrayOfCandidateBoards = [];
-
-    let firstLevelBoards = this.getNextMoveCandidateBoardsForABoard(
-      board,
-      white
-    );
-    stack.push(firstLevelBoards);
-
-    /*for (let i = 0; i < firstLevelBoards.length; ++i) {
-      arrayOfCandidateBoards[i] = []; // only for the first iteration
-    }*/
-
-    let next = [];
-    while (stack.length > 0) {
-      next = stack.pop();
-      console.log("deep = " + deep + " stack.length = " + stack.length);
-      //for (let n = 0; n < firstLevelBoards.length; ++n) {
-      for (let i = 0; i < next.length; ++i) {
-        if (deep === 1) {
-          arrayOfCandidateBoards.push(parseInt(777, 10)); // push only leaf nodes as scores; initially length function servers as a "mock score": W - B + W - B
-        } else {
-          stack.push(this.getNextMoveCandidateBoardsForABoard(next[i], !white));
-        }
-      } // for
-      //}
-      deep--;
-    } // while
-
-    return arrayOfCandidateBoards; // return just the stack and process it later; i.e. process the scores from the stack to the arrayOfCandidateBoards (scoreboard)
-  }
-  getDeep2Array(board, white) {
-    let deep = 3;
-    let stack = [];
-    let arrayOfCandidateBoards = [];
-    let firstIterationDone = false;
-    stack.push(this.getNextMoveCandidateBoardsForABoard(board, white));
-    let prev = [];
-    while (stack.length > 0) {
-      if (deep > 1) {
-        prev = stack.pop();
-      }
-
-      console.log("while....");
-      for (let i = 0; i < prev.length; ++i) {
-        if (!firstIterationDone) {
-          arrayOfCandidateBoards[i] = []; // only for the first iteration
-        }
-
-        if (deep === 1) {
-          const next = stack.pop();
-          for (let j = 0; j < next.length; ++j) {
-            // only score leaf nodes
-            arrayOfCandidateBoards[i].push(parseInt(777, 10)); // push only leaf nodes as scores; initially length function servers as a "mock score": W - B + W - B
-          }
-        } else {
-          stack.push(this.getNextMoveCandidateBoardsForABoard(prev[i], !white));
-        }
-      } // for
-      firstIterationDone = true;
-      deep--;
-    } // while
-
-    return arrayOfCandidateBoards;
-  }
   /**
    * TODO: generalize this and make it this use stack & iterative (deep/ply as a parameter)
    */
