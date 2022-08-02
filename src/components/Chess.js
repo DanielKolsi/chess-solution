@@ -127,10 +127,11 @@ class Chess extends React.Component {
 
     const rootScoreArray = scoreArrays[scoreArrays.length - 1]; // this array contains all the possible scores for the next moves, order is the same as the allowedBoards order
 
-   let gap = scoreArrays.length - 2;
-   let rangeSumArrays = []; // ranges for each root board (move)
 
-   while (gap > 0) {
+   let gap = scoreArrays.length - 2;
+   let rangeSumArrays = []; // ranges for each root board 
+
+   //while (gap > 0) {
 
     let previousDeepScoreArrayForCalculatingRanges = [];
 
@@ -140,7 +141,7 @@ class Chess extends React.Component {
         absoluteBoardNumber
       );
     } else {
-      previousDeepScoreArrayForCalculatingRanges = scoreArrays[1]; // for calculating ranges for the (next) leaf nodes
+      previousDeepScoreArrayForCalculatingRanges = scoreArrays[scoreArrays.length - 2]; // for calculating ranges for the (next) leaf nodes  was: scoreArrays.length - gap
     }
 
     let rootScoreArrayPos = 0;
@@ -148,26 +149,52 @@ class Chess extends React.Component {
     let sum = 0;
 
     let startPosition = 0;
-    while (rootScoreArrayPos < previousDeepScoreArrayForCalculatingRanges.length) {
+    while (rootScoreArrayPos < rootScoreArray.length) {
       for (
         let i = startPosition;
         i <
         startPosition +
-        previousDeepScoreArrayForCalculatingRanges[previousDeepScoreArrayForCalculatingRanges.length - 1 - rootScoreArrayPos];
+          rootScoreArray[rootScoreArray.length - 1 - rootScoreArrayPos];
         ++i
       ) {
         sum += previousDeepScoreArrayForCalculatingRanges[i];
       }
       rangeSumArrays[rootScoreArrayPos] = sum;
       startPosition +=
-      previousDeepScoreArrayForCalculatingRanges[previousDeepScoreArrayForCalculatingRanges.length - 1 - rootScoreArrayPos];
+        rootScoreArray[rootScoreArray.length - 1 - rootScoreArrayPos];
       rootScoreArrayPos++;
 
       sum = 0;
     } // while
 
-    gap--;
-   } // while gap
+
+    rootScoreArrayPos = 0;
+    startPosition = 0;
+    let rangeSumArrays2 = [scoreArrays.length];
+    sum = 0;
+
+
+    if (scoreArrays.length > 3) { // deepness >= 4
+      while (rootScoreArrayPos < rootScoreArray.length) {
+        for (
+          let i = startPosition;
+          i <
+          startPosition +
+            rangeSumArrays[rootScoreArrayPos];
+          ++i
+        ) {
+          sum += scoreArrays[1][i];
+        }
+        rangeSumArrays2[rootScoreArrayPos] = sum;
+        startPosition += rangeSumArrays[rootScoreArrayPos];        
+        rootScoreArrayPos++;
+        sum = 0;
+      } // while
+  
+    }
+    
+    //gap--;
+   //} // while gap
 
    nextMoveBoardIndexNumber = Heuristics.getBestNextMoveBoardNumber(
     rangeSumArrays,
@@ -243,7 +270,7 @@ class Chess extends React.Component {
 
     //let bestNextBoardIndexNumber = Heuristics.getBestNextMoveBoardNumber(scoreArrayAndarrayOfCandidateBoardsArrays[0][0], indexOfBestBoard);
 
-    let bestNextBoardIndexNumber = this.getNextMoveBoardIndexForAbsoluteBoardNumber(
+  let bestNextBoardIndexNumber = this.getNextMoveBoardIndexForAbsoluteBoardNumber(
       indexOfBestBoard,
       scoreArrays
     );
@@ -884,7 +911,7 @@ class Chess extends React.Component {
    * @returns
    */
   getNextMoveCandidateBoardsForABoard(board, white) {
-   // console.log("***getNextMoveCandidateBoardsForABoard****");
+    console.log("***getNextMoveCandidateBoardsForABoard****");
     const candidateMoves = this.getCandidateMovesForBoard(white, board);
     const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
     const candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
