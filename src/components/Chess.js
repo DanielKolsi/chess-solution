@@ -451,7 +451,6 @@ class Chess extends React.Component {
 
     this.setState({ pieces });
     //this.makeNumberOfMoves(3); // check game over condition!
-
     return pieces;
   }
 
@@ -540,7 +539,6 @@ class Chess extends React.Component {
         }
       }
     }
-
     return candidateMovesWhite;
   }
 
