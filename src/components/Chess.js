@@ -1,10 +1,12 @@
 import React from "react";
+
 import Square from "./Square";
 import NextPly from "./NextPly";
 
 import PrevPly from "./PrevPly";
 import CONSTANTS from "../config/constants";
 
+import * as ScoreSumProcessor from "./ScoreSumProcessor";
 import * as Heuristics from "./Heuristics";
 import * as MoveFunctions from "./MoveFunctions";
 import * as ThreatScores from "./ThreatScores";
@@ -643,6 +645,8 @@ class Chess extends React.Component {
    * @param {*} less
    */
   getArrayOfCandidateBoardsArrays(white, board, deepness) {
+    const originalDeepness = deepness;
+
     let stack = [];
     let scoreStack = []; // previous level scores to be added for the next level deepness iteration
     let scoreArrays = []; // store individual candidateBoardArrays lengths for the eval score function
@@ -697,18 +701,18 @@ class Chess extends React.Component {
             nextMoveCandidateBoards.length
         );*/
 
-        if (scoreStack.length > 0 && deepness > 3) { // TODO: remove magic number 2
+      /*  if (scoreStack.length > 0  && deepness > 3) { // TODO: remove magic number 2
           const stackValue =  scoreStack.pop();
           scoreArrays[deepness - 1].push(
             nextMoveCandidateBoardsLengthScore + stackValue 
           ); // this is where the SUM SCORE is calculated and stored
-        } else  { 
+        } else  { */
           scoreArrays[deepness - 1].push(nextMoveCandidateBoardsLengthScore);
-       }
+       //}
 
        if (deepness > 1) {
           for (let j = 0; j < nextMoveCandidateBoards.length; ++j) {
-            scoreStack.push(nextMoveCandidateBoardsLengthScore);
+            //scoreStack.push(nextMoveCandidateBoardsLengthScore);
             stack.push(nextMoveCandidateBoards[j]);
           }
         }
@@ -744,6 +748,7 @@ class Chess extends React.Component {
     // scoreAndArrayOfCandidateBoardsArrays[0] = scoreArrays; // add scoreArray as we need it later
     //scoreAndArrayOfCandidateBoardsArrays[1] = arrayOfCandidateBoardsArrays;
     //const checkSum = Heuristics.getCheckSum(scoreArrays[1]);
+    ScoreSumProcessor.getScoreSumArray(scoreArrays);
     return scoreArrays; // TODO: we should possibly return a compound array consisting of scoreArrays AND arrayOfCandidateBoardsArrays
   }
   
