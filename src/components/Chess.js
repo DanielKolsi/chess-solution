@@ -160,14 +160,14 @@ class Chess extends React.Component {
         let i = startPosition;
         i <
         startPosition +
-          rootScoreArray[rootScoreArray.length - 1 - rootScoreArrayPos]; // rootScoreArray WAS originally from a stack - LIFO, we need to reverse the order here!
+          Math.abs(rootScoreArray[rootScoreArray.length - 1 - rootScoreArrayPos]); // rootScoreArray WAS originally from a stack - LIFO, we need to reverse the order here!
         ++i
       ) {
         sum += previousDeepScoreArrayForCalculatingRanges[i];
       }
       rangeSumArrays[rootScoreArrayPos] = sum;
       startPosition +=
-        rootScoreArray[rootScoreArray.length - 1 - rootScoreArrayPos];
+        Math.abs(rootScoreArray[rootScoreArray.length - 1 - rootScoreArrayPos]);
       rootScoreArrayPos++;
 
       sum = 0;
@@ -177,7 +177,7 @@ class Chess extends React.Component {
       // deepness >= 4
       rootScoreArrayPos = 0;
       startPosition = 0;
-      let rangeSumArrays2 = [scoreArrays.length];
+      //let rangeSumArrays2 = [scoreArrays.length];
 
       while (rootScoreArrayPos < rootScoreArray.length) {
         for (
@@ -187,7 +187,7 @@ class Chess extends React.Component {
         ) {
           sum += scoreArrays[1][i];
         }
-        rangeSumArrays2[rootScoreArrayPos] = sum;
+     //   rangeSumArrays2[rootScoreArrayPos] = sum;
         startPosition += rangeSumArrays[rootScoreArrayPos];
         rootScoreArrayPos++;
         sum = 0;
@@ -257,11 +257,12 @@ class Chess extends React.Component {
     //let bestBoardNumberTrivial = this.getBoardNumberForBestMoveDeep4(board);
 
     const DEEPNESS = 3; // 3 = -BLACK + WHITE - BLACK
-    const scoreArrays = this.getArrayOfCandidateBoardsArrays(
+    const compoundArray = this.getArrayOfCandidateBoardsArrays(
       white,
       board,
       DEEPNESS
     ); // includes also root score array!
+    const scoreArrays = compoundArray[1];
     let scoreArray = scoreArrays[0];
 
     // TODO: this works only if WHITE is the last of the deep, e.g. when deep = 1, 3, 5, ...
@@ -298,8 +299,9 @@ class Chess extends React.Component {
     let bestNextBoardIndexNumber =
       this.getNextMoveBoardIndexForAbsoluteBoardNumber(
         indexOfBestBoard,
-        scoreArrays
+        compoundArray[0], white
       );
+    console.log("best next board IDX number = " + bestNextBoardIndexNumber + " RETURNING"); 
     return; // TODO: end code execution here for algorithm debugging purpose
 
     candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
@@ -748,8 +750,8 @@ class Chess extends React.Component {
     // scoreAndArrayOfCandidateBoardsArrays[0] = scoreArrays; // add scoreArray as we need it later
     //scoreAndArrayOfCandidateBoardsArrays[1] = arrayOfCandidateBoardsArrays;
     //const checkSum = Heuristics.getCheckSum(scoreArrays[1]);
-    ScoreSumProcessor.getScoreSumArray(scoreArrays);
-    return scoreArrays; // TODO: we should possibly return a compound array consisting of scoreArrays AND arrayOfCandidateBoardsArrays
+   
+    return ScoreSumProcessor.getScoreSumArray(scoreArrays); // TODO: we should possibly return a compound array consisting of scoreArrays AND arrayOfCandidateBoardsArrays
   }
   
 
