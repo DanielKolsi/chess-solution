@@ -12,7 +12,7 @@ export function getScoreSumArray(scoreArrays) {
   const originalScoreArrays = _.cloneDeep(scoreArrays);
   let arrayOfOriginalAndScoreSumArray = [2];
 
-  let expandedSumArray = []; // mapped from the previous array to have the same size than the upcoming array
+   let expandedSumArray = []; // mapped from the previous array to have the same size than the upcoming array
   //let scoreArrayPos = scoreArrays.length - 1;
   for (let i = originalScoreArrays.length - 1; i > 0; i--) {
     let startPos = 0;
@@ -30,14 +30,14 @@ export function getScoreSumArray(scoreArrays) {
     for (let j = 0; j < expandedSumArray.length; ++j) {
       const originalScoreArrayValue = originalScoreArrays[i - 1][j]; // this should always be from the original NON-MODIFIED score array
 
-      console.log(
+   /*   console.log(
         "SCORE ARRAY VALUE = " +
           originalScoreArrayValue +
           " scoreArrayPos = " +
           (i - 1) +
           " j = " +
           j
-      );
+      );*/
      
       const expandedSumArrayValue = expandedSumArray[j];
       scoreArrays[i - 1][j] = originalScoreArrayValue + expandedSumArrayValue; // this can be negative as well
