@@ -255,8 +255,8 @@ class Chess extends React.Component {
       board,
       DEEPNESS
     ); // includes also root score array!
-    const scoreArrays = compoundArray[1];
-    let scoreArray = scoreArrays[0];
+    const scoreArrays = compoundArray[1]; // recurring sum score arrays
+    const scoreArray = scoreArrays[0]; // this has all the final sum scores!
 
     // TODO: this works only if WHITE is the last of the deep, e.g. when deep = 1, 3, 5, ...
 
