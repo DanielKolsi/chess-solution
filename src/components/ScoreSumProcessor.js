@@ -1,5 +1,6 @@
 //import CONSTANTS from "../config/constants";
 import _ from "lodash";
+import * as Heuristics from "./Heuristics";
 //import * as HelpFunctions from "./HelpFunctions";
 
 /**
@@ -13,20 +14,21 @@ export function getScoreSumArray(scoreArrays) {
   let arrayOfOriginalAndScoreSumArray = [2];
 
    let expandedSumArray = []; // mapped from the previous array to have the same size than the upcoming array
-  //let scoreArrayPos = scoreArrays.length - 1;
+  
+  let rootScoresCalculated = false;
+
   for (let i = originalScoreArrays.length - 1; i > 0; i--) {
-    let startPos = 0;
-
-    for (let n = 0; n < originalScoreArrays[i].length; ++n) {
-      let value = scoreArrays[i][n]; // if the sum is there, we'll add just it! // originalScoreArrays[i][n];
-      const endPos = startPos + Math.abs(value);
-
-      for (let k = startPos; k < endPos; ++k) {
-        expandedSumArray[k] = value; // value can be negative here
-      }
-      startPos = endPos;
+   // let startPos = 0;
+    console.log("orig score array length = " +  originalScoreArrays[i].length);
+   
+    expandedSumArray = getExpandedArrayFromPreviousOriginalScoreArray(originalScoreArrays[i], scoreArrays[i], rootScoresCalculated);
+   
+    if (!rootScoresCalculated) {     
+      rootScoresCalculated = true;
     }
 
+
+    console.log("expanded sum array length = " + expandedSumArray.length);
     for (let j = 0; j < expandedSumArray.length; ++j) {
       const originalScoreArrayValue = originalScoreArrays[i - 1][j]; // this should always be from the original NON-MODIFIED score array
 
@@ -40,14 +42,52 @@ export function getScoreSumArray(scoreArrays) {
       );*/
      
       const expandedSumArrayValue = expandedSumArray[j];
-      scoreArrays[i - 1][j] = originalScoreArrayValue + expandedSumArrayValue; // this can be negative as well
-    } //for
-    // scoreArrayPos--;
-   
+       
+      if ((i % 2) !== 0) {
+     
+        
+        scoreArrays[i - 1][j] = -originalScoreArrayValue + expandedSumArrayValue; // this can be negative as well
+      } else {
+        
+        scoreArrays[i - 1][j] = originalScoreArrayValue + expandedSumArrayValue; // this can be negative as well
+      }
+          } //for
+       
   } // for
   arrayOfOriginalAndScoreSumArray[0] = originalScoreArrays;
   arrayOfOriginalAndScoreSumArray[1] = scoreArrays;
  
-  
+ // let expandedSumArray2 = getExpandedArrayFromPreviousOriginalScoreArray(originalScoreArrays[1], scoreArrays[1]);
+
   return arrayOfOriginalAndScoreSumArray;
+}
+
+function getExpandedArrayFromPreviousOriginalScoreArray(previousOriginalScoreArray, previousScoreArray, rootScoresCalculated) {
+
+  
+  //const checkSum = Heuristics.getCheckSum(previousScoreArray); // 734 issue
+
+  let expandedSumArray = [];
+  let startPos = 0;
+  let endPos = 0;
+  console.log("orig score array length = " +  previousOriginalScoreArray.length);
+  for (let n = 0; n < previousOriginalScoreArray.length; ++n) {
+    let value = 0;
+    if (!rootScoresCalculated) {
+      value = -previousScoreArray[n]; // MIN-MAX first is always the opponent, thus negative!
+    } else {
+      value = previousScoreArray[n]; // if the sum is there, we'll add just it! // originalScoreArrays[i][n];
+    }
+    
+    endPos = startPos + previousOriginalScoreArray[n];
+
+    for (let k = startPos; k < endPos; ++k) {
+      expandedSumArray[k] = value; 
+    }
+    startPos = endPos;
+  } // for
+
+
+  return expandedSumArray;
+
 }

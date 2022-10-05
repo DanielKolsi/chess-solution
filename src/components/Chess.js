@@ -121,7 +121,8 @@ class Chess extends React.Component {
     return arrayOfCandidateBoards;
   }
 
-  getNextMoveBoardIndexForAbsoluteBoardNumber(deepness,
+  getNextMoveBoardIndexForAbsoluteBoardNumber(
+    deepness,
     absoluteBoardNumber,
     scoreArrays,
     white
@@ -130,10 +131,7 @@ class Chess extends React.Component {
 
     const rootScoreArray = scoreArrays[scoreArrays.length - 1]; // this array contains all the possible scores for the next moves, order is the same as the allowedBoards order
 
-    //let gap = scoreArrays.length - 2;
     let rangeSumArrays = []; // ranges for each root board
-
-    //while (gap > 0) {
 
     let previousDeepScoreArrayForCalculatingRanges = [];
 
@@ -144,9 +142,7 @@ class Chess extends React.Component {
         white
       );
     } else {
-      
-      previousDeepScoreArrayForCalculatingRanges =
-        scoreArrays[deepness - 2]; // TODO for calculating ranges for the (next) leaf nodes  was: scoreArrays.length - gap
+      previousDeepScoreArrayForCalculatingRanges = scoreArrays[deepness - 2]; // TODO for calculating ranges for the (next) leaf nodes  was: scoreArrays.length - gap
     }
 
     let rootScoreArrayPos = 0;
@@ -178,22 +174,20 @@ class Chess extends React.Component {
 
     if (deepness === 4) {
       // one more round
-     //const checkedSum = Heuristics.getCheckSum(scoreArrays[2]);
-     //const checkedSum=  Heuristics.getCheckSum(scoreArrays[1]);
-     let start = 0;
+      //const checkedSum = Heuristics.getCheckSum(scoreArrays[2]);
+      //const checkedSum=  Heuristics.getCheckSum(scoreArrays[1]);
+      let start = 0;
       for (let r = 0; r < rangeSumArrays.length; r++) {
         let sumScore = 0;
-       
+
         console.log("RANGE R = " + rangeSumArrays[r]);
         for (let s = start; s < start + rangeSumArrays[r]; s++) {
-          sumScore+=scoreArrays[1][s]; 
-        } 
+          sumScore += scoreArrays[1][s];
+        }
         start += rangeSumArrays[r];
         rangeSumArrays[r] = Math.abs(sumScore);
       }
     }
-
-   
 
     nextMoveBoardIndexNumber = Heuristics.getBestNextMoveBoardNumber(
       rangeSumArrays,
@@ -210,8 +204,7 @@ class Chess extends React.Component {
    * @returns
    */
   nextPly() {
-    const DEEPNESS = 2; // 3 = -BLACK + WHITE - BLACK
-
+    const DEEPNESS = 3; // 3 = -BLACK + WHITE - BLACK
 
     let {
       currentBoardSquares: board,
@@ -234,7 +227,7 @@ class Chess extends React.Component {
         " WHITE = " + white + " allowed moves:" + allowedMoves.join("|")
       );
     }
-    
+
     const compoundArray = this.getArrayOfCandidateBoardsArrays(
       white,
       board,
@@ -247,11 +240,9 @@ class Chess extends React.Component {
 
     let bestBoardScore = 0;
 
-   if (white) {
-      bestBoardScore = Math.max.apply(Math, scoreArray);
-    } else {
-      bestBoardScore = Math.min.apply(Math, scoreArray);
-    }
+    
+  bestBoardScore = Math.max.apply(Math, scoreArray); // whether black or white, we always want the MAX score! (as part of the eval score function, opponent's move score values are always negative)
+  
 
     let indexOfBestBoard = scoreArray.indexOf(bestBoardScore); // candidate board i.e. move number from the candidateBoards to be selected
 
@@ -284,9 +275,9 @@ class Chess extends React.Component {
     console.log(
       "best next board IDX number = " + bestNextBoardIndexNumber + " RETURNING"
     );
-   // return; // TODO: end code execution here for algorithm debugging purpose
+    // return; // TODO: end code execution here for algorithm debugging purpose
 
- candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
+    candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
     console.log(
       "WHITE = " +
         white +
@@ -629,12 +620,8 @@ class Chess extends React.Component {
    * @param {*} less
    */
   getArrayOfCandidateBoardsArrays(white, board, deepness) {
-    //const originalDeepness = deepness;
-
     let stack = [];
-    //let scoreStack = []; // previous level scores to be added for the next level deepness iteration
     let scoreArrays = []; // store individual candidateBoardArrays lengths for the eval score function
-    //let scoreArraysDeepness = [deepness][null];
 
     deepness++; // convenience additicion?!
 
@@ -646,7 +633,9 @@ class Chess extends React.Component {
       board,
       white
     );
-    console.log("white = " + white + " boards = " + nextMoveCandidateBoards.length);
+    console.log(
+      "white = " + white + " boards = " + nextMoveCandidateBoards.length
+    );
 
     //scoreArraysDeepness[deepness][nextMoveCandidateBoards.length]; // TODO: this should be for the complete deep X totalEvalScoreSumArray (e.b. score = W-B+W-B)
 
@@ -666,43 +655,24 @@ class Chess extends React.Component {
 
     deepness--;
 
-    // TODO: use next move candidateboards for ROOTS
-    //let rootProcessed = false;
-
     while (deepness > 0) {
       for (let i = 0; i < arrayOfCandidateBoardsArrays.length; ++i) {
-      
         nextMoveCandidateBoards = arrayOfCandidateBoardsArrays[i];
         let nextMoveCandidateBoardsLengthScore = nextMoveCandidateBoards.length;
-
-        if (!nextPlyColor) {
-          console.log("DEEPNESS = " + deepness + " COLOR = " + nextPlyColor);
-          nextMoveCandidateBoardsLengthScore =
-            -nextMoveCandidateBoardsLengthScore;
-        }
 
         /*  console.log(
           "FIRST next move candit boards length = " +
             nextMoveCandidateBoards.length
         );*/
 
-        /*  if (scoreStack.length > 0  && deepness > 3) { // TODO: remove magic number 2
-          const stackValue =  scoreStack.pop();
-          scoreArrays[deepness - 1].push(
-            nextMoveCandidateBoardsLengthScore + stackValue 
-          ); // this is where the SUM SCORE is calculated and stored
-        } else  { */
         scoreArrays[deepness - 1].push(nextMoveCandidateBoardsLengthScore);
-        //}
 
         if (deepness > 1) {
           for (let j = 0; j < nextMoveCandidateBoards.length; ++j) {
-            //scoreStack.push(nextMoveCandidateBoardsLengthScore);
             stack.push(nextMoveCandidateBoards[j]);
           }
         }
       } // for
-      // scoreArraysDeepness[deepness - 1] = scoreArrays[deepness - 1]; // WHITE - negative values for black!
 
       if (stack.length > 0 && deepness > 1) {
         arrayOfCandidateBoardsArrays = []; // clear the array
@@ -710,29 +680,24 @@ class Chess extends React.Component {
 
       while (stack.length > 0 && deepness > 1) {
         let childBoard = stack.pop();
-
-        //nextPlyColor = !nextPlyColor; // TODO review this!
         let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
           childBoard,
           !nextPlyColor
         );
-        console.log(
-          "next move candit boards length = " + nextMoveCandidateBoards.length + " WHITE = " + nextPlyColor
-        );
+     /*   console.log(
+          "next move candit boards length = " +
+            nextMoveCandidateBoards.length +
+            " WHITE = " +
+            nextPlyColor
+        ); */
 
         arrayOfCandidateBoardsArrays.push(nextMoveCandidateBoards); // SCORE
       } // while stack
 
       deepness--;
-      //  rootProcessed = true;
-      nextPlyColor = !nextPlyColor;
     } // while deepness
 
-    // const scoreAndArrayOfCandidateBoardsArrays = [2];
-    // scoreAndArrayOfCandidateBoardsArrays[0] = scoreArrays; // add scoreArray as we need it later
-    //scoreAndArrayOfCandidateBoardsArrays[1] = arrayOfCandidateBoardsArrays;
     //const checkSum = Heuristics.getCheckSum(scoreArrays[0]);
-
     return ScoreSumProcessor.getScoreSumArray(scoreArrays); // TODO: we should possibly return a compound array consisting of scoreArrays AND arrayOfCandidateBoardsArrays
   }
 
@@ -743,16 +708,16 @@ class Chess extends React.Component {
    * @returns
    */
   getNextMoveCandidateBoardsForABoard(board, white) {
-    //white = !white
-    //console.log("***getNextMoveCandidateBoardsForABoard****");
+       //console.log("***getNextMoveCandidateBoardsForABoard****");
     const candidateMoves = this.getCandidateMovesForBoard(white, board);
     const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
-    console.log("allowedMoves for WHITE = " + white + " " + allowedMoves.length);
+    /*console.log(
+      "allowedMoves for WHITE = " + white + " " + allowedMoves.length
+    );*/
     const candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
     return candidateBoards;
   }
 
-  
   /**
    *
    * @param {*} allowedMoves
