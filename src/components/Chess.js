@@ -164,11 +164,9 @@ class Chess extends React.Component {
         sum += Math.abs(previousDeepScoreArrayForCalculatingRanges[i]); // must be positive integer!
       }
       rangeSumArrays[rootScoreArrayPos] = sum;
-      startPosition += Math.abs(
-        rootScoreArray[rootScoreArray.length - 1 - rootScoreArrayPos]
-      );
+      startPosition +=
+        rootScoreArray[rootScoreArray.length - 1 - rootScoreArrayPos];
       rootScoreArrayPos++;
-
       sum = 0;
     } // while
 
@@ -240,11 +238,9 @@ class Chess extends React.Component {
 
     let bestBoardScore = 0;
 
-    
-  bestBoardScore = Math.max.apply(Math, scoreArray); // whether black or white, we always want the MAX score! (as part of the eval score function, opponent's move score values are always negative)
-  
+    bestBoardScore = Math.max.apply(Math, scoreArray); // whether black or white, we always want the MAX score! (as part of the eval score function, opponent's move score values are always negative)
 
-    let indexOfBestBoard = scoreArray.indexOf(bestBoardScore); // candidate board i.e. move number from the candidateBoards to be selected
+    const indexOfBestBoard = scoreArray.indexOf(bestBoardScore); // candidate board i.e. move number from the candidateBoards to be selected
 
     console.log(
       "Index of board having the best HEURISTICS SCORE: " + indexOfBestBoard
@@ -684,7 +680,7 @@ class Chess extends React.Component {
           childBoard,
           !nextPlyColor
         );
-     /*   console.log(
+        /*   console.log(
           "next move candit boards length = " +
             nextMoveCandidateBoards.length +
             " WHITE = " +
@@ -697,7 +693,7 @@ class Chess extends React.Component {
       deepness--;
     } // while deepness
 
-    //const checkSum = Heuristics.getCheckSum(scoreArrays[0]);
+    const checkSum = Heuristics.getCheckSum(scoreArrays[0]);
     return ScoreSumProcessor.getScoreSumArray(scoreArrays); // TODO: we should possibly return a compound array consisting of scoreArrays AND arrayOfCandidateBoardsArrays
   }
 
@@ -708,7 +704,7 @@ class Chess extends React.Component {
    * @returns
    */
   getNextMoveCandidateBoardsForABoard(board, white) {
-       //console.log("***getNextMoveCandidateBoardsForABoard****");
+    //console.log("***getNextMoveCandidateBoardsForABoard****");
     const candidateMoves = this.getCandidateMovesForBoard(white, board);
     const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
     /*console.log(
