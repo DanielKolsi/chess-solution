@@ -172,8 +172,8 @@ class Chess extends React.Component {
 
     if (deepness === 4) {
       // one more round
-      //const checkedSum = Heuristics.getCheckSum(scoreArrays[2]);
-      //const checkedSum=  Heuristics.getCheckSum(scoreArrays[1]);
+      const checkedSum = Heuristics.getCheckSum(scoreArrays[2]);
+      const checkedSum2 =  Heuristics.getCheckSum(scoreArrays[1]);
       let start = 0;
       for (let r = 0; r < rangeSumArrays.length; r++) {
         let sumScore = 0;
@@ -202,7 +202,7 @@ class Chess extends React.Component {
    * @returns
    */
   nextPly() {
-    const DEEPNESS = 3; // 3 = -BLACK + WHITE - BLACK
+    const DEEPNESS = 4; // 3 = -BLACK + WHITE - BLACK
 
     let {
       currentBoardSquares: board,

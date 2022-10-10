@@ -1,7 +1,4 @@
-//import CONSTANTS from "../config/constants";
 import _ from "lodash";
-//import * as Heuristics from "./Heuristics";
-//import * as HelpFunctions from "./HelpFunctions";
 
 /**
  * Calculate the sum total scores for the evaluation function
@@ -15,6 +12,7 @@ export function getScoreSumArray(scoreArrays) {
   let expandedSumArray = []; // mapped from the previous array to have the same size than the upcoming array
 
   let rootScoresCalculated = false;
+  let subtractNegativeOriginalScoreArrayValue = false;
 
   for (let i = originalScoreArrays.length - 1; i > 0; i--) {
     console.log("orig score array length = " + originalScoreArrays[i].length);
@@ -44,13 +42,15 @@ export function getScoreSumArray(scoreArrays) {
 
       const expandedSumArrayValue = expandedSumArray[j];
 
-      if (i % 2 !== 0) {
+      if (subtractNegativeOriginalScoreArrayValue) {
         scoreArrays[i - 1][j] =
-          -originalScoreArrayValue + expandedSumArrayValue; // this can be negative as well
+          expandedSumArrayValue - originalScoreArrayValue; // expandedSumArrayValue can be negative as well        
       } else {
         scoreArrays[i - 1][j] = originalScoreArrayValue + expandedSumArrayValue; // this can be negative as well
+      
       }
     } //for
+    subtractNegativeOriginalScoreArrayValue = !subtractNegativeOriginalScoreArrayValue;
   } // for
   arrayOfOriginalAndScoreSumArray[0] = originalScoreArrays;
   arrayOfOriginalAndScoreSumArray[1] = scoreArrays;
