@@ -202,7 +202,7 @@ class Chess extends React.Component {
    * @returns
    */
   nextPly() {
-    const DEEPNESS = 4; // 3 = -BLACK + WHITE - BLACK
+    const DEEPNESS = 2; // 3 = -BLACK + WHITE - BLACK
 
     let {
       currentBoardSquares: board,
@@ -240,6 +240,7 @@ class Chess extends React.Component {
 
     bestBoardScore = Math.max.apply(Math, scoreArray); // whether black or white, we always want the MAX score! (as part of the eval score function, opponent's move score values are always negative)
 
+    //scoreArray.sort((a, b) => b - a);
     const indexOfBestBoard = scoreArray.indexOf(bestBoardScore); // candidate board i.e. move number from the candidateBoards to be selected
 
     console.log(
