@@ -1,11 +1,11 @@
 import _ from "lodash";
 
 // MAX-MIN rangeScores, for deep 4 get the one where MAX(deep 4) has the minimum score, e.g. MIN of MAXES
-export function getScoreSumArray(scoreArrays, deepness) {
+export function getMinMaxScoreIndex(scoreArrays) {
   
   let minMaxScoreIdx = 0;
-  let previousScoreArray = scoreArrays[deepness - 2]; // use this like checkSum
-  let currentScoreArray = scoreArrays[deepness - 1]; 
+  let previousScoreArray = scoreArrays[1]; // use this like checkSum
+  let currentScoreArray = scoreArrays[0]; 
 
   let currentIdx = 0;
   let minMaxScore = 1000;
@@ -20,17 +20,16 @@ export function getScoreSumArray(scoreArrays, deepness) {
         localMax = currentScoreArray[j];
       }
     } // for
-    currentIdx+= prevValue;
+   
 
     if (localMax < minMaxScore) {
       minMaxScore = localMax;
       minMaxScoreIdx = currentIdx; // this should guarantee the right index for selecting the correct ROOT board (move)
     }
+    currentIdx+= prevValue; // for the next value range
 
   } // for
-
   return minMaxScoreIdx; // this will be used as a seed for the range scores function to get the best board index!
-
 }
 /**
  * Calculate the sum total scores for the evaluation function

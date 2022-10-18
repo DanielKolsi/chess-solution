@@ -202,7 +202,7 @@ class Chess extends React.Component {
    * @returns
    */
   nextPly() {
-    const DEEPNESS = 2; // 3 = -BLACK + WHITE - BLACK
+    const DEEPNESS = 4; // 3 = -BLACK + WHITE - BLACK
 
     let {
       currentBoardSquares: board,
@@ -617,6 +617,8 @@ class Chess extends React.Component {
    * @param {*} less
    */
   getArrayOfCandidateBoardsArrays(white, board, deepness) {
+    
+
     let stack = [];
     let scoreArrays = []; // store individual candidateBoardArrays lengths for the eval score function
 
@@ -694,7 +696,8 @@ class Chess extends React.Component {
       deepness--;
     } // while deepness
 
-    const checkSum = Heuristics.getCheckSum(scoreArrays[0]);
+    //const checkSum = Heuristics.getCheckSum(scoreArrays[0]);
+    const minMaxScoreIndex = ScoreSumProcessor.getMinMaxScoreIndex(scoreArrays);
     return ScoreSumProcessor.getScoreSumArray(scoreArrays); // TODO: we should possibly return a compound array consisting of scoreArrays AND arrayOfCandidateBoardsArrays
   }
 
