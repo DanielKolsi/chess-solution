@@ -121,6 +121,7 @@ class Chess extends React.Component {
     return arrayOfCandidateBoards;
   }
 
+  // using ranges to map the absolute best board index to the root moves board index
   getNextMoveBoardIndexForAbsoluteBoardNumber(
     deepness,
     absoluteBoardNumber,
@@ -202,7 +203,7 @@ class Chess extends React.Component {
    * @returns
    */
   nextPly() {
-    const DEEPNESS = 4; // 3 = -BLACK + WHITE - BLACK
+    const DEEPNESS = 2; // 3 = -BLACK + WHITE - BLACK
 
     let {
       currentBoardSquares: board,
@@ -231,17 +232,19 @@ class Chess extends React.Component {
       board,
       DEEPNESS
     ); // includes also root score array!
-    const scoreArrays = compoundArray[1]; // recurring sum score arrays
-    const scoreArray = scoreArrays[0]; // this has all the final sum scores!
+ //   const scoreArrays = compoundArray[1]; // recurring sum score arrays
+   // const scoreArray = scoreArrays[0]; // this has all the final sum scores!
 
     // TODO: this works only if WHITE is the last of the deep, e.g. when deep = 1, 3, 5, ...
 
-    let bestBoardScore = 0;
+    const indexOfBestBoard = ScoreSumProcessor.getMinMaxScoreIndex(compoundArray[0]); // we need original score arrays here!
 
-    bestBoardScore = Math.max.apply(Math, scoreArray); // whether black or white, we always want the MAX score! (as part of the eval score function, opponent's move score values are always negative)
+    //let bestBoardScore = 0;
+
+   // bestBoardScore = Math.max.apply(Math, scoreArray); // whether black or white, we always want the MAX score! (as part of the eval score function, opponent's move score values are always negative)
 
     //scoreArray.sort((a, b) => b - a);
-    const indexOfBestBoard = scoreArray.indexOf(bestBoardScore); // candidate board i.e. move number from the candidateBoards to be selected
+   // const indexOfBestBoard = scoreArray.indexOf(bestBoardScore); // candidate board i.e. move number from the candidateBoards to be selected
 
     console.log(
       "Index of board having the best HEURISTICS SCORE: " + indexOfBestBoard
@@ -618,7 +621,6 @@ class Chess extends React.Component {
    */
   getArrayOfCandidateBoardsArrays(white, board, deepness) {
     
-
     let stack = [];
     let scoreArrays = []; // store individual candidateBoardArrays lengths for the eval score function
 
@@ -697,7 +699,7 @@ class Chess extends React.Component {
     } // while deepness
 
     //const checkSum = Heuristics.getCheckSum(scoreArrays[0]);
-    const minMaxScoreIndex = ScoreSumProcessor.getMinMaxScoreIndex(scoreArrays);
+  
     return ScoreSumProcessor.getScoreSumArray(scoreArrays); // TODO: we should possibly return a compound array consisting of scoreArrays AND arrayOfCandidateBoardsArrays
   }
 

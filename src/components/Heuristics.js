@@ -72,7 +72,7 @@ export function getBestNextMoveBoardNumber(scoreArray, absoluteMoveIndex) {
   let bestNextMoveIndex = 0; 
   let incrementedScore =  scoreArray[bestNextMoveIndex];
   
-  while (absoluteMoveIndex > incrementedScore) { 
+  while (absoluteMoveIndex >= incrementedScore) { 
     incrementedScore += scoreArray[++bestNextMoveIndex];  
   }
   return bestNextMoveIndex;
@@ -180,7 +180,7 @@ export function getBestMove(board, allowedMoves) {
  * @param {*} white
  * @returns
  */
-export function getMaxPointCandidateBoard(candidateBoards, white) {
+export function getMaxPointCandidateBoard(candidateBoards) {
   let points = getPointsForAllCandidateBoards(candidateBoards);
   let maxPoint = Math.max(points);
 

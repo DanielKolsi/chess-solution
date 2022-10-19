@@ -1,34 +1,73 @@
 import _ from "lodash";
 
 // MAX-MIN rangeScores, for deep 4 get the one where MAX(deep 4) has the minimum score, e.g. MIN of MAXES
-export function getMinMaxScoreIndex(scoreArrays) {
-  
-  let minMaxScoreIdx = 0;
-  let previousScoreArray = scoreArrays[1]; // use this like checkSum
-  let currentScoreArray = scoreArrays[0]; 
 
+// For even deepnesses: Opponent wants to choose the child node with the SMALLEST value, thus the parent with largest SMALL (MAX of MINS) needs to be selected.
+export function getMinMaxScoreIndex(scoreArrays) {
+
+   
+  let minMaxScoreIdx = 0;
+  let currentScoreArray = scoreArrays[0]; 
+  let previousScoreArray;
+  let even = false; // even deepness, e.g. 2, 4
+  if (scoreArrays.length === 1) {
+    previousScoreArray = currentScoreArray;
+  } else {
+    previousScoreArray = scoreArrays[1]; // use this like checkSum
+    if (scoreArrays.length % 2 === 0) {
+      even = true;
+    }
+ 
+  }
+   
   let currentIdx = 0;
   let minMaxScore = 1000;
+  let maxMinScore = 0;
 
-  for (let i = 0; i < previousScoreArray.length; ++i) {
+  if (!even) {
+    for (let i = 0; i < previousScoreArray.length; ++i) {
     
-    const prevValue = previousScoreArray[i];
-    let localMax = 0;
-
-    for (let j = currentIdx; j < currentIdx + prevValue; ++j) {
-      if (currentScoreArray[j] > localMax) {
-        localMax = currentScoreArray[j];
+      const prevValue = previousScoreArray[i];
+      let localMax = 0;
+  
+      for (let j = currentIdx; j < currentIdx + prevValue; ++j) {
+        if (currentScoreArray[j] > localMax) {
+          localMax = currentScoreArray[j];
+        }
+      } // for
+     
+  
+      if (localMax < minMaxScore) {
+        minMaxScore = localMax;
+        minMaxScoreIdx = currentIdx; // this should guarantee the right index for selecting the correct ROOT board (move)
       }
-    } // for
-   
+      currentIdx+= prevValue; // for the next value range
+  
+    } // for  
+  } else {
 
-    if (localMax < minMaxScore) {
-      minMaxScore = localMax;
-      minMaxScoreIdx = currentIdx; // this should guarantee the right index for selecting the correct ROOT board (move)
-    }
-    currentIdx+= prevValue; // for the next value range
+    for (let i = 0; i < previousScoreArray.length; ++i) {
+    
+      const prevValue = previousScoreArray[i];
+      let localMin = 1000;
+  
+      for (let j = currentIdx; j < currentIdx + prevValue; ++j) {
+        if (currentScoreArray[j] < localMin) {
+          localMin = currentScoreArray[j];
+        }
+      } // for
+     
+  
+      if (localMin > maxMinScore) {
+        maxMinScore = localMin;
+        minMaxScoreIdx = currentIdx; // this should guarantee the right index for selecting the correct ROOT board (move)
+      }
+      currentIdx+= prevValue; // for the next value range
+  
+    } // for  
 
-  } // for
+  }
+ 
   return minMaxScoreIdx; // this will be used as a seed for the range scores function to get the best board index!
 }
 /**
