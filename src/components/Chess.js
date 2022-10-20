@@ -203,7 +203,7 @@ class Chess extends React.Component {
    * @returns
    */
   nextPly() {
-    const DEEPNESS = 2; // 3 = -BLACK + WHITE - BLACK
+    const DEEPNESS = 1; // 3 = -BLACK + WHITE - BLACK
 
     let {
       currentBoardSquares: board,
@@ -265,7 +265,7 @@ class Chess extends React.Component {
 
     //let bestNextBoardIndexNumber = Heuristics.getBestNextMoveBoardNumber(scoreArrayAndarrayOfCandidateBoardsArrays[0][0], indexOfBestBoard);
 
-    let bestNextBoardIndexNumber =
+    let bestNextBoardIndexNumber = DEEPNESS === 1 ? 1 :
       this.getNextMoveBoardIndexForAbsoluteBoardNumber(
         DEEPNESS,
         indexOfBestBoard,

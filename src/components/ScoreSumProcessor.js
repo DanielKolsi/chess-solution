@@ -4,20 +4,20 @@ import _ from "lodash";
 
 // For even deepnesses: Opponent wants to choose the child node with the SMALLEST value, thus the parent with largest SMALL (MAX of MINS) needs to be selected.
 export function getMinMaxScoreIndex(scoreArrays) {
-
    
   let minMaxScoreIdx = 0;
   let currentScoreArray = scoreArrays[0]; 
   let previousScoreArray;
   let even = false; // even deepness, e.g. 2, 4
   if (scoreArrays.length === 1) {
-    previousScoreArray = currentScoreArray;
+    const min = Math.min(...scoreArrays[0]);
+    const index = scoreArrays[0].indexOf(min)
+    return index;
   } else {
     previousScoreArray = scoreArrays[1]; // use this like checkSum
     if (scoreArrays.length % 2 === 0) {
       even = true;
     }
- 
   }
    
   let currentIdx = 0;
@@ -35,8 +35,7 @@ export function getMinMaxScoreIndex(scoreArrays) {
           localMax = currentScoreArray[j];
         }
       } // for
-     
-  
+      
       if (localMax < minMaxScore) {
         minMaxScore = localMax;
         minMaxScoreIdx = currentIdx; // this should guarantee the right index for selecting the correct ROOT board (move)
@@ -64,10 +63,8 @@ export function getMinMaxScoreIndex(scoreArrays) {
       }
       currentIdx+= prevValue; // for the next value range
   
-    } // for  
-
+    } // for 
   }
- 
   return minMaxScoreIdx; // this will be used as a seed for the range scores function to get the best board index!
 }
 /**

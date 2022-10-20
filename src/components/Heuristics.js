@@ -72,7 +72,7 @@ export function getBestNextMoveBoardNumber(scoreArray, absoluteMoveIndex) {
   let bestNextMoveIndex = 0; 
   let incrementedScore =  scoreArray[bestNextMoveIndex];
   
-  while (absoluteMoveIndex >= incrementedScore) { 
+  while (absoluteMoveIndex >= incrementedScore) {  // as index starts from 0, e.g. 5th move index is 6th move
     incrementedScore += scoreArray[++bestNextMoveIndex];  
   }
   return bestNextMoveIndex;
