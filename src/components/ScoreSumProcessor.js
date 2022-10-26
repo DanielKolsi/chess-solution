@@ -11,7 +11,7 @@ export function getMinMaxScoreIndex(scoreArrays) {
   let even = false; // even deepness, e.g. 2, 4
   if (scoreArrays.length === 1) {
     const min = Math.min(...scoreArrays[0]);
-    const index = scoreArrays[0].indexOf(min)
+    const index = scoreArrays[0].indexOf(min) // we just want that the opponent has the minimum amount of legal move possibilities for his next move
     return index;
   } else {
     previousScoreArray = scoreArrays[1]; // use this like checkSum
@@ -24,7 +24,7 @@ export function getMinMaxScoreIndex(scoreArrays) {
   let minMaxScore = 1000;
   let maxMinScore = 0;
 
-  if (!even) {
+  if (!even) { // the branch will be selected whose children had the MINIMUM max score value
     for (let i = 0; i < previousScoreArray.length; ++i) {
     
       const prevValue = previousScoreArray[i];
@@ -44,7 +44,7 @@ export function getMinMaxScoreIndex(scoreArrays) {
   
     } // for  
   } else {
-
+    // EVEN: the branch will be selected that has the MAX minimum score value
     for (let i = 0; i < previousScoreArray.length; ++i) {
     
       const prevValue = previousScoreArray[i];
@@ -56,7 +56,6 @@ export function getMinMaxScoreIndex(scoreArrays) {
         }
       } // for
      
-  
       if (localMin > maxMinScore) {
         maxMinScore = localMin;
         minMaxScoreIdx = currentIdx; // this should guarantee the right index for selecting the correct ROOT board (move)

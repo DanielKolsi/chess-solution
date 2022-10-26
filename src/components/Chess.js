@@ -265,7 +265,7 @@ class Chess extends React.Component {
 
     //let bestNextBoardIndexNumber = Heuristics.getBestNextMoveBoardNumber(scoreArrayAndarrayOfCandidateBoardsArrays[0][0], indexOfBestBoard);
 
-    let bestNextBoardIndexNumber = DEEPNESS === 1 ? 1 :
+    let bestNextBoardIndexNumber = DEEPNESS === 1 ? indexOfBestBoard :
       this.getNextMoveBoardIndexForAbsoluteBoardNumber(
         DEEPNESS,
         indexOfBestBoard,
