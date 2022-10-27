@@ -2,8 +2,8 @@
 export default {
   pieces: [
     // black pieces 0-15
-    //[41, "RookBA", "bra", 0, false, -5], //currentSquare, type, id, n (number-id), white (true/false), value
-    //[1, "KnightBB", "bka", 1, false, -3],
+    [41, "RookBA", "bra", 0, false, -5], //currentSquare, type, id, n (number-id), white (true/false), value
+    [1, "KnightBB", "bka", 1, false, -3],
     
     
     [3, "KingB", "bk", 4, false, -6],
@@ -12,7 +12,7 @@ export default {
     // white pieces 48-63
     [22, "PawnWG", "wpg", 54, true, 1],
     
-   // [14, "QueenW", "wq", 59, true, 9],
+    [14, "QueenW", "wq", 59, true, 9],
     [21, "KingW", "wk", 60, true, 6],
     
     // additional promoted pieces, need to add all underpromotions for white & black!

@@ -203,7 +203,7 @@ class Chess extends React.Component {
    * @returns
    */
   nextPly() {
-    const DEEPNESS = 1; // 3 = -BLACK + WHITE - BLACK
+    const DEEPNESS = 4; // 3 = -BLACK + WHITE - BLACK
 
     let {
       currentBoardSquares: board,
