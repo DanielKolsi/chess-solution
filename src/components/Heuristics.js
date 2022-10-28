@@ -21,7 +21,6 @@ import * as CheckFunctions from "./CheckFunctions";
 //-> select the highest point functioned candidate board
 
 
-
 // return the sum of array integers
 export function getCheckSum(array) {
   let sum = 0;
@@ -30,9 +29,6 @@ export function getCheckSum(array) {
   }
   return sum;
 }
-
-
-
 
 /**
  * This superarray contains arrays and eacy array contains scores of boards. Each board thus maps to
@@ -58,11 +54,11 @@ export function getCandidateBoardNumberCorrespondingMaxScore(
   return maxScoresForArrays.indexOf(maxArrayScore); // candidate board i.e. move number from the candidateBoards to be selected
 }
 
-export function getAbsoluteScoreForAllCandidateboards(candidateBoards, white) {}
+//export function getAbsoluteScoreForAllCandidateboards(candidateBoards, white) {}
 
-export function getBestCandidateboard(candidateBoards, white) {}
+//export function getBestCandidateboard(candidateBoards, white) {}
 
-export function getNextBoardForASelectedBoard(board, white) {}
+//export function getNextBoardForASelectedBoard(board, white) {}
 
 /*
  This function maps absoluteMoveIndex to the bestNextMoveIndex using the information from scoreArray

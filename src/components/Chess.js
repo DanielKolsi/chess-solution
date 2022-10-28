@@ -216,6 +216,13 @@ class Chess extends React.Component {
 
     const candidateMoves = this.getCandidateMovesForBoard(white, board);
     const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
+    candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
+    console.log(
+      "WHITE = " +
+        white +
+        " Number of  Candidate boards: " +
+        candidateBoards.length
+    );
 
     if (this.gameOver(candidateMoves, allowedMoves, white)) {
       return; // return as game over
@@ -232,25 +239,12 @@ class Chess extends React.Component {
       board,
       DEEPNESS
     ); // includes also root score array!
- //   const scoreArrays = compoundArray[1]; // recurring sum score arrays
-   // const scoreArray = scoreArrays[0]; // this has all the final sum scores!
-
-    // TODO: this works only if WHITE is the last of the deep, e.g. when deep = 1, 3, 5, ...
-
+ 
     const indexOfBestBoard = ScoreSumProcessor.getMinMaxScoreIndex(compoundArray[0]); // we need original score arrays here!
-
-    //let bestBoardScore = 0;
-
-   // bestBoardScore = Math.max.apply(Math, scoreArray); // whether black or white, we always want the MAX score! (as part of the eval score function, opponent's move score values are always negative)
-
-    //scoreArray.sort((a, b) => b - a);
-   // const indexOfBestBoard = scoreArray.indexOf(bestBoardScore); // candidate board i.e. move number from the candidateBoards to be selected
-
     console.log(
       "Index of board having the best HEURISTICS SCORE: " + indexOfBestBoard
     );
-    // TODO: this selected board index from all the "DEEP N BOARDS" need to be mapped so that its matches the range of next possible moves (e.g. king has only 4 possible moves, e.g. [1-24]->{1})
-
+   
     //4, 97, 1619, 36348, 876731
     //const totalNumberOfCandidateBoards  = this.getTotalNumberOfCandidateBoards(arrayOfCandidateBoardsArrays);
     //console.log("total number of CandidateBoards: " + totalNumberOfCandidateBoards);//TODO deep 5 = 876731 vs. 38064 = 36348 + 1619 + 97
@@ -262,7 +256,6 @@ class Chess extends React.Component {
     );
     */
     //let bestBoardNumber = this.getBoardNumberForBestMove(true, board, 4);
-
     //let bestNextBoardIndexNumber = Heuristics.getBestNextMoveBoardNumber(scoreArrayAndarrayOfCandidateBoardsArrays[0][0], indexOfBestBoard);
 
     let bestNextBoardIndexNumber = DEEPNESS === 1 ? indexOfBestBoard :
@@ -276,14 +269,6 @@ class Chess extends React.Component {
       "best next board IDX number = " + bestNextBoardIndexNumber + " RETURNING"
     );
     // return; // TODO: end code execution here for algorithm debugging purpose
-
-    candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
-    console.log(
-      "WHITE = " +
-        white +
-        " Number of  Candidate boards: " +
-        candidateBoards.length
-    );
 
     /*const numberOfPossibleNextMoves = this.getNumberOfAllowedNextMovesForBoard(
       candidateBoards,
@@ -339,7 +324,6 @@ class Chess extends React.Component {
           movesStringFromSelectedMove[1]
       );
     //}
-
     this.setStatesOfKingMovementAndPromotion(
       pieceNumberId,
       pieces,
@@ -347,9 +331,7 @@ class Chess extends React.Component {
       white
     );
   */
-
     //   this.setStatesOfCastlingMoves(board[movesStringFromSelectedMove[0]]); // we need to check if the selected move caused restrictions that block future castling
-
     //candidateBoards[selectedMoveIndex]
 
     this.setState(
@@ -1005,10 +987,10 @@ class Chess extends React.Component {
         candidateBoards[boardIdx] = board;
 
         this.setState({ candidateBoards }); // we need to update the candidate boards, as there's now check in this board
-        console.error(
+        /*console.error(
           "CHECK revised as an possible allowed move, candit move = " +
             whiteCandidateMove
-        );
+        );*/
       } else if (delim === CONSTANTS.CASTLING_QUEEN_SIDE) {
         console.log("Checking allowance of white queen side castling...");
         let blackCandidateMoves = this.getCandidateMovesBlack(board);
@@ -1118,10 +1100,10 @@ class Chess extends React.Component {
         candidateBoards[boardIdx] = board;
 
         this.setState({ candidateBoards }); // we need to update the candidate boards, as there's now check in this board
-        console.error(
+        /*console.error(
           "CHECK revised as an possible allowed move, candit move = " +
             blackCandidateMove
-        );
+        );*/
       } else if (blackCandidateMove.includes(CONSTANTS.CASTLING_QUEEN_SIDE)) {
         const whiteCandidateMoves = this.getCandidateMovesWhite(board);
         let allowLeftCastling = true;

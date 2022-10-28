@@ -49,19 +49,21 @@ export function getMinMaxScoreIndex(scoreArrays) {
     
       const prevValue = previousScoreArray[i];
       let localMin = 1000;
-  
+     // console.log("prevValue = " + prevValue);
       for (let j = currentIdx; j < currentIdx + prevValue; ++j) {
         if (currentScoreArray[j] < localMin) {
           localMin = currentScoreArray[j];
+          console.log("LOCAL MIN = " + localMin);
         }
       } // for
-     
+     console.log("NEXT ROUND *********");
       if (localMin > maxMinScore) {
         maxMinScore = localMin;
         minMaxScoreIdx = currentIdx; // this should guarantee the right index for selecting the correct ROOT board (move)
+       console.log("MAX MIN SCORE = " + maxMinScore + " currentIdx = " + currentIdx); 
       }
       currentIdx+= prevValue; // for the next value range
-  
+    //  console.log("current idx= " + currentIdx);
     } // for 
   }
   return minMaxScoreIdx; // this will be used as a seed for the range scores function to get the best board index!

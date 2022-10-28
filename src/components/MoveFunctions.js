@@ -360,7 +360,7 @@ export function getCandidateKnightMoves(piece, board) {
             board[TWO_RIGHT_ONE_UP].piece.value === CONSTANTS.WHITE_KING_CODE))
       ) {
         candidateMoves.push(CURRENT_PIECE_SQUARE + CHECK + TWO_RIGHT_ONE_UP);
-        console.error("CHECK DETECTED!!");
+        //console.error("CHECK DETECTED!!");
       } else {
         candidateMoves.push(CURRENT_PIECE_SQUARE + DLM + TWO_RIGHT_ONE_UP);
       }
