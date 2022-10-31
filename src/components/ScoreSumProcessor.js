@@ -53,14 +53,14 @@ export function getMinMaxScoreIndex(scoreArrays) {
       for (let j = currentIdx; j < currentIdx + prevValue; ++j) {
         if (currentScoreArray[j] < localMin) {
           localMin = currentScoreArray[j];
-          console.log("LOCAL MIN = " + localMin);
+          //console.log("LOCAL MIN = " + localMin);
         }
       } // for
-     console.log("NEXT ROUND *********");
+     //console.log("NEXT ROUND *********");
       if (localMin > maxMinScore) {
         maxMinScore = localMin;
         minMaxScoreIdx = currentIdx; // this should guarantee the right index for selecting the correct ROOT board (move)
-       console.log("MAX MIN SCORE = " + maxMinScore + " currentIdx = " + currentIdx); 
+       //console.log("MAX MIN SCORE = " + maxMinScore + " currentIdx = " + currentIdx); 
       }
       currentIdx+= prevValue; // for the next value range
     //  console.log("current idx= " + currentIdx);
@@ -83,7 +83,7 @@ export function getScoreSumArray(scoreArrays) {
   let subtractNegativeOriginalScoreArrayValue = false;
 
   for (let i = originalScoreArrays.length - 1; i > 0; i--) {
-    console.log("orig score array length = " + originalScoreArrays[i].length);
+    //console.log("orig score array length = " + originalScoreArrays[i].length);
 
     expandedSumArray = getExpandedArrayFromPreviousOriginalScoreArray(
       originalScoreArrays[i],

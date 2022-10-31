@@ -75,6 +75,179 @@ class Chess extends React.Component {
     document.getElementById("previous").disabled = true;
   }
 
+/**
+   * Does set state.
+   * @returns
+   */
+ nextPly() {
+  const DEEPNESS = 4; // 3 = -BLACK + WHITE - BLACK
+
+  let {
+    currentBoardSquares: board,
+    white,
+    candidateBoards,
+    pieces,
+  } = this.state;
+  const previousBoard = _.cloneDeep(board);
+  this.state.previousBoards.push(previousBoard); // stack of previous boards, Lodash deep clone is required!
+
+  const candidateMoves = this.getCandidateMovesForBoard(white, board);
+  const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
+  candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
+  console.log(
+    "WHITE = " +
+      white +
+      " Number of  Candidate boards: " +
+      candidateBoards.length + " DEEPNESS = " + DEEPNESS);
+  
+
+  if (this.gameOver(candidateMoves, allowedMoves, white)) {
+    return; // return as game over
+  } // handle game over condition and ritual
+
+  if (this.state.DEBUG) {
+    console.log(
+      " WHITE = " + white + " allowed moves:" + allowedMoves.join("|")
+    );
+  }
+
+  const compoundArray = this.getArrayOfCandidateBoardsArrays(
+    white,
+    board,
+    DEEPNESS
+  ); // includes also root score array!
+
+  const indexOfBestBoard = ScoreSumProcessor.getMinMaxScoreIndex(compoundArray[0]); // we need original score arrays here!
+  console.log(
+    "Index of board having the best HEURISTICS SCORE: " + indexOfBestBoard
+  );
+ 
+  //4, 97, 1619, 36348, 876731
+  //const totalNumberOfCandidateBoards  = this.getTotalNumberOfCandidateBoards(arrayOfCandidateBoardsArrays);
+  //console.log("total number of CandidateBoards: " + totalNumberOfCandidateBoards);//TODO deep 5 = 876731 vs. 38064 = 36348 + 1619 + 97
+
+  /*
+  let boardNumberForBestMove =
+  Heuristics.getCandidateBoardNumberCorrespondingMaxScore(
+    arrayOfArrayOfCandidateBoardScores
+  );
+  */
+  //let bestBoardNumber = this.getBoardNumberForBestMove(true, board, 4);
+  //let bestNextBoardIndexNumber = Heuristics.getBestNextMoveBoardNumber(scoreArrayAndarrayOfCandidateBoardsArrays[0][0], indexOfBestBoard);
+
+  let bestNextBoardIndexNumber = DEEPNESS === 1 ? indexOfBestBoard :
+    this.getNextMoveBoardIndexForAbsoluteBoardNumber(
+      DEEPNESS,
+      indexOfBestBoard,
+      compoundArray[0],
+      white
+    );
+  console.log(
+    "best next board IDX number = " + bestNextBoardIndexNumber + " RETURNING"
+  );
+  // return; // TODO: end code execution here for algorithm debugging purpose
+
+  /*const numberOfPossibleNextMoves = this.getNumberOfAllowedNextMovesForBoard(
+    candidateBoards,
+    white
+  );*/
+
+  /*const threatScoreForCandidateboards =
+    ThreatScores.getThreatScoreForCandidateBoards(candidateBoards, white);
+  const optimalThreatScoreBoardIndex =
+    ThreatScores.getOptimalThreatScoreBoardIndex(
+      threatScoreForCandidateboards,
+      white
+    );
+*/
+  // TODO: check the purpose of this call as maxIdx is redefined afterwards
+  /*const staleMateAvoidingMaxIdx =
+    this.getMaxMovesIndexWhileNotAllowingStalemate(
+      white,
+      candidateBoards,
+      allowedMoves,
+      numberOfPossibleNextMoves
+    );
+*/
+  // this will be the final selected move for white / black determined by the heuristics / strategy
+  const selectedMove = allowedMoves[bestNextBoardIndexNumber];
+
+  const movesStringFromSelectedMove =
+    HelpFunctions.getMovesString(selectedMove);
+
+  console.log(
+    "Sel move index: " +
+      selectedMove +
+      " Move string: " +
+      movesStringFromSelectedMove
+  );
+  //    let pieceNumberId;
+
+  /* if (
+    candidateBoards[staleMateAvoidingMaxIdx][movesStringFromSelectedMove[1]]
+      .piece !== null
+  ) {
+    pieceNumberId =
+      candidateBoards[staleMateAvoidingMaxIdx][movesStringFromSelectedMove[1]]
+        .piece.n;
+  } else { 
+    pieceNumberId =
+      candidateBoards[selectedMoveIndex][movesStringFromSelectedMove[1]].piece
+        .n;
+    console.error(
+      " SelectedMoveIndex = " +
+        selectedMoveIndex +
+        " moveIDX=" +
+        movesStringFromSelectedMove[1]
+    );
+  //}
+  this.setStatesOfKingMovementAndPromotion(
+    pieceNumberId,
+    pieces,
+    movesStringFromSelectedMove,
+    white
+  );
+*/
+  //   this.setStatesOfCastlingMoves(board[movesStringFromSelectedMove[0]]); // we need to check if the selected move caused restrictions that block future castling
+  //candidateBoards[selectedMoveIndex]
+
+  this.setState(
+    {
+      pieces,
+      candidateBoards,
+      currentBoardSquares: candidateBoards[bestNextBoardIndexNumber],
+      white: !white,
+      nextPly: ++this.state.nextPly,
+    },
+    function () {
+      if (this.state.DEBUG) {
+        console.log("state update complete, nextPly : " + this.state.nextPly);
+      }
+    }
+  );
+} // nextPly
+
+/**
+ * Does set state.
+ */
+prevPly() {
+  this.setState(
+    {
+      currentBoardSquares: this.state.previousBoards.pop(),
+      white: !this.state.white,
+      nextPly: --this.state.nextPly,
+    },
+    function () {
+      if (this.state.DEBUG) {
+        console.log(
+          "state update complete, prevTurn : " + this.state.prevTurn
+        );
+      }
+    }
+  );
+}
+
+
   /*moveMap(sr, sc, dr, dc) {
     const src = 56 - (sr - 1) * 8 + (sc - 1);
     const dst = 56 - (dr - 1) * 8 + (dc - 1);
@@ -171,10 +344,10 @@ class Chess extends React.Component {
       sum = 0;
     } // while
 
-    if (deepness === 4) {
+    if (deepness === 4) { // TODO: fix this magic number...
       // one more round
-      const checkedSum = Heuristics.getCheckSum(scoreArrays[2]);
-      const checkedSum2 =  Heuristics.getCheckSum(scoreArrays[1]);
+      //const checkedSum = Heuristics.getCheckSum(scoreArrays[2]);
+      //const checkedSum2 =  Heuristics.getCheckSum(scoreArrays[1]);
       let start = 0;
       for (let r = 0; r < rangeSumArrays.length; r++) {
         let sumScore = 0;
@@ -185,8 +358,8 @@ class Chess extends React.Component {
         }
         start += rangeSumArrays[r];
         rangeSumArrays[r] = Math.abs(sumScore);
-      }
-    }
+      } // for
+    } // if
 
     nextMoveBoardIndexNumber = Heuristics.getBestNextMoveBoardNumber(
       rangeSumArrays,
@@ -198,177 +371,7 @@ class Chess extends React.Component {
     return nextMoveBoardIndexNumber;
   }
 
-  /**
-   * Does set state.
-   * @returns
-   */
-  nextPly() {
-    const DEEPNESS = 4; // 3 = -BLACK + WHITE - BLACK
-
-    let {
-      currentBoardSquares: board,
-      white,
-      candidateBoards,
-      pieces,
-    } = this.state;
-    const previousBoard = _.cloneDeep(board);
-    this.state.previousBoards.push(previousBoard); // stack of previous boards, Lodash deep clone is required!
-
-    const candidateMoves = this.getCandidateMovesForBoard(white, board);
-    const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
-    candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
-    console.log(
-      "WHITE = " +
-        white +
-        " Number of  Candidate boards: " +
-        candidateBoards.length
-    );
-
-    if (this.gameOver(candidateMoves, allowedMoves, white)) {
-      return; // return as game over
-    } // handle game over condition and ritual
-
-    if (this.state.DEBUG) {
-      console.log(
-        " WHITE = " + white + " allowed moves:" + allowedMoves.join("|")
-      );
-    }
-
-    const compoundArray = this.getArrayOfCandidateBoardsArrays(
-      white,
-      board,
-      DEEPNESS
-    ); // includes also root score array!
- 
-    const indexOfBestBoard = ScoreSumProcessor.getMinMaxScoreIndex(compoundArray[0]); // we need original score arrays here!
-    console.log(
-      "Index of board having the best HEURISTICS SCORE: " + indexOfBestBoard
-    );
-   
-    //4, 97, 1619, 36348, 876731
-    //const totalNumberOfCandidateBoards  = this.getTotalNumberOfCandidateBoards(arrayOfCandidateBoardsArrays);
-    //console.log("total number of CandidateBoards: " + totalNumberOfCandidateBoards);//TODO deep 5 = 876731 vs. 38064 = 36348 + 1619 + 97
-
-    /*
-    let boardNumberForBestMove =
-    Heuristics.getCandidateBoardNumberCorrespondingMaxScore(
-      arrayOfArrayOfCandidateBoardScores
-    );
-    */
-    //let bestBoardNumber = this.getBoardNumberForBestMove(true, board, 4);
-    //let bestNextBoardIndexNumber = Heuristics.getBestNextMoveBoardNumber(scoreArrayAndarrayOfCandidateBoardsArrays[0][0], indexOfBestBoard);
-
-    let bestNextBoardIndexNumber = DEEPNESS === 1 ? indexOfBestBoard :
-      this.getNextMoveBoardIndexForAbsoluteBoardNumber(
-        DEEPNESS,
-        indexOfBestBoard,
-        compoundArray[0],
-        white
-      );
-    console.log(
-      "best next board IDX number = " + bestNextBoardIndexNumber + " RETURNING"
-    );
-    // return; // TODO: end code execution here for algorithm debugging purpose
-
-    /*const numberOfPossibleNextMoves = this.getNumberOfAllowedNextMovesForBoard(
-      candidateBoards,
-      white
-    );*/
-
-    /*const threatScoreForCandidateboards =
-      ThreatScores.getThreatScoreForCandidateBoards(candidateBoards, white);
-    const optimalThreatScoreBoardIndex =
-      ThreatScores.getOptimalThreatScoreBoardIndex(
-        threatScoreForCandidateboards,
-        white
-      );
-*/
-    // TODO: check the purpose of this call as maxIdx is redefined afterwards
-    /*const staleMateAvoidingMaxIdx =
-      this.getMaxMovesIndexWhileNotAllowingStalemate(
-        white,
-        candidateBoards,
-        allowedMoves,
-        numberOfPossibleNextMoves
-      );
-*/
-    // this will be the final selected move for white / black determined by the heuristics / strategy
-    const selectedMove = allowedMoves[bestNextBoardIndexNumber];
-
-    const movesStringFromSelectedMove =
-      HelpFunctions.getMovesString(selectedMove);
-
-    console.log(
-      "Sel move index: " +
-        selectedMove +
-        " Move string: " +
-        movesStringFromSelectedMove
-    );
-    //    let pieceNumberId;
-
-    /* if (
-      candidateBoards[staleMateAvoidingMaxIdx][movesStringFromSelectedMove[1]]
-        .piece !== null
-    ) {
-      pieceNumberId =
-        candidateBoards[staleMateAvoidingMaxIdx][movesStringFromSelectedMove[1]]
-          .piece.n;
-    } else { 
-      pieceNumberId =
-        candidateBoards[selectedMoveIndex][movesStringFromSelectedMove[1]].piece
-          .n;
-      console.error(
-        " SelectedMoveIndex = " +
-          selectedMoveIndex +
-          " moveIDX=" +
-          movesStringFromSelectedMove[1]
-      );
-    //}
-    this.setStatesOfKingMovementAndPromotion(
-      pieceNumberId,
-      pieces,
-      movesStringFromSelectedMove,
-      white
-    );
-  */
-    //   this.setStatesOfCastlingMoves(board[movesStringFromSelectedMove[0]]); // we need to check if the selected move caused restrictions that block future castling
-    //candidateBoards[selectedMoveIndex]
-
-    this.setState(
-      {
-        pieces,
-        candidateBoards,
-        currentBoardSquares: candidateBoards[bestNextBoardIndexNumber],
-        white: !white,
-        nextPly: ++this.state.nextPly,
-      },
-      function () {
-        if (this.state.DEBUG) {
-          console.log("state update complete, nextPly : " + this.state.nextPly);
-        }
-      }
-    );
-  } // nextPly
-
-  /**
-   * Does set state.
-   */
-  prevPly() {
-    this.setState(
-      {
-        currentBoardSquares: this.state.previousBoards.pop(),
-        white: !this.state.white,
-        nextPly: --this.state.nextPly,
-      },
-      function () {
-        if (this.state.DEBUG) {
-          console.log(
-            "state update complete, prevTurn : " + this.state.prevTurn
-          );
-        }
-      }
-    );
-  }
+  
 
   /**
    * Does set state.
@@ -424,13 +427,6 @@ class Chess extends React.Component {
     return pieces;
   }
 
-  /*makeNumberOfMoves(n) {
-  if (!this.gameOver) {
-    for (let i = 0; i < n; i++) {
-      this.nextPly(i + 1);
-    }
-  }
-}*/
 
   // starting candidate moves functions
 
