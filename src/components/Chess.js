@@ -602,7 +602,7 @@ prevPly() {
     let stack = [];
     let scoreArrays = []; // store individual candidateBoardArrays lengths for the eval score function
 
-    deepness++; // convenience additicion?!
+    deepness++; // convenience addition?!
 
     for (let i = 0; i < deepness - 1; ++i) {
       scoreArrays[i] = [];
@@ -635,32 +635,29 @@ prevPly() {
     deepness--;
 
     while (deepness > 0) {
+      const deepnessMinusOne = deepness - 1;
       for (let i = 0; i < arrayOfCandidateBoardsArrays.length; ++i) {
-        nextMoveCandidateBoards = arrayOfCandidateBoardsArrays[i];
-        let nextMoveCandidateBoardsLengthScore = nextMoveCandidateBoards.length;
-
+        //nextMoveCandidateBoards = arrayOfCandidateBoardsArrays[i];
+       
         /*  console.log(
           "FIRST next move candit boards length = " +
             nextMoveCandidateBoards.length
         );*/
 
-        scoreArrays[deepness - 1].push(nextMoveCandidateBoardsLengthScore);
-
-        if (deepness > 1) {
-          for (let j = 0; j < nextMoveCandidateBoards.length; ++j) {
-            stack.push(nextMoveCandidateBoards[j]);
-          }
-        }
-      } // for
-
-      if (stack.length > 0 && deepness > 1) {
-        arrayOfCandidateBoardsArrays = []; // clear the array
-      }
-
+        scoreArrays[deepnessMinusOne].push(arrayOfCandidateBoardsArrays[i].length); // nextMoveCandidateBoardsLengthScore
+       
+        if (deepness <= 1) continue;
+           
+          for (let j = 0; j < arrayOfCandidateBoardsArrays[i].length; ++j) {
+            stack.push(arrayOfCandidateBoardsArrays[i][j]);
+          }    
+      } // for    
+      arrayOfCandidateBoardsArrays.length = 0; // clear the array
+    
       while (stack.length > 0 && deepness > 1) {
-        let childBoard = stack.pop();
-        let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
-          childBoard,
+        
+        const nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
+          stack.pop(),
           !nextPlyColor
         );
         /*   console.log(
@@ -672,12 +669,12 @@ prevPly() {
 
         arrayOfCandidateBoardsArrays.push(nextMoveCandidateBoards); // SCORE
       } // while stack
-
+      stack.length = 0;
       deepness--;
     } // while deepness
 
     //const checkSum = Heuristics.getCheckSum(scoreArrays[0]);
-  
+    
     return ScoreSumProcessor.getScoreSumArray(scoreArrays); // TODO: we should possibly return a compound array consisting of scoreArrays AND arrayOfCandidateBoardsArrays
   }
 
