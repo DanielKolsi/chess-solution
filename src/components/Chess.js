@@ -91,7 +91,7 @@ class Chess extends React.Component {
   const previousBoard = _.cloneDeep(board);
   this.state.previousBoards.push(previousBoard); // stack of previous boards, Lodash deep clone is required!
 
-  const candidateMoves = this.getCandidateMovesForBoard(white, board);
+  const candidateMoves =  white ? this.getCandidateMovesWhite(board) : this.getCandidateMovesBlack(board);
   const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
   candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
   console.log(
@@ -651,7 +651,8 @@ prevPly() {
           for (let j = 0; j < arrayOfCandidateBoardsArrays[i].length; ++j) {
             stack.push(arrayOfCandidateBoardsArrays[i][j]);
           }    
-      } // for    
+      } // for 
+
       arrayOfCandidateBoardsArrays.length = 0; // clear the array
     
       while (stack.length > 0 && deepness > 1) {
@@ -686,7 +687,7 @@ prevPly() {
    */
   getNextMoveCandidateBoardsForABoard(board, white) {
     //console.log("***getNextMoveCandidateBoardsForABoard****");
-    const candidateMoves = this.getCandidateMovesForBoard(white, board);
+    const candidateMoves = white ? this.getCandidateMovesWhite(board) : this.getCandidateMovesBlack(board); 
     const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
     /*console.log(
       "allowedMoves for WHITE = " + white + " " + allowedMoves.length
@@ -725,16 +726,10 @@ prevPly() {
    * @param {*} board
    * @returns
    */
-  getCandidateMovesForBoard(white, board) {
-    let candidateMoves = [];
-    if (white) {
-      candidateMoves = this.getCandidateMovesWhite(board);
-    } else {
-      candidateMoves = this.getCandidateMovesBlack(board);
-    }
-    //console.log("candit moves = " + candidateMoves);
-    return candidateMoves;
-  }
+  /*getCandidateMovesForBoard(white, board) {
+  
+    return white ? this.getCandidateMovesWhite(board) : this.getCandidateMovesBlack(board);
+  }*/
   /**
    *
    * @param {*} piece
@@ -902,13 +897,8 @@ prevPly() {
   getAllowedMoves(white, board, candidateMoves) {
     if (candidateMoves === null || candidateMoves.length === 0) return null;
 
-    let allowedMoves = [];
-
-    if (white) {
-      allowedMoves = this.getAllowedMovesWhite(board, candidateMoves);
-    } else {
-      allowedMoves = this.getAllowedMovesBlack(board, candidateMoves);
-    }
+    let allowedMoves = white ? this.getAllowedMovesWhite(board, candidateMoves) : this.getAllowedMovesBlack(board, candidateMoves);     
+   
     allowedMoves = CheckFunctions.getTransformToPlusDelimForCheckMoves(
       board,
       allowedMoves,

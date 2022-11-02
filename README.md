@@ -1,7 +1,17 @@
-100% OK
-last change
+
+===============================
+549 ply selection reason
+1. W: Attack checking piece
+2. B: Min white next moves, check without block&threat next move
+3. W: Immediate threat for black piece, restricting good move possibilities
+4. B: Check, protecting a piece under threat, minimize white allowed moves
+5. W: Maximize own next moves
+6. B: Maximise own next moves
+7. W: Check, threat for protected black piece, restricting good move possibilities
 
 
+
+===============================
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
