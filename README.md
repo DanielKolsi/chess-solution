@@ -8,6 +8,15 @@
 5. W: Maximize own next moves
 6. B: Maximise own next moves
 7. W: Check, threat for protected black piece, restricting good move possibilities
+8. B: To catch passed pawn to be promoted
+9. W: Push the pawn to be promoted
+10. B: Threat to queen if pawn is promoted
+11. W: underpromote to knigh to check to save queen
+12. B: protect both pieces
+13. W: check (reduce opponent's movements)
+14. B: Maximize own next moves
+15. W: avoid queen capture by check, protect queen
+
 
 
 

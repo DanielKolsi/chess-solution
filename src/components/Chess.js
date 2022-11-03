@@ -44,7 +44,7 @@ class Chess extends React.Component {
       promotedWhiteBishopNumber: 80,
       promotedBlackBishopNumber: -20,
       promotedWhiteKnightNumber: 90,
-      promotedBlacKnightNumber: -30,
+      promotedBlackKnightNumber: -30,
 
       previousBoards: [], // array (stack with push/pop) of previous boards
       nextPly: 1, // 'pointer' to the next turn number (initially will be 1)
@@ -75,84 +75,92 @@ class Chess extends React.Component {
     document.getElementById("previous").disabled = true;
   }
 
-/**
+  /**
    * Does set state.
    * @returns
    */
- nextPly() {
-  const DEEPNESS = 4; // 3 = -BLACK + WHITE - BLACK
+  nextPly() {
+    const DEEPNESS = 4; // 3 = -BLACK + WHITE - BLACK
 
-  let {
-    currentBoardSquares: board,
-    white,
-    candidateBoards,
-    pieces,
-  } = this.state;
-  const previousBoard = _.cloneDeep(board);
-  this.state.previousBoards.push(previousBoard); // stack of previous boards, Lodash deep clone is required!
+    let {
+      currentBoardSquares: board,
+      white,
+      candidateBoards,
+      pieces,
+    } = this.state;
+    const previousBoard = _.cloneDeep(board);
+    this.state.previousBoards.push(previousBoard); // stack of previous boards, Lodash deep clone is required!
 
-  const candidateMoves =  white ? this.getCandidateMovesWhite(board) : this.getCandidateMovesBlack(board);
-  const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
-  candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
-  console.log(
-    "WHITE = " +
-      white +
-      " Number of  Candidate boards: " +
-      candidateBoards.length + " DEEPNESS = " + DEEPNESS);
-  
-
-  if (this.gameOver(candidateMoves, allowedMoves, white)) {
-    return; // return as game over
-  } // handle game over condition and ritual
-
-  if (this.state.DEBUG) {
+    const candidateMoves = white
+      ? this.getCandidateMovesWhite(board)
+      : this.getCandidateMovesBlack(board);
+    const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
+    candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
     console.log(
-      " WHITE = " + white + " allowed moves:" + allowedMoves.join("|")
+      "WHITE = " +
+        white +
+        " Number of  Candidate boards: " +
+        candidateBoards.length +
+        " DEEPNESS = " +
+        DEEPNESS
     );
-  }
 
-  const compoundArray = this.getArrayOfCandidateBoardsArrays(
-    white,
-    board,
-    DEEPNESS
-  ); // includes also root score array!
+    if (this.gameOver(candidateMoves, allowedMoves, white)) {
+      return; // return as game over
+    } // handle game over condition and ritual
 
-  const indexOfBestBoard = ScoreSumProcessor.getMinMaxScoreIndex(compoundArray[0]); // we need original score arrays here!
-  console.log(
-    "Index of board having the best HEURISTICS SCORE: " + indexOfBestBoard
-  );
- 
-  //4, 97, 1619, 36348, 876731
-  //const totalNumberOfCandidateBoards  = this.getTotalNumberOfCandidateBoards(arrayOfCandidateBoardsArrays);
-  //console.log("total number of CandidateBoards: " + totalNumberOfCandidateBoards);//TODO deep 5 = 876731 vs. 38064 = 36348 + 1619 + 97
+    if (this.state.DEBUG) {
+      console.log(
+        " WHITE = " + white + " allowed moves:" + allowedMoves.join("|")
+      );
+    }
 
-  /*
+    const compoundArray = this.getArrayOfCandidateBoardsArrays(
+      white,
+      board,
+      DEEPNESS
+    ); // includes also root score array!
+
+    const indexOfBestBoard = ScoreSumProcessor.getMinMaxScoreIndex(
+      compoundArray[0]
+    ); // we need original score arrays here!
+    console.log(
+      "Index of board having the best HEURISTICS SCORE: " + indexOfBestBoard
+    );
+
+    //4, 97, 1619, 36348, 876731
+    //const totalNumberOfCandidateBoards  = this.getTotalNumberOfCandidateBoards(arrayOfCandidateBoardsArrays);
+    //console.log("total number of CandidateBoards: " + totalNumberOfCandidateBoards);//TODO deep 5 = 876731 vs. 38064 = 36348 + 1619 + 97
+
+    /*
   let boardNumberForBestMove =
   Heuristics.getCandidateBoardNumberCorrespondingMaxScore(
     arrayOfArrayOfCandidateBoardScores
   );
   */
-  //let bestBoardNumber = this.getBoardNumberForBestMove(true, board, 4);
-  //let bestNextBoardIndexNumber = Heuristics.getBestNextMoveBoardNumber(scoreArrayAndarrayOfCandidateBoardsArrays[0][0], indexOfBestBoard);
+    //let bestBoardNumber = this.getBoardNumberForBestMove(true, board, 4);
+    //let bestNextBoardIndexNumber = Heuristics.getBestNextMoveBoardNumber(scoreArrayAndarrayOfCandidateBoardsArrays[0][0], indexOfBestBoard);
 
-  let bestNextBoardIndexNumber = DEEPNESS === 1 ? indexOfBestBoard :
-    this.getNextMoveBoardIndexForAbsoluteBoardNumber(
-      DEEPNESS,
-      indexOfBestBoard,
-      compoundArray[0],
-      white
+    let bestNextBoardIndexNumber =
+      DEEPNESS === 1
+        ? indexOfBestBoard
+        : this.getNextMoveBoardIndexForAbsoluteBoardNumber(
+            DEEPNESS,
+            indexOfBestBoard,
+            compoundArray[0],
+            white
+          );
+    console.log(
+      "best next board IDX number = " + bestNextBoardIndexNumber + " RETURNING"
     );
-  console.log(
-    "best next board IDX number = " + bestNextBoardIndexNumber + " RETURNING"
-  );
-  // return; // TODO: end code execution here for algorithm debugging purpose
+    // return; // TODO: end code execution here for algorithm debugging purpose
 
-  /*const numberOfPossibleNextMoves = this.getNumberOfAllowedNextMovesForBoard(
+    /*const numberOfPossibleNextMoves = this.getNumberOfAllowedNextMovesForBoard(
     candidateBoards,
     white
   );*/
 
-  /*const threatScoreForCandidateboards =
+    /*const threatScoreForCandidateboards =
     ThreatScores.getThreatScoreForCandidateBoards(candidateBoards, white);
   const optimalThreatScoreBoardIndex =
     ThreatScores.getOptimalThreatScoreBoardIndex(
@@ -160,8 +168,8 @@ class Chess extends React.Component {
       white
     );
 */
-  // TODO: check the purpose of this call as maxIdx is redefined afterwards
-  /*const staleMateAvoidingMaxIdx =
+    // TODO: check the purpose of this call as maxIdx is redefined afterwards
+    /*const staleMateAvoidingMaxIdx =
     this.getMaxMovesIndexWhileNotAllowingStalemate(
       white,
       candidateBoards,
@@ -169,21 +177,21 @@ class Chess extends React.Component {
       numberOfPossibleNextMoves
     );
 */
-  // this will be the final selected move for white / black determined by the heuristics / strategy
-  const selectedMove = allowedMoves[bestNextBoardIndexNumber];
+    // this will be the final selected move for white / black determined by the heuristics / strategy
+    const selectedMove = allowedMoves[bestNextBoardIndexNumber];
 
-  const movesStringFromSelectedMove =
-    HelpFunctions.getMovesString(selectedMove);
+    const movesStringFromSelectedMove =
+      HelpFunctions.getMovesString(selectedMove);
 
-  console.log(
-    "Sel move index: " +
-      selectedMove +
-      " Move string: " +
-      movesStringFromSelectedMove
-  );
-  //    let pieceNumberId;
+    console.log(
+      "Sel move index: " +
+        selectedMove +
+        " Move string: " +
+        movesStringFromSelectedMove
+    );
+    //    let pieceNumberId;
 
-  /* if (
+    /* if (
     candidateBoards[staleMateAvoidingMaxIdx][movesStringFromSelectedMove[1]]
       .piece !== null
   ) {
@@ -208,45 +216,44 @@ class Chess extends React.Component {
     white
   );
 */
-  //   this.setStatesOfCastlingMoves(board[movesStringFromSelectedMove[0]]); // we need to check if the selected move caused restrictions that block future castling
-  //candidateBoards[selectedMoveIndex]
+    //   this.setStatesOfCastlingMoves(board[movesStringFromSelectedMove[0]]); // we need to check if the selected move caused restrictions that block future castling
+    //candidateBoards[selectedMoveIndex]
 
-  this.setState(
-    {
-      pieces,
-      candidateBoards,
-      currentBoardSquares: candidateBoards[bestNextBoardIndexNumber],
-      white: !white,
-      nextPly: ++this.state.nextPly,
-    },
-    function () {
-      if (this.state.DEBUG) {
-        console.log("state update complete, nextPly : " + this.state.nextPly);
+    this.setState(
+      {
+        pieces,
+        candidateBoards,
+        currentBoardSquares: candidateBoards[bestNextBoardIndexNumber],
+        white: !white,
+        nextPly: ++this.state.nextPly,
+      },
+      function () {
+        if (this.state.DEBUG) {
+          console.log("state update complete, nextPly : " + this.state.nextPly);
+        }
       }
-    }
-  );
-} // nextPly
+    );
+  } // nextPly
 
-/**
- * Does set state.
- */
-prevPly() {
-  this.setState(
-    {
-      currentBoardSquares: this.state.previousBoards.pop(),
-      white: !this.state.white,
-      nextPly: --this.state.nextPly,
-    },
-    function () {
-      if (this.state.DEBUG) {
-        console.log(
-          "state update complete, prevTurn : " + this.state.prevTurn
-        );
+  /**
+   * Does set state.
+   */
+  prevPly() {
+    this.setState(
+      {
+        currentBoardSquares: this.state.previousBoards.pop(),
+        white: !this.state.white,
+        nextPly: --this.state.nextPly,
+      },
+      function () {
+        if (this.state.DEBUG) {
+          console.log(
+            "state update complete, prevTurn : " + this.state.prevTurn
+          );
+        }
       }
-    }
-  );
-}
-
+    );
+  }
 
   /*moveMap(sr, sc, dr, dc) {
     const src = 56 - (sr - 1) * 8 + (sc - 1);
@@ -344,7 +351,8 @@ prevPly() {
       sum = 0;
     } // while
 
-    if (deepness === 4) { // TODO: fix this magic number...
+    if (deepness === 4) {
+      // TODO: fix this magic number...
       // one more round
       //const checkedSum = Heuristics.getCheckSum(scoreArrays[2]);
       //const checkedSum2 =  Heuristics.getCheckSum(scoreArrays[1]);
@@ -370,8 +378,6 @@ prevPly() {
 
     return nextMoveBoardIndexNumber;
   }
-
-  
 
   /**
    * Does set state.
@@ -426,7 +432,6 @@ prevPly() {
     //this.makeNumberOfMoves(3); // check game over condition!
     return pieces;
   }
-
 
   // starting candidate moves functions
 
@@ -598,7 +603,6 @@ prevPly() {
    * @param {*} less
    */
   getArrayOfCandidateBoardsArrays(white, board, deepness) {
-    
     let stack = [];
     let scoreArrays = []; // store individual candidateBoardArrays lengths for the eval score function
 
@@ -638,29 +642,28 @@ prevPly() {
       const deepnessMinusOne = deepness - 1;
       for (let i = 0; i < arrayOfCandidateBoardsArrays.length; ++i) {
         //nextMoveCandidateBoards = arrayOfCandidateBoardsArrays[i];
-       
+
         /*  console.log(
           "FIRST next move candit boards length = " +
             nextMoveCandidateBoards.length
         );*/
 
-        scoreArrays[deepnessMinusOne].push(arrayOfCandidateBoardsArrays[i].length); // nextMoveCandidateBoardsLengthScore
-       
+        scoreArrays[deepnessMinusOne].push(
+          arrayOfCandidateBoardsArrays[i].length
+        ); // nextMoveCandidateBoardsLengthScore
+
         if (deepness <= 1) continue;
-           
-          for (let j = 0; j < arrayOfCandidateBoardsArrays[i].length; ++j) {
-            stack.push(arrayOfCandidateBoardsArrays[i][j]);
-          }    
-      } // for 
+
+        for (let j = 0; j < arrayOfCandidateBoardsArrays[i].length; ++j) {
+          stack.push(arrayOfCandidateBoardsArrays[i][j]);
+        }
+      } // for
 
       arrayOfCandidateBoardsArrays.length = 0; // clear the array
-    
+
       while (stack.length > 0 && deepness > 1) {
-        
-        const nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
-          stack.pop(),
-          !nextPlyColor
-        );
+        const nextMoveCandidateBoards =
+          this.getNextMoveCandidateBoardsForABoard(stack.pop(), !nextPlyColor);
         /*   console.log(
           "next move candit boards length = " +
             nextMoveCandidateBoards.length +
@@ -675,7 +678,7 @@ prevPly() {
     } // while deepness
 
     //const checkSum = Heuristics.getCheckSum(scoreArrays[0]);
-    
+
     return ScoreSumProcessor.getScoreSumArray(scoreArrays); // TODO: we should possibly return a compound array consisting of scoreArrays AND arrayOfCandidateBoardsArrays
   }
 
@@ -687,7 +690,9 @@ prevPly() {
    */
   getNextMoveCandidateBoardsForABoard(board, white) {
     //console.log("***getNextMoveCandidateBoardsForABoard****");
-    const candidateMoves = white ? this.getCandidateMovesWhite(board) : this.getCandidateMovesBlack(board); 
+    const candidateMoves = white
+      ? this.getCandidateMovesWhite(board)
+      : this.getCandidateMovesBlack(board);
     const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
     /*console.log(
       "allowedMoves for WHITE = " + white + " " + allowedMoves.length
@@ -798,61 +803,79 @@ prevPly() {
     let { pieces } = this.state;
 
     // handle promotions and underpromotions
-    if (delim === CONSTANTS.PROMOTION_TO_QUEEN) {
-      let promotedQueenNumber = white
-        ? this.state.promotedWhiteQueenNumber
-        : this.state.promotedBlackQueenNumber;
+    switch (delim) {
+      case CONSTANTS.PROMOTION_TO_QUEEN: {
+        let promotedQueenNumber = white
+          ? this.state.promotedWhiteQueenNumber
+          : this.state.promotedBlackQueenNumber;
 
-      board = PromotionFunctions.doPromote(
-        board,
-        pieces,
-        moves,
-        promotedQueenNumber
-      );
-    } else if (delim === CONSTANTS.PROMOTION_TO_ROOK) {
-      let promotedRookNumber = white
-        ? this.state.promotedWhiteRookNumber
-        : this.state.promotedBlackRookNumber;
+        board = PromotionFunctions.doPromote(
+          board,
+          pieces,
+          moves,
+          promotedQueenNumber
+        );
+        break;
+      }
+      case CONSTANTS.PROMOTION_TO_ROOK: {
+        let promotedRookNumber = white
+          ? this.state.promotedWhiteRookNumber
+          : this.state.promotedBlackRookNumber;
 
-      board = PromotionFunctions.doPromote(
-        board,
-        pieces,
-        moves,
-        promotedRookNumber
-      );
-    } else if (delim === CONSTANTS.PROMOTION_TO_BISHOP) {
-      let promotedBishopNumber = white
-        ? this.state.promotedWhiteBishopNumber
-        : this.state.promotedBlackBishopNumber;
+        board = PromotionFunctions.doPromote(
+          board,
+          pieces,
+          moves,
+          promotedRookNumber
+        );
+        break;
+      }
+      case CONSTANTS.PROMOTION_TO_BISHOP: {
+        let promotedBishopNumber = white
+          ? this.state.promotedWhiteBishopNumber
+          : this.state.promotedBlackBishopNumber;
 
-      board = PromotionFunctions.doPromote(
-        board,
-        pieces,
-        moves,
-        promotedBishopNumber
-      );
-    } else if (delim === CONSTANTS.PROMOTION_TO_KNIGHT) {
-      let promotedKnightNumber = white
-        ? this.state.promotedWhiteKnightNumber
-        : this.state.promotedBlackKnightNumber;
+        board = PromotionFunctions.doPromote(
+          board,
+          pieces,
+          moves,
+          promotedBishopNumber
+        );
+        break;
+      }
 
-      board = PromotionFunctions.doPromote(
-        board,
-        pieces,
-        moves,
-        promotedKnightNumber
-      );
-    } else if (delim === CONSTANTS.CASTLING_QUEEN_SIDE) {
-      board = this.castleQueenSideAllowedBoard(white, board); // castle queen side was the allowed move, create the corresponding board
-    } else if (delim === CONSTANTS.CASTLING_KING_SIDE) {
-      board = this.castleKingSideAllowedBoard(white, board);
-    } else if (delim === CONSTANTS.EN_PASSANT) {
-      board = EnPassantFunctions.doEnPassantComplete(board, moves);
-    } else {
-      // normal move, includes eats
-      board[moves[1]].piece = board[moves[0]].piece; // the move: dst square's piece becomes src square's piece
-      board[moves[1]].piece.currentSquare = parseInt(moves[1], 10);
-      board[moves[0]].piece = null; // the original src piece has moved, so the square doesn't have its peace anymore
+      case CONSTANTS.PROMOTION_TO_KNIGHT: {
+        let promotedKnightNumber = white
+          ? this.state.promotedWhiteKnightNumber
+          : this.state.promotedBlackKnightNumber;
+
+        board = PromotionFunctions.doPromote(
+          board,
+          pieces,
+          moves,
+          promotedKnightNumber
+        );
+        break;
+      }
+      case CONSTANTS.CASTLING_QUEEN_SIDE: {
+        board = this.castleQueenSideAllowedBoard(white, board); // castle queen side was the allowed move, create the corresponding board
+        break;
+      }
+       case CONSTANTS.CASTLING_KING_SIDE: {
+        board = this.castleKingSideAllowedBoard(white, board);
+        break;
+      }
+      case CONSTANTS.EN_PASSANT: {
+        board = EnPassantFunctions.doEnPassantComplete(board, moves);
+        break;
+      }
+
+      default: {
+        // normal move, includes eats
+        board[moves[1]].piece = board[moves[0]].piece; // the move: dst square's piece becomes src square's piece
+        board[moves[1]].piece.currentSquare = parseInt(moves[1], 10);
+        board[moves[0]].piece = null; // the original src piece has moved, so the square doesn't have its peace anymore
+      }
     }
     return board;
   }
@@ -897,14 +920,16 @@ prevPly() {
   getAllowedMoves(white, board, candidateMoves) {
     if (candidateMoves === null || candidateMoves.length === 0) return null;
 
-    let allowedMoves = white ? this.getAllowedMovesWhite(board, candidateMoves) : this.getAllowedMovesBlack(board, candidateMoves);     
-   
+    let allowedMoves = white
+      ? this.getAllowedMovesWhite(board, candidateMoves)
+      : this.getAllowedMovesBlack(board, candidateMoves);
+
     allowedMoves = CheckFunctions.getTransformToPlusDelimForCheckMoves(
       board,
       allowedMoves,
       white
     );
-    if (this.state.LOGGING) {
+    /*if (this.state.LOGGING) {
       console.log(
         "allowedmoves | " +
           white +
@@ -913,7 +938,7 @@ prevPly() {
           " length = " +
           allowedMoves.length
       );
-    }
+    } */
 
     return allowedMoves;
   }
@@ -929,13 +954,12 @@ prevPly() {
     let candidateMoves = [];
     let allowedMoves = [];
     if (white) {
-      candidateMoves = this.getCandidateMovesWhite(board); // add *CHECK* instaed of eating the king!
+      candidateMoves = this.getCandidateMovesWhite(board); // add *CHECK* instead of eating the king!
       allowedMoves = this.getAllowedMovesWhite(board, candidateMoves, boardIdx);
     } else {
       candidateMoves = this.getCandidateMovesBlack(board);
       allowedMoves = this.getAllowedMovesBlack(board, candidateMoves, boardIdx);
     }
-
     return allowedMoves;
   }
 
