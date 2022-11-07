@@ -1,21 +1,37 @@
 
 ===============================
 549 ply selection reason
-1. W: Attack checking piece
-2. B: Min white next moves, check without block&threat next move
-3. W: Immediate threat for black piece, restricting good move possibilities
-4. B: Check, protecting a piece under threat, minimize white allowed moves
-5. W: Maximize own next moves
-6. B: Maximise own next moves
-7. W: Check, threat for protected black piece, restricting good move possibilities
-8. B: To catch passed pawn to be promoted
-9. W: Push the pawn to be promoted
-10. B: Threat to queen if pawn is promoted
-11. W: underpromote to knigh to check to save queen
-12. B: protect both pieces
-13. W: check (reduce opponent's movements)
-14. B: Maximize own next moves
-15. W: avoid queen capture by check, protect queen
+General rule: Capture only when capture doesn't cause direct damage like losing own capturing piece.
+-------------
+1W. Attack checking piece
+1B. Min white next moves, check without block&threat next move
+2W. Immediate threat for black piece, restricting good move possibilities
+2B. Check, protecting a piece under threat, minimize white allowed moves
+3W. Maximize own next moves
+3B. Maximise own next moves
+4W. Check, threat for protected black piece, restricting good move possibilities
+4B. To catch passed pawn to be promoted
+5B. Push the pawn to be promoted
+5W. Threat to queen if pawn is promoted
+6W.  Underpromote to knigh to check to save queen
+6B. protect both pieces
+7W. check (reduce opponent's movements)
+7B. Max own next moves
+8W. avoid queen capture by check, protect queen
+8B. Min opponent next moves, check
+9W: Max own next moves
+9B: Min opponent next moves, check
+10W: Max own next moves, attack
+10B: Min opponent next moves, check
+---
+537W: Min opponent next moves, check
+537B: Avoid M1
+538W: Check+threat an unprotected piece
+538B: Max own next moves
+
+548W:
+548B: insignificant (no move can save from imbending mate) 
+549W: mate
 
 
 
