@@ -132,15 +132,6 @@ class Chess extends React.Component {
     //const totalNumberOfCandidateBoards  = this.getTotalNumberOfCandidateBoards(arrayOfCandidateBoardsArrays);
     //console.log("total number of CandidateBoards: " + totalNumberOfCandidateBoards);//TODO deep 5 = 876731 vs. 38064 = 36348 + 1619 + 97
 
-    /*
-  let boardNumberForBestMove =
-  Heuristics.getCandidateBoardNumberCorrespondingMaxScore(
-    arrayOfArrayOfCandidateBoardScores
-  );
-  */
-    //let bestBoardNumber = this.getBoardNumberForBestMove(true, board, 4);
-    //let bestNextBoardIndexNumber = Heuristics.getBestNextMoveBoardNumber(scoreArrayAndarrayOfCandidateBoardsArrays[0][0], indexOfBestBoard);
-
     let bestNextBoardIndexNumber =
       DEEPNESS === 1
         ? indexOfBestBoard
@@ -661,24 +652,22 @@ class Chess extends React.Component {
 
       arrayOfCandidateBoardsArrays.length = 0; // clear the array
 
-      while (stack.length > 0 && deepness > 1) {
-        const nextMoveCandidateBoards =
-          this.getNextMoveCandidateBoardsForABoard(stack.pop(), !nextPlyColor);
-        /*   console.log(
-          "next move candit boards length = " +
-            nextMoveCandidateBoards.length +
-            " WHITE = " +
-            nextPlyColor
-        ); */
-
-        arrayOfCandidateBoardsArrays.push(nextMoveCandidateBoards); // SCORE
-      } // while stack
-      stack.length = 0;
-      deepness--;
+     if (deepness > 1 ) {  
+      console.log(" stack length = " + stack.length);   
+        while (stack.length > 0) {
+          
+          //const nextMoveCandidateBoards =
+            
+          arrayOfCandidateBoardsArrays.push(this.getNextMoveCandidateBoardsForABoard(
+            stack.pop(),
+            !nextPlyColor
+          )); // SCORE
+        } // while stack
+      } // IF deepness
+        stack.length = 0;
+        deepness--;  
     } // while deepness
-
     //const checkSum = Heuristics.getCheckSum(scoreArrays[0]);
-
     return ScoreSumProcessor.getScoreSumArray(scoreArrays); // TODO: we should possibly return a compound array consisting of scoreArrays AND arrayOfCandidateBoardsArrays
   }
 
@@ -693,12 +682,12 @@ class Chess extends React.Component {
     const candidateMoves = white
       ? this.getCandidateMovesWhite(board)
       : this.getCandidateMovesBlack(board);
-    const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
+    //const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
     /*console.log(
       "allowedMoves for WHITE = " + white + " " + allowedMoves.length
     );*/
-    const candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
-    return candidateBoards;
+    
+    return this.getCandidateBoards(this.getAllowedMoves(white, board, candidateMoves), board, white);
   }
 
   /**
@@ -861,7 +850,7 @@ class Chess extends React.Component {
         board = this.castleQueenSideAllowedBoard(white, board); // castle queen side was the allowed move, create the corresponding board
         break;
       }
-       case CONSTANTS.CASTLING_KING_SIDE: {
+      case CONSTANTS.CASTLING_KING_SIDE: {
         board = this.castleKingSideAllowedBoard(white, board);
         break;
       }

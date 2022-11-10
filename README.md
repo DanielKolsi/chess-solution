@@ -13,7 +13,7 @@ General rule: Capture only when capture doesn't cause direct damage like losing 
 4B. To catch passed pawn to be promoted
 5B. Push the pawn to be promoted
 5W. Threat to queen if pawn is promoted
-6W.  Underpromote to knigh to check to save queen
+6W. Underpromote to knigh to check to save queen
 6B. protect both pieces
 7W. check (reduce opponent's movements)
 7B. Max own next moves
@@ -28,8 +28,25 @@ General rule: Capture only when capture doesn't cause direct damage like losing 
 537B: Avoid M1
 538W: Check+threat an unprotected piece
 538B: Max own next moves
-
-548W:
+539W: Take a free piece
+539B: Min opponent next moves
+540W: Max own next moves?
+540B: Max own next moves
+541W: check, min opponent next moves
+541B: to avoid check-threat (causing to lose the bishop!)
+542W: Bring king to help queen (mate in X)
+542B: Max own next moves
+543W: Min opponent next moves, check
+543B: Max next moves
+544W: Bring king to help queen (mate in X), min opponent next moves without check
+544B: Max next moves
+545W: Check, min opponent next moves
+545B: Protect piece, max next moves
+546W: Min opponent next moves, check
+546B: Max own next moves
+547W: Min opponent next moves
+547B: Max own next moves
+548W: secure M1
 548B: insignificant (no move can save from imbending mate) 
 549W: mate
 
