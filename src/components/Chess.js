@@ -646,26 +646,30 @@ class Chess extends React.Component {
         if (deepness <= 1) continue;
 
         for (let j = 0; j < arrayOfCandidateBoardsArrays[i].length; ++j) {
-          stack.push(arrayOfCandidateBoardsArrays[i][j]);
+          stack.push(arrayOfCandidateBoardsArrays[i][j]); // TODO: put only feasible candidates to the stack to avoid stack overflow
         }
       } // for
 
       arrayOfCandidateBoardsArrays.length = 0; // clear the array
 
-     if (deepness > 1 ) {  
-      console.log(" stack length = " + stack.length);   
+      if (deepness > 1) {
+        console.log(" stack length = " + stack.length);
+        let stackLength = 0;
+        if (stack.length > 200000) {
+          stackLength = stack.length;
+        }
         while (stack.length > 0) {
-          
-          //const nextMoveCandidateBoards =
-            
-          arrayOfCandidateBoardsArrays.push(this.getNextMoveCandidateBoardsForABoard(
-            stack.pop(),
-            !nextPlyColor
-          )); // SCORE
+          if (stack.length < stackLength - 10000) {
+            stackLength = stack.length;
+            console.log("stack length = " + stackLength);
+          }
+          arrayOfCandidateBoardsArrays.push(
+            this.getNextMoveCandidateBoardsForABoard(stack.pop(), !nextPlyColor)
+          ); // SCORE
         } // while stack
       } // IF deepness
-        stack.length = 0;
-        deepness--;  
+      stack.length = 0;
+      deepness--;
     } // while deepness
     //const checkSum = Heuristics.getCheckSum(scoreArrays[0]);
     return ScoreSumProcessor.getScoreSumArray(scoreArrays); // TODO: we should possibly return a compound array consisting of scoreArrays AND arrayOfCandidateBoardsArrays
@@ -686,8 +690,12 @@ class Chess extends React.Component {
     /*console.log(
       "allowedMoves for WHITE = " + white + " " + allowedMoves.length
     );*/
-    
-    return this.getCandidateBoards(this.getAllowedMoves(white, board, candidateMoves), board, white);
+
+    return this.getCandidateBoards(
+      this.getAllowedMoves(white, board, candidateMoves),
+      board,
+      white
+    );
   }
 
   /**

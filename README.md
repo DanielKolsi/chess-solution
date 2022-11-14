@@ -3,52 +3,67 @@
 549 ply selection reason
 General rule: Capture only when capture doesn't cause direct damage like losing own capturing piece.
 -------------
-1W. Attack checking piece
-1B. Min white next moves, check without block&threat next move
-2W. Immediate threat for black piece, restricting good move possibilities
-2B. Check, protecting a piece under threat, minimize white allowed moves
-3W. Maximize own next moves
-3B. Maximise own next moves
-4W. Check, threat for protected black piece, restricting good move possibilities
+Categories:
+RULE: use filters by categories to narrow down good moves 
+
+1. Maximize own next moves
+2. Min opponent next moves
+3. Secure M1 or mate, Avoid M1
+4. Min opponent next moves, check
+5. Attack checking piece with king, max next moves *
+6. Immediate threat for opponent piece, restricting good move possibilities
+7. Check, protecting a piece under threat, minimize opponent allowed moves
+8. Check, threat for protected opponent piece, restricting good move possibilities
+9.  protect both pieces
+10. Take a free piece
+11. check (reduce opponent's movements)
+--------------
+1W. Attack checking piece with king, max next moves *
+1B. Min opponent next moves, check without block&threat next move *
+2W. Immediate threat for opponent piece, restricting good move possibilities *
+2B. Check, protecting a piece under threat, minimize opponent allowed moves *
+3W. Maximize own next moves *
+3B. Maximise own next moves *
+4W. Check, threat for protected opponent piece, restricting good move possibilities *
 4B. To catch passed pawn to be promoted
 5B. Push the pawn to be promoted
 5W. Threat to queen if pawn is promoted
 6W. Underpromote to knigh to check to save queen
-6B. protect both pieces
-7W. check (reduce opponent's movements)
-7B. Max own next moves
+6B. protect both pieces *
+7W. check (reduce opponent's movements) * 
+7B. Max own next moves *
 8W. avoid queen capture by check, protect queen
-8B. Min opponent next moves, check
-9W: Max own next moves
-9B: Min opponent next moves, check
+8B. Min opponent next moves, check *
+9W: Max own next moves *
+9B: Min opponent next moves, check *
 10W: Max own next moves, attack
-10B: Min opponent next moves, check
+10B: Min opponent next moves, check *
 ---
-537W: Min opponent next moves, check
-537B: Avoid M1
+537W: Min opponent next moves, check *
+537B: Avoid M1 *
 538W: Check+threat an unprotected piece
-538B: Max own next moves
-539W: Take a free piece
-539B: Min opponent next moves
+538B: Max own next moves *
+539W: Take a free piece *
+539B: Min opponent next moves *
 540W: Max own next moves?
-540B: Max own next moves
-541W: check, min opponent next moves
+540B: Max own next moves *
+541W: check, min opponent next moves *
 541B: to avoid check-threat (causing to lose the bishop!)
 542W: Bring king to help queen (mate in X)
-542B: Max own next moves
-543W: Min opponent next moves, check
-543B: Max next moves
+542B: Max own next moves *
+543W: Min opponent next moves, check *
+543B: Max own next moves *
 544W: Bring king to help queen (mate in X), min opponent next moves without check
-544B: Max next moves
+544B: Max own next moves *
 545W: Check, min opponent next moves
 545B: Protect piece, max next moves
 546W: Min opponent next moves, check
-546B: Max own next moves
-547W: Min opponent next moves
-547B: Max own next moves
-548W: secure M1
+546B: Max own next moves *
+547W: Min opponent next moves *
+547B: Max own next moves *
+548W: secure M1 *
 548B: insignificant (no move can save from imbending mate) 
-549W: mate
+549W: mate *
 
 
 
