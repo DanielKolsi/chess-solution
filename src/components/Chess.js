@@ -627,10 +627,13 @@ class Chess extends React.Component {
       arrayOfCandidateBoardsArrays.push(nextMoveCandidateBoardsFirsts);
     } // while
 
-    deepness--;
+    //deepness--;
 
-    while (deepness > 0) {
+    while (deepness-- > 0) {
+      console.log("DEEPNESS = " + deepness);
       const deepnessMinusOne = deepness - 1;
+      let minBlack = 100;
+      let maxWhite = 0;
       for (let i = 0; i < arrayOfCandidateBoardsArrays.length; ++i) {
         //nextMoveCandidateBoards = arrayOfCandidateBoardsArrays[i];
 
@@ -638,14 +641,33 @@ class Chess extends React.Component {
           "FIRST next move candit boards length = " +
             nextMoveCandidateBoards.length
         );*/
+     //  console.log("candidate array length: = " + arrayOfCandidateBoardsArrays[i].length + " deepNess = " + deepness);
+      
+       
+       if (deepness % 2 === 0 ) {
+        if (arrayOfCandidateBoardsArrays[i].length <= minBlack) {
+          minBlack = arrayOfCandidateBoardsArrays[i].length; // select a node that causes min next moves for the opponent 
+          console.log("min opponent: " + minBlack + " deepness="+deepness);
+        } else continue;
+       } else {
+        if (arrayOfCandidateBoardsArrays[i].length >= maxWhite) {
+          maxWhite = arrayOfCandidateBoardsArrays[i].length; // select a node that causes max next moves you
+          console.log("max own: " + maxWhite + " deepness="+deepness);
+        } else continue;         
+      }   
 
-        scoreArrays[deepnessMinusOne].push(
+
+
+       scoreArrays[deepnessMinusOne].push(
           arrayOfCandidateBoardsArrays[i].length
         ); // nextMoveCandidateBoardsLengthScore
 
         if (deepness <= 1) continue;
-
+      
+        
         for (let j = 0; j < arrayOfCandidateBoardsArrays[i].length; ++j) {
+        // 4 = black, 3 = white, 2 = black
+    
           stack.push(arrayOfCandidateBoardsArrays[i][j]); // TODO: put only feasible candidates to the stack to avoid stack overflow
         }
       } // for
@@ -659,7 +681,7 @@ class Chess extends React.Component {
           stackLength = stack.length;
         }
         while (stack.length > 0) {
-          if (stack.length < stackLength - 10000) {
+          if (stack.length < stackLength - 30000) {
             stackLength = stack.length;
             console.log("stack length = " + stackLength);
           }
@@ -669,7 +691,7 @@ class Chess extends React.Component {
         } // while stack
       } // IF deepness
       stack.length = 0;
-      deepness--;
+      //deepness--;
     } // while deepness
     //const checkSum = Heuristics.getCheckSum(scoreArrays[0]);
     return ScoreSumProcessor.getScoreSumArray(scoreArrays); // TODO: we should possibly return a compound array consisting of scoreArrays AND arrayOfCandidateBoardsArrays

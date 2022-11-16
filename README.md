@@ -19,6 +19,9 @@ RULE: use filters by categories to narrow down good moves
 9.  protect both pieces
 10. Take a free piece
 11. check (reduce opponent's movements)
+12. Max own next moves, attack 
+13. Check+threat an unprotected piece
+14. to avoid check-threat (causing to lose the bishop!)
 --------------
 1W. Attack checking piece with king, max next moves *
 1B. Min opponent next moves, check without block&threat next move *
@@ -38,7 +41,7 @@ RULE: use filters by categories to narrow down good moves
 8B. Min opponent next moves, check *
 9W: Max own next moves *
 9B: Min opponent next moves, check *
-10W: Max own next moves, attack
+10W: Max own next moves, attack *
 10B: Min opponent next moves, check *
 ---
 537W: Min opponent next moves, check *
@@ -50,14 +53,14 @@ RULE: use filters by categories to narrow down good moves
 540W: Max own next moves?
 540B: Max own next moves *
 541W: check, min opponent next moves *
-541B: to avoid check-threat (causing to lose the bishop!)
+541B: to avoid check-threat (causing to lose the bishop!) *
 542W: Bring king to help queen (mate in X)
 542B: Max own next moves *
 543W: Min opponent next moves, check *
 543B: Max own next moves *
 544W: Bring king to help queen (mate in X), min opponent next moves without check
 544B: Max own next moves *
-545W: Check, min opponent next moves
+545W: Check, min opponent next moves *
 545B: Protect piece, max next moves
 546W: Min opponent next moves, check
 546B: Max own next moves *
