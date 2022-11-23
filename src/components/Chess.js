@@ -656,8 +656,6 @@ class Chess extends React.Component {
         } else continue;         
       }   
 
-
-
        scoreArrays[deepnessMinusOne].push(
           arrayOfCandidateBoardsArrays[i].length
         ); // nextMoveCandidateBoardsLengthScore
@@ -695,6 +693,40 @@ class Chess extends React.Component {
     } // while deepness
     //const checkSum = Heuristics.getCheckSum(scoreArrays[0]);
     return ScoreSumProcessor.getScoreSumArray(scoreArrays); // TODO: we should possibly return a compound array consisting of scoreArrays AND arrayOfCandidateBoardsArrays
+  }
+
+
+  getCandidateboardWithMaxOwnNextMoves(board, white) {
+
+    let candidateBoards = this.getNextMoveCandidateBoardsForABoard(board, white);
+
+    let maxNextMoves = 0;
+    let selectedBoardIndex = 0;
+    for (let i = 0; i < candidateBoards.length; ++i) {
+      let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(candidateBoards[i], white);
+      if (nextMoveCandidateBoards.length > maxNextMoves) {
+         maxNextMoves = nextMoveCandidateBoards.length;
+         selectedBoardIndex = i;
+      }
+    }
+    return candidateBoards[selectedBoardIndex];
+  }
+
+
+  getCandidateboardWithMinOpponentNextMoves(board, white) {
+
+    let candidateBoards = this.getNextMoveCandidateBoardsForABoard(board, white);
+
+    let minNextMoves = 100;
+    let selectedBoardIndex = 0;
+    for (let i = 0; i < candidateBoards.length; ++i) {
+      let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(candidateBoards[i], !white);
+      if (nextMoveCandidateBoards.length < minNextMoves) {
+         minNextMoves = nextMoveCandidateBoards.length;
+         selectedBoardIndex = i;
+      }
+    }
+    return candidateBoards[selectedBoardIndex];
   }
 
   /**

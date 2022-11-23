@@ -8,7 +8,7 @@ General rule: Capture only when capture doesn't cause direct damage like losing 
 Categories:
 RULE: use filters by categories to narrow down good moves 
 
-1. Maximize own next moves
+1. Maximize own next moves (check as tie-breaker)
 2. Min opponent next moves
 3. Secure M1 or mate, Avoid M1
 4. Min opponent next moves, check

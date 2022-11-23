@@ -31,7 +31,7 @@ export function getCheckSum(array) {
 }
 
 /**
- * This superarray contains arrays and eacy array contains scores of boards. Each board thus maps to
+ * This superarray contains arrays and each array contains scores of boards. Each board thus maps to
  * one array from superarray, and superarray contains as many arrays as there are possible moves (e.g. for white).
  *
  * Each array has its max scores, and the array number (which correspond the candidate board number) which has the
@@ -56,7 +56,7 @@ export function getCandidateBoardNumberCorrespondingMaxScore(
 
 //export function getAbsoluteScoreForAllCandidateboards(candidateBoards, white) {}
 
-//export function getBestCandidateboard(candidateBoards, white) {}
+
 
 //export function getNextBoardForASelectedBoard(board, white) {}
 
