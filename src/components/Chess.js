@@ -96,6 +96,9 @@ class Chess extends React.Component {
       : this.getCandidateMovesBlack(board);
     const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
     candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
+    
+    const bestNextBoardIndexNumber = this.getCandidateboardIndexWithMaxOwnNextMoves(candidateBoards, white);
+
     console.log(
       "WHITE = " +
         white +
@@ -115,7 +118,7 @@ class Chess extends React.Component {
       );
     }
 
-    const compoundArray = this.getArrayOfCandidateBoardsArrays(
+    /*const compoundArray = this.getArrayOfCandidateBoardsArrays(
       white,
       board,
       DEEPNESS
@@ -144,6 +147,7 @@ class Chess extends React.Component {
     console.log(
       "best next board IDX number = " + bestNextBoardIndexNumber + " RETURNING"
     );
+    */
     // return; // TODO: end code execution here for algorithm debugging purpose
 
     /*const numberOfPossibleNextMoves = this.getNumberOfAllowedNextMovesForBoard(
@@ -696,7 +700,7 @@ class Chess extends React.Component {
   }
 
 
-  getCandidateboardWithMaxOwnNextMoves(board, white) {
+  getCandidateboardIndexWithMaxOwnNextMoves(board, white) {
 
     let candidateBoards = this.getNextMoveCandidateBoardsForABoard(board, white);
 
@@ -709,11 +713,11 @@ class Chess extends React.Component {
          selectedBoardIndex = i;
       }
     }
-    return candidateBoards[selectedBoardIndex];
+    return selectedBoardIndex;
   }
 
-
-  getCandidateboardWithMinOpponentNextMoves(board, white) {
+  // TODO: this could be combined / filtered with getCandidateboardIndexWithMaxOwnNextMoves
+  getCandidateboardIndexWithMinOpponentNextMoves(board, white) {
 
     let candidateBoards = this.getNextMoveCandidateBoardsForABoard(board, white);
 
@@ -726,7 +730,7 @@ class Chess extends React.Component {
          selectedBoardIndex = i;
       }
     }
-    return candidateBoards[selectedBoardIndex];
+    return selectedBoardIndex;
   }
 
   /**

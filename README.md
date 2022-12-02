@@ -1,27 +1,28 @@
-update
-
-
 ===============================
 549 ply selection reason
 General rule: Capture only when capture doesn't cause direct damage like losing own capturing piece.
 -------------
 Categories:
 RULE: use filters by categories to narrow down good moves 
+Heuristic: Move should restrict opponent's next good moves!
+Boolean logic: e.g. 1 && 2 && 12 (as tie-breaker?)
+Heuristic: a simple combination of rules/heuristics that will follow the 549 model as far as possible...
 
 1. Maximize own next moves (check as tie-breaker)
 2. Min opponent next moves
 3. Secure M1 or mate, Avoid M1
 4. Min opponent next moves, check
-5. Attack checking piece with king, max next moves *
+5. Attack checking piece with king, max next moves 
 6. Immediate threat for opponent piece, restricting good move possibilities
 7. Check, protecting a piece under threat, minimize opponent allowed moves
-8. Check, threat for protected opponent piece, restricting good move possibilities
-9.  protect both pieces
+8. Check, threat for (unprotected/protected) opponent piece, restricting good move possibilities
+9. protect both pieces (under attack)
 10. Take a free piece
 11. check (reduce opponent's movements)
 12. Max own next moves, attack 
 13. Check+threat an unprotected piece
 14. to avoid check-threat (causing to lose the bishop!)
+15. promote if otherwise OK
 --------------
 1W. Attack checking piece with king, max next moves *
 1B. Min opponent next moves, check without block&threat next move *
@@ -30,7 +31,7 @@ RULE: use filters by categories to narrow down good moves
 3W. Maximize own next moves *
 3B. Maximise own next moves *
 4W. Check, threat for protected opponent piece, restricting good move possibilities *
-4B. To catch passed pawn to be promoted
+4B. To catch passed opponent pawn about to be promoted
 5B. Push the pawn to be promoted
 5W. Threat to queen if pawn is promoted
 6W. Underpromote to knigh to check to save queen
@@ -46,7 +47,7 @@ RULE: use filters by categories to narrow down good moves
 ---
 537W: Min opponent next moves, check *
 537B: Avoid M1 *
-538W: Check+threat an unprotected piece
+538W: Check+threat an unprotected piece *
 538B: Max own next moves *
 539W: Take a free piece *
 539B: Min opponent next moves *
@@ -62,7 +63,7 @@ RULE: use filters by categories to narrow down good moves
 544B: Max own next moves *
 545W: Check, min opponent next moves *
 545B: Protect piece, max next moves
-546W: Min opponent next moves, check
+546W: Min opponent next moves, check *
 546B: Max own next moves *
 547W: Min opponent next moves *
 547B: Max own next moves *
