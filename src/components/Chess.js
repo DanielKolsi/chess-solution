@@ -700,9 +700,7 @@ class Chess extends React.Component {
   }
 
 
-  getCandidateboardIndexWithMaxOwnNextMoves(board, white) {
-
-    let candidateBoards = this.getNextMoveCandidateBoardsForABoard(board, white);
+  getCandidateboardIndexWithMaxOwnNextMoves(candidateBoards, white) {
 
     let maxNextMoves = 0;
     let selectedBoardIndex = 0;
@@ -717,9 +715,7 @@ class Chess extends React.Component {
   }
 
   // TODO: this could be combined / filtered with getCandidateboardIndexWithMaxOwnNextMoves
-  getCandidateboardIndexWithMinOpponentNextMoves(board, white) {
-
-    let candidateBoards = this.getNextMoveCandidateBoardsForABoard(board, white);
+  getCandidateboardIndexWithMinOpponentNextMoves(candidateBoards, white) {
 
     let minNextMoves = 100;
     let selectedBoardIndex = 0;

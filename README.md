@@ -8,7 +8,7 @@ Heuristic: Move should restrict opponent's next good moves!
 Boolean logic: e.g. 1 && 2 && 12 (as tie-breaker?)
 Heuristic: a simple combination of rules/heuristics that will follow the 549 model as far as possible...
 
-1. Maximize own next moves (check as tie-breaker)
+1. Maximize own next moves (check as a tie-breaker)
 2. Min opponent next moves
 3. Secure M1 or mate, Avoid M1
 4. Min opponent next moves, check
