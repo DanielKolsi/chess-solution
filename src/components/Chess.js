@@ -99,6 +99,7 @@ class Chess extends React.Component {
     
     const bestNextBoardIndexNumber = this.getCandidateboardIndexWithMaxOwnNextMoves(candidateBoards, white);
 
+
     console.log(
       "WHITE = " +
         white +
@@ -699,6 +700,32 @@ class Chess extends React.Component {
     return ScoreSumProcessor.getScoreSumArray(scoreArrays); // TODO: we should possibly return a compound array consisting of scoreArrays AND arrayOfCandidateBoardsArrays
   }
 
+
+  getCandidateboardIndexWithMinMaxNextMoves(candidateBoards, white) {
+    let maxNextMoves = 0;
+    let selectedBoardIndexMax = 0;
+    let selectedBoardIndexMin = 0;
+
+    for (let i = 0; i < candidateBoards.length; ++i) {
+      let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(candidateBoards[i], white);
+      if (nextMoveCandidateBoards.length > maxNextMoves) {
+         maxNextMoves = nextMoveCandidateBoards.length;
+         selectedBoardIndexMax = i;
+      }
+    }
+    let minNextMoves = 100;
+    
+    for (let i = 0; i < candidateBoards.length; ++i) {
+      let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(candidateBoards[i], !white);
+      if (nextMoveCandidateBoards.length < minNextMoves) {
+         minNextMoves = nextMoveCandidateBoards.length;
+         selectedBoardIndexMin = i;
+      }
+    }
+    if (maxNextMoves > 2 * minNextMoves) {
+      return selectedBoardIndexMax;
+    } else return selectedBoardIndexMin;
+  }
 
   getCandidateboardIndexWithMaxOwnNextMoves(candidateBoards, white) {
 
