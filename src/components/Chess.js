@@ -97,7 +97,7 @@ class Chess extends React.Component {
     const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
     candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
     
-    const bestNextBoardIndexNumber = this.getCandidateboardIndexWithMaxOwnNextMoves(candidateBoards, white);
+    const bestNextBoardIndexNumber = this.getCandidateboardIndexWithMinMaxNextMoves(candidateBoards, white);//  getCandidateboardIndexWithMaxOwnNextMoves(candidateBoards, white);
 
 
     console.log(
