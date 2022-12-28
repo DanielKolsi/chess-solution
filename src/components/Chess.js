@@ -722,7 +722,8 @@ class Chess extends React.Component {
          selectedBoardIndexMin = i;
       }
     }
-    if (maxNextMoves > 2 * minNextMoves) {
+    if (minNextMoves <= 1) return selectedBoardIndexMin;
+    if (maxNextMoves > 8 * minNextMoves) {
       return selectedBoardIndexMax;
     } else return selectedBoardIndexMin;
   }
