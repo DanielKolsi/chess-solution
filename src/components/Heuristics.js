@@ -20,6 +20,10 @@ import * as CheckFunctions from "./CheckFunctions";
  */
 //-> select the highest point functioned candidate board
 
+// like 2nd (black) ply in 549 
+export function filterOpponentUnprotectedDoubleThreat(arrayOfCandidateBoards) {
+
+}
 
 // return the sum of array integers
 export function getCheckSum(array) {
