@@ -1,7 +1,6 @@
 import CONSTANTS from "../config/constants";
 
 
-
 /**
  *
  * @param {*} piece

@@ -10,6 +10,16 @@ Heuristic: a simple combination of rules/heuristics that will follow the 549 mod
 RULE: difference between MAX NEXT and OPPONENT MIN NEXT can be used as a tie breaker : +-, Math.max(MAX_NEXT-MIN_NEXT)
 Heuristic: filter out "bad move" options before using other more coarse grained score/move evaluation and selection
 
+----------------------
+1. Worst moves (fool's mate)
+2. MIN/MAX MaxScore(OwnMovesNext-OppMovesNext)
+3. Continue iteration among 3 best MIN/MAX scores
+4. Check immediate checkmates!
+5. en passat++
+6. underpromotions?
+
+---------------------
+
 1. Maximize own next moves (check as a tie-breaker)
 2. Min opponent next moves
 3. Secure M1 or mate, Avoid M1
