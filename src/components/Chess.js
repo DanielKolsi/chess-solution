@@ -701,6 +701,8 @@ class Chess extends React.Component {
   }
 
 
+  // TODO: continue from here 22.8.2023 to get maxScore(OwnNextMaxMoves-OpponentNextMaxMoves)
+  // getCandidateboardIndexWithMinMaxNextMoves(candidateBoards, true) -  getCandidateboardIndexWithMinMaxNextMoves(candidateBoards, false)
   getCandidateboardIndexWithMinMaxNextMoves(candidateBoards, white) {
     let maxNextMoves = 0;
     let selectedBoardIndexMax = 0;
@@ -778,6 +780,25 @@ class Chess extends React.Component {
       board,
       white
     );
+  }
+
+  // TODO: further check if the opponent can e.g. win tempo by checking!
+  getNextDiffCandidateBoardsScoreForABoard(board, white) {
+     let candidateMovesWhite = this.getCandidateMovesWhite(board);
+   
+     let candidateMovesBlack =  this.getCandidateMovesBlack(board);
+
+     let candidateBoardsWhite =  this.getAllowedMoves(true, board, candidateMovesWhite); 
+     let candidateBoardsBlack =  this.getAllowedMoves(false, board, candidateMovesBlack); 
+
+     let diff = 0;
+     if (white) {
+      diff = candidateBoardsWhite - candidateBoardsBlack;
+      return candidateBoardsBlack === 0 ?  CONSTANTS.WIN: diff; 
+     } else {
+       diff =  candidateBoardsBlack - candidateBoardsWhite;
+      return  candidateBoardsWhite === 0 ?  CONSTANTS.WIN: diff;  // return particular board score; the better score the better board -> should be possibly selected
+     }
   }
 
   /**

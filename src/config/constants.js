@@ -18,7 +18,9 @@ const CONSTANTS = {
   BLACK_KING: "KingB",
   WHITE_PAWN_CODE: 1,
   BLACK_PAWN_CODE: -1,
-  
+
+  WIN: 777, // number indicating immediate win
+
   minWhite: 48, // white piece minimum value
   maxWhite: 63, // 0..63
   maxBlack: 15, // black piece max value
