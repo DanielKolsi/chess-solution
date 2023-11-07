@@ -1,4 +1,19 @@
 ===============================
+https://www.youtube.com/watch?v=9LDaY7X2qGk
+
+let globalMax = -100;
+let bestBoard;
+forEach(allowedBoard) {
+ let max = OwnNextAllowedMoves-OpponentNextAllowedMoves;
+ if (max > globalMax) {
+  globalMax = max;
+  bestBoard = allowedBoard;
+ }
+}
+return allowedBoard;
+
+
+
 549 ply selection reason
 General rule: Capture only when capture doesn't cause direct damage like losing own capturing piece.
 -------------
