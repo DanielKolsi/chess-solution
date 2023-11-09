@@ -153,13 +153,14 @@ export function getCandidateWhitePawnMoves(piece, board, prevMove) {
   }
 
   if (
-    board[CURRENT_PIECE_SQUARE].col > 7 &&
+    board[CURRENT_PIECE_SQUARE].col > CONSTANTS.minCol &&
     board[DOWN_LEFT].piece !== null &&
     board[DOWN_LEFT].piece.white === false
   ) {
+    const move = CURRENT_PIECE_SQUARE + DELIMITER + DOWN_LEFT; 
     // eat black
-    candidateMoves.push(CURRENT_PIECE_SQUARE + DELIMITER + DOWN_LEFT); // eats black piece
-  }
+    candidateMoves.push(move); // eats black piece
+  } 
   if (
     board[CURRENT_PIECE_SQUARE].col < CONSTANTS.maxCol &&
     board[DOWN_RIGHT].piece !== null &&

@@ -80,7 +80,7 @@ class Chess extends React.Component {
    * @returns
    */
   nextPly() {
-    const DEEPNESS = 4; // 3 = -BLACK + WHITE - BLACK
+    //const DEEPNESS = 4; // 3 = -BLACK + WHITE - BLACK
 
     let {
       currentBoardSquares: board,
@@ -96,18 +96,21 @@ class Chess extends React.Component {
       : this.getCandidateMovesBlack(board);
     const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
     candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
-
+    
+    console.log("candidateMoves:" + candidateMoves);
+    //console.log("allowedMoves:" + allowedMoves); // TODO: fix bug; not capturing a checking queen with a pawn!
+    // Nov 2023, use minMax without deepness at this point
     const bestNextBoardIndexNumber = this.getCandidateboardIndexWithMinMaxNextMoves(candidateBoards, white);//  getCandidateboardIndexWithMaxOwnNextMoves(candidateBoards, white);
 
 
-    console.log(
+    /*console.log(
       "WHITE = " +
       white +
       " Number of  Candidate boards: " +
       candidateBoards.length +
       " DEEPNESS = " +
       DEEPNESS
-    );
+    ); */
 
     if (this.gameOver(candidateMoves, allowedMoves, white)) {
       return; // return as game over
@@ -732,6 +735,8 @@ class Chess extends React.Component {
   }
 
   // TODO 7/11/23
+  // Instead of using DEEP and iterations, we need to use heuristical calculations and evaluation functions to find the optimal next move!
+  // Target: 549 & Fool's mate moves
   /*
   let globalMax = -100;
  let bestBoard;
@@ -746,7 +751,7 @@ return allowedBoard;
  
 */
   getCandidateboardIndexWithMinMaxNextMoves(candidateBoards, white) {
-    let topScore = 0;
+    let topScore = -100;
     let selectedBoardIndexMax = 0;
    
     for (let i = 0; i < candidateBoards.length; ++i) {
@@ -755,12 +760,13 @@ return allowedBoard;
       let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(candidateBoards[i], white);
    
       let minMax = nextMoveCandidateBoards.length - nextMoveCandidateBoardsOpponent.length;
-      if (minMax > topScore) {
+      if (parseInt(minMax, 10) > parseInt(topScore, 10)) {
         topScore = minMax;
         selectedBoardIndexMax = i;
       }
     }
-    console.log("MINIMAX: " + selectedBoardIndexMax);
+    
+    console.log("MINIMAX: " + topScore);
     return selectedBoardIndexMax;
   }
 
