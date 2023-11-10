@@ -158,7 +158,6 @@ export function getCandidateWhitePawnMoves(piece, board, prevMove) {
     board[DOWN_LEFT].piece.white === false
   ) {
     const move = CURRENT_PIECE_SQUARE + DELIMITER + DOWN_LEFT; 
-    // eat black
     candidateMoves.push(move); // eats black piece
   } 
   if (
@@ -166,7 +165,6 @@ export function getCandidateWhitePawnMoves(piece, board, prevMove) {
     board[DOWN_RIGHT].piece !== null &&
     board[DOWN_RIGHT].piece.white === false
   ) {
-    // right up eat black
     candidateMoves.push(CURRENT_PIECE_SQUARE + DELIMITER + DOWN_RIGHT); // eats black piece
   }
 

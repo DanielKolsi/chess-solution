@@ -1,5 +1,4 @@
 import React from "react";
-
 import Square from "./Square";
 import NextPly from "./NextPly";
 
@@ -97,8 +96,8 @@ class Chess extends React.Component {
     const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
     candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
     
-    console.log("candidateMoves:" + candidateMoves);
-    //console.log("allowedMoves:" + allowedMoves); // TODO: fix bug; not capturing a checking queen with a pawn!
+    //console.log("candidateMoves:" + candidateMoves);
+    console.log("allowedMoves:" + allowedMoves); // TODO: fix bug; not capturing a checking queen with a pawn!
     // Nov 2023, use minMax without deepness at this point
     const bestNextBoardIndexNumber = this.getCandidateboardIndexWithMinMaxNextMoves(candidateBoards, white);//  getCandidateboardIndexWithMaxOwnNextMoves(candidateBoards, white);
 
@@ -1213,7 +1212,7 @@ return allowedBoard;
         )
       ) {
         allowedMoves.push(whiteCandidateMove);
-      }
+      } 
     } // ..for
 
     return allowedMoves;
@@ -1324,17 +1323,20 @@ return allowedBoard;
    * @returns
    */
   isWhiteMoveAllowed(board, whiteKingPosition, whiteCandidateMove) {
+  
+    const debug = false;
+    const blackCapturedPosition =  parseInt(whiteCandidateMove.slice(-2), 10);
     let allowed = true;
 
     for (let i = 0; i <= CONSTANTS.whiteRightRookId; i++) {
       let piece = board[i].piece;
 
-      if (piece === null) {
-        continue; // piece has been e.g. eaten or is a pawn
+      if (piece === null || (!piece.white && i === blackCapturedPosition)) {
+        continue; // no piece here or black will be captured here
       }
 
       const value = piece.value;
-      let debug = false;
+     
 
       switch (
       value // only consider black pieces here!
@@ -1406,7 +1408,7 @@ return allowedBoard;
             whiteKingPosition,
             whiteCandidateMove
           );
-          if (debug && !allowed) {
+          if (!allowed) {
             console.log(
               "Not allowed: " +
               whiteCandidateMove +
@@ -1434,11 +1436,12 @@ return allowedBoard;
    */
   isBlackMoveAllowed(board, blackKingPosition, blackCandidateMove) {
     let allowed = true;
+    const whiteCapturedPosition =  parseInt(blackCandidateMove.slice(-2), 10); // white will be captured here
 
     for (let i = 0; i < CONSTANTS.NUMBER_OF_SQUARES; i++) {
       const piece = board[i].piece;
 
-      if (piece === null) {
+      if (piece === null || (piece.white && i === whiteCapturedPosition)) {
         continue; // piece has been e.g. eaten
       }
 
