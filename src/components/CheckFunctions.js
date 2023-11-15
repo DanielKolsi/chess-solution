@@ -25,11 +25,16 @@ export function getCheckMoves(allowedMoves) {
    * @param {*} white
    */
  export function getTransformToPlusDelimForCheckMoves(board, allowedMoves, white) {
+  
   for (let i = 0; i < allowedMoves.length; i++) {
     const moves = HelpFunctions.getMovesString(allowedMoves[i]);
     const src = parseInt(moves[0], 10);
     let piece = board[src].piece;
-
+  if (piece === null) {
+    console.log("BUG: piece should not be null here: piece:"+piece + " src="+src + "board:" + board[src] + " moves:"+moves);
+   console.log("allowedMoves: " + allowedMoves);
+  }
+    // TOOD: BUG/Piece was null here: 10/11/23
     switch (
       Math.abs(piece.value) // handles both white & black piece values
     ) {
