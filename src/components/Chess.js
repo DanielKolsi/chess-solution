@@ -1,19 +1,19 @@
 import React from "react";
-import Square from "./Square";
 import NextPly from "./NextPly";
+import Square from "./Square";
 
-import PrevPly from "./PrevPly";
 import CONSTANTS from "../config/constants";
+import PrevPly from "./PrevPly";
 
-import * as ScoreSumProcessor from "./ScoreSumProcessor";
 import * as Heuristics from "./Heuristics";
 import * as MoveFunctions from "./MoveFunctions";
+import * as ScoreSumProcessor from "./ScoreSumProcessor";
 
-import * as CheckFunctions from "./CheckFunctions";
-import * as HelpFunctions from "./HelpFunctions";
 import * as CastlingFunctions from "./CastlingFunctions";
-import * as PromotionFunctions from "./PromotionFunctions";
+import * as CheckFunctions from "./CheckFunctions";
 import * as EnPassantFunctions from "./EnPassantFunctions";
+import * as HelpFunctions from "./HelpFunctions";
+import * as PromotionFunctions from "./PromotionFunctions";
 //import { doublePawnPointsHandling } from "./Heuristics";
 import _ from "lodash";
 
@@ -87,19 +87,19 @@ class Chess extends React.Component {
       candidateBoards,
       pieces,
     } = this.state;
-   
+
     const previousBoard = _.cloneDeep(board);
     this.state.previousBoards.push(previousBoard); // stack of previous boards, Lodash deep clone is required!
 
     const candidateMoves = white
       ? this.getCandidateMovesWhite(board)
       : this.getCandidateMovesBlack(board);
-    
+
     const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
-   
+
     candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
-    
-    
+
+
     //console.log("candidateMoves:" + candidateMoves);
     console.log("allowedMoves:" + allowedMoves); // TODO: fix bug; not capturing a checking queen with a pawn!
     // Nov 2023, use minMax without deepness at this point
@@ -221,8 +221,8 @@ class Chess extends React.Component {
     //   this.setStatesOfCastlingMoves(board[movesStringFromSelectedMove[0]]); // we need to check if the selected move caused restrictions that block future castling
     //candidateBoards[selectedMoveIndex]
 
-   // TODO: state hasn't properly updated yet!
-   console.log("state to be updated, 60:" + candidateBoards[bestNextBoardIndexNumber][60].piece);
+    // TODO: state hasn't properly updated yet!
+    console.log("state to be updated, 60:" + candidateBoards[bestNextBoardIndexNumber][60].piece);
     this.setState(
       {
         pieces,
@@ -233,12 +233,12 @@ class Chess extends React.Component {
       },
       function () {
         //if (this.state.DEBUG) {
-         
-          console.log("state update complete, nextPly : " + this.state.nextPly);
+
+        console.log("state update complete, nextPly : " + this.state.nextPly);
         //}
       }
     );
-  
+
   } // nextPly
 
   /**
@@ -451,29 +451,29 @@ class Chess extends React.Component {
     let castlingLeftAddedAsCandidateMove = false;
     let castlingRightAddedAsCandidateMove = false;
 
- 
+
     for (let i = 0; i <= CONSTANTS.maxWhite; i++) {
       let piece = board[i].piece;
 
-      if (piece === null)  
+      if (piece === null)
         continue; // piece has been e.g. eaten
-      
+
       if (!piece.white) continue; // it was a black piece...
 
       let candidateMoves = this.getCandidateMovesForPiece(piece, board);
-      
+
       if (
         board[CONSTANTS.whiteKingId].piece !== null &&
         !this.state.whiteKingMoved // it's OK to have only one variable in state for 'whiteKingMoved', as it corresponds the real history i.e. squares (the chosen previous move)
       ) {
         if (
           !castlingLeftAddedAsCandidateMove &&
-          !this.state.whiteLeftRookMoved 
+          !this.state.whiteLeftRookMoved
         ) {
           if (
             board[57].piece === null &&
             board[58].piece === null &&
-            board[59].piece === null 
+            board[59].piece === null
             //&& board[56].piece.value === CONSTANTS.WHITE_ROOK_CODE
           ) {
             candidateMoves.push(
@@ -488,14 +488,14 @@ class Chess extends React.Component {
         ) {
           if (
             board[61].piece === null &&
-            board[62].piece === null 
-           && board[60].piece !== null // king should be there!
-          ) {   
-               candidateMoves.push(
+            board[62].piece === null
+            && board[60].piece !== null // king should be there!
+          ) {
+            candidateMoves.push(
               CONSTANTS.whiteKingId + CONSTANTS.CASTLING_KING_SIDE + 62
             ); //add white castling right (king move!) as a candidate move
             castlingRightAddedAsCandidateMove = true;
-           
+
           }
         }
       }
@@ -507,12 +507,10 @@ class Chess extends React.Component {
         candidateMovesWhite = candidateMoves;
       } else if (candidateMoves.length > 0) {
         if (!candidateMovesWhite.includes(candidateMoves)) {
-         if (board[60].piece === null && candidateMoves.includes("60⇒59")) {
-            console.log("should not concatenate!, i = " + i);
-         }
-            candidateMovesWhite = candidateMovesWhite.concat(candidateMoves); // candidateMoves, removalmoves, candidateMoves
-          
-        
+
+          candidateMovesWhite = candidateMovesWhite.concat(candidateMoves); // candidateMoves, removalmoves, candidateMoves
+
+
           /*console.log(
           "concatenating moves, added n = " +
             candidateMoves.length +
@@ -522,9 +520,7 @@ class Chess extends React.Component {
         }
       }
     } // ..for
-    if (board[60].piece === null) {
-      console.log("possible bug");
-    }
+  
     return candidateMovesWhite;
   }
 
@@ -769,20 +765,20 @@ return allowedBoard;
   getCandidateboardIndexWithMinMaxNextMoves(candidateBoards, white) {
     let topScore = -100;
     let selectedBoardIndexMax = 0;
-   
-  
+
+
     for (let i = 0; i < candidateBoards.length; ++i) {
       let nextMoveCandidateBoardsOpponent = this.getNextMoveCandidateBoardsForABoard(candidateBoards[i], !white);
       if (nextMoveCandidateBoardsOpponent === 0) return i; // it is mate for the opponent, so return here
       let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(candidateBoards[i], white);
-   
+
       let minMax = nextMoveCandidateBoards.length - nextMoveCandidateBoardsOpponent.length;
       if (parseInt(minMax, 10) > parseInt(topScore, 10)) {
         topScore = minMax;
         selectedBoardIndexMax = i;
       }
     }
-    
+
     console.log("MINIMAX: " + topScore);
     return selectedBoardIndexMax;
   }
@@ -832,7 +828,7 @@ return allowedBoard;
     /*console.log(
       "allowedMoves for WHITE = " + white + " " + allowedMoves.length
     );*/
-    
+
     return this.getCandidateBoards(
       this.getAllowedMoves(white, board, candidateMoves),
       board,
@@ -1048,8 +1044,7 @@ return allowedBoard;
    * @returns
    */
   castleQueenSideAllowedBoard(white, board) {
-    if (white) {
-      console.log("WHITE queen side castling allowed...");
+    if (white) { 
       return CastlingFunctions.castleQueenSideWhite(board);
     } else {
       return CastlingFunctions.castleQueenSideBlack(board);
@@ -1077,13 +1072,13 @@ return allowedBoard;
    * @returns
    */
   getAllowedMoves(white, board, candidateMoves) {
-   
+
 
     if (candidateMoves === null || candidateMoves.length === 0) return null;
     let allowedMoves = white
       ? this.getAllowedMovesWhite(board, candidateMoves)
       : this.getAllowedMovesBlack(board, candidateMoves);
-      
+
     allowedMoves = CheckFunctions.getTransformToPlusDelimForCheckMoves(
       board,
       allowedMoves,
@@ -1136,7 +1131,7 @@ return allowedBoard;
     if (board[60].piece === null) {
       console.log("WHITE KING  60-5: " + board[60].piece);
     }
-    
+
 
 
     const { candidateBoards } = this.state;
@@ -1215,7 +1210,7 @@ return allowedBoard;
           }
         }
         if (allowKingSideCastling) {
-         // console.log("castling check: king side castling allowed, move =" + whiteCandidateMove);
+          // console.log("castling check: king side castling allowed, move =" + whiteCandidateMove);
           allowedMoves.push(whiteCandidateMove);
         }
         continue;
@@ -1239,7 +1234,7 @@ return allowedBoard;
         )
       ) {
         allowedMoves.push(whiteCandidateMove);
-      } 
+      }
     } // ..for
 
     return allowedMoves;
@@ -1350,9 +1345,9 @@ return allowedBoard;
    * @returns
    */
   isWhiteMoveAllowed(board, whiteKingPosition, whiteCandidateMove) {
-  
+
     const debug = false;
-    const blackCapturedPosition =  parseInt(whiteCandidateMove.slice(-2), 10);
+    const blackCapturedPosition = parseInt(whiteCandidateMove.slice(-2), 10);
     let allowed = true;
 
 
@@ -1365,7 +1360,7 @@ return allowedBoard;
       }
 
       const value = piece.value;
-     
+
 
       switch (
       value // only consider black pieces here!
@@ -1465,7 +1460,7 @@ return allowedBoard;
    */
   isBlackMoveAllowed(board, blackKingPosition, blackCandidateMove) {
     let allowed = true;
-    const whiteCapturedPosition =  parseInt(blackCandidateMove.slice(-2), 10); // white will be captured here
+    const whiteCapturedPosition = parseInt(blackCandidateMove.slice(-2), 10); // white will be captured here
 
     for (let i = 0; i < CONSTANTS.NUMBER_OF_SQUARES; i++) {
       const piece = board[i].piece;

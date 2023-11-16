@@ -21,8 +21,10 @@ export function doEnPassantComplete(board, moves) {
   } else if (dstSquare === srcSquare + 9) {
     pieceToBeRemovedSquare = srcSquare + CONSTANTS.right;
   }
-
+  const tmp = board[dstSquare].piece.currentSquare;
   board[dstSquare].piece = board[srcSquare].piece;
+  
+  board[dstSquare].piece.currentSquare = tmp;
   board[srcSquare].piece = null;
   console.log("removed piece = " + pieceToBeRemovedSquare);
   board[pieceToBeRemovedSquare].piece = null;
