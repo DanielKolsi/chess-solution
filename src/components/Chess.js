@@ -221,8 +221,7 @@ class Chess extends React.Component {
     //   this.setStatesOfCastlingMoves(board[movesStringFromSelectedMove[0]]); // we need to check if the selected move caused restrictions that block future castling
     //candidateBoards[selectedMoveIndex]
 
-    // TODO: state hasn't properly updated yet!
-    console.log("state to be updated, 60:" + candidateBoards[bestNextBoardIndexNumber][60].piece);
+   
     this.setState(
       {
         pieces,
@@ -1128,12 +1127,6 @@ return allowedBoard;
    */
   getAllowedMovesWhite(board, candidateMovesWhite, boardIdx) {
 
-    if (board[60].piece === null) {
-      console.log("WHITE KING  60-5: " + board[60].piece);
-    }
-
-
-
     const { candidateBoards } = this.state;
     let allowedMoves = []; // contains only the candidate moves that were eventually verified to be allowed
 
@@ -1350,8 +1343,6 @@ return allowedBoard;
     const blackCapturedPosition = parseInt(whiteCandidateMove.slice(-2), 10);
     let allowed = true;
 
-
-    console.log("WHITE KING 60:" + board[60].piece)
     for (let i = 0; i <= CONSTANTS.whiteRightRookId; i++) {
       let piece = board[i].piece;
 
