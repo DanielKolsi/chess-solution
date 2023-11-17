@@ -748,36 +748,27 @@ class Chess extends React.Component {
   // TODO 7/11/23
   // Instead of using DEEP and iterations, we need to use heuristical calculations and evaluation functions to find the optimal next move!
   // Target: 549 & Fool's mate moves
-  /*
-  let globalMax = -100;
- let bestBoard;
-forEach(allowedBoard) {
- let max = OwnNextAllowedMoves-OpponentNextAllowedMoves;
- if (max > globalMax) {
-  globalMax = max;
-  bestBoard = allowedBoard;
- }
-}
-return allowedBoard;
- 
-*/
   getCandidateboardIndexWithMinMaxNextMoves(candidateBoards, white) {
     let topScore = -100;
     let selectedBoardIndexMax = 0;
-
+    let allowedMovesPerCandidateBoard = [];
+    let allowedOpponentMovesPerCandidateBoard = [];
+    let scores = [];
 
     for (let i = 0; i < candidateBoards.length; ++i) {
       let nextMoveCandidateBoardsOpponent = this.getNextMoveCandidateBoardsForABoard(candidateBoards[i], !white);
       if (nextMoveCandidateBoardsOpponent === 0) return i; // it is mate for the opponent, so return here
       let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(candidateBoards[i], white);
-
+      allowedOpponentMovesPerCandidateBoard[i] = nextMoveCandidateBoardsOpponent.length;
+      allowedMovesPerCandidateBoard[i] = nextMoveCandidateBoards.length;
       let minMax = nextMoveCandidateBoards.length - nextMoveCandidateBoardsOpponent.length;
+      scores[i] = minMax;
       if (parseInt(minMax, 10) > parseInt(topScore, 10)) {
         topScore = minMax;
         selectedBoardIndexMax = i;
       }
-    }
 
+    } // ..for
     console.log("MINIMAX: " + topScore);
     return selectedBoardIndexMax;
   }
@@ -885,10 +876,11 @@ return allowedBoard;
    * @param {*} board
    * @returns
    */
+
   /*getCandidateMovesForBoard(white, board) {
-  
     return white ? this.getCandidateMovesWhite(board) : this.getCandidateMovesBlack(board);
   }*/
+
   /**
    *
    * @param {*} piece
@@ -1025,7 +1017,7 @@ return allowedBoard;
       }
 
       default: {
-        // normal move, includes eats
+        // normal move, includes captures
         board[moves[1]].piece = board[moves[0]].piece; // the move: dst square's piece becomes src square's piece
         board[moves[1]].piece.currentSquare = parseInt(moves[1], 10);
         board[moves[0]].piece = null; // the original src piece has moved, so the square doesn't have its peace anymore
@@ -1746,8 +1738,7 @@ return allowedBoard;
    */
   setStatesOfCastlingMoves(srcSquare) {
     switch (srcSquare) {
-      case CONSTANTS.whiteKingId:
-        alert("WHITE KING MOVED - CASTLING");
+      case CONSTANTS.whiteKingId: 
         this.setState({ whiteKingMoved: true });
         break;
       case CONSTANTS.blackKingId:

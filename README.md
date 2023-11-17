@@ -1,19 +1,15 @@
 ===============================
 https://www.youtube.com/watch?v=9LDaY7X2qGk
 
-let globalMax = -100;
-let bestBoard;
-forEach(allowedBoard) {
- let max = OwnNextAllowedMoves-OpponentNextAllowedMoves;
- if (max > globalMax) {
-  globalMax = max;
-  bestBoard = allowedBoard;
- }
-}
-return allowedBoard;
 
 
+TODO (17/11/23): 
+----
+Avoid "suicides" i.e. immediate captures of own checking piece by opponent king. (+avoid blocking, capturing by other opponent piece)
+* CaptureFunctions: e.g. boolean WhiteKingCapturesAt(50)
+   // -> getAllowedMovesOpponentKing(...)
 
+----
 549 ply selection reason
 General rule: Capture only when capture doesn't cause direct damage like losing own capturing piece.
 -------------
