@@ -28,7 +28,7 @@ class Chess extends React.Component {
       LOGGING: false,
       arrayOfCandidateBoards: [],
       white: CONSTANTS.WHITE_STARTS, // white starts by default
-      currentBoardSquares: [], // current board squares; all next turn possibilities will create a separate (candidate) board
+      currentBoard: [], // current board squares; all next turn possibilities will create a separate (candidate) board
       candidateBoards: [], // each board has different squares, there are as many boards as there are allowed move possibilities per a turn
       pieces: {},
       staleMateQueenWarning: false,
@@ -82,7 +82,7 @@ class Chess extends React.Component {
     //const DEEPNESS = 4; // 3 = -BLACK + WHITE - BLACK
 
     let {
-      currentBoardSquares: board,
+      currentBoard: board,
       white,
       candidateBoards,
       pieces,
@@ -139,7 +139,8 @@ class Chess extends React.Component {
     );
 
     //4, 97, 1619, 36348, 876731
-    //const totalNumberOfCandidateBoards  = this.getTotalNumberOfCandidateBoards(arrayOfCandidateBoardsArrays);
+    const totalNumberOfCandidateBoards  = this.getTotalNumberOfCandidateBoards(compoundArray); // compoundArray?
+    //const totalNumberOfCandidateBoards  = this.getTotalNumberOfCandidateBoards(arrayOfCandidateBoardsArrays); // compoundArray?
     //console.log("total number of CandidateBoards: " + totalNumberOfCandidateBoards);//TODO deep 5 = 876731 vs. 38064 = 36348 + 1619 + 97
 
     let bestNextBoardIndexNumber =
@@ -221,12 +222,12 @@ class Chess extends React.Component {
     //   this.setStatesOfCastlingMoves(board[movesStringFromSelectedMove[0]]); // we need to check if the selected move caused restrictions that block future castling
     //candidateBoards[selectedMoveIndex]
 
-   
+
     this.setState(
       {
         pieces,
         candidateBoards,
-        currentBoardSquares: candidateBoards[bestNextBoardIndexNumber],
+        currentBoard: candidateBoards[bestNextBoardIndexNumber],
         white: !white,
         nextPly: ++this.state.nextPly,
       },
@@ -246,7 +247,7 @@ class Chess extends React.Component {
   prevPly() {
     this.setState(
       {
-        currentBoardSquares: this.state.previousBoards.pop(),
+        currentBoard: this.state.previousBoards.pop(),
         white: !this.state.white,
         nextPly: --this.state.nextPly,
       },
@@ -405,7 +406,7 @@ class Chess extends React.Component {
         idx++;
       }
     }
-    this.setState({ currentBoardSquares: squares });
+    this.setState({ currentBoard: squares });
   }
 
   /**
@@ -414,7 +415,7 @@ class Chess extends React.Component {
    * @returns board pieces
    */
   initPieces() {
-    const { currentBoardSquares, pieces } = this.state;
+    const { currentBoard, pieces } = this.state;
 
     this.props.chess.forEach((item) => {
       let piece = {
@@ -428,7 +429,7 @@ class Chess extends React.Component {
       };
 
       if (item[0] >= 0 && item[0] <= CONSTANTS.maxWhite) {
-        currentBoardSquares[item[0]].piece = piece;
+        currentBoard[item[0]].piece = piece;
       }
       pieces[piece.n] = piece;
     });
@@ -519,7 +520,7 @@ class Chess extends React.Component {
         }
       }
     } // ..for
-  
+
     return candidateMovesWhite;
   }
 
@@ -681,10 +682,8 @@ class Chess extends React.Component {
 
         if (deepness <= 1) continue;
 
-
         for (let j = 0; j < arrayOfCandidateBoardsArrays[i].length; ++j) {
           // 4 = black, 3 = white, 2 = black
-
           stack.push(arrayOfCandidateBoardsArrays[i][j]); // TODO: put only feasible candidates to the stack to avoid stack overflow
         }
       } // for
@@ -713,8 +712,6 @@ class Chess extends React.Component {
     //const checkSum = Heuristics.getCheckSum(scoreArrays[0]);
     return ScoreSumProcessor.getScoreSumArray(scoreArrays); // TODO: we should possibly return a compound array consisting of scoreArrays AND arrayOfCandidateBoardsArrays
   }
-
-
   // TODO: continue from here 22.8.2023 to get maxScore(OwnNextMaxMoves-OpponentNextMaxMoves)
   // getCandidateboardIndexWithMinMaxNextMoves(candidateBoards, true) -  getCandidateboardIndexWithMinMaxNextMoves(candidateBoards, false)
 
@@ -761,18 +758,18 @@ class Chess extends React.Component {
       let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(candidateBoards[i], white);
       allowedOpponentMovesPerCandidateBoard[i] = nextMoveCandidateBoardsOpponent.length;
       allowedMovesPerCandidateBoard[i] = nextMoveCandidateBoards.length;
-      let minMax = nextMoveCandidateBoards.length - nextMoveCandidateBoardsOpponent.length;
+      // shorter move range? / protected squares
+      let minMax = nextMoveCandidateBoards.length - (2 * nextMoveCandidateBoardsOpponent.length);
       scores[i] = minMax;
       if (parseInt(minMax, 10) > parseInt(topScore, 10)) {
         topScore = minMax;
         selectedBoardIndexMax = i;
       }
-
     } // ..for
     console.log("MINIMAX: " + topScore);
+   // call deep +2? here to get additional INFO ( can be eaten?), combination of this and DEEP
     return selectedBoardIndexMax;
   }
-
 
   getCandidateboardIndexWithMaxOwnNextMoves(candidateBoards, white) {
 
@@ -945,7 +942,6 @@ class Chess extends React.Component {
   getCandidateBoardCorrespondingAllowedMove(allowedMove, board, white) {
     const delim = HelpFunctions.getDelim(allowedMove);
     let moves = HelpFunctions.getMovesString(allowedMove); // src = moves[0], dst = moves[1]
-
     let { pieces } = this.state;
 
     // handle promotions and underpromotions
@@ -954,7 +950,6 @@ class Chess extends React.Component {
         let promotedQueenNumber = white
           ? this.state.promotedWhiteQueenNumber
           : this.state.promotedBlackQueenNumber;
-
         board = PromotionFunctions.doPromote(
           board,
           pieces,
@@ -967,7 +962,6 @@ class Chess extends React.Component {
         let promotedRookNumber = white
           ? this.state.promotedWhiteRookNumber
           : this.state.promotedBlackRookNumber;
-
         board = PromotionFunctions.doPromote(
           board,
           pieces,
@@ -980,7 +974,6 @@ class Chess extends React.Component {
         let promotedBishopNumber = white
           ? this.state.promotedWhiteBishopNumber
           : this.state.promotedBlackBishopNumber;
-
         board = PromotionFunctions.doPromote(
           board,
           pieces,
@@ -989,12 +982,10 @@ class Chess extends React.Component {
         );
         break;
       }
-
       case CONSTANTS.PROMOTION_TO_KNIGHT: {
         let promotedKnightNumber = white
           ? this.state.promotedWhiteKnightNumber
           : this.state.promotedBlackKnightNumber;
-
         board = PromotionFunctions.doPromote(
           board,
           pieces,
@@ -1015,7 +1006,6 @@ class Chess extends React.Component {
         board = EnPassantFunctions.doEnPassantComplete(board, moves);
         break;
       }
-
       default: {
         // normal move, includes captures
         board[moves[1]].piece = board[moves[0]].piece; // the move: dst square's piece becomes src square's piece
@@ -1035,7 +1025,7 @@ class Chess extends React.Component {
    * @returns
    */
   castleQueenSideAllowedBoard(white, board) {
-    if (white) { 
+    if (white) {
       return CastlingFunctions.castleQueenSideWhite(board);
     } else {
       return CastlingFunctions.castleQueenSideBlack(board);
@@ -1205,8 +1195,8 @@ class Chess extends React.Component {
       const dst = parseInt(moves[1], 10);
       let whiteKingMoveCandidate = whiteKingPosition;
 
-      // eslint-disable-next-line
-      if (src == whiteKingPosition) {
+
+      if (src === whiteKingPosition) {
         // white king move candidate!
         whiteKingMoveCandidate = dst;
       }
@@ -1307,8 +1297,8 @@ class Chess extends React.Component {
       const dst = parseInt(moves[1], 10);
       let kingPosition = blackKingPosition;
 
-      // eslint-disable-next-line
-      if (src == kingPosition) {
+
+      if (src === kingPosition) {
         // black king move candidate!
         kingPosition = dst;
       }
@@ -1547,8 +1537,8 @@ class Chess extends React.Component {
    * @returns
    */
   gameOver(candidateMoves, allowedMoves, white) {
-    // eslint-disable-next-line
-    if (allowedMoves === null || allowedMoves.length == 0) {
+
+    if (allowedMoves === null || allowedMoves.length === 0) {
       if (white) {
         console.log(
           "Game over, black wins. candidateMoves = " +
@@ -1608,8 +1598,8 @@ class Chess extends React.Component {
           white,
           candidateBoards[i]
         );
-        // eslint-disable-next-line
-        if (numberOfAllowedOpponentMoves == 0) {
+
+        if (numberOfAllowedOpponentMoves === 0) {
           return i; // this will be maxIdx, because it's an immediate mate!
         } else if (numberOfAllowedOpponentMoves < 2) {
           // TODO: at this point the opponent has only one possibly move which could mean an impending mate; this strategy should be refined
@@ -1634,8 +1624,7 @@ class Chess extends React.Component {
       this.getNumberOfAllowedOpponentMoves(
         white,
         candidateBoards[maxIdx]
-        // eslint-disable-next-line
-      ) == 0
+      ) === 0
     ) {
       // (review this): opponent can't move -> stalemate!
       console.log(
@@ -1728,8 +1717,6 @@ class Chess extends React.Component {
     }
   }
 
-  // functions that set state
-
   /**
    * Does set state.
    * special moves: king, castling, promotion...
@@ -1738,7 +1725,7 @@ class Chess extends React.Component {
    */
   setStatesOfCastlingMoves(srcSquare) {
     switch (srcSquare) {
-      case CONSTANTS.whiteKingId: 
+      case CONSTANTS.whiteKingId:
         this.setState({ whiteKingMoved: true });
         break;
       case CONSTANTS.blackKingId:
@@ -1774,12 +1761,11 @@ class Chess extends React.Component {
     movesStringFromSelectedMove,
     white
   ) {
-    /* eslint-disable */
+
     if (
-      pieceNumberId == CONSTANTS.whiteKingId ||
-      pieceNumberId == CONSTANTS.blackKingId
+      pieceNumberId === CONSTANTS.whiteKingId ||
+      pieceNumberId === CONSTANTS.blackKingId
     ) {
-      /* eslint-enable */
       // king moved
       pieces[pieceNumberId].currentSquare = parseInt(
         movesStringFromSelectedMove[1],
@@ -1807,7 +1793,7 @@ class Chess extends React.Component {
   }
 
   render() {
-    let board = this.state.currentBoardSquares.map((square, index) => {
+    let board = this.state.currentBoard.map((square, index) => {
       return (
         <Square
           ref={index}
@@ -1815,7 +1801,7 @@ class Chess extends React.Component {
           index={index}
           chessId={square.chessId}
           piece={square.piece}
-          moveMap={this.moveMap}
+        //moveMap={this.moveMap}
         />
       );
     });
