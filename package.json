@@ -16,6 +16,8 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-plugin-react": "^7.33.2",
     "immutability-helper": "^2.3.0"
   }
 }

@@ -8,15 +8,11 @@ export function castleQueenSideBlack(board) {
     // this condition is enough at this point!
     board[2].piece = board[4].piece;
     board[2].piece.currentSquare = 4;
-    
+
     board[4].piece = null;
     board[3].piece = board[0].piece;
     board[3].piece.currentSquare = 0;
     board[0].piece = null;
-  } else {
-    console.error(
-      "ERROR: KingB or RookBA has moved alread, castling not allowed!"
-    );
   }
   return board;
 }
@@ -34,10 +30,6 @@ export function castleKingSideBlack(board) {
     board[5].piece = board[7].piece;
     board[5].piece.currentSquare = 7;
     board[7].piece = null;
-  } else {
-    console.error(
-      "ERROR: KingB or RookBH has moved alread, castling not allowed!"
-    );
   }
   return board;
 }
@@ -57,10 +49,6 @@ export function castleQueenSideWhite(board) {
     board[59].piece = board[56].piece;
     board[59].piece.currentSquare = 56;
     board[56].piece = null;
-  } else {
-    console.error(
-      "ERROR: KingW or RookWA has moved alread, castling not allowed!"
-    );
   }
   return board;
 }
@@ -79,10 +67,6 @@ export function castleKingSideWhite(board) {
     board[61].piece = board[63].piece;
     board[61].piece.currentSquare = 61;
     board[63].piece = null;
-  } else {
-    console.error(
-      "ERROR: KingW or RookWH has moved alread, castling not allowed!"
-    );
   }
   return board;
 }
