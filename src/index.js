@@ -11,11 +11,17 @@ import config from "./config/549";
 //mport config from "./config/threatScoresDebug";
 import React from "react";
 import ReactDOM from "react-dom";
+//import { createRoot } from "react-dom/client";
 
 import App from "./App";
 import registerServiceWorker from "./registerServiceWorker";
 import "./styles/Chess.css";
 //require('./styles/chess.scss'); // does the squares!!
+//const root = ReactDOM.createRoot(document.getElementById("root"));
+//const rootElement = document.getElementById("root");
+//const root = createRoot(rootElement);
+
+//root.render(<App chess={config.pieces} />);
 
 ReactDOM.render(<App chess={config.pieces} />, document.getElementById("root"));
-registerServiceWorker();
+//registerServiceWorker();

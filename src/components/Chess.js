@@ -117,11 +117,12 @@ class Chess extends React.Component {
       );
     }
 
-    const compoundArray = this.getArrayOfCandidateBoardsArrays(
+    /*const compoundArray = this.getArrayOfCandidateBoardsArrays(
       white,
       board,
       DEEPNESS
     ); // includes also root score array!
+
 
     const indexOfBestBoard = ScoreSumProcessor.getMinMaxScoreIndex(
       compoundArray[0]
@@ -129,12 +130,12 @@ class Chess extends React.Component {
     console.log(
       "Index of board having the best HEURISTICS SCORE: " + indexOfBestBoard
     );
-
+*/
     //4, 97, 1619, 36348, 876731  -> 4, 97, 1625, 36579, 884718 (28.11.23)
     //const totalNumberOfCandidateBoards = this.getTotalNumberOfCandidateBoards(compoundArray); // compoundArray?
     //const totalNumberOfCandidateBoards  = this.getTotalNumberOfCandidateBoards(arrayOfCandidateBoardsArrays); // compoundArray?
     //console.log("total number of CandidateBoards: " + totalNumberOfCandidateBoards); //TODO deep 5 = 876731 vs. 38064 = 36348 + 1619 + 97
-
+    /*
     let bestNextBoardIndexNumber2 =
       DEEPNESS === 1
         ? indexOfBestBoard
@@ -147,7 +148,7 @@ class Chess extends React.Component {
     console.log(
       "best next board IDX number = " + bestNextBoardIndexNumber + " RETURNING"
     );
-
+*/
     /*const numberOfPossibleNextMoves = this.getNumberOfAllowedNextMovesForBoard(
     candidateBoards,
     white
@@ -217,12 +218,10 @@ class Chess extends React.Component {
         candidateBoards,
         currentBoard: candidateBoards[bestNextBoardIndexNumber],
         white: !white,
-        nextPly: ++this.state.nextPly,
+        nextPly: this.state.nextPly + 1,
       },
       function () {
-        if (this.state.DEBUG) {
-          console.log("state update complete, nextPly : " + this.state.nextPly);
-        }
+        console.log("state update complete, nextPly : " + this.state.nextPly);
       }
     );
   } // nextPly
@@ -235,7 +234,7 @@ class Chess extends React.Component {
       {
         currentBoard: this.state.previousBoards.pop(),
         white: !this.state.white,
-        nextPly: --this.state.nextPly,
+        nextPly: this.state.nextPly - 1,
       },
       function () {
         if (this.state.DEBUG) {
@@ -752,8 +751,11 @@ class Chess extends React.Component {
       );
       let minMax =
         nextMoveCandidateBoards.length -
-        2 * nextMoveCandidateBoardsOpponent.length +
-        threatScore;
+        nextMoveCandidateBoardsOpponent.length +
+        Math.abs(threatScore);
+      console.log(
+        "threat score:" + threatScore + " i = " + i + " minMax = " + minMax
+      );
       scores[i] = minMax;
       if (parseInt(minMax, 10) > parseInt(topScore, 10)) {
         topScore = minMax;
@@ -1767,7 +1769,7 @@ class Chess extends React.Component {
       // white promoted queen = [63, 69]
       console.error("UPDATE next promoted WHITE queen number!!");
       this.setState({
-        promotedWhiteQueenNumber: ++this.state.promotedWhiteQueenNumber,
+        promotedWhiteQueenNumber: this.state.promotedWhiteQueenNumber + 1,
       });
     } else if (
       !white &&
@@ -1775,7 +1777,7 @@ class Chess extends React.Component {
       pieceNumberId <= CONSTANTS.BLACK_QUEEN_CODE
     ) {
       this.setState({
-        promotedBlackQueenNumber: --this.state.promotedBlackQueenNumber,
+        promotedBlackQueenNumber: this.state.promotedBlackQueenNumber - 1,
       });
     } // TODO: add underpromotion piece number counters! (white & black)
   }

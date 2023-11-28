@@ -1,44 +1,50 @@
 import CONSTANTS from "../config/constants";
 /**
-   * For white the optimal is the lowest score, for black the highest!
-   * @param {*} threatScoreForCandidateBoards
-   * @param {*} white
-   * @returns
-   */
- export function getOptimalThreatScoreBoardIndex(threatScoreForCandidateBoards, white) {
+ * For white the optimal is the lowest score, for black the highest!
+ * @param {*} threatScoreForCandidateBoards
+ * @param {*} white
+ * @returns
+ */
+export function getOptimalThreatScoreBoardIndex(
+  threatScoreForCandidateBoards,
+  white
+) {
   let threatScore = threatScoreForCandidateBoards[0];
   let optimalThreatScoreIdx = 0;
 
   //console.log(" number of candit boards = " + threatScoreForCandidateBoards.length);
   for (let i = 0; i < threatScoreForCandidateBoards.length; ++i) {
-    if ((white && threatScoreForCandidateBoards[i] < threatScore) || (!white && threatScoreForCandidateBoards[i] > threatScore)) {
+    if (
+      (white && threatScoreForCandidateBoards[i] < threatScore) ||
+      (!white && threatScoreForCandidateBoards[i] > threatScore)
+    ) {
       threatScore = threatScoreForCandidateBoards[i];
       optimalThreatScoreIdx = i;
-    } 
+    }
   }
   return optimalThreatScoreIdx;
 }
 
- /**
-   *
-   * @param {*} candidateBoards
-   * @param {*} white
-   * @returns
-   */
-  export function getThreatScoreForCandidateBoards(candidateBoards, white) {
-    let threatScoreForCandidateBoards = [];
+/**
+ *
+ * @param {*} candidateBoards
+ * @param {*} white
+ * @returns
+ */
+export function getThreatScoreForCandidateBoards(candidateBoards, white) {
+  let threatScoreForCandidateBoards = [];
 
-    for (let i = 0; i < candidateBoards.length; ++i) {
-      threatScoreForCandidateBoards[i] = getTotalOpponentThreatScoreAgainstMe(
-        candidateBoards[i],
-        white
-      );
-      if (white && threatScoreForCandidateBoards[i] < 0) {
-        console.log("ERROR: NEGATIVE THREAT SCORE FOR WHITE.");
-      } else if (!white && threatScoreForCandidateBoards[i] > 0) {
-        console.log("ERROR: POSITIVE THREAT SCORE FOR BLACK.");
-      }
-      /*console.log(
+  for (let i = 0; i < candidateBoards.length; ++i) {
+    threatScoreForCandidateBoards[i] = getTotalOpponentThreatScoreAgainstMe(
+      candidateBoards[i],
+      white
+    );
+    if (white && threatScoreForCandidateBoards[i] < 0) {
+      console.log("ERROR: NEGATIVE THREAT SCORE FOR WHITE.");
+    } else if (!white && threatScoreForCandidateBoards[i] > 0) {
+      console.log("ERROR: POSITIVE THREAT SCORE FOR BLACK.");
+    }
+    /*console.log(
         "Threat score for candidate board. Index = " +
           i +
           " || Score = " +
@@ -46,10 +52,9 @@ import CONSTANTS from "../config/constants";
           " || White = " +
           white
       );*/
-    }
-
-    return threatScoreForCandidateBoards;
   }
+  return threatScoreForCandidateBoards;
+}
 
 // 1. White candidate move 2. check all black next allowed moves to check the threats against white assuming this candidate move is played
 // 3. sum threat scores (from those black allowed moves) against white piece (move) by piece
@@ -137,7 +142,6 @@ export function getOpponentQueenThreatScoreAgainstMe(
     board,
     white
   );
-
   return threatScore;
 }
 
@@ -175,7 +179,7 @@ export function getOpponentKingThreatScoreAgainstMe(threateningPiece, board) {
     }
   }
   if (board[currentPieceSquareNumber].col < 7 && board[RIGHT].piece !== null) {
-    if (threateningPiece.white !== !board[RIGHT].piece.white) {
+    if (threateningPiece.white !== board[RIGHT].piece.white) {
       threatScore += board[RIGHT].piece.value;
     }
   }
@@ -370,7 +374,7 @@ export function getOpponentRookThreatScoreAgainstMe(piece, board) {
         break;
       }
     }
-  }  
+  }
   return threatScore;
 }
 
@@ -442,19 +446,18 @@ export function getOpponentBishopThreatScoreAgainstMe(threateningPiece, board) {
   return threatScore;
 }
 
-
 /**
- * 
+ *
  * @param {*} board candidate board
  * @param {*} white my color
- * @returns 
+ * @returns
  */
 export function getTotalOpponentThreatScoreAgainstMe(board, white) {
   let threatScore = 0;
 
   for (let i = 0; i <= CONSTANTS.whiteRightRookId; i++) {
     let piece = board[i].piece;
-    
+
     if (piece === null) {
       continue; // piece has been e.g. eaten
     }
@@ -462,7 +465,6 @@ export function getTotalOpponentThreatScoreAgainstMe(board, white) {
     if (white && value > 0) continue; // white piece cannot cause threat to white
     if (!white && value < 0) continue; // black piece cannot cause threat to black
 
-    
     if (value === CONSTANTS.BLACK_PAWN_CODE) {
       threatScore += getOpponentBlackPawnThreatScoreAgainstMe(piece, board); // positive score
     } else if (value === CONSTANTS.WHITE_PAWN_CODE) {
