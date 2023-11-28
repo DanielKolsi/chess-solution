@@ -1,13 +1,13 @@
 const CONSTANTS = {
   NUMBER_OF_SQUARES: 64,
   WHITE_STARTS: true,
-  
+
   WHITE_KNIGHT_CODE: 3,
   WHITE_BISHOP_CODE: 4,
   WHITE_ROOK_CODE: 5,
   WHITE_KING_CODE: 6,
   WHITE_QUEEN_CODE: 9,
-  
+
   BLACK_KNIGHT_CODE: -3,
   BLACK_BISHOP_CODE: -4,
   BLACK_ROOK_CODE: -5,
@@ -57,7 +57,7 @@ const CONSTANTS = {
   twoLeftOneDown: -10,
   twoDownOneRight: -15,
   twoDownOneLeft: -17,
-  
+
   maxKnightRowUp: 6,
   minKnightRowDown: 1,
   minTwoDigitNumber: 10,
@@ -82,10 +82,11 @@ const CONSTANTS = {
   PROMOTION_TO_BISHOP: "B",
   PROMOTION_TO_KNIGHT: "N",
 
+
   // castling constants
   //blackRookCastlingRightSrc: 7,
   //blackRookCastlingRightDst: 5,
   // add other castling square position constants, black & white
-  DOBLE_PAWN_STRING:'48⇒3249⇒3350⇒3451⇒3552⇒3653⇒3754⇒3855⇒39',
+  DOBLE_PAWN_STRING: '48⇒3249⇒3350⇒3451⇒3552⇒3653⇒3754⇒3855⇒39',
 };
 export default CONSTANTS;

@@ -8,7 +8,7 @@
 //import config from "./config/generalBugFixing";
 import config from "./config/549"; 
 //import config from "./config/60"; 
-//import config from "./config/threatScoresDebug"; 
+//mport config from "./config/threatScoresDebug"; 
 import React from "react";
 import ReactDOM from "react-dom";
 

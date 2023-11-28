@@ -1,5 +1,15 @@
 import _ from "lodash";
 
+
+/*
+  What would be the next move score from this board to a piece?
+  Take into account: capture possibilities (e.g. doble threat), check, threats...
+*/
+export function nextMoveScore(board, piece, white) {
+
+}
+
+
 // MAX-MIN rangeScores, for deep 4 get the one where MAX(deep 4) has the minimum score, e.g. MIN of MAXES
 
 // For even deepnesses: Opponent wants to choose the child node with the SMALLEST value, thus the parent with largest SMALL (MAX of MINS) needs to be selected.
