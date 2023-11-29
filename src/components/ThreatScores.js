@@ -455,6 +455,10 @@ export function getOpponentBishopThreatScoreAgainstMe(threateningPiece, board) {
 export function getTotalOpponentThreatScoreAgainstMe(board, white) {
   let threatScore = 0;
 
+  white
+    ? console.log("Thread score against WHITE: " + white)
+    : console.log("Thread score against BLACK: " + white);
+
   for (let i = 0; i <= CONSTANTS.whiteRightRookId; i++) {
     let piece = board[i].piece;
 

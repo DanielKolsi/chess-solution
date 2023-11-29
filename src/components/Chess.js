@@ -66,12 +66,8 @@ class Chess extends React.Component {
     this.prevPly = this.prevPly.bind(this);
   } // constructor
 
-  componentWillMount() {
-    this.initBoard();
-  }
-
   componentDidMount() {
-    this.initPieces();
+    this.initBoard();
     document.getElementById("previous").disabled = true;
   }
 
@@ -247,8 +243,13 @@ class Chess extends React.Component {
   }
 
   // distance of this candidate move
-  getMoveDistance(sr, sc, dr, dc) {
-    // e.g. board[12].piece.currentSquare.r
+  getMoveDistance(board, allowedMove) {
+    let move = HelpFunctions.getMovesString(allowedMove);
+    let sr = board[move[0]].piece.currentSquare.row;
+    let sc = board[move[0]].piece.currentSquare.col;
+    let dr = board[move[1]].piece.currentSquare.row;
+    let dc = board[move[1]].piece.currentSquare.col;
+
     let distanceRow = Math.abs(sr - dr);
     let distanceCol = Math.abs(sc - dc);
     return distanceRow + distanceCol;
@@ -393,7 +394,26 @@ class Chess extends React.Component {
         idx++;
       }
     }
-    this.setState({ currentBoard: squares });
+    this.setState({ currentBoard: squares }, function () {
+      const { currentBoard, pieces } = this.state;
+
+      this.props.chess.forEach((item) => {
+        let piece = {
+          currentSquare: item[0], // number 0..63, changes
+          type: item[1], // actual piece, e.g. RookBA
+          id: item[2], // piece id, e.g. bra
+          n: item[3], // ORIGINAL number 0..63, won't change (unique identifier)
+          white: item[4], // true if white
+          value: item[5], // piece value ( black has negative corresponding values), won't change, because piece is replaced in promotion!
+          //value: //exact piece value in relation to other pieces
+        };
+        if (item[0] >= 0 && item[0] <= CONSTANTS.maxWhite) {
+          currentBoard[item[0]].piece = piece;
+        }
+        pieces[piece.n] = piece;
+      });
+      this.setState({ pieces });
+    });
   }
 
   /**
@@ -402,6 +422,7 @@ class Chess extends React.Component {
    * @returns board pieces
    */
   initPieces() {
+    console.log("starting initpieces");
     const { currentBoard, pieces } = this.state;
 
     this.props.chess.forEach((item) => {

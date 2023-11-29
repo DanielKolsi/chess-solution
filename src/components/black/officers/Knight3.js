@@ -1,11 +1,10 @@
 import React from "react";
 
-   class Knight3 extends Moves {
-    constructor(props) {
-      super(props);
-      this.state = {
-      }
-    }
+class Knight3 extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
   getCandidateMoves(piece, squares) {
     return this.getCandidateKnightMoves(piece, squares);
   }
