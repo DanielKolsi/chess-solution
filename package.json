@@ -1,6 +1,6 @@
 {
   "name": "chess-solution",
-  "version": "0.1.0",
+  "version": "0.7.0",
   "private": true,
   "dependencies": {
     "browser-sync": "^2.27.10",
@@ -16,7 +16,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "eslint": "^3.19.0",
+    "eslint": "^8.54.0",
     "eslint-plugin-react": "^7.33.2",
     "immutability-helper": "^2.3.0"
   }

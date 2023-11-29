@@ -93,7 +93,11 @@ class Chess extends React.Component {
     console.log("allowedMoves:" + allowedMoves); // TODO: fix bug; not capturing a checking queen with a pawn!
     // Nov 2023, use minMax without deepness at this point
     const bestNextBoardIndexNumber =
-      this.getCandidateboardIndexWithMinMaxNextMoves(candidateBoards, white); //  getCandidateboardIndexWithMaxOwnNextMoves(candidateBoards, white);
+      this.getCandidateboardIndexWithMinMaxNextMoves(
+        allowedMoves,
+        candidateBoards,
+        white
+      ); //  getCandidateboardIndexWithMaxOwnNextMoves(candidateBoards, white);
     /*console.log(
       "WHITE = " +
       white +
@@ -745,7 +749,11 @@ class Chess extends React.Component {
   // Instead of using DEEP and iterations, we need to use heuristical calculations and evaluation functions to find the optimal next move!
   // Target: 549 & Fool's mate moves
 
-  getCandidateboardIndexWithMinMaxNextMoves(candidateBoards, white) {
+  getCandidateboardIndexWithMinMaxNextMoves(
+    allowedMoves,
+    candidateBoards,
+    white
+  ) {
     let topScore = -100;
     let selectedBoardIndexMax = 0;
     let allowedMovesPerCandidateBoard = [];
@@ -763,17 +771,22 @@ class Chess extends React.Component {
       allowedOpponentMovesPerCandidateBoard[i] =
         nextMoveCandidateBoardsOpponent.length;
       allowedMovesPerCandidateBoard[i] = nextMoveCandidateBoards.length;
-      // shorter move range? / protected squares
-      // ThreatScores: getTotalOpponentThreatScoreAgainstMe(board, white) {
 
       let threatScore = ThreatScores.getTotalOpponentThreatScoreAgainstMe(
         candidateBoards[i],
         !white
       );
+
+      let moveDistanceScore = this.getMoveDistance(
+        candidateBoards[i],
+        allowedMoves[i]
+      );
+
       let minMax =
         nextMoveCandidateBoards.length -
         nextMoveCandidateBoardsOpponent.length +
-        Math.abs(threatScore);
+        Math.abs(threatScore) -
+        moveDistanceScore; // heuristic 1: prefer shorter distance
       console.log(
         "threat score:" + threatScore + " i = " + i + " minMax = " + minMax
       );
