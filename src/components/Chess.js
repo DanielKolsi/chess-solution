@@ -249,10 +249,11 @@ class Chess extends React.Component {
   // distance of this candidate move
   getMoveDistance(board, allowedMove) {
     let move = HelpFunctions.getMovesString(allowedMove);
-    let sr = board[move[0]].piece.currentSquare.row;
-    let sc = board[move[0]].piece.currentSquare.col;
-    let dr = board[move[1]].piece.currentSquare.row;
-    let dc = board[move[1]].piece.currentSquare.col;
+    console.log("move: " + move + " src=" + move[0]);
+    let sr = HelpFunctions.getRowForSquareNumber(parseInt(move[0], 10));
+    let sc = HelpFunctions.getColForSquareNumber(parseInt(move[0], 10));
+    let dr = 1 + board[parseInt(move[1], 10)].row;
+    let dc = 1 + board[parseInt(move[1], 10)].col;
 
     let distanceRow = Math.abs(sr - dr);
     let distanceCol = Math.abs(sc - dc);
@@ -788,7 +789,14 @@ class Chess extends React.Component {
         Math.abs(threatScore) -
         moveDistanceScore; // heuristic 1: prefer shorter distance
       console.log(
-        "threat score:" + threatScore + " i = " + i + " minMax = " + minMax
+        "threat score:" +
+          threatScore +
+          " i = " +
+          i +
+          " minMax = " +
+          minMax +
+          " distance score: " +
+          moveDistanceScore
       );
       scores[i] = minMax;
       if (parseInt(minMax, 10) > parseInt(topScore, 10)) {
