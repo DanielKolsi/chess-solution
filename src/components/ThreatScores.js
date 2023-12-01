@@ -455,10 +455,6 @@ export function getOpponentBishopThreatScoreAgainstMe(threateningPiece, board) {
 export function getTotalOpponentThreatScoreAgainstMe(board, white) {
   let threatScore = 0;
 
-  white
-    ? console.log("Thread score against WHITE: " + white)
-    : console.log("Thread score against BLACK: " + white);
-
   for (let i = 0; i <= CONSTANTS.whiteRightRookId; i++) {
     let piece = board[i].piece;
 
@@ -470,9 +466,9 @@ export function getTotalOpponentThreatScoreAgainstMe(board, white) {
     if (!white && value < 0) continue; // black piece cannot cause threat to black
 
     if (value === CONSTANTS.BLACK_PAWN_CODE) {
-      threatScore += getOpponentBlackPawnThreatScoreAgainstMe(piece, board); // positive score
+      threatScore += getOpponentBlackPawnThreatScoreAgainstMe(piece, board);
     } else if (value === CONSTANTS.WHITE_PAWN_CODE) {
-      threatScore += getOpponentWhitePawnThreatScoreAgainstMe(piece, board); // negative score
+      threatScore += getOpponentWhitePawnThreatScoreAgainstMe(piece, board);
     }
 
     switch (Math.abs(value)) {
@@ -495,5 +491,5 @@ export function getTotalOpponentThreatScoreAgainstMe(board, white) {
         break;
     }
   }
-  return threatScore;
+  return threatScore; // black pieces give negative threat score
 }

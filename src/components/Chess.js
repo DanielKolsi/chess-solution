@@ -212,44 +212,30 @@ class Chess extends React.Component {
 */
     //   this.setStatesOfCastlingMoves(board[movesStringFromSelectedMove[0]]); // we need to check if the selected move caused restrictions that block future castling
     //candidateBoards[selectedMoveIndex]
-    this.setState(
-      {
-        pieces,
-        candidateBoards,
-        currentBoard: candidateBoards[bestNextBoardIndexNumber],
-        white: !white,
-        nextPly: this.state.nextPly + 1,
-      },
-      function () {
-        console.log("state update complete, nextPly : " + this.state.nextPly);
-      }
-    );
+    this.setState({
+      pieces,
+      candidateBoards,
+      currentBoard: candidateBoards[bestNextBoardIndexNumber],
+      white: !white,
+      nextPly: this.state.nextPly + 1,
+    });
   } // nextPly
 
   /**
    * Does set state.
    */
   prevPly() {
-    this.setState(
-      {
-        currentBoard: this.state.previousBoards.pop(),
-        white: !this.state.white,
-        nextPly: this.state.nextPly - 1,
-      },
-      function () {
-        if (this.state.DEBUG) {
-          console.log(
-            "state update complete, prevTurn : " + this.state.prevTurn
-          );
-        }
-      }
-    );
+    this.setState({
+      currentBoard: this.state.previousBoards.pop(),
+      white: !this.state.white,
+      nextPly: this.state.nextPly - 1,
+    });
   }
 
   // distance of this candidate move
   getMoveDistance(board, allowedMove) {
     let move = HelpFunctions.getMovesString(allowedMove);
-    console.log("move: " + move + " src=" + move[0]);
+
     let sr = HelpFunctions.getRowForSquareNumber(parseInt(move[0], 10));
     let sc = HelpFunctions.getColForSquareNumber(parseInt(move[0], 10));
     let dr = 1 + board[parseInt(move[1], 10)].row;
@@ -778,19 +764,29 @@ class Chess extends React.Component {
         !white
       );
 
+      let threatScore2 = ThreatScores.getTotalOpponentThreatScoreAgainstMe(
+        candidateBoards[i],
+        white
+      );
+
       let moveDistanceScore = this.getMoveDistance(
         candidateBoards[i],
         allowedMoves[i]
       );
 
       let minMax =
-        nextMoveCandidateBoards.length -
-        nextMoveCandidateBoardsOpponent.length +
-        Math.abs(threatScore) -
-        moveDistanceScore; // heuristic 1: prefer shorter distance
+        Math.ceil(3.241 * nextMoveCandidateBoards.length) -
+        Math.floor(0.985 * nextMoveCandidateBoardsOpponent.length) +
+        Math.abs(Math.ceil(0.84 * threatScore)) -
+        Math.abs(3 * threatScore2) -
+        moveDistanceScore; // heuristic 1: prefer shorter distance, TODO: subtract againstWhiteThreatScore
       console.log(
-        "threat score:" +
+        "next move score: " +
+          nextMoveCandidateBoards.length +
+          "threat score:" +
           threatScore +
+          " threat score2:" +
+          threatScore2 +
           " i = " +
           i +
           " minMax = " +
