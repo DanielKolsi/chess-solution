@@ -775,9 +775,9 @@ class Chess extends React.Component {
       );
 
       let minMax =
-        Math.ceil(3.241 * nextMoveCandidateBoards.length) -
-        Math.floor(0.985 * nextMoveCandidateBoardsOpponent.length) +
-        Math.abs(Math.ceil(0.84 * threatScore)) -
+        3.1 * nextMoveCandidateBoards.length -
+        nextMoveCandidateBoardsOpponent.length +
+        Math.abs(0.8 * threatScore) -
         Math.abs(3 * threatScore2) -
         moveDistanceScore; // heuristic 1: prefer shorter distance, TODO: subtract againstWhiteThreatScore
       console.log(
