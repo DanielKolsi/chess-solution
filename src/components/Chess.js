@@ -174,14 +174,8 @@ class Chess extends React.Component {
     // this will be the final selected move for white / black determined by the heuristics / strategy
     const selectedMove = allowedMoves[bestNextBoardIndexNumber];
 
-    const movesStringFromSelectedMove =
-      HelpFunctions.getMovesString(selectedMove);
-
     console.log(
-      "Sel move index: " +
-        selectedMove +
-        " Move string: " +
-        movesStringFromSelectedMove
+      "Selected IDX: " + bestNextBoardIndexNumber + " | MOVE:" + selectedMove
     );
     //    let pieceNumberId;
 
@@ -781,17 +775,20 @@ class Chess extends React.Component {
         Math.abs(3 * threatScore2) -
         moveDistanceScore; // heuristic 1: prefer shorter distance, TODO: subtract againstWhiteThreatScore
       console.log(
-        "next move score: " +
+        i +
+          " | " +
+          allowedMoves[i] +
+          " | next moves: " +
           nextMoveCandidateBoards.length +
-          "threat score:" +
+          " | next moves opponent:" +
+          +nextMoveCandidateBoardsOpponent.length +
+          " | threat score:" +
           threatScore +
-          " threat score2:" +
+          " | threat score2:" +
           threatScore2 +
-          " i = " +
-          i +
           " minMax = " +
           minMax +
-          " distance score: " +
+          " | distance score: " +
           moveDistanceScore
       );
       scores[i] = minMax;
@@ -800,7 +797,15 @@ class Chess extends React.Component {
         selectedBoardIndexMax = i;
       }
     } // ..for
-    console.log("MINIMAX: " + topScore);
+    console.log(
+      "SELECTED IDX:" +
+        selectedBoardIndexMax +
+        "|MINIMAX: " +
+        topScore +
+        "|MOVE:" +
+        allowedMoves[selectedBoardIndexMax]
+    );
+
     // call deep +2? here to get additional INFO ( can be eaten?), combination of this and DEEP
     return selectedBoardIndexMax;
   }

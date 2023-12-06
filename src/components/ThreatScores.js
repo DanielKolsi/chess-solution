@@ -436,7 +436,7 @@ export function getOpponentBishopThreatScoreAgainstMe(threateningPiece, board) {
         // get the threat score
         let value = board[dstDir].piece.value;
         threatScore += value;
-        console.log("value = " + value + " piece = " + dstDir);
+        // console.log("value = " + value + " piece = " + dstDir);
         break;
       } else {
         break; // own piece
