@@ -6,7 +6,7 @@ export default {
     [41, "RookBA", "bra", 0, false, -5], //currentSquare, type, id, n (number-id), white (true/false), value
     [1, "KnightBB", "bka", 1, false, -3],
 
-    [3, "KingB", "bk", 4, false, -6],
+    [3, "KingB", "bk", 4, false, CONSTANTS.BLACK_KING_CODE],
     [39, "BishopBF", "bbf", 5, false, CONSTANTS.BLACK_BISHOP_CODE],
 
     // white pieces 48-63

@@ -772,7 +772,7 @@ class Chess extends React.Component {
         3.1 * nextMoveCandidateBoards.length -
         nextMoveCandidateBoardsOpponent.length +
         Math.abs(0.8 * threatScore) -
-        Math.abs(3 * threatScore2) -
+        Math.abs(0.97 * threatScore2) -
         moveDistanceScore; // heuristic 1: prefer shorter distance, TODO: subtract againstWhiteThreatScore
       console.log(
         i +
@@ -1370,12 +1370,11 @@ class Chess extends React.Component {
       if (piece === null || (!piece.white && i === blackCapturedPosition)) {
         continue; // no piece here or black will be captured here
       }
+      if (piece.white) continue; // only consider black pieces here!
 
       const value = piece.value;
 
-      switch (
-        value // only consider black pieces here!
-      ) {
+      switch (value) {
         case CONSTANTS.BLACK_PAWN_CODE:
           allowed = MoveFunctions.isAllowedByOpponentBlackPawn(
             piece,

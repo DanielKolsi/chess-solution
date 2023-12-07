@@ -9,7 +9,7 @@ const CONSTANTS = {
   WHITE_QUEEN_CODE: 9,
 
   BLACK_KNIGHT_CODE: -3,
-  BLACK_BISHOP_CODE: -3.8, // TODO: magic -4 is used somewhere!
+  BLACK_BISHOP_CODE: -3.8,
   BLACK_ROOK_CODE: -5,
   BLACK_KING_CODE: -6,
   BLACK_QUEEN_CODE: -9,
