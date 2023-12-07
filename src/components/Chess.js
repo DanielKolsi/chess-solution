@@ -12,7 +12,7 @@ import * as ScoreSumProcessor from "./ScoreSumProcessor";
 import * as CastlingFunctions from "./CastlingFunctions";
 import * as CheckFunctions from "./CheckFunctions";
 import * as EnPassantFunctions from "./EnPassantFunctions";
-import * as HelpFunctions from "./HelpFunctions";
+import * as HelpFunctions from "../utils/HelpFunctions";
 import * as PromotionFunctions from "./PromotionFunctions";
 import * as ThreatScores from "./ThreatScores";
 
@@ -768,6 +768,7 @@ class Chess extends React.Component {
         allowedMoves[i]
       );
 
+      // TODO: improve with alpha-beta pruning (e.g. 3 best boards)
       let minMax =
         3.1 * nextMoveCandidateBoards.length -
         nextMoveCandidateBoardsOpponent.length +

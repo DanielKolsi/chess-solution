@@ -1,5 +1,5 @@
 import CONSTANTS from "../config/constants";
-import * as HelpFunctions from "./HelpFunctions";
+import * as HelpFunctions from "../utils/HelpFunctions";
 
 /**
  *
@@ -17,20 +17,22 @@ export function getCheckMoves(allowedMoves) {
   return checkMoves;
 }
 
-
 /**
-   *
-   * @param {*} board
-   * @param {*} allowedMoves
-   * @param {*} white
-   */
- export function getTransformToPlusDelimForCheckMoves(board, allowedMoves, white) {
-  
+ *
+ * @param {*} board
+ * @param {*} allowedMoves
+ * @param {*} white
+ */
+export function getTransformToPlusDelimForCheckMoves(
+  board,
+  allowedMoves,
+  white
+) {
   for (let i = 0; i < allowedMoves.length; i++) {
     const moves = HelpFunctions.getMovesString(allowedMoves[i]);
     const src = parseInt(moves[0], 10);
     let piece = board[src].piece;
-  
+
     // TOOD: BUG/Piece was null here: 10/11/23
     switch (
       Math.abs(piece.value) // handles both white & black piece values
@@ -354,21 +356,28 @@ export function getCheckPlusSymbolForRookMove(board, allowedMove, white) {
   const LEFT_MOVES = board[dst].col;
   const MOVES = [UP_MOVES, DOWN_MOVES, RIGHT_MOVES, LEFT_MOVES];
 
-  const MOVESTEP = [CONSTANTS.up, CONSTANTS.down, CONSTANTS.right, CONSTANTS.left];  
+  const MOVESTEP = [
+    CONSTANTS.up,
+    CONSTANTS.down,
+    CONSTANTS.right,
+    CONSTANTS.left,
+  ];
 
-  for (let n = 0; n < MOVES.length; ++n) { // length == 4  
-    for (let i = 0; i < MOVES[n]; ++i) { // UP, DOWN, RIGHT, LEFT
-      let targetSquare = dst + ((i + 1) * MOVESTEP[n]); 
+  for (let n = 0; n < MOVES.length; ++n) {
+    // length == 4
+    for (let i = 0; i < MOVES[n]; ++i) {
+      // UP, DOWN, RIGHT, LEFT
+      let targetSquare = dst + (i + 1) * MOVESTEP[n];
       if (board[targetSquare].piece === null) {
         continue;
-      } else if (board[targetSquare].piece.value === KING_CODE) {        
+      } else if (board[targetSquare].piece.value === KING_CODE) {
         allowedMove = src + CONSTANTS.CHECK + dst;
         return allowedMove; // do the '+' conversion
       } else {
         break;
       }
     }
-  }  
+  }
   return allowedMove;
 }
 

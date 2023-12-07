@@ -1,6 +1,6 @@
 import CONSTANTS from "../config/constants";
 import * as ThreatScores from "./ThreatScores";
-import * as HelpFunctions from "./HelpFunctions";
+import * as HelpFunctions from "../utils/HelpFunctions";
 import * as CheckFunctions from "./CheckFunctions";
 
 /**
@@ -20,16 +20,14 @@ import * as CheckFunctions from "./CheckFunctions";
  */
 //-> select the highest point functioned candidate board
 
-// like 2nd (black) ply in 549 
-export function filterOpponentUnprotectedDoubleThreat(arrayOfCandidateBoards) {
-
-}
+// like 2nd (black) ply in 549
+export function filterOpponentUnprotectedDoubleThreat(arrayOfCandidateBoards) {}
 
 // return the sum of array integers
 export function getCheckSum(array) {
   let sum = 0;
-  for(let i = 0; i < array.length; ++i) {
-    sum+=array[i];
+  for (let i = 0; i < array.length; ++i) {
+    sum += array[i];
   }
   return sum;
 }
@@ -50,7 +48,7 @@ export function getCandidateBoardNumberCorrespondingMaxScore(
 ) {
   // index of Math.max(array)
   let maxScoresForArrays = [];
-  for (let i = 0; i < arrayOfArrayOfCandidateBoardScores.length; i++) {    
+  for (let i = 0; i < arrayOfArrayOfCandidateBoardScores.length; i++) {
     let array = arrayOfArrayOfCandidateBoardScores[i];
     maxScoresForArrays[i] = Math.max.apply(Math, array);
   }
@@ -60,20 +58,18 @@ export function getCandidateBoardNumberCorrespondingMaxScore(
 
 //export function getAbsoluteScoreForAllCandidateboards(candidateBoards, white) {}
 
-
-
 //export function getNextBoardForASelectedBoard(board, white) {}
 
 /*
  This function maps absoluteMoveIndex to the bestNextMoveIndex using the information from scoreArray
 */
 export function getBestNextMoveBoardNumber(scoreArray, absoluteMoveIndex) {
-  
-  let bestNextMoveIndex = 0; 
-  let incrementedScore =  scoreArray[bestNextMoveIndex];
-  
-  while (absoluteMoveIndex >= incrementedScore) {  // as index starts from 0, e.g. 5th move index is 6th move
-    incrementedScore += scoreArray[++bestNextMoveIndex];  
+  let bestNextMoveIndex = 0;
+  let incrementedScore = scoreArray[bestNextMoveIndex];
+
+  while (absoluteMoveIndex >= incrementedScore) {
+    // as index starts from 0, e.g. 5th move index is 6th move
+    incrementedScore += scoreArray[++bestNextMoveIndex];
   }
   return bestNextMoveIndex;
 }
