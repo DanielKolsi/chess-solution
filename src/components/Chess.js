@@ -28,11 +28,13 @@ class Chess extends React.Component {
     this.state = {
       DEBUG: false,
       LOGGING: false,
+      plies: [], // white and black half-moves
       arrayOfCandidateBoards: [],
       white: CONSTANTS.WHITE_STARTS, // white starts by default
       currentBoard: [], // current board squares; all next turn possibilities will create a separate (candidate) board
       candidateBoards: [], // each board has different squares, there are as many boards as there are allowed move possibilities per a turn
       pieces: {},
+
       staleMateQueenWarning: false,
 
       // promotions
@@ -739,7 +741,7 @@ class Chess extends React.Component {
     let selectedBoardIndexMax = 0;
     let allowedMovesPerCandidateBoard = [];
     let allowedOpponentMovesPerCandidateBoard = [];
-    let scores = [];
+    let scores = []; // use this to decide a smaller game three using alpha-beta pruning, e.g. TOP 3
 
     for (let i = 0; i < candidateBoards.length; ++i) {
       let nextMoveCandidateBoardsOpponent =
@@ -793,6 +795,7 @@ class Chess extends React.Component {
           moveDistanceScore
       );
       scores[i] = minMax;
+      //console.log("PARSEINT=" + parseInt(minMax, 10));
       if (parseInt(minMax, 10) > parseInt(topScore, 10)) {
         topScore = minMax;
         selectedBoardIndexMax = i;
