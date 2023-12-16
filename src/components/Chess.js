@@ -770,9 +770,14 @@ class Chess extends React.Component {
         allowedMoves[i]
       );
 
+      let addition = 0;
+
+      if (this.state.nextPly === 6) {
+        addition = 0.3;
+      }
       // TODO: improve with alpha-beta pruning (e.g. 3 best boards)
       let minMax =
-        3.1 * nextMoveCandidateBoards.length -
+        (3.1 + addition) * nextMoveCandidateBoards.length -
         nextMoveCandidateBoardsOpponent.length +
         Math.abs(0.8 * threatScore) -
         Math.abs(0.97 * threatScore2) -
@@ -795,7 +800,7 @@ class Chess extends React.Component {
           moveDistanceScore
       );
       scores[i] = minMax;
-      //console.log("PARSEINT=" + parseInt(minMax, 10));
+      console.log("PARSEINT=" + parseInt(minMax, 10));
       if (parseInt(minMax, 10) > parseInt(topScore, 10)) {
         topScore = minMax;
         selectedBoardIndexMax = i;
