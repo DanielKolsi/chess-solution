@@ -17,6 +17,7 @@ import * as CheckFunctions from "./CheckFunctions";
  * 4. getNextBoardsForASelectedBoard (next moves, allowedMove->board)
  * 5. threat score for candidate boards -> ThreatScores
  *
+ *
  */
 //-> select the highest point functioned candidate board
 
@@ -287,6 +288,26 @@ export function getMoveReducedPointsDueToLostPiece(
   return extraPoints;
 }
 
+// 31.5.2024
+// TODO: 549: need to find a formula to calculate the best-next-move from a given position (candidateBoards) without alpha-beta pruning or deep X recursion
+// strategy: trial & error houristics for 5th and 6th move from 549 || 2-5 best score boards (pruning), then analyze only those
+export function getUniversalScoreReduction(
+  allowedMove,
+  candidateBoard,
+  previousBoard
+) {
+  let reduction = 0;
+  // positional reduction due to e.g. PIN, X-RAY, THREAT, FORK, CHECK, UNDEFENDED, DOUBLE_PAWN, CAUSES_PIN etc.
+  const board = [
+    [0, 10, 15, 20],
+    [10, 0, 35, 25],
+    [15, 35, 0, 30],
+    [20, 25, 30, 0],
+  ];
+
+  return reduction;
+}
+
 // minimize threat score
 // go through the every opponent black piece in the board and calculate the threat score IF the candidate white move was played
 // this could be used as an universal function to calculate also possible CHECK threats (moves not allowed)
@@ -301,4 +322,14 @@ export function getMinimizedThreatScore(board) {
   threatScore = ThreatScores.getTotalOpponentThreatScoreAgainstMe(board);
 
   return threatScore;
+}
+
+// extra score for causing zugzwang with a tempo move
+export function getZugzwangTempoMoveExtraPoints(
+  allowedMove,
+  candidateBoard,
+  previousBoard
+) {
+  let extraPoints = 0;
+  return extraPoints;
 }

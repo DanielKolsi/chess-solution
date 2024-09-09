@@ -1,6 +1,6 @@
 ===============================
 https://www.youtube.com/watch?v=9LDaY7X2qGk
-
+// 549 https://tb7.chessok.com/probe/3/61
 TODO PROGRESS 11/12/23
 Compare between:
 
@@ -9,6 +9,18 @@ Compare between:
 3. trial & error
 4. change/adjust formula for next move scoring
 5. add more rules to fit the model better
+
+positional_score = material_score + piece_activity_score + pawn_structure_score + king_safety_score + control_score
+material_score: This is the sum of the values of all the pieces on the board. Each piece is assigned a value (e.g., pawn = 1, knight = 3, bishop = 3, rook = 5, queen = 9).
+
+piece_activity_score: This evaluates the activity and mobility of the pieces.
+It can be calculated by considering factors such as the number of legal moves available to each piece and the control of important squares.
+
+pawn_structure_score: This assesses the pawn structure, including factors such as pawn chains, isolated pawns, backward pawns, and passed pawns.
+
+king_safety_score: This evaluates the safety of the king, considering factors such as pawn shelter, open files near the king, and the presence of attacking pieces.
+
+control_score: This measures the control of key squares on the board, including the center and important diagonals.
 
 ---
 

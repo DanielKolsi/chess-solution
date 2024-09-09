@@ -1,3 +1,4 @@
+//https://tb7.chessok.com/probe/3/61
 import CONSTANTS from "../config/constants";
 //board[0..63].piece.currentSquare|type|id|n|white|value;
 export default {

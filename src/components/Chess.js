@@ -746,7 +746,9 @@ class Chess extends React.Component {
     for (let i = 0; i < candidateBoards.length; ++i) {
       let nextMoveCandidateBoardsOpponent =
         this.getNextMoveCandidateBoardsForABoard(candidateBoards[i], !white);
-      if (nextMoveCandidateBoardsOpponent === 0) return i; // it is mate for the opponent, so return here
+
+      if (nextMoveCandidateBoardsOpponent === 0) return i; // it is check mate for the opponent, so return here
+
       let nextMoveCandidateBoards = this.getNextMoveCandidateBoardsForABoard(
         candidateBoards[i],
         white
@@ -782,6 +784,7 @@ class Chess extends React.Component {
         Math.abs(0.8 * threatScore) -
         Math.abs(0.97 * threatScore2) -
         moveDistanceScore; // heuristic 1: prefer shorter distance, TODO: subtract againstWhiteThreatScore
+      // TODO: add number of allowed own King next moves scores (Cursor AI)
       console.log(
         i +
           " | " +
