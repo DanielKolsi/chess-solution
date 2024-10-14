@@ -775,16 +775,18 @@ class Chess extends React.Component {
       let addition = 0;
 
       if (this.state.nextPly === 6) {
-        addition = 0.3;
+        addition = 0.3; // TODO: this needs to be removed or made proportional to this.state.nextPly
       }
-      // TODO: improve with alpha-beta pruning (e.g. 3 best boards)
+      // TODO: improve with alpha-beta pruning (e.g. 3 best boards) and with Q-learning
+      let minMaxTrivial =
+        nextMoveCandidateBoards.length - nextMoveCandidateBoardsOpponent.lengt;
       let minMax =
         (3.1 + addition) * nextMoveCandidateBoards.length -
         nextMoveCandidateBoardsOpponent.length +
         Math.abs(0.8 * threatScore) -
         Math.abs(0.97 * threatScore2) -
         moveDistanceScore; // heuristic 1: prefer shorter distance, TODO: subtract againstWhiteThreatScore
-      // TODO: add number of allowed own King next moves scores (Cursor AI)
+      // TODO: add number of allowed (own King next moves - opponent King next moves) scores (Cursor AI)
       console.log(
         i +
           " | " +
