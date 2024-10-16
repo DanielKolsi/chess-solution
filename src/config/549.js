@@ -8,7 +8,7 @@
 2. RB5+  #
 3. KG4   #
 4. RB4+  #
-5. KF3   # KF3 vs. KH5  difference in BEST move between Probe and Lichess
+5. KF3   # KF3 vs. KH5  difference in BEST move between Probe (+OWN) and Lichess
   Why KF3 is the best alternative and better than KH5? (Allowed moves: KF3, KF5, KH3, KH5)
 + KF3: Number of allowed next own King moves++ (+ N points score)
 - KH5: Threatscore (attacks black bishop in H4, pins rook, -1/-2 own king next moves)
@@ -17,7 +17,16 @@
 ## Best simplest strategy for 5.: MAX OWN NEXT ALLOWED MOVES
 
 6. ND7   #
-7. QH8 Probe vs. ?? OWN  # what causes the difference/deviation?
+7. QH8 Probe vs. QD7 # OWN blunder # what causes the difference/deviation?
+*
+* TRIVIAL SCORE FORMULA FOR FIRST 7 PLIES (1=CORRECT, 0=WRONG)
+* 1. 1 
+* 2. 0 (RF3)
+* 3.  
+* 4. 
+* 5. 
+* 6. 
+* 7.
 */
 
 import CONSTANTS from "../config/constants";

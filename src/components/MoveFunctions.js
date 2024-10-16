@@ -1,6 +1,5 @@
 import CONSTANTS from "../config/constants";
 
-
 /**
  *
  * @param {*} piece
@@ -157,9 +156,9 @@ export function getCandidateWhitePawnMoves(piece, board, prevMove) {
     board[DOWN_LEFT].piece !== null &&
     board[DOWN_LEFT].piece.white === false
   ) {
-    const move = CURRENT_PIECE_SQUARE + DELIMITER + DOWN_LEFT; 
+    const move = CURRENT_PIECE_SQUARE + DELIMITER + DOWN_LEFT;
     candidateMoves.push(move); // eats black piece
-  } 
+  }
   if (
     board[CURRENT_PIECE_SQUARE].col < CONSTANTS.maxCol &&
     board[DOWN_RIGHT].piece !== null &&
@@ -483,6 +482,7 @@ export function isAllowedByOpponentKnight(piece, board, kingPosition) {
 
   let pos = piece.currentSquare; // piece current position
 
+  //console.log("kingPosition:" + kingPosition);
   /* eslint-disable */
 
   if (board[pos].col < 6 && board[pos].row < 7) {
@@ -496,7 +496,7 @@ export function isAllowedByOpponentKnight(piece, board, kingPosition) {
     if (TWO_UP_ONE_RIGHT == kingPosition) return false; // move cannot be accepted (king would be eaten)
   }
 
-  if (board[pos].col < 7 && board[pos].row < 6) {
+  if (board[pos].col > 0 && board[pos].row < 6) {
     if (TWO_UP_ONE_LEFT == kingPosition) return false; // move cannot be accepted (king would be eaten)
   }
 
@@ -504,7 +504,7 @@ export function isAllowedByOpponentKnight(piece, board, kingPosition) {
     if (TWO_LEFT_ONE_UP == kingPosition) return false; // move cannot be accepted (king would be eaten)
   }
 
-  if (board[pos].col < 6 && board[pos].row > 0) {
+  if (board[pos].col > 1 && board[pos].row > 0) {
     if (TWO_LEFT_ONE_DOWN == kingPosition) return false; // move cannot be accepted (king would be eaten)
   }
 
@@ -514,7 +514,7 @@ export function isAllowedByOpponentKnight(piece, board, kingPosition) {
 
   if (board[pos].col > 0 && board[pos].row > 1) {
     if (TWO_DOWN_ONE_LEFT == kingPosition) {
-      return false; // move cannot be accepted (king would be eaten)
+      return false; // move cannot be accepted (king would be in check)
     }
   }
 

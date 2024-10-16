@@ -91,7 +91,7 @@ class Chess extends React.Component {
 
     const allowedMoves = this.getAllowedMoves(white, board, candidateMoves);
     candidateBoards = this.getCandidateBoards(allowedMoves, board, white);
-    //console.log("candidateMoves:" + candidateMoves);
+    console.log("candidateMoves:" + candidateMoves);
     console.log("allowedMoves:" + allowedMoves); // TODO: fix bug; not capturing a checking queen with a pawn!
     // Nov 2023, use minMax without deepness at this point
     const bestNextBoardIndexNumber =
@@ -757,15 +757,17 @@ class Chess extends React.Component {
         nextMoveCandidateBoardsOpponent.length;
       allowedMovesPerCandidateBoard[i] = nextMoveCandidateBoards.length;
 
-      let threatScore = ThreatScores.getTotalOpponentThreatScoreAgainstMe(
-        candidateBoards[i],
-        !white
-      );
+      let threatScoreAgainstOpponent =
+        ThreatScores.getTotalOpponentThreatScoreAgainstMe(
+          candidateBoards[i],
+          !white
+        );
 
-      let threatScore2 = ThreatScores.getTotalOpponentThreatScoreAgainstMe(
-        candidateBoards[i],
-        white
-      );
+      let threatScoreAgainstMe =
+        ThreatScores.getTotalOpponentThreatScoreAgainstMe(
+          candidateBoards[i],
+          white
+        );
 
       let moveDistanceScore = this.getMoveDistance(
         candidateBoards[i],
@@ -778,13 +780,13 @@ class Chess extends React.Component {
         addition = 0.3; // TODO: this needs to be removed or made proportional to this.state.nextPly
       }
       // TODO: improve with alpha-beta pruning (e.g. 3 best boards) and with Q-learning
-      let minMaxTrivial =
-        nextMoveCandidateBoards.length - nextMoveCandidateBoardsOpponent.lengt;
       let minMax =
+        nextMoveCandidateBoards.length - nextMoveCandidateBoardsOpponent.length;
+      let minMax2 =
         (3.1 + addition) * nextMoveCandidateBoards.length -
         nextMoveCandidateBoardsOpponent.length +
-        Math.abs(0.8 * threatScore) -
-        Math.abs(0.97 * threatScore2) -
+        Math.abs(0.8 * threatScoreAgainstOpponent) -
+        Math.abs(0.97 * threatScoreAgainstMe) -
         moveDistanceScore; // heuristic 1: prefer shorter distance, TODO: subtract againstWhiteThreatScore
       // TODO: add number of allowed (own King next moves - opponent King next moves) scores (Cursor AI)
       console.log(
@@ -796,9 +798,9 @@ class Chess extends React.Component {
           " | next moves opponent:" +
           +nextMoveCandidateBoardsOpponent.length +
           " | threat score:" +
-          threatScore +
+          threatScoreAgainstOpponent +
           " | threat score2:" +
-          threatScore2 +
+          threatScoreAgainstMe +
           " minMax = " +
           minMax +
           " | distance score: " +
@@ -1406,6 +1408,12 @@ class Chess extends React.Component {
             board,
             whiteKingPosition
           );
+          //console.log(
+          //  "BLACK KNIGHT: whiteKingPosition:" +
+          //    whiteKingPosition +
+          //    " ALLOWED=" +
+          //    allowed
+          //);
           if (debug && !allowed) {
             console.log(
               "Not allowed: isAllowedByOpponentBlackKnight" + whiteCandidateMove
