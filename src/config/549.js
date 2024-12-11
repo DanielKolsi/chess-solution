@@ -1,6 +1,7 @@
 //https://tb7.chessok.com/probe/3/61
 /*
-
+# TODO: 11/12/2024
+# Opp-King-NoMoves-IF-Checked (Free a strategic checking square by a SAC to mate) #freeBySac
 # Check INDIVIDUAL starting positions, which ones (1-7/549) will go correct with a VERY simple (OWN-OPPONENT) scoring function?
 # Rule out outright bad NEXT moves, e.g. threatning piece can be captured by next opponent move 
 # Smothered mate; check + zero King moves!
